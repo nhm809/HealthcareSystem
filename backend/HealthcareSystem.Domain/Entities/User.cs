@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace HealthcareSystem.Domain.Entities;
+
+public partial class User
+{
+    public int UserId { get; set; }
+
+    public string? FullName { get; set; }
+
+    public string? Password { get; set; }
+
+    public string? Email { get; set; }
+
+    public string? PhoneNumber { get; set; }
+
+    public DateOnly? DoB { get; set; }
+
+    public string? Gender { get; set; }
+
+    public string? Address { get; set; }
+
+    public DateOnly? CreateDate { get; set; }
+
+    public string? Avatar { get; set; }
+
+    public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<Appointment> AppointmentMembers { get; set; } = new List<Appointment>();
+
+    public virtual ICollection<BlogView> BlogViews { get; set; } = new List<BlogView>();
+
+    public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
+
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+    public virtual ICollection<Otprequest> Otprequests { get; set; } = new List<Otprequest>();
+
+    public virtual ICollection<Question> QuestionConsultants { get; set; } = new List<Question>();
+
+    public virtual ICollection<Question> QuestionMembers { get; set; } = new List<Question>();
+
+    public virtual ICollection<ReproductiveCycle> ReproductiveCycles { get; set; } = new List<ReproductiveCycle>();
+
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+
+    public virtual ICollection<TestServiceRecord> TestServiceRecordMembers { get; set; } = new List<TestServiceRecord>();
+
+    public virtual ICollection<TestServiceRecord> TestServiceRecordStaffs { get; set; } = new List<TestServiceRecord>();
+
+    public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
+
+    public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+}
