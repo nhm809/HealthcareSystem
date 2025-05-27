@@ -8,6 +8,6 @@ namespace Application.DTOs
         public required string Topic { get; set; }
         public DateTime PublishDate { get; set; }
         public required string ConsultantName { get; set; }
-        public required string ThumbnailImagePath { get; set; } // ảnh đại diện
+        public required string ThumbnailImagePath { get; set; } // ảnh đại cho bài blog 
     }
 }
