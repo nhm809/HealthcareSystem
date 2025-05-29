@@ -42,12 +42,29 @@ public class AuthService : IAuthService
     public async Task<bool> LoginAsync(LoginDTO dto)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == dto.Email || u.PhoneNumber == dto.PhoneNumber);
+            .FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
         {
-            throw new Exception("Invalid email/phone number or password.");
+            throw new Exception("Invalid email or password.");
         }
         // Generate JWT token or session here if needed
         return true;
     }
+
+    public async Task<string> GetRoleAsync(LoginDTO dto)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        var role = await _context.Roles
+        .FirstOrDefaultAsync(r => r.UserID == user.UserID);
+
+        return role?.RoleID;
+    }
+
 }
