@@ -1,0 +1,85 @@
+.top-bar {
+  background-color: #FFFFFF;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #004d40;
+  position: relative;
+}
+
+.top-bar span {
+  font-size: 16px;
+}
+
+.menu {
+  display: flex;
+  gap: 0;
+}
+
+.menu button {
+  background: none;
+  border: none;
+  color: #004d40;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin: -10px 0;
+  padding: 18px 15px;
+  border-radius: 0;
+}
+
+.menu button:hover {
+  background-color: #54AA7F;
+  color: #ffffff;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.menu button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 77, 64, 0.2);
+}
+
+.header {
+  background-color: #54AA7F;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.auth-buttons button {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.text-header {
+  text-decoration: none;
+  color: #ffff;
+}
+
+#phone-icon,
+.service-icon {
+  margin-left: 15px;
+  vertical-align: middle;
+}
+
+#service-icon {
+  margin-left: 8px;
+  font-size: 14px;
+}
