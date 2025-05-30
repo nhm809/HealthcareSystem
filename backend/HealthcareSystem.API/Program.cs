@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
@@ -23,22 +22,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Healthcare API", Version = "v1" });
 });
-=======
-using HealthcareSystem.Application.Interfaces;
-using HealthcareSystem.Application.Services;
-using HealthcareSystem.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IHomeService, HomeService>();
-
->>>>>>> 451843ac7b64222dbb6a4cdff6f5aaba2014d4c6
 
 
 var app = builder.Build();
