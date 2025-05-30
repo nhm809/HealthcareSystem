@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
 using Domain.Entities;
+=======
+
+namespace HealthcareSystem.Domain.Entities;
+>>>>>>> parent of 451843a (Update CreateDatabase.sql and InsertDB.sql)
 
 namespace Infrastructure.data
 {
