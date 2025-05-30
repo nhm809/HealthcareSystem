@@ -6,10 +6,10 @@ use HealthcareSystem
 CREATE TABLE [User] (
   [UserID] int PRIMARY KEY,
   [FullName] nvarchar(50),
-  [Password] varchar(100),
+  [PasswordHash] varchar(100),
   [Email] varchar(100),
   [PhoneNumber] varchar(15),
-  [BirthdayDate] date,
+  [DoB] date,
   [Gender] nvarchar(15),
   [Address] nvarchar(100),
   [CreateDate] date,
@@ -72,7 +72,7 @@ GO
 CREATE TABLE [TestServiceRecord] (
   [TestServiceRecordID] int PRIMARY KEY,
   [ServiceID] int,
-  [Dob] date,
+  [DoB] date,
   [Gender] nvarchar(15),
   [PhoneNumber] varchar(15),
   [FullNameOfMember] nvarchar(100),
@@ -296,10 +296,20 @@ GO
 
 
 
-INSERT INTO [User] (UserID, FullName,[Password] , Email, PhoneNumber, BirthdayDate, Gender, Address, CreateDate, Avatar)
+--User
+INSERT INTO [User] (UserID, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar)
 VALUES
-(1,N'Nguyễn Hữu Mỹ', 'pass123@My', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL),
-(2,N'Tống Anh Tài', 'tai321@Pass', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL),
-(3,N'Phạm Nguyễn Đăng Hải', 'hai456@Acc', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL),
-(4,N'Nguyễn Văn Hiếu', 'hieu789@Pw', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL),
-(5,N'Nguyễn Trọng Tốt', 'tot999@Key', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL);
+(1, N'Nguyễn Hữu Mỹ', '$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL),
+(2, N'Tống Anh Tài', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL),
+(3, N'Phạm Nguyễn Đăng Hải', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL),
+(4, N'Nguyễn Văn Hiếu', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL),
+(5, N'Nguyễn Trọng Tốt', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL);
+
+--Role 
+INSERT INTO Role (RoleID, UserID, RoleName)
+VALUES
+('AD', 1, 'Admin'),
+('MG', 2, 'Manager'),
+('ST', 3, 'Staff'),
+('CS', 4, 'Consultant'),
+('MB', 5, 'Member');
