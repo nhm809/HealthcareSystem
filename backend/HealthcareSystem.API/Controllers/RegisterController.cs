@@ -1,11 +1,12 @@
-
-
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Application.DTOs;
+using Application.Interfaces;
 
 [ApiController]
-[Route("api/[controller]")]
-pubic class RegisterController : ControllerBase
+[Route("api/register")]
+public class RegisterController : ControllerBase
 {
     private readonly IAuthService _authService;
 
@@ -14,8 +15,8 @@ pubic class RegisterController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FormBody] RegisterDTO dto)
+    [HttpPost]
+    public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
         try
         {
@@ -25,14 +26,14 @@ pubic class RegisterController : ControllerBase
             {
                 return Ok(new { success = true, message = "Register successful" });
             }
-            else{
+            else
+            {
                 return BadRequest(new { success = false, message = "Register failed" });
             }
         }
         catch (Exception e)
         {
-            return BadRequest(new { message = e.Message });
+            return BadRequest(new { success = false, message = e.Message });
         }
     }
-
 }

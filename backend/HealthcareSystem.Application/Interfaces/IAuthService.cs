@@ -1,8 +1,13 @@
 using System.Threading.Tasks;
+using Application.DTOs;
 
-public interface IAuthService
+namespace Application.Interfaces
 {
-    Task<bool> RegisterAsync(RegisterDTO dto);
-    Task<bool> LoginAsync(LoginDTO dto);
-    Task<string> GetRoleAsync(LoginDTO dto)
+
+    public interface IAuthService
+    {
+        Task<bool> RegisterAsync(RegisterDTO dto);
+        Task<bool> LoginAsync(LoginDTO dto);
+        Task<string> GetRoleAsync(LoginDTO dto);
+    }
 }
