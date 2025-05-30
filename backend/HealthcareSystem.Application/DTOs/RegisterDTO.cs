@@ -12,8 +12,5 @@ namespace Application.DTOs
 
         [Required]
         public string? Password { get; set; }
-
-        [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        public string? ConfirmPassword { get; set; }
     }
 }
