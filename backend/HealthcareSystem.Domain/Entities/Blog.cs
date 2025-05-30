@@ -19,6 +19,8 @@ public partial class Blog
 
     public string? Topic { get; set; }
 
+    public string ThumbnailImagePath { get; set; } = string.Empty; // Bên BlogDTO có nhưng bên này chưa có 
+
     public virtual ICollection<BlogImage> BlogImages { get; set; } = new List<BlogImage>();
 
     public virtual ICollection<BlogView> BlogViews { get; set; } = new List<BlogView>();

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <ProjectReference Include="..\HealthcareSystem.Infrastructure\HealthcareSystem.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
