@@ -1,5 +1,10 @@
-public class GoogleLoginDto
+using System.ComponentModel.DataAnnotations;
+
+namespace Application.DTOs
 {
-    [Required]
-    public string IdToken { get; set; }
+    public class GoogleLoginDto
+    {
+        [Required]
+        public string? IdToken { get; set; }
+    }
 }
