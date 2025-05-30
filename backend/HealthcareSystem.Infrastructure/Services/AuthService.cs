@@ -70,7 +70,7 @@ namespace Infrastructure.Services
             var role = await _context.Roles
             .FirstOrDefaultAsync(r => r.UserId == user.UserId);
 
-            return role?.RoleId ?? string.Empty;
+            return role!.RoleId;
         }
 
     }

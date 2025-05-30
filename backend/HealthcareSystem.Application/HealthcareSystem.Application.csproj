@@ -6,11 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-<<<<<<< HEAD
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
   </ItemGroup>
 
-=======
->>>>>>> parent of 451843a (Update CreateDatabase.sql and InsertDB.sql)
 </Project>
