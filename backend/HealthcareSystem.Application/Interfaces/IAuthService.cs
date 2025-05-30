@@ -10,5 +10,4 @@ namespace Application.Interfaces
         Task<bool> LoginAsync(LoginDTO dto);
         Task<string> GetRoleAsync(LoginDTO dto);
     }
-
 }
