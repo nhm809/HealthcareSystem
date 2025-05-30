@@ -1,4 +1,6 @@
-﻿public class RegisterDTO
+﻿using System.ComponentModel.DataAnnotations;
+
+public class RegisterDTO
 {
     [Required, EmailAddress]
     public string Email { get; set; }

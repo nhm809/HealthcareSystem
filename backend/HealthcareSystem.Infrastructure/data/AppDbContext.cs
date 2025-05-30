@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
 namespace HealthcareSystem.Domain.Entities;
 
 public partial class AppDbContext : DbContext

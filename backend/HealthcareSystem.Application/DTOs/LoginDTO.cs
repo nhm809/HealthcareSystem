@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 public class loginDTO
 {
+
 	[Required]
 	public string email { get; set; }
 
