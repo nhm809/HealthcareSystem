@@ -11,7 +11,7 @@ const api = axios.create(
 
 export const authApi = {
      sendOtp: (email) => api.post('/auth/send-otp', {email}),
-     login: (data) => api.post('/auth/login', data),
+     login: (data) => api.post('/api/login', data),
      register: (data) => api.post('/auth/register', data),
 };
 
