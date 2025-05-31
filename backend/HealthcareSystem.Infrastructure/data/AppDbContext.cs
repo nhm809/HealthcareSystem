@@ -419,7 +419,7 @@ namespace Infrastructure.data {
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-                entity.Property(e => e.FullName).HasMaxLength(50);
+                entity.Property(e => e.FullName).HasMaxLength(50).IsRequired(false);
                 entity.Property(e => e.Gender).HasMaxLength(15);
                 entity.Property(e => e.PasswordHash)
                     .HasMaxLength(100)
