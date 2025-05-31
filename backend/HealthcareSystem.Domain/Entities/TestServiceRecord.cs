@@ -1,41 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HealthcareSystem.Domain.Entities;
-
-public partial class TestServiceRecord
+namespace Domain.Entities
 {
-    public int TestServiceRecordId { get; set; }
 
-    public int? ServiceId { get; set; }
+    public partial class TestServiceRecord
+    {
+        public int TestServiceRecordId { get; set; }
 
-    public DateOnly? Dob { get; set; }
+        public int? ServiceId { get; set; }
 
-    public string? Gender { get; set; }
+        public DateOnly? Dob { get; set; }
 
-    public string? PhoneNumber { get; set; }
+        public string? Gender { get; set; }
 
-    public string? FullNameOfMember { get; set; }
+        public string? PhoneNumber { get; set; }
 
-    public int? MemberId { get; set; }
+        public string? FullNameOfMember { get; set; }
 
-    public string? Result { get; set; }
+        public int? MemberId { get; set; }
 
-    public int? StaffId { get; set; }
+        public string? Result { get; set; }
 
-    public DateTime? RecordDate { get; set; }
+        public int? StaffId { get; set; }
 
-    public string? Notes { get; set; }
+        public DateTime? RecordDate { get; set; }
 
-    public string? Status { get; set; }
+        public string? Notes { get; set; }
 
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public string? Status { get; set; }
 
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+        public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    public virtual User? Member { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
-    public virtual Service? Service { get; set; }
+        public virtual User? Member { get; set; }
 
-    public virtual User? Staff { get; set; }
+        public virtual Service? Service { get; set; }
+
+        public virtual User? Staff { get; set; }
+    }
 }

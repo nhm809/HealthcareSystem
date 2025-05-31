@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HealthcareSystem.Domain.Entities;
-
-public partial class Notification
+namespace Domain.Entities
 {
-    public int NotificationId { get; set; }
 
-    public int? UserId { get; set; }
+    public partial class Notification
+    {
+        public int NotificationId { get; set; }
 
-    public string? Type { get; set; }
+        public int? UserId { get; set; }
 
-    public string? Content { get; set; }
+        public string? Type { get; set; }
 
-    public DateTime? SendTime { get; set; }
+        public string? Content { get; set; }
 
-    public string? Status { get; set; }
+        public DateTime? SendTime { get; set; }
 
-    public virtual User? User { get; set; }
+        public string? Status { get; set; }
+
+        public virtual User? User { get; set; }
+    }
 }

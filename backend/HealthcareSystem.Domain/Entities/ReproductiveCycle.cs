@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HealthcareSystem.Domain.Entities;
-
-public partial class ReproductiveCycle
+namespace Domain.Entities
 {
-    public int CycleId { get; set; }
 
-    public int? MemberId { get; set; }
+    public partial class ReproductiveCycle
+    {
+        public int CycleId { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+        public int? MemberId { get; set; }
 
-    public int? CycleLength { get; set; }
+        public DateOnly? StartDate { get; set; }
 
-    public int? PeriodLength { get; set; }
+        public int? CycleLength { get; set; }
 
-    public TimeOnly? PillTime { get; set; }
+        public int? PeriodLength { get; set; }
 
-    public DateTime? LastUpdated { get; set; }
+        public TimeOnly? PillTime { get; set; }
 
-    public virtual User? Member { get; set; }
+        public DateTime? LastUpdated { get; set; }
+
+        public virtual User? Member { get; set; }
+    }
 }
