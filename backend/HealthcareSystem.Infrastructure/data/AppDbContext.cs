@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 
-namespace Infrastructure.data
-{
+namespace Infrastructure.data {
+
     public partial class AppDbContext : DbContext
     {
         public AppDbContext()
@@ -58,13 +58,11 @@ namespace Infrastructure.data
         {
             modelBuilder.Entity<Appointment>(entity =>
             {
-                entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__8ECDFCA2BFB38570");
+                entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__8ECDFCA2D172AD9E");
 
                 entity.ToTable("Appointment");
 
-                entity.Property(e => e.AppointmentId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("AppointmentID");
+                entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
                 entity.Property(e => e.MeetLink)
@@ -73,60 +71,46 @@ namespace Infrastructure.data
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
                 entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
-                entity.Property(e => e.Status)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.Status).HasMaxLength(20);
 
                 entity.HasOne(d => d.Consultant).WithMany(p => p.AppointmentConsultants)
                     .HasForeignKey(d => d.ConsultantId)
-                    .HasConstraintName("FK__Appointme__Consu__4AB81AF0");
+                    .HasConstraintName("FK__Appointme__Consu__3F466844");
 
                 entity.HasOne(d => d.Member).WithMany(p => p.AppointmentMembers)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__Appointme__Membe__48CFD27E");
+                    .HasConstraintName("FK__Appointme__Membe__3D5E1FD2");
 
                 entity.HasOne(d => d.Service).WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.ServiceId)
-                    .HasConstraintName("FK__Appointme__Servi__49C3F6B7");
+                    .HasConstraintName("FK__Appointme__Servi__3E52440B");
             });
 
             modelBuilder.Entity<Blog>(entity =>
             {
-                entity.HasKey(e => e.BlogId).HasName("PK__Blog__54379E504E59807F");
+                entity.HasKey(e => e.BlogId).HasName("PK__Blog__54379E5044619794");
 
                 entity.ToTable("Blog");
 
-                entity.Property(e => e.BlogId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("BlogID");
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
-                entity.Property(e => e.Content).HasColumnType("text");
-                entity.Property(e => e.Description).HasColumnType("text");
-                entity.Property(e => e.Title)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-                entity.Property(e => e.Topic)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Title).HasMaxLength(200);
+                entity.Property(e => e.Topic).HasMaxLength(50);
 
                 entity.HasOne(d => d.Consultant).WithMany(p => p.Blogs)
                     .HasForeignKey(d => d.ConsultantId)
-                    .HasConstraintName("FK__Blog__Consultant__4E88ABD4");
+                    .HasConstraintName("FK__Blog__Consultant__34C8D9D1");
             });
 
             modelBuilder.Entity<BlogImage>(entity =>
             {
-                entity.HasKey(e => e.ImageId).HasName("PK__BlogImag__7516F4EC92482275");
+                entity.HasKey(e => e.ImageId).HasName("PK__BlogImag__7516F4EC111C0B4F");
 
                 entity.ToTable("BlogImage");
 
-                entity.Property(e => e.ImageId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ImageID");
+                entity.Property(e => e.ImageId).HasColumnName("ImageID");
                 entity.Property(e => e.BlogId).HasColumnName("BlogID");
-                entity.Property(e => e.ImageCaption)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity.Property(e => e.ImageCaption).HasMaxLength(200);
                 entity.Property(e => e.ImagePath)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -134,137 +118,126 @@ namespace Infrastructure.data
 
                 entity.HasOne(d => d.Blog).WithMany(p => p.BlogImages)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("FK__BlogImage__BlogI__5441852A");
+                    .HasConstraintName("FK__BlogImage__BlogI__59063A47");
             });
 
             modelBuilder.Entity<BlogView>(entity =>
             {
-                entity.HasKey(e => e.BlogViewId).HasName("PK__BlogView__5A5F0B6C6ACA44F2");
+                entity.HasKey(e => e.BlogViewId).HasName("PK__BlogView__5A5F0B6CFF67BCB5");
 
                 entity.ToTable("BlogView");
 
-                entity.Property(e => e.BlogViewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("BlogViewID");
+                entity.Property(e => e.BlogViewId).HasColumnName("BlogViewID");
                 entity.Property(e => e.BlogId).HasColumnName("BlogID");
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
                 entity.Property(e => e.ViewDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Blog).WithMany(p => p.BlogViews)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("FK__BlogView__BlogID__619B8048");
+                    .HasConstraintName("FK__BlogView__BlogID__5CD6CB2B");
 
                 entity.HasOne(d => d.Member).WithMany(p => p.BlogViews)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__BlogView__Member__60A75C0F");
+                    .HasConstraintName("FK__BlogView__Member__5BE2A6F2");
             });
 
             modelBuilder.Entity<Feedback>(entity =>
             {
-                entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF6FFB87368");
+                entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDF62A9CAF58");
 
                 entity.ToTable("Feedback");
 
-                entity.Property(e => e.FeedbackId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("FeedbackID");
+                entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
-                entity.Property(e => e.Comment).HasColumnType("text");
+                entity.Property(e => e.FeedbackDate)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasColumnType("datetime");
                 entity.Property(e => e.RecordId).HasColumnName("RecordID");
 
                 entity.HasOne(d => d.Appointment).WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.AppointmentId)
-                    .HasConstraintName("FK__Feedback__Appoin__4BAC3F29");
+                    .HasConstraintName("FK__Feedback__Appoin__656C112C");
 
                 entity.HasOne(d => d.Record).WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.RecordId)
-                    .HasConstraintName("FK__Feedback__Record__4CA06362");
+                    .HasConstraintName("FK__Feedback__Record__66603565");
             });
 
             modelBuilder.Entity<Invoice>(entity =>
             {
-                entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD56506E1C1");
+                entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD50B806764");
 
                 entity.ToTable("Invoice");
 
-                entity.Property(e => e.InvoiceId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("InvoiceID");
+                entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
                 entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
                 entity.Property(e => e.TaxRate).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.TestServiceRecordId).HasColumnName("TestServiceRecordID");
-                entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.UnitPrice)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Appointment).WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.AppointmentId)
-                    .HasConstraintName("FK__Invoice__Appoint__59063A47");
+                    .HasConstraintName("FK__Invoice__Appoint__5441852A");
+
+                entity.HasOne(d => d.Payment).WithMany(p => p.Invoices)
+                    .HasForeignKey(d => d.PaymentId)
+                    .HasConstraintName("FK__Invoice__Payment__5629CD9C");
 
                 entity.HasOne(d => d.TestServiceRecord).WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.TestServiceRecordId)
-                    .HasConstraintName("FK__Invoice__TestSer__59FA5E80");
+                    .HasConstraintName("FK__Invoice__TestSer__5535A963");
             });
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasKey(e => e.MessageId).HasName("PK__Message__C87C037CF5DC5647");
+                entity.HasKey(e => e.MessageId).HasName("PK__Message__C87C037C57A9A3C6");
 
                 entity.ToTable("Message");
 
-                entity.Property(e => e.MessageId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("MessageID");
-                entity.Property(e => e.Content).HasColumnType("text");
+                entity.Property(e => e.MessageId).HasColumnName("MessageID");
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
                 entity.Property(e => e.SenderId).HasColumnName("SenderID");
                 entity.Property(e => e.SentAt).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Question).WithMany(p => p.Messages)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__Message__Questio__5BE2A6F2");
+                    .HasConstraintName("FK__Message__Questio__5FB337D6");
 
                 entity.HasOne(d => d.Sender).WithMany(p => p.Messages)
                     .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("FK__Message__SenderI__5CD6CB2B");
+                    .HasConstraintName("FK__Message__SenderI__60A75C0F");
             });
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32C0C86861");
+                entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E325DAFA885");
 
                 entity.ToTable("Notification");
 
-                entity.Property(e => e.NotificationId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("NotificationID");
+                entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
                 entity.Property(e => e.Content).HasColumnType("text");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
-                entity.Property(e => e.Status)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-                entity.Property(e => e.Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Status).HasMaxLength(20);
+                entity.Property(e => e.Type).HasMaxLength(50);
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Notifications)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Notificat__UserI__52593CB8");
+                    .HasConstraintName("FK__Notificat__UserI__4BAC3F29");
             });
 
             modelBuilder.Entity<Otprequest>(entity =>
             {
-                entity.HasKey(e => e.Otpid).HasName("PK__OTPReque__5C2EC562635C7CC6");
+                entity.HasKey(e => e.Otpid).HasName("PK__OTPReque__5C2EC562B070925E");
 
                 entity.ToTable("OTPRequest");
 
-                entity.Property(e => e.Otpid)
-                    .ValueGeneratedNever()
-                    .HasColumnName("OTPID");
+                entity.Property(e => e.Otpid).HasColumnName("OTPID");
                 entity.Property(e => e.Code)
                     .HasMaxLength(15)
                     .IsUnicode(false);
@@ -277,26 +250,22 @@ namespace Infrastructure.data
 
                 entity.HasOne(d => d.User).WithMany(p => p.Otprequests)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__OTPReques__UserI__5AEE82B9");
+                    .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
             });
 
             modelBuilder.Entity<Payment>(entity =>
             {
-                entity.HasKey(e => e.PaymentId).HasName("PK__Payment__A0D9EFA6A68CA681");
+                entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58EBE0C8DD");
 
                 entity.ToTable("Payment");
 
-                entity.Property(e => e.PaymentId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("paymentID");
+                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
                 entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.BankCode)
                     .HasMaxLength(20)
                     .IsUnicode(false);
                 entity.Property(e => e.PaidAt).HasColumnType("datetime");
-                entity.Property(e => e.PaymentMethod)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.PaymentMethod).HasMaxLength(50);
                 entity.Property(e => e.Status)
                     .HasMaxLength(20)
                     .IsUnicode(false);
@@ -304,90 +273,68 @@ namespace Infrastructure.data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("TransactionID");
-
-                entity.HasOne(d => d.PaymentNavigation).WithOne(p => p.Payment)
-                    .HasForeignKey<Payment>(d => d.PaymentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Payment__payment__5535A963");
             });
 
             modelBuilder.Entity<Question>(entity =>
             {
-                entity.HasKey(e => e.QuestionId).HasName("PK__Question__0DC06F8CF017467D");
+                entity.HasKey(e => e.QuestionId).HasName("PK__Question__0DC06F8C7085B3FF");
 
                 entity.ToTable("Question");
 
-                entity.Property(e => e.QuestionId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("QuestionID");
-                entity.Property(e => e.AttachmentPath)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
+                entity.Property(e => e.AttachmentPath).HasMaxLength(200);
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
-                entity.Property(e => e.Content).HasColumnType("text");
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
-                entity.Property(e => e.Specialty)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-                entity.Property(e => e.Status)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.Specialty).HasMaxLength(50);
+                entity.Property(e => e.Status).HasMaxLength(20);
                 entity.Property(e => e.SubmitDate).HasColumnType("datetime");
-                entity.Property(e => e.TitleQuestion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
+                entity.Property(e => e.TitleQuestion).HasMaxLength(200);
 
                 entity.HasOne(d => d.Consultant).WithMany(p => p.QuestionConsultants)
                     .HasForeignKey(d => d.ConsultantId)
-                    .HasConstraintName("FK__Question__Consul__5812160E");
+                    .HasConstraintName("FK__Question__Consul__45F365D3");
 
                 entity.HasOne(d => d.Member).WithMany(p => p.QuestionMembers)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__Question__Member__571DF1D5");
+                    .HasConstraintName("FK__Question__Member__44FF419A");
             });
 
             modelBuilder.Entity<ReportServiceDetail>(entity =>
             {
-                entity.HasKey(e => e.ReportServiceId).HasName("PK__ReportSe__EBE89863234FCE03");
+                entity.HasKey(e => e.ReportServiceId).HasName("PK__ReportSe__EBE898635120F25D");
 
                 entity.ToTable("ReportServiceDetail");
 
-                entity.Property(e => e.ReportServiceId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ReportServiceID");
+                entity.Property(e => e.ReportServiceId).HasColumnName("ReportServiceID");
                 entity.Property(e => e.AvgRating).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-                entity.Property(e => e.ReportPeriod)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.ReportPeriod).HasMaxLength(20);
                 entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
                 entity.Property(e => e.TotalRevenue).HasColumnType("decimal(10, 2)");
 
                 entity.HasOne(d => d.Service).WithMany(p => p.ReportServiceDetails)
                     .HasForeignKey(d => d.ServiceId)
-                    .HasConstraintName("FK__ReportSer__Servi__5629CD9C");
+                    .HasConstraintName("FK__ReportSer__Servi__4222D4EF");
             });
 
             modelBuilder.Entity<ReproductiveCycle>(entity =>
             {
-                entity.HasKey(e => e.CycleId).HasName("PK__Reproduc__077B24D926B42B5A");
+                entity.HasKey(e => e.CycleId).HasName("PK__Reproduc__077B24D97C9AA5A6");
 
                 entity.ToTable("ReproductiveCycle");
 
-                entity.Property(e => e.CycleId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("CycleID");
+                entity.Property(e => e.CycleId).HasColumnName("CycleID");
                 entity.Property(e => e.LastUpdated).HasColumnType("datetime");
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.HasOne(d => d.Member).WithMany(p => p.ReproductiveCycles)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__Reproduct__Membe__4D94879B");
+                    .HasConstraintName("FK__Reproduct__Membe__2F10007B");
             });
 
             modelBuilder.Entity<Role>(entity =>
             {
-                entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3ABDFAAD38");
+                entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3A872501E5");
 
                 entity.ToTable("Role");
 
@@ -395,69 +342,49 @@ namespace Infrastructure.data
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("RoleID");
-                entity.Property(e => e.RoleName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User).WithMany(p => p.Roles)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Role__UserID__5DCAEF64");
+                entity.Property(e => e.RoleDescription).HasMaxLength(255);
+                entity.Property(e => e.RoleName).HasMaxLength(100);
             });
 
             modelBuilder.Entity<Service>(entity =>
             {
-                entity.HasKey(e => e.ServiceId).HasName("PK__Service__C51BB0EA16CB26C0");
+                entity.HasKey(e => e.ServiceId).HasName("PK__Service__C51BB0EA63AB2E89");
 
                 entity.ToTable("Service");
 
-                entity.Property(e => e.ServiceId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ServiceID");
-                entity.Property(e => e.Description).HasColumnType("text");
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
+                entity.Property(e => e.Name).HasMaxLength(100);
                 entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             });
 
             modelBuilder.Entity<Specialty>(entity =>
             {
-                entity.HasKey(e => e.SpecialtyId).HasName("PK__Specialt__D768F64810D6E652");
+                entity.HasKey(e => e.SpecialtyId).HasName("PK__Specialt__D768F6489A0BBC10");
 
                 entity.ToTable("Specialty");
 
-                entity.Property(e => e.SpecialtyId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("SpecialtyID");
-                entity.Property(e => e.Description).HasColumnType("text");
-                entity.Property(e => e.Name)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                entity.Property(e => e.SpecialtyId).HasColumnName("SpecialtyID");
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<TestServiceRecord>(entity =>
             {
-                entity.HasKey(e => e.TestServiceRecordId).HasName("PK__TestServ__F810175D2BBAD248");
+                entity.HasKey(e => e.TestServiceRecordId).HasName("PK__TestServ__F810175D4779B45B");
 
                 entity.ToTable("TestServiceRecord");
 
-                entity.Property(e => e.TestServiceRecordId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("TestServiceRecordID");
-                entity.Property(e => e.FullNameOfMember)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.TestServiceRecordId).HasColumnName("TestServiceRecordID");
+                entity.Property(e => e.FullNameOfMember).HasMaxLength(100);
                 entity.Property(e => e.Gender)
                     .HasMaxLength(15)
                     .IsUnicode(false);
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
-                entity.Property(e => e.Notes).HasColumnType("text");
+                entity.Property(e => e.Notes).HasMaxLength(100);
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(15)
                     .IsUnicode(false);
                 entity.Property(e => e.RecordDate).HasColumnType("datetime");
-                entity.Property(e => e.Result).HasColumnType("text");
+                entity.Property(e => e.Result).HasMaxLength(100);
                 entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
                 entity.Property(e => e.StaffId).HasColumnName("StaffID");
                 entity.Property(e => e.Status)
@@ -466,47 +393,48 @@ namespace Infrastructure.data
 
                 entity.HasOne(d => d.Member).WithMany(p => p.TestServiceRecordMembers)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__TestServi__Membe__5070F446");
+                    .HasConstraintName("FK__TestServi__Membe__398D8EEE");
 
                 entity.HasOne(d => d.Service).WithMany(p => p.TestServiceRecords)
                     .HasForeignKey(d => d.ServiceId)
-                    .HasConstraintName("FK__TestServi__Servi__4F7CD00D");
+                    .HasConstraintName("FK__TestServi__Servi__38996AB5");
 
                 entity.HasOne(d => d.Staff).WithMany(p => p.TestServiceRecordStaffs)
                     .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK__TestServi__Staff__5165187F");
+                    .HasConstraintName("FK__TestServi__Staff__3A81B327");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC96B157BC");
+                entity.HasKey(e => e.UserId).HasName("PK__User__1788CCAC907AF080");
 
                 entity.ToTable("User");
 
-                entity.Property(e => e.UserId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("UserID");
-                entity.Property(e => e.Address)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.Address).HasMaxLength(100);
                 entity.Property(e => e.Avatar)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+                entity.Property(e => e.CreateDate).HasDefaultValueSql("(getdate())");
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-                entity.Property(e => e.FullName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-                entity.Property(e => e.Gender)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                entity.Property(e => e.FullName).HasMaxLength(50);
+                entity.Property(e => e.Gender).HasMaxLength(15);
                 entity.Property(e => e.PasswordHash)
                     .HasMaxLength(100)
                     .IsUnicode(false);
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(15)
                     .IsUnicode(false);
+                entity.Property(e => e.RoleId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("RoleID");
+
+                entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK__User__RoleID__286302EC");
 
                 entity.HasMany(d => d.Specialties).WithMany(p => p.Users)
                     .UsingEntity<Dictionary<string, object>>(
@@ -514,14 +442,14 @@ namespace Infrastructure.data
                         r => r.HasOne<Specialty>().WithMany()
                             .HasForeignKey("SpecialtyId")
                             .OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("FK__UserSpeci__Speci__5FB337D6"),
+                            .HasConstraintName("FK__UserSpeci__Speci__4F7CD00D"),
                         l => l.HasOne<User>().WithMany()
                             .HasForeignKey("UserId")
                             .OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("FK__UserSpeci__UserI__5EBF139D"),
+                            .HasConstraintName("FK__UserSpeci__UserI__4E88ABD4"),
                         j =>
                         {
-                            j.HasKey("UserId", "SpecialtyId").HasName("PK__UserSpec__8AFE43C8519533A2");
+                            j.HasKey("UserId", "SpecialtyId").HasName("PK__UserSpec__8AFE43C8943BFACE");
                             j.ToTable("UserSpecialty");
                             j.IndexerProperty<int>("UserId").HasColumnName("UserID");
                             j.IndexerProperty<int>("SpecialtyId").HasColumnName("SpecialtyID");
@@ -530,24 +458,18 @@ namespace Infrastructure.data
 
             modelBuilder.Entity<WorkSchedule>(entity =>
             {
-                entity.HasKey(e => e.WorkScheduleId).HasName("PK__WorkSche__C6AC635E9F0F80BD");
+                entity.HasKey(e => e.WorkScheduleId).HasName("PK__WorkSche__C6AC635EDF22BB92");
 
                 entity.ToTable("WorkSchedule");
 
-                entity.Property(e => e.WorkScheduleId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("WorkScheduleID");
+                entity.Property(e => e.WorkScheduleId).HasColumnName("WorkScheduleID");
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
-                entity.Property(e => e.Note)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-                entity.Property(e => e.ShiftType)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Note).HasMaxLength(100);
+                entity.Property(e => e.ShiftType).HasMaxLength(50);
 
                 entity.HasOne(d => d.Consultant).WithMany(p => p.WorkSchedules)
                     .HasForeignKey(d => d.ConsultantId)
-                    .HasConstraintName("FK__WorkSched__Consu__534D60F1");
+                    .HasConstraintName("FK__WorkSched__Consu__31EC6D26");
             });
 
             OnModelCreatingPartial(modelBuilder);

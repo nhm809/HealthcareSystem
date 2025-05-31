@@ -1,18 +1,22 @@
-using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 
 [ApiController]
 [Route("api/login")]
 public class LoginController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IConfiguration _config;
 
-    public LoginController(IAuthService authService)
+    public LoginController(IAuthService authService, IConfiguration config)
     {
         _authService = authService;
+        _config = config;
+
     }
 
     [HttpPost]
@@ -20,20 +24,24 @@ public class LoginController : ControllerBase
     {
         try
         {
-            var isAuthenticated = await _authService.LoginAsync(dto);
+            LoginResponseDTO response = await _authService.LoginAsync(dto);
 
-            if (isAuthenticated)
+            return Ok(new
             {
-                return Ok(new { success = true, message = "Login successful" });
-            }
-            else
-            {
-                return Unauthorized(new { success = false, message = "Login failed" });
-            }
+                success = true,
+                token = response.Token,
+                email = response.Email,
+                phoneNumber = response.PhoneNumber,
+                roleId = response.Role,
+                avatarPath = response.AvatarPath,
+                expires = response.Expires,
+                message = "Login successful"
+            });
         }
         catch (Exception e)
         {
-            return BadRequest(new { success = false, message = e.Message });
+            return Unauthorized(new { success = false, message = e.Message });
         }
     }
+
 }

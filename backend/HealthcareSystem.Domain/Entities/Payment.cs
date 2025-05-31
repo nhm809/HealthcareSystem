@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-
     public partial class Payment
     {
         public int PaymentId { get; set; }
@@ -20,6 +19,6 @@ namespace Domain.Entities
 
         public string? Status { get; set; }
 
-        public virtual Invoice PaymentNavigation { get; set; } = null!;
+        public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
     }
 }

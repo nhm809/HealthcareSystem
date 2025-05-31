@@ -8,11 +8,11 @@ namespace Domain.Entities
     {
         public int UserId { get; set; }
 
-        public string? FullName { get; set; }
+        public string FullName { get; set; } = null!;
 
-        public string? PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = null!;
 
-        public string? Email { get; set; }
+        public string Email { get; set; } = null!;
 
         public string? PhoneNumber { get; set; }
 
@@ -25,6 +25,8 @@ namespace Domain.Entities
         public DateOnly? CreateDate { get; set; }
 
         public string? Avatar { get; set; }
+
+        public string? RoleId { get; set; }
 
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 
@@ -46,7 +48,7 @@ namespace Domain.Entities
 
         public virtual ICollection<ReproductiveCycle> ReproductiveCycles { get; set; } = new List<ReproductiveCycle>();
 
-        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+        public virtual Role? Role { get; set; }
 
         public virtual ICollection<TestServiceRecord> TestServiceRecordMembers { get; set; } = new List<TestServiceRecord>();
 
