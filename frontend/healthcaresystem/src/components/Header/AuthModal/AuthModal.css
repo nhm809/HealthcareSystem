@@ -170,7 +170,7 @@
 .auth-divider {
   display: flex;
   align-items: center;
-  margin: 24px 0 12px 0;
+  margin: 12px 0 12px 0;
 }
 .auth-divider span:first-child,
 .auth-divider span:last-child {
@@ -180,8 +180,9 @@
 }
 .auth-divider-text {
   margin: 0 12px;
-  color: #888;
+  color: #00000088;
   font-size: 0.95rem;
+  font-weight: bold;
   white-space: nowrap;
 }
 
@@ -228,5 +229,11 @@
 } 
 
 #btn-style {
-  background-color: #54AA7F;
+  background: linear-gradient(to right, #54AA7F 0%, #4ADE80 100%);
+}
+
+.forget-account {
+  text-decoration: none;
+  color: #007bff;
+  text-align: right;
 }
