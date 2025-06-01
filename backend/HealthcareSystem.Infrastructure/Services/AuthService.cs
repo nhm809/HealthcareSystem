@@ -84,6 +84,7 @@ namespace Infrastructure.Services
             {
                 Token = token,
                 RefreshToken = RefreshToken,
+                UserId = user.UserId,
                 Email = user.Email,
                 FullName = user.FullName ?? string.Empty,
                 PhoneNumber = user.PhoneNumber,

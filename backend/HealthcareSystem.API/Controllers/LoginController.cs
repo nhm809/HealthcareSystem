@@ -31,6 +31,7 @@ public class LoginController : ControllerBase
                 success = true,
                 token = response.Token,
                 refreshToken = response.RefreshToken,
+                userId = response.UserId,
                 email = response.Email,
                 phoneNumber = response.PhoneNumber,
                 roleId = response.Role,
