@@ -18,6 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 /////////////////////////////////////////////////
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 
