@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import AuthModal from '../AuthModal';
+import AuthModal from './AuthModal/AuthModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
@@ -29,8 +29,8 @@ function Header() {
                <strong>1900 3366</strong>
           </span>
         <div className="auth-buttons">
-          <a class="text-header" href="#" onClick={() => handleOpenModal(0)}>Đăng nhập</a>/
-          <a class="text-header" href="#" onClick={() => handleOpenModal(1)}> Đăng ký</a>
+          <a className="text-header" href="#" onClick={() => handleOpenModal(0)}>Đăng nhập</a>/
+          <a className="text-header" href="#" onClick={() => handleOpenModal(1)}> Đăng ký</a>
         </div>
       </div>
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
@@ -46,6 +46,7 @@ function Header() {
           <button>Hỏi đáp bác sĩ</button>
           <button>Theo dõi chu kỳ sinh sản</button>
           <button onClick={() => navigate('/blog')}>Blog</button>
+          <button onClick={() => navigate('/verify-otp')}>Blog</button>
         </div>
       </div>
     </>
