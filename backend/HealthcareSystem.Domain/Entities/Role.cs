@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Role
 {
+    public string RoleId { get; set; } = null!;
 
-    public partial class Role
-    {
-        public string RoleId { get; set; } = null!;
+    public string RoleName { get; set; } = null!;
 
-        public int? UserId { get; set; }
+    public string? RoleDescription { get; set; }
 
-        public string? RoleName { get; set; }
-
-        public virtual User? User { get; set; }
-    }
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

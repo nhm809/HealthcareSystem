@@ -1,11 +1,16 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Application.DTOs;
 using Microsoft.Extensions.Configuration;
 using Application.Interfaces;            
 using Infrastructure.data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
+using BCrypt;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace Infrastructure.Services
 {
@@ -32,20 +37,28 @@ namespace Infrastructure.Services
                 throw new Exception("Phone number already exists.");
             }
 
-
             var user = new User
             {
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                RoleId = "MB"
             };
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database error: " + (ex.InnerException?.Message ?? ex.Message));
+            }
         }
 
-        public async Task<bool> LoginAsync(LoginDTO dto)
+
+        public async Task<LoginResponseDTO> LoginAsync(LoginDTO dto)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -53,25 +66,50 @@ namespace Infrastructure.Services
             {
                 throw new Exception("Invalid email or password.");
             }
-            // Generate JWT token or session here if needed
-            return true;
-        }
+            
+            var expires = DateTime.Now.AddHours(0.5);
+            var token = GenerateJwtToken(user, expires);
 
-        public async Task<string> GetRoleAsync(LoginDTO dto)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
-
-            if (user == null)
+            return new LoginResponseDTO
             {
-                return null;
-            }
+                Token = token,
+                Email = user.Email,
+                FullName = user.FullName ?? string.Empty,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.RoleId,
+                AvatarPath = user.Avatar ?? string.Empty,
+                Expires = expires
+            };
 
-            var role = await _context.Roles
-            .FirstOrDefaultAsync(r => r.UserId == user.UserId);
-
-            return role!.RoleId;
         }
+
+        private string GenerateJwtToken(User user, DateTime expires)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_config["Jwt:Secret"] ?? throw new Exception("JWT secret not configured."));
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Email, user.Email ?? ""),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString())
+            };
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = expires,
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+
 
     }
 }

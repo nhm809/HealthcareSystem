@@ -7,7 +7,6 @@ namespace Application.Interfaces
     public interface IAuthService
     {
         Task<bool> RegisterAsync(RegisterDTO dto);
-        Task<bool> LoginAsync(LoginDTO dto);
-        Task<string> GetRoleAsync(LoginDTO dto);
+        Task<LoginResponseDTO> LoginAsync(LoginDTO dto);
     }
 }
