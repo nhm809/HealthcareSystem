@@ -30,11 +30,13 @@ public class LoginController : ControllerBase
             {
                 success = true,
                 token = response.Token,
+                refreshToken = response.RefreshToken,
                 email = response.Email,
                 phoneNumber = response.PhoneNumber,
                 roleId = response.Role,
                 avatarPath = response.AvatarPath,
-                expires = response.Expires,
+                expiresAcessToken = response.ExpiresAcessToken,
+                expiresRefreshToken = response.ExpiresRefreshToken,
                 message = "Login successful"
             });
         }
