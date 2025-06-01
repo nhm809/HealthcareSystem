@@ -1,9 +1,6 @@
-    using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 
 [ApiController]
 [Route("api/login")]
