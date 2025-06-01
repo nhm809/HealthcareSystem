@@ -8,7 +8,11 @@ namespace Domain.Entities
     {
         public int UserId { get; set; }
 
-        public string FullName { get; set; } = null!;
+        public string? Provider { get; set; }
+
+        public string? GoogleId { get; set; }
+
+        public string? FullName { get; set; } = null!;
 
         public string PasswordHash { get; set; } = null!;
 
@@ -27,6 +31,10 @@ namespace Domain.Entities
         public string? Avatar { get; set; }
 
         public string? RoleId { get; set; }
+
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpiryTime { get; set; }
 
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 

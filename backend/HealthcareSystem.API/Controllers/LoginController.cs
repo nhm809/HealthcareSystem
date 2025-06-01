@@ -1,9 +1,7 @@
-    using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 
 [ApiController]
 [Route("api/login")]
@@ -30,11 +28,14 @@ public class LoginController : ControllerBase
             {
                 success = true,
                 token = response.Token,
+                refreshToken = response.RefreshToken,
+                userId = response.UserId,
                 email = response.Email,
                 phoneNumber = response.PhoneNumber,
                 roleId = response.Role,
                 avatarPath = response.AvatarPath,
-                expires = response.Expires,
+                expiresAcessToken = response.ExpiresAcessToken,
+                expiresRefreshToken = response.ExpiresRefreshToken,
                 message = "Login successful"
             });
         }
