@@ -5,27 +5,40 @@ import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Blog from './pages/Blog/BlogPage';
 import OTPVerification from './components/Header/AuthModal/OTPVerfication';
+import './assets/styles/main.scss'
+import MainLayout from './components/Layout/Layout';
+import Banner from './components/Banner/Banner'
+import { ToastProvider } from './contexts/ToastProvider';
 
 function App() {
   return (
-    <Router>
+    <ToastProvider>
+      <Router>
       <div className="App">
-
         <div>
           <Header />
         </div>
         
-        <Routes>
+        <div>
+          <Banner/>
+        </div>
+        
+
+
+        {/* <MainLayout>
+         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<Blog />} />
           <Route path='/verify-otp' element={<OTPVerification />}/>
-        </Routes>
-
+        </Routes> 
+        </MainLayout> */}
+        
         <div>
           <Footer />
         </div>  
       </div>
     </Router>
+    </ToastProvider>
   );
 }
 

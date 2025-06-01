@@ -29,8 +29,8 @@ function Header() {
                <strong>1900 3366</strong>
           </span>
         <div className="auth-buttons">
-          <a class="text-header" href="#" onClick={() => handleOpenModal(0)}>Đăng nhập</a>/
-          <a class="text-header" href="#" onClick={() => handleOpenModal(1)}> Đăng ký</a>
+          <a className="text-header" href="#" onClick={() => handleOpenModal(0)}>Đăng nhập</a>/
+          <a className="text-header" href="#" onClick={() => handleOpenModal(1)}> Đăng ký</a>
         </div>
       </div>
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />

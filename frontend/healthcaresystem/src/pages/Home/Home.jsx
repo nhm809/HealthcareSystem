@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import banner from '../../assets/banner.png';
+import banner from '../../assets/imgs/banner.png';
 import './Home.css';
 import 'antd/dist/reset.css';
 import { UploadOutlined } from '@ant-design/icons';
@@ -44,7 +44,7 @@ function Home() {
   return (
     <div className="home-container">
           <div className="Main-content">
-            <img class="banner-img" src={banner} alt="Healthcare Banner"/>
+            <img className="banner-img" src={banner} alt="Healthcare Banner"/>
 
             <div className="customer-feedback">
               <h1 className="tile-feedback">Cảm nhận từ phía khác hàng</h1>
