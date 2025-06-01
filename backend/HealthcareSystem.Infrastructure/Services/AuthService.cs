@@ -66,19 +66,31 @@ namespace Infrastructure.Services
             {
                 throw new Exception("Invalid email or password.");
             }
-            
-            var expires = DateTime.Now.AddHours(0.5);
-            var token = GenerateJwtToken(user, expires);
+
+            var RefreshToken = user.RefreshToken;
+            if (string.IsNullOrEmpty(RefreshToken) || user.RefreshTokenExpiryTime < DateTime.Now)
+            {
+                RefreshToken = GenerateRefreshToken();
+                user.RefreshToken = RefreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(15);
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+            var expiresAcessToken = DateTime.Now.AddHours(1);
+            var token = GenerateJwtToken(user, expiresAcessToken);
 
             return new LoginResponseDTO
             {
                 Token = token,
+                RefreshToken = RefreshToken,
                 Email = user.Email,
                 FullName = user.FullName ?? string.Empty,
                 PhoneNumber = user.PhoneNumber,
                 Role = user.RoleId,
                 AvatarPath = user.Avatar ?? string.Empty,
-                Expires = expires
+                ExpiresAcessToken = expiresAcessToken,
+                ExpiresRefreshToken = user.RefreshTokenExpiryTime
             };
 
         }
@@ -86,7 +98,7 @@ namespace Infrastructure.Services
         private string GenerateJwtToken(User user, DateTime expires)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["Jwt:Secret"] ?? throw new Exception("JWT secret not configured."));
+            var key = Encoding.UTF8.GetBytes(_config["Jwt:Secret"]);
 
             var claims = new[]
             {
@@ -109,7 +121,16 @@ namespace Infrastructure.Services
             return tokenHandler.WriteToken(token);
         }
 
-
-
+        public string GenerateRefreshToken()
+        {
+            var ramdomNumber = new byte[64];
+            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(ramdomNumber);
+                return Convert.ToBase64String(ramdomNumber);
+            }
+        }
     }
 }
+
+
