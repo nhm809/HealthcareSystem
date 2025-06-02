@@ -16,9 +16,13 @@ export const authApi = {
      sendOtpRegister: (email) => api.post('/sendotp-register', {email}),
      login: (data) => api.post('/login', data),
      register: (data) => api.post('/register', data),
-     getUserInfo: () => api.get('/user-info'),
+     // getUserInfo: () => api.get('/user-info'),
      refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
 };
+
+export const getInfo = async (userId) => {
+     return await api.get(`/user-info/${userId}`)
+}
 
 // Request interceptor
 api.interceptors.request.use(

@@ -68,7 +68,13 @@
   font-size: 14px;
 }
 
-.text-header {
+.user-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.text-header-lg {
   text-decoration: none;
   color: #ffff;
 }
