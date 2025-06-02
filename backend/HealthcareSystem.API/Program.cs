@@ -1,7 +1,7 @@
 using Application.Interfaces;
 using Application.Validators;
 using FluentValidation;
-using HealthcareSystem.Application.Interfaces;  // Giữ lại dòng này từ nhánh hợp nhất
+using Application.Interfaces;  // Giữ lại dòng này từ nhánh hợp nhất
 using Infrastructure.data;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
