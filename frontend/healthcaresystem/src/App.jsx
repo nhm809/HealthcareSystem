@@ -1,44 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import Home from './pages/Home/Home';
-import Blog from './pages/Blog/BlogPage';
-import OTPVerification from './components/Header/AuthModal/OTPVerfication';
+import Loading from './components/Loading/Loading';
 import './assets/styles/main.scss'
-import MainLayout from './components/Layout/Layout';
-import Banner from './components/Banner/Banner'
 import { ToastProvider } from './contexts/ToastProvider';
+import { StoreProvider } from './contexts/StoreProvider';
+import routers from './routers/routers';
 
 function App() {
   return (
-    <ToastProvider>
-      <Router>
-      <div className="App">
-        <div>
-          <Header />
-        </div>
-        
-        <div>
-          <Banner/>
-        </div>
-        
-
-
-        {/* <MainLayout>
-         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path='/verify-otp' element={<OTPVerification />}/>
-        </Routes> 
-        </MainLayout> */}
-        
-        <div>
-          <Footer />
-        </div>  
-      </div>
-    </Router>
-    </ToastProvider>
+    <StoreProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <div className="App">
+            <Header />
+            <Suspense fallback={<Loading />}>
+              <Routes>
+                {routers.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={<route.component />}
+                  />
+                ))}
+              </Routes>
+            </Suspense>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </ToastProvider>
+    </StoreProvider>
   );
 }
 
