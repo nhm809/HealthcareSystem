@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, Box, Typography, Tabs, Tab } from '@mui/material';
 import FormInput from '../../FormInput/FormInput';
 import Button from '../../Button/Button';
@@ -18,7 +18,6 @@ function AuthModal({ open, onClose }) {
     const [error, setError] = useState('');
     const { toast } = useContext(ToastContext);
     const [inputErrors, setInputErrors] = useState({});
-    const { userInfo } = useContext(StoreContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -36,12 +35,12 @@ function AuthModal({ open, onClose }) {
             const response = await authApi.login({ email, password });
             
             if (response.data.success) {
-                const { token, refreshToken, email, roleId, phoneNumber, avatarPath, userid } = response.data;
+                const { token, refreshToken, email, roleId, phoneNumber, avatarPath, userId } = response.data;
                 
                 Cookies.set('token', token);
                 Cookies.set('refreshToken', refreshToken);
                 Cookies.set('email', email);
-                Cookies.set('userId', userid);
+                Cookies.set('userId', userId);
 
                 const userInfo = {
                     email,
@@ -194,7 +193,7 @@ function AuthModal({ open, onClose }) {
                     )}
                 </div>
                 <div className="auth-modal-right">
-                    <img src="https://nqs.1cdn.vn/2025/05/26/statictttc.kinhtedothi.vn-zoom-1000-uploaded-luonghaiyen-2025_05_26-_jack2_txeh.jpg" alt="auth-visual" className="auth-modal-img" />
+                    <img src="https://huynhgiaminh.vn/media/1031/dong-phuc-y-te-1.jpg" alt="auth-visual" className="auth-modal-img" />
                 </div>
             </Box>
         </Modal>

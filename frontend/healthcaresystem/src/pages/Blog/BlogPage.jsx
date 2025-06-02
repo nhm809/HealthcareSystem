@@ -1,10 +1,13 @@
 import { Button, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import MainLayout from '@components/Layout/Layout'
 
 function BlogPage() {
      const navigate = useNavigate();
      return (
-          <Result
+
+          <MainLayout>
+               <Result
                status="warning"
                title="Hmmm Chúng tôi đang phát triển tính năng này, quay lại sau nhennn <333."
                extra={
@@ -13,6 +16,8 @@ function BlogPage() {
                     </Button>
                }
           />
+          </MainLayout>
+          
      );
 }
 
