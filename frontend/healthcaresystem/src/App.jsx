@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Blog from './pages/Blog/BlogPage';
+import BlogDetail from './pages/Blog/BlogDetail';
 import OTPVerification from './components/Header/AuthModal/OTPVerfication';
 import './assets/styles/main.scss'
 import MainLayout from './components/Layout/Layout';
@@ -19,19 +20,18 @@ function App() {
           <Header />
         </div>
         
-        <div>
+        {/* <div>
           <Banner/>
-        </div>
-        
+        </div> */}
 
-
-        {/* <MainLayout>
-         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path='/verify-otp' element={<OTPVerification />}/>
-        </Routes> 
-        </MainLayout> */}
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path='/verify-otp' element={<OTPVerification />}/>
+          </Routes> 
+        </MainLayout>
         
         <div>
           <Footer />
