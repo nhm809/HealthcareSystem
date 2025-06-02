@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Box, Typography, Tabs, Tab } from '@mui/material';
 import FormInput from '../../FormInput/FormInput';
 import Button from '../../Button/Button';
@@ -6,60 +6,81 @@ import { authApi } from '../../../services/api';
 import './AuthModal.css';
 import { ToastContext } from '../../../contexts/ToastProvider';
 import Cookies from 'js-cookie';
+import { StoreContext } from '../../../contexts/StoreProvider';
+import { validateLogin, validateRegister } from '../../../utils/validate';
 
 function AuthModal({ open, onClose }) {
-    const [tab, setTab] = useState(0); // 0: Login, 1: Register
+    const [tab, setTab] = useState(0);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [error, setError] = useState('');
     const { toast } = useContext(ToastContext);
+    const [inputErrors, setInputErrors] = useState({});
+    const { userInfo } = useContext(StoreContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try {
-            const response = {
-                data: {
-                    success: true,
-                    token: 'mocked-access-token-123',
-                    refreshToken: 'mocked-refresh-token-456',
-                    // các trường khác nếu cần
-                }
-            };
+        e.stopPropagation();
+        setError('');
 
-            // const response = await authApi.login({ email, password });
+        try {
+            const errors = validateLogin({ email, password });
+            if (Object.keys(errors).length > 0) {
+                setInputErrors(errors);
+                return;
+            }
+
+            setInputErrors({});
+            const response = await authApi.login({ email, password });
+            
             if (response.data.success) {
-                toast.success('Đăng nhập thành công');
-                onClose();
-                //   setTimeout(() => {
-                //       window.location.reload();
-                //   }, 5000);
-                console.log(response);
-                const { id, token, refreshToken } = response.data;
+                const { token, refreshToken, email, roleId, phoneNumber, avatarPath, userid } = response.data;
+                
                 Cookies.set('token', token);
                 Cookies.set('refreshToken', refreshToken);
+                Cookies.set('email', email);
+                Cookies.set('userId', userid);
 
-            }
+                const userInfo = {
+                    email,
+                    roleId,
+                    phoneNumber,
+                    avatarPath
+                };
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                
+                toast.success('Đăng nhập thành công');
+                onClose();
+            } 
         } catch (err) {
             console.error(err);
-            toast.error(err.response.data.message);
-            setError('Login failed. Please check your credentials.');
-        }
+            setError('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+            setInputErrors({});
+        } 
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
-            setError('Passwords do not match.');
-            return;
-        }
+        e.stopPropagation();
+        setError('');
+
         try {
+            const errors = validateRegister({ email, password, confirmPassword, phoneNumber });
+            if (Object.keys(errors).length > 0) {
+                setInputErrors(errors);
+                return;
+            }
+
+            setInputErrors({});
+
             const response = await authApi.register({
                 email,
                 password,
                 phoneNumber,
             });
+            
             if (response.data.success) {
                 setTab(0);
                 setError('');
@@ -67,14 +88,15 @@ function AuthModal({ open, onClose }) {
             }
         } catch (err) {
             console.error(err);
-            toast.error(err.response.data.message);
-            setError('Registration failed. Please try again.');
-        }
+            setError(err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+            setInputErrors({});
+        } 
     };
 
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
         setError('');
+        setInputErrors({});
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -91,18 +113,27 @@ function AuthModal({ open, onClose }) {
                     </Tabs>
 
                     {tab === 0 && (
-                        <form className="auth-form" onSubmit={handleLogin}>
-                            <FormInput label="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                            <FormInput label="Mật khẩu" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                            <Button type="submit" id="btn-style">
-                                ĐĂNG NHẬP
-                            </Button>
+                        <form className="auth-form" onSubmit={handleLogin} noValidate>
+                            <FormInput 
+                                label="Email" 
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)} 
+                                error={inputErrors.email}
+                            />
+                            <FormInput 
+                                label="Mật khẩu" 
+                                type="password" 
+                                value={password} 
+                                onChange={e => setPassword(e.target.value)} 
+                                error={inputErrors.password}
+                            />
+                            <Button type="submit" id="btn-style">ĐĂNG NHẬP</Button>
 
                             {error && (
                                 <Typography className="error-message">{error}</Typography>
                             )}
 
-                            <a className="forget-account" href="#">Quên mật khẩu</a>
+                            <a className="forget-account" href="#" onClick={(e) => e.preventDefault()}>Quên mật khẩu</a>
 
                             <div className="auth-divider">
                                 <span></span>
@@ -117,12 +148,35 @@ function AuthModal({ open, onClose }) {
                     )}
 
                     {tab === 1 && (
-                        <form className="auth-form" onSubmit={handleRegister}>
-                            <FormInput label="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                            <FormInput label="Số điện thoại" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
-                            <FormInput label="Mật khẩu" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                            <FormInput label="Nhập lại mật khẩu" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                        <form className="auth-form" onSubmit={handleRegister} noValidate>
+                            <FormInput 
+                                label="Email" 
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)} 
+                                error={inputErrors.email}
+                            />
+                            <FormInput 
+                                label="Số điện thoại" 
+                                value={phoneNumber} 
+                                onChange={e => setPhoneNumber(e.target.value)} 
+                                error={inputErrors.phoneNumber}
+                            />
+                            <FormInput 
+                                label="Mật khẩu" 
+                                type="password" 
+                                value={password} 
+                                onChange={e => setPassword(e.target.value)} 
+                                error={inputErrors.password}
+                            />
+                            <FormInput 
+                                label="Nhập lại mật khẩu" 
+                                type="password" 
+                                value={confirmPassword} 
+                                onChange={e => setConfirmPassword(e.target.value)} 
+                                error={inputErrors.confirmPassword}
+                            />
                             <Button type="submit" id="btn-style">TIẾP TỤC</Button>
+                            
                             {error && (
                                 <Typography className="error-message">{error}</Typography>
                             )}
@@ -138,7 +192,6 @@ function AuthModal({ open, onClose }) {
                             </button>
                         </form>
                     )}
-
                 </div>
                 <div className="auth-modal-right">
                     <img src="https://nqs.1cdn.vn/2025/05/26/statictttc.kinhtedothi.vn-zoom-1000-uploaded-luonghaiyen-2025_05_26-_jack2_txeh.jpg" alt="auth-visual" className="auth-modal-img" />
