@@ -1,7 +1,7 @@
 ﻿using Application.DTOs;
 using System;
-//Iservice.cs push
-namespace HealthcareSystem.Application.Interfaces
+
+namespace Application.Interfaces
 {
     public interface IService
     {

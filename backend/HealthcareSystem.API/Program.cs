@@ -6,6 +6,8 @@ using Infrastructure.data;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,10 +45,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-
-
-
->>>>>>> parent of 7a4b223 (GoogleLogin)
 var app = builder.Build();
 
 // Configure middleware

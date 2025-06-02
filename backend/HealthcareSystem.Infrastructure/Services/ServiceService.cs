@@ -1,9 +1,9 @@
 ﻿using Application.DTOs;
 using Domain.Entities;
-using HealthcareSystem.Application.Interfaces;
+using Application.Interfaces;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
-//ServiceService.cs push
+
 namespace Infrastructure.Services
 {
     public class ServiceService : IService

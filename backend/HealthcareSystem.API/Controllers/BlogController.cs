@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Api.Controllers
 {
@@ -56,9 +57,10 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                // Trả về lỗi nếu có
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                var message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, $"Internal server error: {message}");
             }
+
         }
 
         // Phương thức GET để lấy các blog nổi bật (Popular Blogs)

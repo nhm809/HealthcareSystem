@@ -87,7 +87,7 @@ namespace Infrastructure.Services
                 var blogView = new BlogView
                 {
                     BlogId = blogId,
-                    MemberId = memberId,
+                    //MemberId = memberId,
                     ViewDate = DateTime.Now
                 };
 

@@ -1,6 +1,6 @@
-using HealthcareSystem.Application.Interfaces;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-//ServiceController.cs push
+
 namespace Api.Controllers
 {
     [ApiController]
