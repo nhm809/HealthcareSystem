@@ -6,8 +6,9 @@ using Infrastructure.data;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-//using HealthcareSystem.Application.Interfaces;
-//using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,10 +20,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IService, ServiceService>();
+
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
-
-builder.Services.AddScoped<IService, ServiceService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -43,9 +44,6 @@ builder.Services.AddAuthentication(options =>
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
-
-
-
 
 
 var app = builder.Build();
