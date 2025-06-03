@@ -42,6 +42,7 @@ namespace Infrastructure.Services
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Provider = "Local",
                 RoleId = "MB"
             };
 
