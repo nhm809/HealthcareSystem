@@ -15,7 +15,7 @@ namespace Domain.Entities
 
         public string? FullName { get; set; } = null!;
 
-        public string PasswordHash { get; set; } = null!;
+        public string? PasswordHash { get; set; } = null!;
 
         public string Email { get; set; } = null!;
 

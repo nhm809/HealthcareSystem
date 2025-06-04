@@ -266,8 +266,7 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('CS', 'Consultant', N'Nhân viên tư vấn'),  --
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
---User
-INSERT INTO [User] (FullName, [Provider], GoogleId,PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID)
+--User=======
 VALUES
 (N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD'),
 (N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG'),

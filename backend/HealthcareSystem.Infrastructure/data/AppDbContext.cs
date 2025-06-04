@@ -236,8 +236,8 @@ namespace Infrastructure.data {
                 entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
                 entity.Property(e => e.Content).HasColumnType("text");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
-                entity.Property(e => e.Status).HasMaxLength(20);
-                entity.Property(e => e.Type).HasMaxLength(50);
+                entity.Property(e => e.IsRead).HasColumnName("IsRead");
+                entity.Property(e => e.Title).HasMaxLength(50);
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Notifications)

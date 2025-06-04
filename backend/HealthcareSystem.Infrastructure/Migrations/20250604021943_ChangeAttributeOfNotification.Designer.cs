@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604021943_ChangeAttributeOfNotification")]
+    partial class ChangeAttributeOfNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -675,6 +678,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
@@ -745,34 +749,22 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("WorkSchedule", (string)null);
                 });
 
-            modelBuilder.Entity("HealthcareSystem.Domain.Entities.UserSpecialty", b =>
+            modelBuilder.Entity("UserSpecialty", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
 
                     b.Property<int>("SpecialtyId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("SpecialtyID");
 
-                    b.HasKey("UserId", "SpecialtyId");
+                    b.HasKey("UserId", "SpecialtyId")
+                        .HasName("PK__UserSpec__8AFE43C8943BFACE");
 
                     b.HasIndex("SpecialtyId");
 
                     b.ToTable("UserSpecialty", (string)null);
-                });
-
-            modelBuilder.Entity("SpecialtyUser", b =>
-                {
-                    b.Property<int>("SpecialtiesSpecialtyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SpecialtiesSpecialtyId", "UsersUserId");
-
-                    b.HasIndex("UsersUserId");
-
-                    b.ToTable("SpecialtyUser");
                 });
 
             modelBuilder.Entity("Domain.Entities.Appointment", b =>
@@ -988,38 +980,19 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("Consultant");
                 });
 
-            modelBuilder.Entity("HealthcareSystem.Domain.Entities.UserSpecialty", b =>
-                {
-                    b.HasOne("Domain.Entities.Specialty", "Specialty")
-                        .WithMany("UserSpecialties")
-                        .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("UserSpecialties")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Specialty");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SpecialtyUser", b =>
+            modelBuilder.Entity("UserSpecialty", b =>
                 {
                     b.HasOne("Domain.Entities.Specialty", null)
                         .WithMany()
-                        .HasForeignKey("SpecialtiesSpecialtyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SpecialtyId")
+                        .IsRequired()
+                        .HasConstraintName("FK__UserSpeci__Speci__4F7CD00D");
 
                     b.HasOne("Domain.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK__UserSpeci__UserI__4E88ABD4");
                 });
 
             modelBuilder.Entity("Domain.Entities.Appointment", b =>
@@ -1055,11 +1028,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("TestServiceRecords");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Specialty", b =>
-                {
-                    b.Navigation("UserSpecialties");
-                });
-
             modelBuilder.Entity("Domain.Entities.TestServiceRecord", b =>
                 {
                     b.Navigation("Feedbacks");
@@ -1092,8 +1060,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("TestServiceRecordMembers");
 
                     b.Navigation("TestServiceRecordStaffs");
-
-                    b.Navigation("UserSpecialties");
 
                     b.Navigation("WorkSchedules");
                 });
