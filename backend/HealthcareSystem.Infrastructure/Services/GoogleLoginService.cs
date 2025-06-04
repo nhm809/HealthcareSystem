@@ -5,6 +5,8 @@ using Google.Apis.Auth;
 using Infrastructure.data;
 using Domain.Entities;  
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
 
 namespace Infrastructure.Services
 {
@@ -12,13 +14,16 @@ namespace Infrastructure.Services
     {
         private readonly IConfiguration _config; //Sử dụng IConfiguration để lấy thông tin cấu hình từ appsettings.json
         private readonly AppDbContext _context;
+        private readonly ILogger<GoogleLoginService> _logger; // Thêm ILogger để ghi log lỗi
 
 
-        public GoogleLoginService(IConfiguration config, AppDbContext context)
+        public GoogleLoginService(IConfiguration config, AppDbContext context, ILogger<GoogleLoginService> logger)
         {
             _config = config;
             _context = context;
+            _logger = logger;
         }
+
 
         public async Task<GoogleLoginDTO> ValidateGoogleTokenAsync(GoogleTokenRequestDTO request)
         {
@@ -61,10 +66,12 @@ namespace Infrastructure.Services
                     Locale = payload.Locale
                 };
             }
-            catch 
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error validating Google token.");
                 return null;
             }
+
         }
-}
+    }
 }
