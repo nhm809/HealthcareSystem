@@ -266,8 +266,7 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('CS', 'Consultant', N'Nhân viên tư vấn'),  --
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
---User
-INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID)
+--User=======
 VALUES
 (N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD'),
 (N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG'),
@@ -326,11 +325,11 @@ INSERT INTO TestServiceRecord (
 VALUES
 -- Cho AppointmentID 2 (ServiceID = 2)
 (2, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
- 5, N'Không phát hiện vấn đề gì', 3, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
+ 5, N'Không phát hiện vấn đề gì', 4, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
 
 -- Cho AppointmentID 3 (ServiceID = 1)
 (1, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
- 5, N'Dương tính nhẹ, cần theo dõi', 3, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành');
+ 5, N'Dương tính nhẹ, cần theo dõi', 4, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành');
 
 
 --Question --=====================================================================================================================================================
