@@ -1,7 +1,7 @@
 
 namespace Application.DTOs
 {
-    public class GetAllNotiDTO
+    public class NotiDTO
     {
         public int NotificationId { get; set; }
         public string? Title { get; set; }

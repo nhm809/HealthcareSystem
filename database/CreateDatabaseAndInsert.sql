@@ -461,10 +461,20 @@ VALUES
 (NULL, 7, 5, N'Cảm ơn vì giúp tôi yên tâm hơn về tình trạng sức khỏe.', GETDATE()),
 (NULL, 8, 5, N'Xét nghiệm tổng quát rất cần thiết. Cảm thấy an toàn hơn.', GETDATE());
 
+--Table [dbo].[Notification]
+INSERT INTO Notification (UserID, Title, [Content], SendTime, IsRead)
+VALUES
+(3, N'Thông báo hệ thống', N'Hệ thống sẽ bảo trì lúc 23:00 đêm nay.', GETDATE(), 0),
+(3, N'Xác nhận email', N'Vui lòng xác nhận email để tiếp tục sử dụng dịch vụ.', GETDATE(), 0),
+(4, N'Cập nhật hồ sơ', N'Hồ sơ của bạn đã được cập nhật thành công.', GETDATE(), 1),
+(5, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', GETDATE(), 0),
+(6, N'Mật khẩu đã thay đổi', N'Bạn vừa thay đổi mật khẩu thành công.', GETDATE(), 1);
+
+
+
 --Còn 6 bảng -=====================================================================================================================================================
 --Table [dbo].[ReproductiveCycle] is empty
 --Table [dbo].[ReportServiceDetail] is empty
 --Table [dbo].[OTPRequest] is empty
---Table [dbo].[Notification] is empty
 --Table [dbo].[Payment] is empty
 --Table [dbo].[Invoice] is empty

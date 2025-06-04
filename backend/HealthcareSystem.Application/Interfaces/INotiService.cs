@@ -5,8 +5,8 @@ namespace Application.Interfaces
 {
     public interface INotiService
     {
-        Task<List<GetAllNotiDTO>> GetAllNotiAsync(int userId);
-        //Task<int> CreateNotiAsync(CreateNotiDTO createNotiDTO);
-        //Task<int> MarkAsReadAsync(int notiId);
+        Task<List<NotiDTO>> GetAllNotiAsync(int userId);
+        Task<bool> CreateNotiAsync(CreateNotiDTO createNotiDTO);
+        Task<int> MarkAsReadAsync(int notiId);
     }
 }
