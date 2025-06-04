@@ -326,11 +326,11 @@ INSERT INTO TestServiceRecord (
 VALUES
 -- Cho AppointmentID 2 (ServiceID = 2)
 (2, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
- 5, N'Không phát hiện vấn đề gì', 3, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
+ 5, N'Không phát hiện vấn đề gì', 4, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
 
 -- Cho AppointmentID 3 (ServiceID = 1)
 (1, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
- 5, N'Dương tính nhẹ, cần theo dõi', 3, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành');
+ 5, N'Dương tính nhẹ, cần theo dõi', 4, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành');
 
 
 --Question --=====================================================================================================================================================
