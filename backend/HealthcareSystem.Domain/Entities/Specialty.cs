@@ -1,5 +1,4 @@
-﻿using HealthcareSystem.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Domain.Entities
@@ -14,8 +13,5 @@ namespace Domain.Entities
         public string? Description { get; set; }
 
         public virtual ICollection<User> Users { get; set; } = new List<User>();
-        public virtual ICollection<UserSpecialty> UserSpecialties { get; set; } = new List<UserSpecialty>();//thêm tay
-
-
     }
 }

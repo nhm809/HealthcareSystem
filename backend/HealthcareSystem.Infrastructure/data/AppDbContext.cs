@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using HealthcareSystem.Domain.Entities;
 
 namespace Infrastructure.data {
 
@@ -47,8 +46,6 @@ namespace Infrastructure.data {
 
         public virtual DbSet<Specialty> Specialties { get; set; }
 
-        public virtual DbSet<UserSpecialty> UserSpecialties { get; set; }
-
         public virtual DbSet<TestServiceRecord> TestServiceRecords { get; set; }
 
         public virtual DbSet<User> Users { get; set; }
@@ -57,23 +54,6 @@ namespace Infrastructure.data {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserSpecialty>(entity =>
-            {//Thêm = tay
-                entity.HasKey(e => new { e.UserId, e.SpecialtyId });//bảng trung gian, nên thường dùng khóa kép
-
-                entity.HasOne(e => e.User)
-                      .WithMany(u => u.UserSpecialties)
-                      .HasForeignKey(e => e.UserId);
-
-                entity.HasOne(e => e.Specialty)
-                      .WithMany(s => s.UserSpecialties)
-                      .HasForeignKey(e => e.SpecialtyId);
-
-                entity.ToTable("UserSpecialty");  
-            });
-
-
-
             modelBuilder.Entity<Appointment>(entity =>
             {
                 entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__8ECDFCA2D172AD9E");
@@ -429,24 +409,24 @@ namespace Infrastructure.data {
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK__User__RoleID__286302EC");
 
-                //entity.HasMany(d => d.Specialties).WithMany(p => p.Users)
-                //    .UsingEntity<Dictionary<string, object>>(
-                //        "UserSpecialty",
-                //        r => r.HasOne<Specialty>().WithMany()
-                //            .HasForeignKey("SpecialtyId")
-                //            .OnDelete(DeleteBehavior.ClientSetNull)
-                //            .HasConstraintName("FK__UserSpeci__Speci__4F7CD00D"),
-                //        l => l.HasOne<User>().WithMany()
-                //            .HasForeignKey("UserId")
-                //            .OnDelete(DeleteBehavior.ClientSetNull)
-                //            .HasConstraintName("FK__UserSpeci__UserI__4E88ABD4"),
-                //        j =>
-                //        {
-                //            j.HasKey("UserId", "SpecialtyId").HasName("PK__UserSpec__8AFE43C8943BFACE");
-                //            j.ToTable("UserSpecialty");
-                //            j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                //            j.IndexerProperty<int>("SpecialtyId").HasColumnName("SpecialtyID");
-                //        });
+                entity.HasMany(d => d.Specialties).WithMany(p => p.Users)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "UserSpecialty",
+                        r => r.HasOne<Specialty>().WithMany()
+                            .HasForeignKey("SpecialtyId")
+                            .OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("FK__UserSpeci__Speci__4F7CD00D"),
+                        l => l.HasOne<User>().WithMany()
+                            .HasForeignKey("UserId")
+                            .OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("FK__UserSpeci__UserI__4E88ABD4"),
+                        j =>
+                        {
+                            j.HasKey("UserId", "SpecialtyId").HasName("PK__UserSpec__8AFE43C8943BFACE");
+                            j.ToTable("UserSpecialty");
+                            j.IndexerProperty<int>("UserId").HasColumnName("UserID");
+                            j.IndexerProperty<int>("SpecialtyId").HasColumnName("SpecialtyID");
+                        });
             });
 
             modelBuilder.Entity<WorkSchedule>(entity =>
