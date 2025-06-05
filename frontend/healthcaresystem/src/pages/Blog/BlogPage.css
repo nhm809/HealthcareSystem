@@ -1,6 +1,6 @@
 .blog-page {
   display: flex;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 40px auto;
   padding: 0 20px;
   gap: 40px;
@@ -12,7 +12,7 @@
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .search-box {
@@ -59,6 +59,12 @@
   color: #008080;
 }
 
+.category-item.active {
+  background-color: #b7e3d8; /* màu nền hover */
+  border-radius: 10px;
+  color: #008080;
+}
+
 .category-item .icon {
   margin-right: 8px;
   color: #30865B;
@@ -83,7 +89,7 @@
 
 .blog-title {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   font-weight: bold;
   color: #333;
 }
@@ -100,7 +106,7 @@
   background-color: #fdfdfd;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: transform 0.2s ease;
 }

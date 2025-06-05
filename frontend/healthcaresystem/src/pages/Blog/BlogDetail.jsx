@@ -1,43 +1,61 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import './BlogDetail.css';
-
-const mockBlogData = {
-  id: 1,
-  title: 'COVID kéo dài có thể làm gia tăng lo âu và trầm cảm ở trẻ em',
-  author: 'Phương Tuấn',
-  date: '22/05/2025',
-  category: 'Nhi khoa',
-  image: '/assets/blog_detail.jpg',
-  content: `
-    Hậu quả tinh thần của đại dịch COVID-19 đang trở thành một chủ đề nóng trong y tế cộng đồng...
-    
-    COVID kéo dài - không chỉ là những triệu chứng thể chất...
-
-    Các chuyên gia nhận thấy trẻ em mắc COVID-19 có biểu hiện lo âu, trầm cảm kéo dài...
-  `
-};
+import MainLayout from '../../components/Layout/Layout';
 
 function BlogDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5011/api/blogs/${id}`);
+        setBlog(res.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy chi tiết blog:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlog();
+  }, [id]);
+
+  const goBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from); // quay lại đúng trang trước
+    } else {
+      navigate('/blog'); // fallback nếu không có state
+    }
+  };
+
+  if (loading) return <div>Đang tải...</div>;
+  if (!blog) return <div>Không tìm thấy bài viết</div>;
 
   return (
-    <div className="blog-detail">
-      <div className="blog-detail-header">
-        <ArrowLeftOutlined onClick={() => navigate('/blog')} className="back-icon" />
-        <h1>{mockBlogData.title}</h1>
-        <div className="meta">
-          <span>{mockBlogData.author}</span> | <span>{mockBlogData.date}</span> | <span>{mockBlogData.category}</span>
+
+    <MainLayout>
+      <div className="blog-detail">
+        <div className="blog-detail-header">
+          <ArrowLeftOutlined onClick={goBack} className="back-icon" />
+          <h1>{blog.title}</h1>
+          <div className="meta">
+            <span>{blog.consultantName}</span> | <span>{blog.publishDate}</span> | <span>{blog.topic}</span>
+          </div>
+        </div>
+        <img className="blog-detail-image" src={blog.images[0].imagePath} alt={blog.title} />
+        <div className="blog-detail-content">
+          {blog.content.split('\n').map((p, index) => (
+            <p key={index}>{p.trim()}</p>
+          ))}
         </div>
       </div>
-      <img className="blog-detail-image" src={mockBlogData.image} alt={mockBlogData.title} />
-      <div className="blog-detail-content">
-        {mockBlogData.content.split('\n').map((p, index) => (
-          <p key={index}>{p.trim()}</p>
-        ))}
-      </div>
-    </div>
+    </MainLayout>
   );
 }
 

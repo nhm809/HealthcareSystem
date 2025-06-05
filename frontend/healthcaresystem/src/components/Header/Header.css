@@ -68,7 +68,13 @@
   font-size: 14px;
 }
 
-.text-header {
+.user-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.text-header-lg {
   text-decoration: none;
   color: #ffff;
 }
@@ -82,4 +88,48 @@
 #service-icon {
   margin-left: 8px;
   font-size: 14px;
+}
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.user-dropdown:hover .user-dropdown-content {
+  display: block;
+}
+
+.user-dropdown-content button {
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.user-dropdown-content button:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-button {
+  color: #dc3545 !important;
+}
+
+.logout-button:hover {
+  background-color: #fff5f5 !important;
 }
