@@ -8,6 +8,7 @@ import { ToastContext } from '../../../contexts/ToastProvider';
 import Cookies from 'js-cookie';
 import { StoreContext } from '../../../contexts/StoreProvider';
 import { validateLogin, validateRegister } from '../../../utils/validate';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function AuthModal({ open, onClose }) {
     const [tab, setTab] = useState(0);
@@ -33,10 +34,10 @@ function AuthModal({ open, onClose }) {
 
             setInputErrors({});
             const response = await authApi.login({ email, password });
-            
+
             if (response.data.success) {
                 const { token, refreshToken, email, roleId, phoneNumber, avatarPath, userId } = response.data;
-                
+
                 Cookies.set('token', token);
                 Cookies.set('refreshToken', refreshToken);
                 Cookies.set('email', email);
@@ -49,15 +50,15 @@ function AuthModal({ open, onClose }) {
                     avatarPath
                 };
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
-                
+
                 toast.success('Đăng nhập thành công');
                 onClose();
-            } 
+            }
         } catch (err) {
             console.error(err);
             setError('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
             setInputErrors({});
-        } 
+        }
     };
 
     const handleRegister = async (e) => {
@@ -79,7 +80,7 @@ function AuthModal({ open, onClose }) {
                 password,
                 phoneNumber,
             });
-            
+
             if (response.data.success) {
                 setTab(0);
                 setError('');
@@ -89,7 +90,7 @@ function AuthModal({ open, onClose }) {
             console.error(err);
             setError(err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
             setInputErrors({});
-        } 
+        }
     };
 
     const handleTabChange = (event, newValue) => {
@@ -113,17 +114,17 @@ function AuthModal({ open, onClose }) {
 
                     {tab === 0 && (
                         <form className="auth-form" onSubmit={handleLogin} noValidate>
-                            <FormInput 
-                                label="Email" 
-                                value={email} 
-                                onChange={e => setEmail(e.target.value)} 
+                            <FormInput
+                                label="Email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 error={inputErrors.email}
                             />
-                            <FormInput 
-                                label="Mật khẩu" 
-                                type="password" 
-                                value={password} 
-                                onChange={e => setPassword(e.target.value)} 
+                            <FormInput
+                                label="Mật khẩu"
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                                 error={inputErrors.password}
                             />
                             <Button type="submit" id="btn-style">ĐĂNG NHẬP</Button>
@@ -139,43 +140,91 @@ function AuthModal({ open, onClose }) {
                                 <span className="auth-divider-text">Hoặc đăng nhập với</span>
                                 <span></span>
                             </div>
-                            <button type="button" className="google-btn">
-                                <img src="https://images.icon-icons.com/2429/PNG/512/google_logo_icon_147282.png" alt="Google" className="google-icon" />
-                                Đăng nhập với Google
-                            </button>
+
+                            <GoogleOAuthProvider clientId="643990637416-5eu4q1ptjimm46k4v8aj3k86grjuiie9.apps.googleusercontent.com">
+                                <GoogleLogin
+                                    onSuccess={async (credentialResponse) => {
+                                        try {
+                                            console.log("Google Token Response:", credentialResponse);
+                                            if (!credentialResponse.credential) {
+                                                toast.error('Không nhận được token từ Google');
+                                                return;
+                                            }
+                                            
+                                            // Gửi token trực tiếp
+                                            const response = await authApi.googleLogin(credentialResponse.credential);
+
+                                            if (response.data.success) {
+                                                const { token, refreshToken, user } = response.data.data;
+                                                
+                                                // Save tokens
+                                                Cookies.set('token', token);
+                                                Cookies.set('refreshToken', refreshToken);
+                                                Cookies.set('email', user.email);
+                                                Cookies.set('userId', user.id);
+
+                                                // Save user info
+                                                const userInfo = {
+                                                    email: user.email,
+                                                    roleId: user.roleId,
+                                                    phoneNumber: user.phoneNumber,
+                                                    avatarPath: user.avatarPath
+                                                };
+                                                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+                                                toast.success('Đăng nhập thành công');
+                                                onClose();
+                                            }
+                                        } catch (err) {
+                                            console.error('Lỗi đăng nhập Google:', err);
+                                            console.error('Response data:', err.response?.data);
+                                            console.error('Response status:', err.response?.status);
+                                            console.error('Request data:', err.config?.data);
+                                            console.error('Full error:', err);
+                                            toast.error(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
+                                        }
+                                    }}
+                                    onError={(error) => {
+                                        console.error('Google login error:', error);
+                                        toast.error('Đăng nhập với Google thất bại');
+                                    }}
+                                />
+                            </GoogleOAuthProvider>
+
+                        
                         </form>
                     )}
 
                     {tab === 1 && (
                         <form className="auth-form" onSubmit={handleRegister} noValidate>
-                            <FormInput 
-                                label="Email" 
-                                value={email} 
-                                onChange={e => setEmail(e.target.value)} 
+                            <FormInput
+                                label="Email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 error={inputErrors.email}
                             />
-                            <FormInput 
-                                label="Số điện thoại" 
-                                value={phoneNumber} 
-                                onChange={e => setPhoneNumber(e.target.value)} 
+                            <FormInput
+                                label="Số điện thoại"
+                                value={phoneNumber}
+                                onChange={e => setPhoneNumber(e.target.value)}
                                 error={inputErrors.phoneNumber}
                             />
-                            <FormInput 
-                                label="Mật khẩu" 
-                                type="password" 
-                                value={password} 
-                                onChange={e => setPassword(e.target.value)} 
+                            <FormInput
+                                label="Mật khẩu"
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                                 error={inputErrors.password}
                             />
-                            <FormInput 
-                                label="Nhập lại mật khẩu" 
-                                type="password" 
-                                value={confirmPassword} 
-                                onChange={e => setConfirmPassword(e.target.value)} 
+                            <FormInput
+                                label="Nhập lại mật khẩu"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={e => setConfirmPassword(e.target.value)}
                                 error={inputErrors.confirmPassword}
                             />
                             <Button type="submit" id="btn-style">TIẾP TỤC</Button>
-                            
+
                             {error && (
                                 <Typography className="error-message">{error}</Typography>
                             )}

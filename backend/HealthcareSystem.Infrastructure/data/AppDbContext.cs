@@ -34,8 +34,6 @@ namespace Infrastructure.data {
 
         public virtual DbSet<Otprequest> Otprequests { get; set; }
 
-        public virtual DbSet<Payment> Payments { get; set; }
-
         public virtual DbSet<Question> Questions { get; set; }
 
         public virtual DbSet<ReportServiceDetail> ReportServiceDetails { get; set; }
@@ -172,7 +170,6 @@ namespace Infrastructure.data {
                 entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
                 entity.Property(e => e.TaxRate).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.TestServiceRecordId).HasColumnName("TestServiceRecordID");
                 entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
@@ -184,9 +181,6 @@ namespace Infrastructure.data {
                     .HasForeignKey(d => d.AppointmentId)
                     .HasConstraintName("FK__Invoice__Appoint__5441852A");
 
-                entity.HasOne(d => d.Payment).WithMany(p => p.Invoices)
-                    .HasForeignKey(d => d.PaymentId)
-                    .HasConstraintName("FK__Invoice__Payment__5629CD9C");
 
                 entity.HasOne(d => d.TestServiceRecord).WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.TestServiceRecordId)
@@ -222,8 +216,8 @@ namespace Infrastructure.data {
                 entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
                 entity.Property(e => e.Content).HasColumnType("text");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
-                entity.Property(e => e.Status).HasMaxLength(20);
-                entity.Property(e => e.Type).HasMaxLength(50);
+                entity.Property(e => e.IsRead).HasColumnName("IsRead");
+                entity.Property(e => e.Title).HasMaxLength(50);
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Notifications)
@@ -253,27 +247,6 @@ namespace Infrastructure.data {
                     .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
             });
 
-            modelBuilder.Entity<Payment>(entity =>
-            {
-                entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A58EBE0C8DD");
-
-                entity.ToTable("Payment");
-
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-                entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
-                entity.Property(e => e.BankCode)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-                entity.Property(e => e.PaidAt).HasColumnType("datetime");
-                entity.Property(e => e.PaymentMethod).HasMaxLength(50);
-                entity.Property(e => e.Status)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-                entity.Property(e => e.TransactionId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("TransactionID");
-            });
 
             modelBuilder.Entity<Question>(entity =>
             {
