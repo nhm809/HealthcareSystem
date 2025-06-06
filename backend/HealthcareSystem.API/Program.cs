@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 // Thêm CORS
