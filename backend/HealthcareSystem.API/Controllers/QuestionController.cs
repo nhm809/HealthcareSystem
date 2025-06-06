@@ -1,0 +1,76 @@
+
+using Microsoft.AspNetCore.Mvc;
+using Application.DTOs;
+using Application.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+
+[ApiController]
+[Route("api/question/")]
+public class QuestionController : ControllerBase
+{ 
+    private readonly IQuestionService _questionService;
+
+    public QuestionController(IQuestionService questionService)
+    {
+        _questionService = questionService;
+    }
+
+    [HttpGet("getAll")]
+    public async Task<ActionResult<List<QuestionDTO>>> GetAllQuestionsAsync()
+    {
+        var questions = await _questionService.GetAllQuestionsAsync();
+        if (questions == null || questions.Count == 0)
+        {
+            return NotFound("No questions found.");
+        }
+        return Ok(questions);
+    }
+
+    [HttpPost("add")]
+    public async Task<ActionResult<bool>> AddQuestionAsync([FromBody] QuestionDTO questionDto)
+    {
+        if (questionDto == null)
+        {
+            return BadRequest("Question data is required.");
+        }
+        var result = await _questionService.AddQuestionAsync(questionDto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while adding the question.");
+        }
+        return Ok(true);
+    }
+
+    [HttpPut("updateStatus/{questionId}")]
+    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId)
+    {
+        if (questionId <= 0)
+        {
+            return BadRequest("Invalid question ID.");
+        }
+        var result = await _questionService.UpdateQuestionStatusAsync(questionId);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while updating the question status.");
+        }
+        return Ok(true);
+    }
+
+    [HttpDelete("delete/{questionId}")]
+    public async Task<ActionResult<bool>> DeleteQuestionAsync(int questionId)
+    {
+        if (questionId <= 0)
+        {
+            return BadRequest("Invalid question ID.");
+        }
+        var result = await _questionService.DeleteQuestionAsync(questionId);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while deleting the question.");
+        }
+        return Ok(true);
+    }
+
+}
