@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
 
-namespace Domain.Entities
+using System;
+
+namespace Application.DTOs
 {
-
-    public partial class Question
+    public class QuestionDTO
     {
         public int QuestionId { get; set; }
 
@@ -24,10 +23,5 @@ namespace Domain.Entities
 
         public bool? IsAnswered { get; set; }
 
-        public virtual User? Consultant { get; set; }
-
-        public virtual User? Member { get; set; }
-
-        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 }

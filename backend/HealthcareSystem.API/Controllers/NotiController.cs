@@ -23,7 +23,7 @@ public class NotiControllter: ControllerBase
         try
         {
             var notifications = await _notiService.GetAllNotiAsync(userId);
-            return Ok(new { notifications });
+            return Ok(notifications);
         }
         catch (Exception e)
         {
@@ -46,7 +46,7 @@ public class NotiControllter: ControllerBase
         }
     }
 
-    [HttpGet("markAsRead/{notiId}")]
+    [HttpPut("markAsRead/{notiId}")]
     public async Task<IActionResult> MarkAsRead(int notiId)
     {
         try

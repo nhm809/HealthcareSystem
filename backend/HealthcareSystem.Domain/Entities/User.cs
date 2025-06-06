@@ -65,5 +65,6 @@ namespace Domain.Entities
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+
     }
 }
