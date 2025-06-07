@@ -1,4 +1,6 @@
-﻿--Role --=====================================================================================================================================================
+﻿use [HealthcareSystemDb]
+
+--Role --=====================================================================================================================================================
 INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('AD', 'Admin', N'Quản trị viên toàn hệ thống'),
 ('MG', 'Manager', N'Quản lý người dùng và dịch vụ'),
@@ -75,7 +77,7 @@ VALUES
 
 --Question --=====================================================================================================================================================
 INSERT INTO Question (
-    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status]
+    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered
 )
 VALUES
 (
@@ -86,7 +88,7 @@ VALUES
     NULL,
     '2024-05-01 09:15:00',
     4,
-    N'Đã trả lời'
+    1
 );
 
 --=====================================================================================================================================================
@@ -207,9 +209,7 @@ VALUES
 (3, N'Thông báo hệ thống', N'Hệ thống sẽ bảo trì lúc 23:00 đêm nay.', GETDATE(), 0),
 (3, N'Xác nhận email', N'Vui lòng xác nhận email để tiếp tục sử dụng dịch vụ.', GETDATE(), 0),
 (4, N'Cập nhật hồ sơ', N'Hồ sơ của bạn đã được cập nhật thành công.', GETDATE(), 1),
-(5, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', GETDATE(), 0),
-(6, N'Mật khẩu đã thay đổi', N'Bạn vừa thay đổi mật khẩu thành công.', GETDATE(), 1);
-
+(5, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', GETDATE(), 0)
 
 
 --Còn 6 bảng -=====================================================================================================================================================
