@@ -236,8 +236,8 @@ namespace Infrastructure.data {
                 entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
                 entity.Property(e => e.Content).HasColumnType("text");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
-                entity.Property(e => e.Status).HasMaxLength(20);
-                entity.Property(e => e.Type).HasMaxLength(50);
+                entity.Property(e => e.IsRead).HasColumnName("IsRead");
+                entity.Property(e => e.Title).HasMaxLength(50);
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User).WithMany(p => p.Notifications)
@@ -381,8 +381,8 @@ namespace Infrastructure.data {
                 entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
                 entity.Property(e => e.StaffId).HasColumnName("StaffID");
                 entity.Property(e => e.Status)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                    .HasMaxLength(100)
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.Member).WithMany(p => p.TestServiceRecordMembers)
                     .HasForeignKey(d => d.MemberId)

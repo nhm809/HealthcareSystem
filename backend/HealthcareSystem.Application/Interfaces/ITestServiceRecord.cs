@@ -8,5 +8,8 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<TestServiceRecordDTO>> GetTestServiceRecordsByMemberIdAsync(int MemberId);
         Task<TestServiceRecordDetailDTO?> GetTestServiceRecordByIdAsync(int ServiceId, int MemberId);
+
+        //Book a test service record for a member
+        Task<int> BookTestServiceAsync(BookTestServiceRecordDTO request);
     }
 }

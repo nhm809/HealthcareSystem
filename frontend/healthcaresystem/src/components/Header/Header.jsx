@@ -4,11 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Avatar, Space } from 'antd';
+import { Avatar, Space, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 function Header() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,16 +31,37 @@ function Header() {
     Cookies.remove('email');
     Cookies.remove('userid');
     Cookies.remove('token');
-    window.location.reload();
+    Cookies.remove('refreshToken');
+    localStorage.removeItem('userInfo');
+    navigate('/');
   };
+
+  const handleViewProfile = () => {
+    navigate('/profile');
+  };
+
+  const items = [
+    {
+      key: '1',
+      label: 'Xem Profile',
+      icon: <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />,
+      onClick: handleViewProfile
+    },
+    {
+      key: '2',
+      label: 'Đăng xuất',
+      icon: <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />,
+      onClick: handleLogout
+    },
+  ];
 
   return (
     <>
       <div className="header">
-          <span>Hotline:
-               <FontAwesomeIcon icon={faPhone} id="phone-icon"/>
-               <strong>1900 3366</strong>
-          </span>
+        <span>Hotline:
+          <FontAwesomeIcon icon={faPhone} id="phone-icon" />
+          <strong>1900 3366</strong>
+        </span>
         <div className="auth-buttons">
           {email ? (
             <div className="user-info">
@@ -46,25 +69,18 @@ function Header() {
                 {email}
               </span>
 
-              <div className="user-dropdown">
-                <div className="user-avatar">
-                  <Avatar size="large" icon={<UserOutlined />} />
-                </div>
-
-              <div className="user-dropdown-content">
-                <button onClick={handleLogout} className="logout-button">
-                  <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />
-                  Đăng xuất
-                </button>
-              </div>
+              <Dropdown
+                menu={{ items }}
+                placement="bottomRight"
+                trigger={['click']}
+              >
+                <Avatar size="large" icon={<UserOutlined />} style={{ cursor: 'pointer' }} />
+              </Dropdown>
             </div>
-            </div>
-
-            
           ) : (
             <>
-              <a className="text-header-lg" href="#" onClick={() =>{handleOpenModal(0)}}>Đăng nhập</a>/
-              <a className="text-header-lg" href="#" onClick={() =>{handleOpenModal(1)}}> Đăng ký</a>
+              <a className="text-header-lg" href="#" onClick={() => { handleOpenModal(0) }}>Đăng nhập</a>/
+              <a className="text-header-lg" href="#" onClick={() => { handleOpenModal(1) }}> Đăng ký</a>
             </>
           )}
         </div>
@@ -72,13 +88,21 @@ function Header() {
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
 
       <div className="top-bar">
-          <span className="logo">HealthCare App</span>
-        
+        <span className="logo"></span>
+
         <div className="menu">
-          <button>
-               Dịch vụ
-               <FontAwesomeIcon icon={faAngleDown} id="service-icon"/> 
-          </button>
+          <div className="service-dropdown">
+            <button className="service-dropdown-button">
+              Dịch vụ
+              <FontAwesomeIcon icon={faAngleDown} id="service-icon" />
+            </button>
+
+            <div className="service-dropdown-content">
+              <button className="stis-button">Xét Nghiệm STIs</button>
+              <button>Tư vấn Trực Tuyến</button>
+            </div>
+          </div>
+
           <button>Hỏi đáp bác sĩ</button>
           <button>Theo dõi chu kỳ sinh sản</button>
           <button onClick={() => navigate('/blog')}>Blog</button>
