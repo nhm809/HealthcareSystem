@@ -54,7 +54,11 @@ namespace Infrastructure.Services
 
             var random = new Random();
 
+            if (!consultants.Any())
+                return false; 
+
             var luckyPerson = consultants[random.Next(consultants.Count)];
+
 
             var question = new Question
             {
