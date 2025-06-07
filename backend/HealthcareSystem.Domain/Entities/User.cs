@@ -14,7 +14,7 @@ namespace Domain.Entities
 
         public string? FullName { get; set; } = null!;
 
-        public string PasswordHash { get; set; } = null!;
+        public string? PasswordHash { get; set; } = null!;
 
         public string Email { get; set; } = null!;
 
@@ -65,5 +65,6 @@ namespace Domain.Entities
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+
     }
 }
