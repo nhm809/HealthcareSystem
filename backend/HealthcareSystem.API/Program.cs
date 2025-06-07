@@ -9,12 +9,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IGoogleLoginService, GoogleLoginService>();
 builder.Services.AddScoped<IService, ServiceService>();
