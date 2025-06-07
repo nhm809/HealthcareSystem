@@ -145,7 +145,13 @@ function AuthModal({ open, onClose }) {
                                 <GoogleLogin
                                     onSuccess={async (credentialResponse) => {
                                         try {
-                                            console.log("Google Token:", credentialResponse.credential);
+                                            console.log("Google Token Response:", credentialResponse);
+                                            if (!credentialResponse.credential) {
+                                                toast.error('Không nhận được token từ Google');
+                                                return;
+                                            }
+                                            
+                                            // Gửi token trực tiếp
                                             const response = await authApi.googleLogin(credentialResponse.credential);
 
                                             if (response.data.success) {
@@ -170,11 +176,16 @@ function AuthModal({ open, onClose }) {
                                                 onClose();
                                             }
                                         } catch (err) {
-                                            console.error(err);
-                                            toast.error('Đăng nhập thất bại. Vui lòng thử lại.');
+                                            console.error('Lỗi đăng nhập Google:', err);
+                                            console.error('Response data:', err.response?.data);
+                                            console.error('Response status:', err.response?.status);
+                                            console.error('Request data:', err.config?.data);
+                                            console.error('Full error:', err);
+                                            toast.error(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
                                         }
                                     }}
-                                    onError={() => {
+                                    onError={(error) => {
+                                        console.error('Google login error:', error);
                                         toast.error('Đăng nhập với Google thất bại');
                                     }}
                                 />

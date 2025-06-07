@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250602152031_Database")]
+    partial class Database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,11 +231,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("varchar(50)");
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int")
+                        .HasColumnName("PaymentID");
 
                     b.Property<int?>("Status")
                         .HasColumnType("int");
@@ -247,9 +248,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<decimal?>("TotalAmount")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<string>("TransactionId")
-                        .HasColumnType("varchar(100)");
-
                     b.Property<string>("UnitPrice")
                         .HasMaxLength(15)
                         .IsUnicode(false)
@@ -259,6 +257,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasName("PK__Invoice__D796AAD50B806764");
 
                     b.HasIndex("AppointmentId");
+
+                    b.HasIndex("PaymentId");
 
                     b.HasIndex("TestServiceRecordId");
 
@@ -310,14 +310,14 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsRead")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsRead");
-
                     b.Property<DateTime?>("SendTime")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Type")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -373,6 +373,47 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("OTPRequest", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PaymentID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("BankCode")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("TransactionId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("TransactionID");
+
+                    b.HasKey("PaymentId")
+                        .HasName("PK__Payment__9B556A58EBE0C8DD");
+
+                    b.ToTable("Payment", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
                     b.Property<int>("QuestionId")
@@ -393,10 +434,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsAnswered")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsAnswered");
-
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
@@ -404,6 +441,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Specialty")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -675,6 +716,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
@@ -848,12 +890,19 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasForeignKey("AppointmentId")
                         .HasConstraintName("FK__Invoice__Appoint__5441852A");
 
+                    b.HasOne("Domain.Entities.Payment", "Payment")
+                        .WithMany("Invoices")
+                        .HasForeignKey("PaymentId")
+                        .HasConstraintName("FK__Invoice__Payment__5629CD9C");
+
                     b.HasOne("Domain.Entities.TestServiceRecord", "TestServiceRecord")
                         .WithMany("Invoices")
                         .HasForeignKey("TestServiceRecordId")
                         .HasConstraintName("FK__Invoice__TestSer__5535A963");
 
                     b.Navigation("Appointment");
+
+                    b.Navigation("Payment");
 
                     b.Navigation("TestServiceRecord");
                 });
@@ -1003,6 +1052,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("BlogImages");
 
                     b.Navigation("BlogViews");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
+                {
+                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("Domain.Entities.Question", b =>
