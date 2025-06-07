@@ -74,10 +74,6 @@ namespace Infrastructure.Services
             {
                 user.Address = dto.Address;
             }
-            if (dto.Avatar != null)
-            {
-                user.Avatar = dto.Avatar;
-            }
 
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
@@ -94,18 +90,6 @@ namespace Infrastructure.Services
             }
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             _context.Users.Update(user);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> DeleteUser(int userId)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserId == userId);
-            if (user == null)
-            {
-                return false; // User not found
-            }
-            _context.Users.Remove(user);
             return await _context.SaveChangesAsync() > 0;
         }
 

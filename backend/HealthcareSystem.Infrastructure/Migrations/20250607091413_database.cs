@@ -6,29 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Database : Migration
+    public partial class database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Payment",
-                columns: table => new
-                {
-                    PaymentID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    TransactionID = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    BankCode = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
-                    PaidAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Status = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__Payment__9B556A58EBE0C8DD", x => x.PaymentID);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
@@ -80,7 +62,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    PasswordHash = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
                     Email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: true),
                     DoB = table.Column<DateOnly>(type: "date", nullable: true),
@@ -90,7 +72,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     Avatar = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: true),
                     RoleID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,10 +172,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     NotificationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<int>(type: "int", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Content = table.Column<string>(type: "text", nullable: true),
                     SendTime = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                    IsRead = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -240,7 +223,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     AttachmentPath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     SubmitDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     ConsultantID = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                    IsAnswered = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -472,11 +455,13 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     AppointmentID = table.Column<int>(type: "int", nullable: true),
                     TestServiceRecordID = table.Column<int>(type: "int", nullable: true),
                     TotalAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    PaymentMethod = table.Column<string>(type: "varchar(50)", nullable: true),
+                    TransactionId = table.Column<string>(type: "varchar(100)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    PaymentID = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true),
                     TaxRate = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    UnitPrice = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: true)
+                    UnitPrice = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: true),
+                    PaidAt = table.Column<DateTime>(type: "datetime", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -486,11 +471,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         column: x => x.AppointmentID,
                         principalTable: "Appointment",
                         principalColumn: "AppointmentID");
-                    table.ForeignKey(
-                        name: "FK__Invoice__Payment__5629CD9C",
-                        column: x => x.PaymentID,
-                        principalTable: "Payment",
-                        principalColumn: "PaymentID");
                     table.ForeignKey(
                         name: "FK__Invoice__TestSer__5535A963",
                         column: x => x.TestServiceRecordID,
@@ -547,11 +527,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "IX_Invoice_AppointmentID",
                 table: "Invoice",
                 column: "AppointmentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Invoice_PaymentID",
-                table: "Invoice",
-                column: "PaymentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_TestServiceRecordID",
@@ -670,9 +645,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Appointment");
-
-            migrationBuilder.DropTable(
-                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "TestServiceRecord");
