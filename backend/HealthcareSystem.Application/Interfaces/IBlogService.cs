@@ -20,5 +20,10 @@ namespace Application.Interfaces
 
         // Lấy blog theo chủ đề
         Task<IEnumerable<GetBlogDTO>> GetBlogsByTopicAsync(string topic);
+        // Lấy blog theo Title
+        Task<GetBlogContentDTO?> GetBlogByTitleAsync(string title);
+        
+
+
     }
 }
