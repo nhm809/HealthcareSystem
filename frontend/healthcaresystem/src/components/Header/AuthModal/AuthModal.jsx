@@ -145,6 +145,7 @@ function AuthModal({ open, onClose }) {
                                 <GoogleLogin
                                     onSuccess={async (credentialResponse) => {
                                         try {
+                                            console.log("Google Token:", credentialResponse.credential);
                                             console.log("Google Token Response:", credentialResponse);
                                             if (!credentialResponse.credential) {
                                                 toast.error('Không nhận được token từ Google');
@@ -176,6 +177,11 @@ function AuthModal({ open, onClose }) {
                                                 onClose();
                                             }
                                         } catch (err) {
+                                            console.error(err);
+                                            toast.error('Đăng nhập thất bại. Vui lòng thử lại.');
+                                        }
+                                    }}
+                                    onError={() => {
                                             console.error('Lỗi đăng nhập Google:', err);
                                             console.error('Response data:', err.response?.data);
                                             console.error('Response status:', err.response?.status);

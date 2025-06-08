@@ -62,18 +62,4 @@ public class UserController : ControllerBase
         }
         return Ok(result);
     }
-    [HttpDelete("delete/{userId}")]
-    public async Task<IActionResult> DeleteUser(int userId)
-    {
-        if (userId <= 0)
-        {
-            return BadRequest("User ID cannot be null or empty.");
-        }
-        var result = await _userService.DeleteUser(userId);
-        if (!result)
-        {
-            return NotFound($"User with ID {userId} not found.");
-        }
-        return Ok(result);
-    }
 }
