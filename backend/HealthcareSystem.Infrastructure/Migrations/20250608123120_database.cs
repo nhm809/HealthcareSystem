@@ -222,7 +222,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     AttachmentPath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     SubmitDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     ConsultantID = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                    IsAnswered = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
