@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HealthcareSystem.Infrastructure.Migrations
 {
-    public partial class AddInitialSchema : Migration
+    /// <inheritdoc />
+    public partial class database : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -71,7 +73,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     RoleID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
