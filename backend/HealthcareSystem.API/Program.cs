@@ -44,6 +44,18 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Healthcare API", Version = "v1" });
 });
 
+// Thêm cấu hình CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -70,8 +82,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
 // Áp dụng CORS
-app.UseCors("AllowFrontend");
+// Đặt UseCors trước UseAuthorization
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
