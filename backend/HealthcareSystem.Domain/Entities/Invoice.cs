@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities;
 
 namespace Domain.Entities {
-    public class Invoice
+    public partial class Invoice
     {
         public int InvoiceId { get; set; }
 

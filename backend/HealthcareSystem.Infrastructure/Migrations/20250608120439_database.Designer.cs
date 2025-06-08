@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250604064921_database")]
+    [Migration("20250608120439_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -396,6 +396,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsAnswered")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsAnswered");
+
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
@@ -403,10 +407,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Specialty")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -676,6 +676,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(100)
