@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Application.DTOs;
 using Domain.Entities;
-using Infrastructure.Models;
+
 namespace HealthcareSystem.Infrastructure.Services
 {
     public class PayPalService : IPayPalService

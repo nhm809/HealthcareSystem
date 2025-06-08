@@ -7,13 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-
+using System.Net.Http.Headers;
+using HealthcareSystem.Application.Interfaces;
+using HealthcareSystem.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add PayPal HTTP client
+builder.Services.AddHttpClient("PayPalClient", client =>
+{
+    var baseUrl = builder.Configuration["PayPal:BaseUrl"] ?? "https://api-m.sandbox.paypal.com";
+    client.BaseAddress = new Uri(baseUrl);
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
 
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<INotiService, NotiService>();
@@ -24,6 +34,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
+builder.Services.AddScoped<IPayPalService, PayPalService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 // Thêm CORS

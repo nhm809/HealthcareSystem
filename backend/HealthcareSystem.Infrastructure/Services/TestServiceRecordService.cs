@@ -33,8 +33,27 @@ namespace Infrastructure.Services
 
         public async Task<TestServiceRecordDetailDTO?> GetTestServiceRecordByIdAsync(int ServiceId, int MemberId)
         {
+            // const int FIXED_SERVICE_ID = 1; // Fix cứng serviceId là 1 (Xét nghiệm tổng quát)
+            
             var record = await _context.TestServiceRecords
                 .Include(r => r.Staff)
+                .Select(r => new
+                {
+                    r.TestServiceRecordId,
+                    r.ServiceId,
+                    r.MemberId,
+                    r.Result,
+                    r.RecordDate,
+                    r.Notes,
+                    r.Status,
+                    r.StaffId,
+                    Staff = r.Staff == null ? null : new
+                    {
+                        r.Staff.FullName,
+                        r.Staff.Email,
+                        r.Staff.Avatar
+                    }
+                })
                 .FirstOrDefaultAsync(r => r.ServiceId == ServiceId && r.MemberId == MemberId);
 
             if (record == null)
@@ -52,7 +71,6 @@ namespace Infrastructure.Services
                .Select(s => s.Name)
                .FirstOrDefaultAsync();
 
-
             return new TestServiceRecordDetailDTO
             {
                 TestServiceRecordId = record.TestServiceRecordId,
@@ -61,17 +79,15 @@ namespace Infrastructure.Services
                 RecordDate = record.RecordDate,
                 Notes = record.Notes,
                 Status = record.Status,
-
-                Staff = new StaffDTO
+                Staff = record.Staff == null ? null : new StaffDTO
                 {
-                    StaffId = record.StaffId,
+                    StaffId = record.StaffId ?? 0,
                     FullName = record.Staff.FullName,
                     Email = record.Staff.Email,
                     Avatar = record.Staff.Avatar,
                     SpecialtyName = specialtyName
                 }
             };
-
         }
 
 
@@ -86,31 +102,20 @@ namespace Infrastructure.Services
             if (request.Dob > DateTime.Now)
                 throw new ArgumentException("Ngày sinh không được là ngày trong tương lai.");
 
-            //if (!new[] { "Male", "Female", "Other" }.Contains(request.Gender))
-            //    throw new ArgumentException("Giới tính không hợp lệ.");
-
             if (!Regex.IsMatch(request.PhoneNumber, @"^0\d{9}$"))
                 throw new ArgumentException("Số điện thoại không hợp lệ.");
 
-            var service = await _context.Services.FindAsync(request.ServiceId);
-            if (service == null)
-                throw new ArgumentException("Dịch vụ không tồn tại.");
-
-            if (request.MemberId.HasValue)//Fe gửi MemberId = 0 nếu không đăng nhập nha
-            {
-                var user = await _context.Users.FindAsync(request.MemberId);
-                if (user == null)
-                    throw new ArgumentException("Người dùng không tồn tại.");
-            }
+            // Fix cứng serviceId = 1 là Xét nghiệm tổng quát
+            const int FIXED_SERVICE_ID = 1;
 
             var testServiceRecord = new TestServiceRecord
             {
-                ServiceId = request.ServiceId,
+                ServiceId = FIXED_SERVICE_ID,
                 FullNameOfMember = request.FullName,
                 Dob = DateOnly.FromDateTime(request.Dob),
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
-                MemberId = request.MemberId,
+                MemberId = request.UserId, // UserId do FE quản lý
                 Status = "Dịch vụ đang chờ thanh toán",
                 RecordDate = DateTime.UtcNow.AddHours(7), // UTC+7 cho Việt Nam
                 Result = null,
