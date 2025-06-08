@@ -50,8 +50,8 @@ function BlogPage() {
       try {
         const url =
           selectedTopic === 'Tất cả'
-            ? 'http://localhost:5011/api/blogs'
-            : `http://localhost:5011/api/blogs/topic/${encodeURIComponent(selectedTopic)}`;
+            ? 'http://localhost:5173/api/blogs'
+            : `http://localhost:5173/api/blogs/topic/${encodeURIComponent(selectedTopic)}`;
         const res = await axios.get(url);
         setBlogs(res.data);
       } catch (error) {
@@ -68,7 +68,7 @@ function BlogPage() {
   useEffect(() => {
     const fetchAllCounts = async () => {
       try {
-        const res = await axios.get('http://localhost:5011/api/blogs');
+        const res = await axios.get('http://localhost:5173/api/blogs');
         const counts = res.data.reduce((acc, blog) => {
           acc[blog.topic] = (acc[blog.topic] || 0) + 1;
           return acc;
