@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;  
+using Application.Interfaces;
 using Application.Validators;
 using FluentValidation;
 using HealthcareSystem.Application.Interfaces;
@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // Cấu hình logging
 builder.Services.AddLogging(logging =>
 {
@@ -24,26 +25,41 @@ builder.Services.AddLogging(logging =>
     logging.SetMinimumLevel(LogLevel.Information);
 });
 
-// Thêm controllers
-
+// Đăng ký các service
 builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<INotiService, NotiService>();
 builder.Services.AddScoped<IGoogleLoginService, GoogleLoginService>();
 builder.Services.AddScoped<IService, ServiceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IManageUserService, ManageUserService>();
+
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
-
-
 builder.Services.AddLogging();
+
+// Thêm CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Healthcare API", Version = "v1" });
 });
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -57,12 +73,13 @@ builder.Services.AddAuthentication(options =>
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
 
-// add HttpClientto call PayPal payment API
+// add HttpClient to call PayPal payment API
 builder.Services.AddHttpClient("PayPalClient", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["PayPal:BaseUrl"]);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
+
 var app = builder.Build();
 
 // Configure middleware
@@ -74,13 +91,16 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Healthcare API v1");
     });
 }
+
 app.UseRouting();
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
 
-app.Run();  
+app.Run();
+
 
 
 // Thêm cấu hình PayPal

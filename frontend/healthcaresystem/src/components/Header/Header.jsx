@@ -88,7 +88,7 @@ function Header() {
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
 
       <div className="top-bar">
-        <span className="logo"></span>
+        <span className="logo" onClick={() => navigate('/')}>hello</span>
 
         <div className="menu">
           <div className="service-dropdown">
@@ -98,8 +98,8 @@ function Header() {
             </button>
 
             <div className="service-dropdown-content">
-              <button className="stis-button">Xét Nghiệm STIs</button>
-              <button>Tư vấn Trực Tuyến</button>
+              <button className="stis-button" onClick={(() => navigate('/test-sti'))}>Xét Nghiệm STIs</button>
+              <button onClick={() => navigate('/appointment')}>Tư vấn Trực Tuyến</button>
             </div>
           </div>
 

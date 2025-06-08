@@ -15,7 +15,7 @@ namespace Domain.Entities
 
         public string? FullName { get; set; } = null!;
 
-        public string PasswordHash { get; set; } = null!;
+        public string? PasswordHash { get; set; } = null!;
 
         public string Email { get; set; } = null!;
 
@@ -36,6 +36,8 @@ namespace Domain.Entities
         public string? RefreshToken { get; set; }
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 

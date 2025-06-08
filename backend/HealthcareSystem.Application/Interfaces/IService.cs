@@ -9,5 +9,6 @@ namespace Application.Interfaces
         Task<ServiceDetailDTO?> GetServiceByIdAsync(int serviceId);
 
 
+
     }
 }
