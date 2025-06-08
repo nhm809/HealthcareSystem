@@ -8,8 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
   </ItemGroup>
+    
+
 	<ItemGroup>
 		<ProjectReference Include="..\HealthcareSystem.Domain\HealthcareSystem.Domain.csproj" />
 	</ItemGroup>
+
 </Project>

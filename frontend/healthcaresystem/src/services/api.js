@@ -12,18 +12,18 @@ const api = axios.create(
 );
 
 export const authApi = {
-     sendOtpReset: (email) => api.post('/sendotp-reset', {email}),
-     sendOtpRegister: (email) => api.post('/sendotp-register', {email}),
-     login: (data) => api.post('/login', data),
-     register: (data) => api.post('/register', data),
-     googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
-     getUserInfo: () => api.get('/user-info'),
-     refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
-     updateUserInfo: (userId, formData) => api.put(`/user-info/${userId}`, formData, {
-          headers: {
-               'Content-Type': 'multipart/form-data',
-          },
-     }),
+    sendOtpReset: (email) => api.post('/sendotp-reset', { email }),
+    sendOtpRegister: (email) => api.post('/sendotp-register', { email }),
+    login: (data) => api.post('/login', data),
+    register: (data) => api.post('/register', data),
+    googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
+    getUserInfo: () => api.get('/user-info'),
+    refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
+    updateUserInfo: (userId, formData) => api.put(`/user-info/${userId}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    }),
 };
      
 export const getInfo = async (userId) => {

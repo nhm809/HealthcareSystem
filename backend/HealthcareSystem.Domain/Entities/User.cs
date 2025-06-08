@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HealthcareSystem.Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Entities
@@ -67,6 +68,9 @@ namespace Domain.Entities
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+
+        //thêm tay
+        public virtual ICollection<UserSpecialty> UserSpecialties { get; set; } = new List<UserSpecialty>();
 
     }
 }
