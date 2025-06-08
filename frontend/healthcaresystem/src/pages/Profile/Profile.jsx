@@ -16,11 +16,17 @@ function Profile() {
 
      useEffect(() => {
           const userId = Cookies.get('userId');
+
           const fetchUserInfo = async () => {
                try {
                     setLoading(true);
-                    const response = await getInfo(userId);
-                    setUser(response.data);
+                    if (userId.length < 100000) {
+                         const response = await getInfo(userId);
+                         setUser(response.data);
+                    } else {
+                         const response = await getInfoGoogle(userId); // Doi API cua thang nay
+                         setUser(response.data);
+                    }
                     setError(null);
                } catch (err) {
                     console.error('Error fetching user info:', err);
@@ -28,7 +34,7 @@ function Profile() {
                } finally {
                     setLoading(false);
                }
-          };
+          }
 
           if (userId) {
                fetchUserInfo();
@@ -36,6 +42,8 @@ function Profile() {
                setError('User ID not found');
                setLoading(false);
           }
+
+
      }, []);
 
      const showModal = () => {
@@ -58,7 +66,7 @@ function Profile() {
           try {
                setUploading(true);
                const formData = new FormData();
-               
+
                // Add user info to formData
                Object.keys(values).forEach(key => {
                     formData.append(key, values[key]);
@@ -71,7 +79,7 @@ function Profile() {
 
                const userId = Cookies.get('userId');
                const response = await authApi.updateUserInfo(userId, formData);
-               
+
                setUser(response.data);
                message.success('Cập nhật thông tin thành công!');
                setIsModalVisible(false);
@@ -123,10 +131,10 @@ function Profile() {
                <Card style={{ maxWidth: 1000, margin: '20px auto', padding: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                          <div>
-                              <Avatar 
-                                   size={100} 
-                                   src={user.avatar} 
-                                   icon={<UserOutlined />} 
+                              <Avatar
+                                   size={100}
+                                   src={user.avatar}
+                                   icon={<UserOutlined />}
                               />
                          </div>
                          <div>

@@ -12,22 +12,21 @@ const api = axios.create(
 );
 
 export const authApi = {
-    sendOtpReset: (email) => api.post('/sendotp-reset', { email }),
-    sendOtpRegister: (email) => api.post('/sendotp-register', { email }),
-    login: (data) => api.post('/login', data),
-    register: (data) => api.post('/register', data),
-    googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
-    getUserInfo: () => api.get('/user-info'),
-    refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
-    updateUserInfo: (userId, formData) => api.put(`/user-info/${userId}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
+     sendOtpReset: (email) => api.post('/sendotp-reset', {email}),
+     sendOtpRegister: (email) => api.post('/sendotp-register', {email}),
+     login: (data) => api.post('/login', data),
+     register: (data) => api.post('/register', data),
+     googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
+     refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
+     updateUserInfo: (userId, formData) => api.put(`/user-info/${userId}`, formData, {
+          headers: {
+               'Content-Type': 'multipart/form-data',
+          },
+     }),
 };
      
 export const getInfo = async (userId) => {
-     return await api.get(`/user-info/${userId}`)
+     return await api.get(`/user/get/${userId}`)
 }
 
 // Request interceptor
@@ -49,11 +48,9 @@ api.interceptors.response.use(
      (response) => response,
      async (error) => {
           const originalRequest = error.config;
-
           // If error is 401 and we haven't tried to refresh token yet
           if (error.response?.status === 401 && !originalRequest._retry) {
                originalRequest._retry = true;
-
                try {
                     const refreshToken = Cookies.get('refreshToken');
                     if (!refreshToken) {
@@ -63,18 +60,14 @@ api.interceptors.response.use(
                          Cookies.remove('refreshToken');
                          return Promise.reject(error);
                     }
-
                     // Try to refresh token
                     const response = await authApi.refreshToken(refreshToken);
                     const { token, refreshToken: newRefreshToken } = response.data;
-
                     // Update tokens
                     Cookies.set('token', token);
                     Cookies.set('refreshToken', newRefreshToken);
-
                     // Update authorization header
                     originalRequest.headers.Authorization = `Bearer ${token}`;
-
                     // Retry the original request
                     return api(originalRequest);
                } catch (refreshError) {
@@ -85,7 +78,6 @@ api.interceptors.response.use(
                     return Promise.reject(refreshError);
                }
           }
-
           return Promise.reject(error);
      }
 );
