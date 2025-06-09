@@ -99,18 +99,15 @@
 }
 
 .auth-modal-2col {
-  display: flex;
-  flex-direction: row;
-  width: 800px;
-  max-width: 95vw;
-  max-height: 90vh;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 24px rgba(0,0,0,0.1);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 900px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
   overflow: hidden;
 }
 
@@ -236,4 +233,50 @@
   text-decoration: none;
   color: #007bff;
   text-align: right;
+  cursor: pointer;
+}
+
+.forgot-password-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.forgot-password-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.forgot-password-container .auth-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.forgot-password-container .auth-form a {
+    display: block;
+    justify-content: flex-start;
+    margin-top: 20px;
+    color: #666;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-container .auth-form a:hover {
+    color: #333;
+}
+
+.forgot-password-container .error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.forgot-password-container .auth-form button[type="submit"] {
+    width: 100%;
+    /* margin-top: 20px; */
 }
