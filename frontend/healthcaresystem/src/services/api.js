@@ -18,9 +18,9 @@ export const authApi = {
      register: (data) => api.post('/register', data),
      googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
      refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
-     updateUserInfo: (userId, formData) => api.put(`/user-info/${userId}`, formData, {
+     updateUserInfo: (userId, data) => api.put(`/user/update/${userId}`, data, {
           headers: {
-               'Content-Type': 'multipart/form-data',
+               'Content-Type': 'application/json',
           },
      }),
 };
