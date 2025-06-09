@@ -112,7 +112,7 @@ namespace Infrastructure.Services
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 MemberId = request.UserId, // UserId do FE quản lý
-                Status = "Đang thanh toán",
+                Status = "Ðang thanh toán",
                 RecordDate = DateTime.UtcNow.AddHours(7), // UTC+7 cho Việt Nam
                 Result = "",
                 StaffId = null, 

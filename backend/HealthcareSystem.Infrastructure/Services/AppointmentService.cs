@@ -30,7 +30,7 @@ namespace Infrastructure.Services
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
                 MeetLink = dto.MeetLink,
-                Status = "Đã đặt"   // giá trị mặc định
+                Status = "Ðang thanh toán"   // giá trị mặc định
             };
 
             await _context.Appointments.AddAsync(entity);
