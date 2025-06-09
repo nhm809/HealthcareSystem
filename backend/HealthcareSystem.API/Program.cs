@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-
+using System.Net.Http.Headers;
+using HealthcareSystem.Application.Interfaces;
+using HealthcareSystem.Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +18,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ITestServiceRecordService, TestServiceRecordService>();
+// Add HttpClient configuration
+builder.Services.AddHttpClient("PayPalClient", client =>
+{
+    client.BaseAddress = new Uri("https://api-m.sandbox.paypal.com");
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
+builder.Services.AddScoped<IPayPalService, PayPalService>();
 builder.Services.AddScoped<IBlogManageService, BlogManageService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
