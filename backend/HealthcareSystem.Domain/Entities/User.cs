@@ -68,5 +68,6 @@ namespace Domain.Entities
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
 
+
     }
 }
