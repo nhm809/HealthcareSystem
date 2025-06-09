@@ -31,7 +31,7 @@ builder.Services.AddScoped<IReproductiveCycleService, ReproductiveCycleService>(
 builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
 builder.Services.AddScoped<IConsultantService, ConsultantService>();
-builder.Services.AddScoped<ITestServiceRecordService, TestServiceRecordService>();
+builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
 builder.Services.AddScoped<IBlogManageService, BlogManageService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
