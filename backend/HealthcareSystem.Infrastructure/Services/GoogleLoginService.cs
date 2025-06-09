@@ -56,12 +56,15 @@ namespace Infrastructure.Services
                     await _context.SaveChangesAsync();
                 }
 
+                var userId = user.UserId;
+
                 return new GoogleLoginDTO
                 {
-                    Sub = payload.Subject,
-                    FullName = payload.Name,
-                    Picture = payload.Picture,
-                    Email = payload.Email,
+                    UserId = userId,
+                    Sub = Sub,
+                    FullName = user.FullName,
+                    Picture = user.Avatar,
+                    Email = user.Email,
                     Email_verified = payload.EmailVerified,
                     Locale = payload.Locale
                 };

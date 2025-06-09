@@ -36,6 +36,8 @@ namespace Domain.Entities
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
+        public bool IsActive { get; set; } = true;
+
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 
         public virtual ICollection<Appointment> AppointmentMembers { get; set; } = new List<Appointment>();
@@ -65,6 +67,7 @@ namespace Domain.Entities
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
+
 
     }
 }

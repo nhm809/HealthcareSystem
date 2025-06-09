@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Avatar, Space, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { icon } from '@fortawesome/fontawesome-svg-core';
 
 function Header() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -88,7 +87,7 @@ function Header() {
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
 
       <div className="top-bar">
-        <span className="logo"></span>
+        <span className="logo" onClick={() => navigate('/')}>hello</span>
 
         <div className="menu">
           <div className="service-dropdown">

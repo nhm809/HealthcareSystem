@@ -94,5 +94,31 @@ namespace Api.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("title/{title}")]
+        public async Task<ActionResult<GetBlogContentDTO>> GetBlogByTitle(string title)
+{
+    try
+    {
+        var blog = await _blogService.GetBlogByTitleAsync(title);
+
+        if (blog == null)
+        {
+            return NotFound();
+        }
+
+        // Giả sử lấy MemberId = 1 để demo
+        int memberId = 1;
+        await _blogService.AddBlogViewAsync(blog.BlogID, memberId);
+
+        return Ok(blog);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Internal server error: {ex.Message}");
+    }
+}
+        
+
+
     }
 }

@@ -1,0 +1,181 @@
+.test-introduce {
+     display: flex;
+     gap: 40px;
+     align-items: flex-start;
+     padding: 20px 0;
+}
+
+.test-introduce-left {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+     text-align: left;
+}
+
+.test-title {
+     font-size: 2.2em;
+     font-weight: bold;
+     color: #54AA7F;
+     margin-bottom: 10px;
+     text-align: left;
+}
+
+.test-introduce p {
+     margin: 0;
+     line-height: 1.6;
+     color: #555;
+     text-align: left;
+}
+
+.test-introduce li {
+     list-style: none;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     color: #333;
+     font-size: 1.1em;
+     text-align: left;
+}
+
+.tick {
+     color: #fff;
+     font-size: 1.2em;
+     background-color: #54AA7F;border-radius: 50%;
+     padding: 5px;
+}
+
+.book-test-btn {
+     margin-top: 20px;
+     background-color: #54AA7F;
+     border-color: #54AA7F;
+     height: 45px;
+     font-size: 1.1em;
+     padding: 0 25px;
+     border-radius: 8px;
+     align-self: flex-start;
+}
+
+
+.test-introduce-right {
+     flex: 0.8;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.test-introduce-right img {
+     max-width: 100%;
+     height: auto;
+     border-radius: 10px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the FAQ section */
+.ant-collapse {
+     background-color: #fff;
+     border: none;
+     /* Remove the outer border */
+     border-radius: 8px;
+}
+
+.ant-collapse-item {
+     border-bottom: none !important;
+     /* Remove the border between items */
+}
+
+.ant-collapse-item:last-child {
+     border-bottom: none !important;
+}
+
+.ant-collapse-header {
+     background-color: #f7f9fa;
+     font-weight: 600;
+     font-size: 1.1em;
+     padding: 12px 16px !important;
+     border-radius: 0;
+     /* Remove individual header rounding if you want items to blend */
+}
+
+/* Add border-radius to the first and last collapse headers to match the overall collapse border-radius */
+.ant-collapse-item:first-child .ant-collapse-header {
+     border-top-left-radius: 8px;
+     border-top-right-radius: 8px;
+}
+
+.ant-collapse-item:last-child .ant-collapse-header {
+     border-bottom-left-radius: 8px;
+     border-bottom-right-radius: 8px;
+}
+
+
+.ant-collapse-header-text {
+     color: #333;
+}
+
+.ant-collapse-content-box {
+     padding: 16px !important;
+     line-height: 1.6;
+     color: #555;
+}
+
+.main-layout-content {
+     padding: 40px 80px;
+     max-width: 1200px;
+     margin: 0 auto;
+}
+
+.test-register {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     background-color: #fff;
+     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+     border-radius: 20px;
+     padding: 15px 25px;
+     margin-top: 40px;
+}
+
+.test-register p {
+     font-size: 1.1em;
+     font-weight: 500;
+     color: #333;
+     margin: 0;
+     flex-grow: 1;
+}
+
+.test-register .book-test-btn {
+     background-color: #54AA7F;
+     border-color: #54AA7F;
+     height: 40px;
+     font-size: 1em;
+     padding: 0 20px;
+     border-radius: 6px;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin: 0;
+}
+
+.register-test-form .ant-modal-content {
+     padding: 24px;
+     width: 400px;
+}
+
+.register-test-form .modal-title {
+     text-align: center;
+     margin-bottom: 16px;
+}
+
+.register-test-form .modal-title-text {
+     font-size: 24px;
+     font-weight: 600;
+     color: #37AF86;
+}
+
+.register-test-form .button-register {
+     display: flex;
+     justify-content: flex-end;
+     gap: 8px;
+     margin-top: 24px;
+}
