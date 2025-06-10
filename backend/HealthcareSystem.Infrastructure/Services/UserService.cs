@@ -74,6 +74,10 @@ namespace Infrastructure.Services
             {
                 user.Address = dto.Address;
             }
+            if (dto.Avatar != null)
+            {
+                user.Avatar = dto.Avatar;
+            }
 
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;

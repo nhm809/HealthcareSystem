@@ -1,7 +1,7 @@
 import { Card, Descriptions, Avatar, Button, Divider, Spin, Modal, Form, Input, Upload, message, DatePicker, Select } from 'antd';
 import { UserOutlined, UploadOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { authApi, getInfo } from '../../services/api';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import './Profile.css';
 import dayjs from 'dayjs';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ToastContext } from '../../contexts/ToastProvider';
 
 function Profile() {
      const navigate = useNavigate();
@@ -22,6 +23,8 @@ function Profile() {
      const [avatarFile, setAvatarFile] = useState(null);
      const [uploading, setUploading] = useState(false);
      const [changingPassword, setChangingPassword] = useState(false);
+     const [uploadingAvatar, setUploadingAvatar] = useState(false);
+     const { toast } = useContext(ToastContext);
 
      useEffect(() => {
           const userId = Cookies.get('userId');
@@ -80,16 +83,41 @@ function Profile() {
           setAvatarFile(null);
      };
 
-     const handleAvatarChange = (info) => {
+     const uploadToCloudinary = async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', 'healthcare');
+
+          const response = await fetch(
+               'https://api.cloudinary.com/v1_1/dktu0nbjx/image/upload',
+               {
+                    method: 'POST',
+                    body: formData,
+               }
+          );
+          const data = await response.json();
+          return data.secure_url;
+     };
+
+     const handleAvatarChange = async (info) => {
           if (info.file.status === 'removed') {
-               form.setFieldValue('avatar', '');
+               form.setFieldValue('avatarPath', '');
                return;
           }
-          if (info.file.url) {
-               form.setFieldValue('avatar', info.file.url);
+          if (info.file.status !== 'done' && info.file.status !== 'uploading') {
+               return;
+          }
+          const file = info.file.originFileObj;
+          if (!file) return;
+          setUploadingAvatar(true);
+          try {
+               const url = await uploadToCloudinary(file);
+               form.setFieldValue('avatarPath', url);
                message.success('Tải ảnh lên thành công!');
-          } else {
-               message.error('Vui lòng upload ảnh lên server trước và lấy link!');
+          } catch (err) {
+               message.error('Tải ảnh lên thất bại!');
+          } finally {
+               setUploadingAvatar(false);
           }
      };
 
@@ -100,8 +128,10 @@ function Profile() {
                const dataToSend = {
                     ...values,
                     doB: values.dateOfBirth ? values.dateOfBirth.format('YYYY-MM-DD') : undefined,
+                    avatar: values.avatarPath,
                };
                delete dataToSend.dateOfBirth;
+               delete dataToSend.avatarPath;
 
                const filteredData = {};
                Object.keys(dataToSend).forEach(key => {
@@ -114,6 +144,7 @@ function Profile() {
                const response = await authApi.updateUserInfo(userId, filteredData);
 
                setUser(response.data);
+               toast.success('Cập nhật thông tin thành công!');
                message.success('Cập nhật thông tin thành công!');
                setIsModalVisible(false);
                form.resetFields();
@@ -213,11 +244,9 @@ function Profile() {
                                    >
                                         Đổi mật khẩu
                                    </Button>
-
                               </div>
                          </div>
                     </div>
-
                     <Divider />
 
                     <Descriptions title="Thông tin chi tiết" bordered column={1}>
@@ -245,7 +274,7 @@ function Profile() {
                          >
                               <Form.Item
                                    label="Ảnh đại diện"
-                                   name="avatar"
+                                   name="avatarPath"
                               >
                                    <Upload
                                         name="avatar"
@@ -315,7 +344,7 @@ function Profile() {
                               </Form.Item>
 
                               <Form.Item>
-                                   <Button type="primary" htmlType="submit" loading={uploading}>
+                                   <Button type="primary" htmlType="submit" loading={uploading || uploadingAvatar} disabled={uploadingAvatar}>
                                         Lưu thay đổi
                                    </Button>
                               </Form.Item>
