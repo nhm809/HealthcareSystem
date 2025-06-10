@@ -40,10 +40,12 @@ function Header() {
   const handleLogout = () => {
     Cookies.remove('email');
     Cookies.remove('userid');
+    Cookies.remove('userId');
     Cookies.remove('token');
     Cookies.remove('refreshToken');
     localStorage.removeItem('userInfo');
     navigate('/');
+    window.location.reload();
   };
 
   const handleViewProfile = () => {
