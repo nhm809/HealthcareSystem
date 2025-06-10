@@ -172,10 +172,7 @@ function Profile() {
           try {
                setChangingPassword(true);
                const userId = Cookies.get('userId');
-               const response = await authApi.changePassword(userId, {
-                    currentPassword: values.currentPassword,
-                    newPassword: values.newPassword
-               });
+               await authApi.changePassword(userId, String(values.currentPassword), values.newPassword);
 
                message.success('Đổi mật khẩu thành công!');
                setIsPasswordModalVisible(false);
