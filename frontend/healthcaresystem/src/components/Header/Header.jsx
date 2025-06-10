@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthModal from './AuthModal/AuthModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -10,12 +10,23 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Avatar, Space, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { getInfo } from '../../services/api';
 
 function Header() {
   const [modalOpen, setModalOpen] = useState(false);
   const [defaultTab, setDefaultTab] = useState(0); // 0: Login, 1: Register
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const email = Cookies.get('email');
+
+  useEffect(() => {
+    const userId = Cookies.get('userId') || Cookies.get('userid');
+    if (userId) {
+      getInfo(userId).then(res => {
+        setUser(res.data);
+      }).catch(() => setUser(null));
+    }
+  }, []);
 
   const handleOpenModal = (tab) => {
     setDefaultTab(tab);
@@ -73,7 +84,7 @@ function Header() {
                 placement="bottomRight"
                 trigger={['click']}
               >
-                <Avatar size="large" icon={<UserOutlined />} style={{ cursor: 'pointer' }} />
+                <Avatar size="large" src={user?.avatar || user?.avatarPath} icon={<UserOutlined />} style={{ cursor: 'pointer' }} />
               </Dropdown>
             </div>
           ) : (
