@@ -171,3 +171,20 @@
 .service-dropdown:hover .service-dropdown-content {
   display: block;
 }
+
+.notification-item {
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background-color: #DBF1E8 !important;
+  transform: translateX(1px);
+}
+
+.notification-item .ant-list-item-meta-title {
+  margin-bottom: 4px !important;
+}
+
+.notification-item .ant-list-item-meta-description {
+  margin-bottom: 0 !important;
+}
