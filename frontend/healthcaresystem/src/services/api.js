@@ -23,6 +23,20 @@ export const authApi = {
                'Content-Type': 'application/json',
           },
      }),
+     changePassword: (userId, oldPassword, newPassword) =>
+          api.post(
+               `/user/change-password/${userId}?newPassword=${encodeURIComponent(newPassword)}`,
+               oldPassword,
+               {
+                    headers: {
+                         'Content-Type': 'text/plain'
+                    },
+                    transformRequest: [(data) => data]
+               }
+          ),
+
+     bookTestServiceRecord: (data) => 
+          api.post('/TestServiceRecord/book/', data),
 };
      
 export const getInfo = async (userId) => {

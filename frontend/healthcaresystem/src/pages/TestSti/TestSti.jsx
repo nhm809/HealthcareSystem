@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CaretRightOutlined, CalendarOutlined } from '@ant-design/icons';
 import './TestSti.css';
 import { useState } from 'react';
+import { authApi } from '../../services/api';
+import Cookies from 'js-cookie';
 
 function TestSti() {
      const navigate = useNavigate();
@@ -16,6 +18,8 @@ function TestSti() {
      const [isModalOpen, setIsModalOpen] = useState(false);
      const [form] = Form.useForm();
      const [loading, setLoading] = useState(false);
+     const userId = Cookies.get('userId');
+     
 
      const panelStyle = {
           marginBottom: 24,
@@ -56,26 +60,27 @@ function TestSti() {
      const handleFinish = async (values) => {
           setLoading(true);
           try {
-               // Format date
                const data = {
-                    ...values,
+                    serviceId: 0, 
+                    fullName: values.fullName,
                     dob: values.dob.format('YYYY-MM-DD'),
+                    gender: values.gender,
+                    phoneNumber: values.phone,
+                    userId: userId
                };
-               // Gọi API, thay endpoint cho phù hợp
-               const res = await fetch('/api/register-sti', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-               });
-               if (res.ok) {
-                    message.success('Đăng ký thành công!');
-                    setIsModalOpen(false);
-                    form.resetFields();
-               } else {
-                    message.error('Đăng ký thất bại!');
+
+               console.log(data);
+               const response = await authApi.bookTestServiceRecord(data);
+
+               if (response.data.message === "Thông tin đặt lịch đã được lưu. Vui lòng tiến hành thanh toán.") {
+                    console.log("Đặt lịch thành công");
+
                }
+               message.success('Đăng ký thành công!');
+               setIsModalOpen(false);
+               form.resetFields();
           } catch (e) {
-               message.error('Có lỗi xảy ra!');
+               message.error('Đăng ký thất bại!');
           } finally {
                setLoading(false);
           }
