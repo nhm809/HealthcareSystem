@@ -49,7 +49,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
     [HttpPost("change-password/{userId}")]
-    public async Task<IActionResult> ChangePassword(int userId, [FromBody] string oldPassword, string newPassword)
+    public async Task<IActionResult> ChangePassword(int userId, [FromBody] string oldPassword, [FromBody] string newPassword)
     {
         if (userId <= 0 || string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword))
         {
