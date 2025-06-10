@@ -8,6 +8,7 @@ import './TestSti.css';
 import { useState } from 'react';
 import { authApi } from '../../services/api';
 import Cookies from 'js-cookie';
+import AuthModal from '../../components/Header/AuthModal/AuthModal';
 
 function TestSti() {
      const navigate = useNavigate();
@@ -19,6 +20,8 @@ function TestSti() {
      const [form] = Form.useForm();
      const [loading, setLoading] = useState(false);
      const userId = Cookies.get('userId');
+     const [authModalOpen, setAuthModalOpen] = useState(false);
+     const [defaultTab, setDefaultTab] = useState(0);
      
 
      const panelStyle = {
@@ -51,7 +54,14 @@ function TestSti() {
           },
      ];
 
-     const handleOpenModal = () => setIsModalOpen(true);
+     const handleOpenModal = () => {
+          if (!userId) {
+               setDefaultTab(0);
+               setAuthModalOpen(true);
+               return;
+          }
+          setIsModalOpen(true);
+     };
      const handleCancel = () => {
           setIsModalOpen(false);
           form.resetFields();
@@ -196,6 +206,8 @@ function TestSti() {
                          </Form>
                     </Modal>
                </div>
+
+               <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={defaultTab} />
 
                <div style={{height: 150}}></div>
           </MainLayout>
