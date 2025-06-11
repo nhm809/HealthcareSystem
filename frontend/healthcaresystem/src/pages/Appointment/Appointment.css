@@ -1,0 +1,148 @@
+.doctor-list-contanter {
+    margin: 40px auto;    
+    background-color: #fff;
+}
+
+.doctor-list-title {
+    text-align: center;
+    color: #4CAF50;
+    font-size: 24px;
+    margin-bottom: 24px;
+}
+
+.doctor-list-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+    max-width: 600px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.doctor-list-search .ant-input {
+    border-radius: 999px;
+}
+
+.doctor-list-search .ant-btn {
+    border-radius: 999px;
+}
+
+.doctor-list-filters {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.doctor-list-filters p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.filter-select {
+    width: 150px;
+}
+
+.ant-card {
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.ant-card-cover img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.ant-card-body {
+    padding: 0 !important;
+    height: 100px;
+}
+
+.ant-card-meta-title {
+    margin: 12px 0 4px 0 !important;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.ant-card-meta-description {
+    margin: 0 0 12px 0 !important;
+    color: gray;
+    font-size: 14px;
+}
+
+.book-button {
+    font-weight: bold;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 16px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.book-button:hover {
+    background-color: #45a049;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.pagination-container .ant-pagination-item {
+  border: none;
+  background-color: #DBF1E8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.pagination-container .ant-pagination-item-active {
+  background-color: #44a383;
+}
+
+.pagination-container .ant-pagination-item-active a {
+  color: white;
+}
+
+.pagination-container .ant-pagination-item-active a:hover {
+  color: black;
+}
+
+.pagination-container .ant-pagination-prev .ant-pagination-item-link,
+.pagination-container .ant-pagination-next .ant-pagination-item-link {
+  background-color: #DBF1E8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.pagination-container .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #b7e3d8;
+  border-radius: 50%;
+}
+
+.pagination-container .ant-pagination-prev .ant-pagination-item-link:hover,
+.pagination-container .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #b7e3d8;
+  border-radius: 50%;
+  color: #008080;
+}
+
+.pagination-container .ant-pagination-disabled {
+  opacity: 0.5;
+}

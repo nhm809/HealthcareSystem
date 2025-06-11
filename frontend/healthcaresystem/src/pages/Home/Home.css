@@ -51,14 +51,14 @@
      opacity: 0.4;
      border: 2px solid transparent;
      transition: opacity 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
      background: #fff;
 }
 
 .avatar.active {
      opacity: 1;
      border-color: #10e272;
-     box-shadow: 0 4px 16px rgba(16,226,114,0.15);
+     box-shadow: 0 4px 16px rgba(16, 226, 114, 0.15);
      transform: scale(1.15);
      z-index: 2;
 }
@@ -66,7 +66,7 @@
 .avatar:not(.active):hover {
      opacity: 0.8;
      transform: scale(1.08);
-     box-shadow: 0 4px 16px rgba(76,139,105,0.18);
+     box-shadow: 0 4px 16px rgba(76, 139, 105, 0.18);
      border-color: #4c8b69;
      cursor: pointer;
 }
@@ -92,8 +92,15 @@
 }
 
 @keyframes fadeIn {
-     from { opacity: 0; transform: translateY(20px); }
-     to { opacity: 1; transform: translateY(0); }
+     from {
+          opacity: 0;
+          transform: translateY(20px);
+     }
+
+     to {
+          opacity: 1;
+          transform: translateY(0);
+     }
 }
 
 @keyframes fadeInUp {
@@ -101,6 +108,7 @@
           opacity: 0;
           transform: translateY(30px) scale(0.98);
      }
+
      to {
           opacity: 1;
           transform: translateY(0) scale(1);
@@ -125,8 +133,8 @@
 }
 
 .box-test-introduce {
-     display: flex; 
-     gap: 20px;   
+     display: flex;
+     gap: 20px;
 }
 
 .box-1-test-introduce {
@@ -154,7 +162,7 @@
 .box-right img {
      width: 160px;
      height: 100%;
-     
+
 }
 
 .box-2-test-introduce {
@@ -164,23 +172,39 @@
      padding: 20px 20px 0 20px;
 }
 
+.process-test-inside {
+     background-color: #DBF1E8;
+     border-radius: 20px;
+}
+
 .box-test-proccess {
      margin-top: 20px;
 }
 
 .box-test-parent {
-     background-color: #DBF1E8;
+
      display: flex;
      gap: 10px;
-     border-radius: 20px;
-     padding: 20px;
+
+     padding: 30px 30px 10px;
 }
 
+.box-test-child {
+     flex: 1;
+}
+
+.box-test-child p {
+     margin-top: 20px;
+}
 
 .box-test-child img {
-     width: 100px;
-     height: 100px;
+     margin-top: 20px;
+     width: 200px;
+     height: 100%;
+
 }
+
+
 
 .proccess-component {
      display: flex;
@@ -208,3 +232,205 @@
 
 
 /* End: Test Service */
+
+/*  Start: Component*/
+.appointment {
+     margin-top: 60px;
+     display: flex;
+     border-radius: 20px;
+     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.book-test-btn {
+     margin: 0;
+}
+
+.appointment-left {
+     display: flex;
+     flex-direction: column;
+     gap: 40px;
+     margin: 30px;
+     align-items: flex-start;
+}
+
+.appointment-left p {
+     margin: 0;
+     font-size: 20px;
+     text-align: left;
+}
+
+.appointment-right {
+     background-color: #DBF1E8;
+     border-radius: 0 20px 20px 0;
+}
+
+.appointment-left h3 {
+     margin: 0;
+     font-size: 25px
+}
+
+/*  End: Component*/
+
+/* Start: Menstrual Cycle */
+.menstrual-cycle {
+     display: flex !important;
+     justify-content: space-between;
+     align-items: center;
+     background: linear-gradient(90deg, #7fc7a6 0%, #d2ede3 100%);
+     border-radius: 28px;
+     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+     padding: 32px 36px;
+     margin: 40px 0 0 0;
+     min-height: 220px;
+     gap: 32px;
+}
+
+.menstrual-cycle-left {
+     flex: 1.2;
+     color: #fff;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: flex-start;
+     gap: 18px;
+}
+
+.menstrual-cycle-left h3 {
+     font-size: 32px;
+     font-weight: 700;
+     margin: 0 0 8px 0;
+     color: #fff;
+}
+
+.menstrual-cycle-left p {
+     font-size: 18px;
+     color: #f6fff9;
+     margin-bottom: 12px;
+}
+
+
+
+
+.menstrual-cycle-right {
+     flex: 1.1;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 28px;
+}
+
+.menstrual-cycle-right img {
+     width: 88px;
+     height: 88px;
+     border-radius: 18px;
+     background: #fff;
+     box-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.10);
+     object-fit: cover;
+     padding: 10px;
+     transition: transform 0.2s;
+}
+
+.menstrual-cycle-right img:hover {
+     transform: translateY(-6px) scale(1.07);
+     box-shadow: 0 6px 24px 0 rgba(44, 62, 80, 0.18);
+}
+
+/* End: Menstrual Cycle */
+
+/* Start: Question */
+.question {
+     margin-top: 60px;
+     display: flex;
+     border-radius: 20px;
+     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+     justify-content: center;
+     align-items: center;
+}
+
+.question-left {
+     padding: 40px;
+}
+
+.question-left h3 {
+     color: #54AA7F;
+     font-size: 24px;
+}
+
+.question-right {
+     padding: 40px;
+}
+
+
+
+
+
+/* End: Question */
+
+/* Featured Doctors Section */
+.featured-doctors-section {
+  margin: 60px 0 40px 0;
+  text-align: center;
+}
+.featured-doctors-section h2 {
+  color: #54AA7F;
+  font-weight: 700;
+  font-size: 32px;
+  margin-bottom: 36px;
+}
+.featured-doctors-list {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.doctor-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 18px 0 rgba(44, 62, 80, 0.10);
+  width: 260px;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.doctor-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  display: block;
+}
+.doctor-card-info {
+  background: #fff;
+  width: 100%;
+  padding: 18px 0 18px 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.doctor-card-info .doctor-name {
+  font-weight: 700;
+  font-size: 20px;
+  color: #111;
+  margin-bottom: 6px;
+}
+.doctor-card-info .doctor-specialty {
+  color: #3b6fd6;
+  font-size: 16px;
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .featured-doctors-list {
+    gap: 18px;
+  }
+  .doctor-card {
+    width: 95vw;
+    max-width: 340px;
+  }
+}
+/* End: Featured Doctors Section */

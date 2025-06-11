@@ -13,6 +13,7 @@ namespace Domain.Entities
         public string? Description { get; set; }
 
         public decimal? Price { get; set; }
+        
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 

@@ -19,8 +19,16 @@ const routers = [
           component: lazy(() => import('../pages/Appointment/Appointment'))
      },
      {
+          path: '/appointment/:id',
+          component: lazy(() => import('../pages/Appointment/DoctorDetailPage'))
+     },
+     {
           path: '/test-sti',
           component: lazy(() => import('../pages/TestSti/TestSti'))
+     },
+     {
+          path: '/question',
+          component: lazy(() => import('../pages/Question/Question'))
      },
      {
           path: '/blog/:id',

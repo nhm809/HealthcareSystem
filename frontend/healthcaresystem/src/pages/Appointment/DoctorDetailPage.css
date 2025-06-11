@@ -1,0 +1,108 @@
+.doctor-detail-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.doctor-info-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.doctor-image {
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.doctor-details h3 {
+  margin: 0;
+}
+
+.specialty-tag {
+  background-color: #e0e0e0;
+  padding: 4px 12px;
+  display: inline-block;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.doctor-stats {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.schedule-card {
+  margin-bottom: 16px;
+  background-color: #f4fef9;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.location-icon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: red;
+}
+
+.location-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.location-address {
+  color: gray;
+  margin: 0;
+}
+
+.date-select-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.schedule-label {
+  font-weight: bold;
+}
+
+.date-select {
+  min-width: 180px;
+}
+
+.time-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-slot {
+  border: 1px solid orange;
+  border-radius: 4px;
+  background-color: white;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+.time-slot:hover {
+  background-color: #fff7e6;
+}
+
+.experience-card {
+  padding: 16px;
+  border-radius: 8px;
+}
