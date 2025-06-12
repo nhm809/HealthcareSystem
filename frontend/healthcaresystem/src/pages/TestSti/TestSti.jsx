@@ -1,17 +1,19 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Collapse, theme, Modal, Form, Input, DatePicker, Radio, message } from 'antd';
 import MainLayout from '@components/Layout/Layout';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CaretRightOutlined, CalendarOutlined } from '@ant-design/icons';
 import './TestSti.css';
-import { useState } from 'react';
-import { authApi } from '../../services/api';
+import { useState, useEffect, useRef } from 'react';
+import { authApi, notiApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
 
 function TestSti() {
      const navigate = useNavigate();
+     const location = useLocation();
+     const notiSentRef = useRef({});
 
      // get token from Ant
      const { token } = theme.useToken(); 
@@ -79,22 +81,63 @@ function TestSti() {
                     userId: userId
                };
 
-               console.log(data);
                const response = await authApi.bookTestServiceRecord(data);
+               console.log('Book response:', response.data);
 
                if (response.data.message === "Thông tin đặt lịch đã được lưu. Vui lòng tiến hành thanh toán.") {
-                    console.log("Đặt lịch thành công");
-
+                    const testServiceRecordId = response.data.testServiceRecordId || response.data.testServiceRecordID;
+                    console.log('ID:', testServiceRecordId);
+                    if (testServiceRecordId) {
+                         const payRes = await authApi.createPaypalUrl(testServiceRecordId, null);
+                         console.log('PayPal response:', payRes.data);
+                         const paymentUrl = payRes.data.PaymentUrl || payRes.data.paymentUrl;
+                         if (paymentUrl) {
+                              window.location.href = paymentUrl;
+                              return;
+                         } else {
+                              message.error('Không lấy được link thanh toán PayPal!');
+                         }
+                    } else {
+                         message.error('Không lấy được mã phiếu xét nghiệm!');
+                    }
+               } else {
+                    message.success('Đăng ký thành công!');
+                    setIsModalOpen(false);
+                    form.resetFields();
                }
-               message.success('Đăng ký thành công!');
-               setIsModalOpen(false);
-               form.resetFields();
           } catch (e) {
                message.error('Đăng ký thất bại!');
           } finally {
                setLoading(false);
           }
      };
+
+     // Tạo notification nếu thanh toán thành công
+     useEffect(() => {
+          const params = new URLSearchParams(location.search);
+          const handler = params.get('handler');
+          const testServiceRecordId = params.get('testServiceRecordId');
+          const userId = Cookies.get('userId');
+          if (handler === 'success' && testServiceRecordId && userId) {
+               const sentKey = `noti_sent_${testServiceRecordId}`;
+               if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
+                    notiSentRef.current[sentKey] = true; // Đánh dấu đã gửi trong phiên này
+                    const now = new Date().toISOString();
+                    notiApi.createNoti({
+                         userId: Number(userId),
+                         title: 'Đặt lịch xét nghiệm thành công',
+                         content: `Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: ${testServiceRecordId}`,
+                         sendTime: now,
+                         isRead: false
+                    }).finally(() => {
+                         sessionStorage.setItem(sentKey, '1');
+                         window.history.replaceState({}, document.title, '/test-sti');
+                    });
+               } else {
+                    window.history.replaceState({}, document.title, '/test-sti');
+               }
+          }
+     }, [location]);
 
      return (
           <MainLayout>

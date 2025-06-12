@@ -44,9 +44,11 @@ namespace Api.Controllers
             if (handler == "success" && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(PayerID))
             {
                 var result = await _payPalService.ExecutePaymentAsync(token, PayerID, testServiceRecordId, appointmentId);
-                return Ok(new { Message = "Thanh toán PayPal thành công!", Result = result });
+                var feUrl = $"http://localhost:5173/test-sti?handler=success&testServiceRecordId={testServiceRecordId}";
+                return Redirect(feUrl);
             }
-            return BadRequest(new { Message = "Thanh toán bị hủy hoặc thất bại." });
+            var cancelUrl = "http://localhost:5173/test-sti?handler=cancel";
+            return Redirect(cancelUrl);
         }
     }
 }

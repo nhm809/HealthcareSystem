@@ -29,7 +29,11 @@ const routers = [
     {
         path: '/blog/:id',
         component: lazy(() => import('../pages/Blog/BlogDetail'))
-    }
+    },
+    {
+        path: 'test-sti',
+        component: lazy(() => import('../pages/TestSti/PaypalCallback'))
+    },
 ]
 
 export default routers;
