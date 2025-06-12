@@ -61,6 +61,15 @@ function AuthModal({ open, onClose }) {
                 };
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
+                // Update user state in Header
+                const headerUser = {
+                    email,
+                    roleId,
+                    phoneNumber,
+                    avatar: avatarPath
+                };
+                window.dispatchEvent(new CustomEvent('userLogin', { detail: headerUser }));
+
                 toast.success('Đăng nhập thành công');
                 onClose();
             }
@@ -261,6 +270,15 @@ function AuthModal({ open, onClose }) {
                                                             avatarPath: user.avatarPath
                                                         };
                                                         localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+                                                        // Update user state in Header
+                                                        const headerUser = {
+                                                            email: user.email,
+                                                            roleId: user.roleId,
+                                                            phoneNumber: user.phoneNumber,
+                                                            avatar: user.avatarPath
+                                                        };
+                                                        window.dispatchEvent(new CustomEvent('userLogin', { detail: headerUser }));
 
                                                         toast.success('Đăng nhập thành công');
                                                         onClose();

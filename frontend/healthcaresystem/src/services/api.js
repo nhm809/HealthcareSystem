@@ -38,6 +38,19 @@ export const authApi = {
      bookTestServiceRecord: (data) => 
           api.post('/TestServiceRecord/book/', data),
 };
+
+export const notiApi = {
+     getNotifications: (userId) => api.get(`/Noti/getNoti/${userId}`, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
+     markAsRead: (notiId) => api.put(`/Noti/markAsRead/${notiId}`, {}, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
+};
      
 export const getInfo = async (userId) => {
      return await api.get(`/user/get/${userId}`)
