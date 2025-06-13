@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CaretRightOutlined, CalendarOutlined } from '@ant-design/icons';
 import './TestSti.css';
 import { useState, useEffect, useRef } from 'react';
-import { authApi, notiApi } from '../../services/api';
+import { notiApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
+import ConfirmTestModal from './ConfirmTestModal';
 
 function TestSti() {
      const navigate = useNavigate();
@@ -19,11 +20,13 @@ function TestSti() {
      const { token } = theme.useToken(); 
 
      const [isModalOpen, setIsModalOpen] = useState(false);
+     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
      const [form] = Form.useForm();
      const [loading, setLoading] = useState(false);
      const userId = Cookies.get('userId');
      const [authModalOpen, setAuthModalOpen] = useState(false);
      const [defaultTab, setDefaultTab] = useState(0);
+     const [formData, setFormData] = useState(null);
      
 
      const panelStyle = {
@@ -70,46 +73,9 @@ function TestSti() {
      };
      
      const handleFinish = async (values) => {
-          setLoading(true);
-          try {
-               const data = {
-                    serviceId: 0, 
-                    fullName: values.fullName,
-                    dob: values.dob.format('YYYY-MM-DD'),
-                    gender: values.gender,
-                    phoneNumber: values.phone,
-                    userId: userId
-               };
-
-               const response = await authApi.bookTestServiceRecord(data);
-               console.log('Book response:', response.data);
-
-               if (response.data.message === "Thông tin đặt lịch đã được lưu. Vui lòng tiến hành thanh toán.") {
-                    const testServiceRecordId = response.data.testServiceRecordId || response.data.testServiceRecordID;
-                    console.log('ID:', testServiceRecordId);
-                    if (testServiceRecordId) {
-                         const payRes = await authApi.createPaypalUrl(testServiceRecordId, null);
-                         console.log('PayPal response:', payRes.data);
-                         const paymentUrl = payRes.data.PaymentUrl || payRes.data.paymentUrl;
-                         if (paymentUrl) {
-                              window.location.href = paymentUrl;
-                              return;
-                         } else {
-                              message.error('Không lấy được link thanh toán PayPal!');
-                         }
-                    } else {
-                         message.error('Không lấy được mã phiếu xét nghiệm!');
-                    }
-               } else {
-                    message.success('Đăng ký thành công!');
-                    setIsModalOpen(false);
-                    form.resetFields();
-               }
-          } catch (e) {
-               message.error('Đăng ký thất bại!');
-          } finally {
-               setLoading(false);
-          }
+          setFormData(values);
+          setIsModalOpen(false);
+          setIsConfirmModalOpen(true);
      };
 
      // Tạo notification nếu thanh toán thành công
@@ -243,12 +209,19 @@ function TestSti() {
                               <div className="button-register">
                                    <Button onClick={handleCancel}>Hủy</Button>
                                    <Button type="primary" htmlType="submit" loading={loading} style={{ minWidth: 100 }}>
-                                        Đăng ký
+                                        Tiếp tục
                                    </Button>
                               </div>
                          </Form>
                     </Modal>
                </div>
+
+               <ConfirmTestModal 
+                    open={isConfirmModalOpen}
+                    onClose={() => setIsConfirmModalOpen(false)}
+                    formData={formData}
+                    userId={userId}
+               />
 
                <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={defaultTab} />
 

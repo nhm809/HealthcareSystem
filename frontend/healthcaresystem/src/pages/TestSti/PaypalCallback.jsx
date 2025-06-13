@@ -22,16 +22,10 @@ function PaypalCallback() {
                 sendTime: now,
                 isRead: false
             })
-            .catch(() => {
-                // Có thể hiển thị thông báo lỗi nếu muốn
-            })
             .finally(() => {
                 navigate('/');
             });
-        } else {
-            // Nếu thất bại, cũng về trang chủ hoặc hiển thị thông báo lỗi
-            navigate('/');
-        }
+        } 
     }, [location, navigate]);
 
     return <div>Đang xử lý thanh toán...</div>;
