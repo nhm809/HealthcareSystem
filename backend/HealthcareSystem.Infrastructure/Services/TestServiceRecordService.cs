@@ -95,8 +95,12 @@ namespace Infrastructure.Services
             if (string.IsNullOrWhiteSpace(request.FullName))
                 throw new ArgumentException("Họ và tên không được để trống.");
 
-            if (request.Dob > DateTime.Now)
-                throw new ArgumentException("Ngày sinh không được là ngày trong tương lai.");
+            if (request.Dob > DateOnly.FromDateTime(DateTime.Now))
+                throw new ArgumentException("Ngày sinh không hợp lệ");
+
+            if(request.TestDate <= DateOnly.FromDateTime(DateTime.Now)){
+                throw new ArgumentException("Ngày khám không hợp lệ ");
+            }
 
             if (!Regex.IsMatch(request.PhoneNumber, @"^0\d{9}$"))
                 throw new ArgumentException("Số điện thoại không hợp lệ.");
@@ -108,7 +112,8 @@ namespace Infrastructure.Services
             {
                 ServiceId = FIXED_SERVICE_ID,
                 FullNameOfMember = request.FullName,
-                Dob = DateOnly.FromDateTime(request.Dob),
+                Dob = request.Dob,
+                TestDate = request.TestDate,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 MemberId = request.UserId, // UserId do FE quản lý

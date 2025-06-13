@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250610135810_database")]
+    [Migration("20250613075647_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -621,6 +621,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<DateOnly?>("TestDate")
+                        .HasColumnType("date");
 
                     b.HasKey("TestServiceRecordId")
                         .HasName("PK__TestServ__F810175D4779B45B");
