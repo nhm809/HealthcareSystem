@@ -214,7 +214,7 @@ namespace Infrastructure.data {
                 entity.ToTable("Notification");
 
                 entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
-                entity.Property(e => e.Content).HasColumnType("text");
+                entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
                 entity.Property(e => e.IsRead).HasColumnName("IsRead");
                 entity.Property(e => e.Title).HasMaxLength(50);

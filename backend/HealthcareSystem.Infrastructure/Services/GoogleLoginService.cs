@@ -6,6 +6,11 @@ using Infrastructure.data;
 using Domain.Entities;  
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 
 namespace Infrastructure.Services
@@ -39,6 +44,26 @@ namespace Infrastructure.Services
 
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.GoogleId == Sub);
+
+                // Generate JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_config["Jwt:Secret"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.NameIdentifier, Sub),
+                new Claim(ClaimTypes.Email, payload.Email),
+                new Claim(ClaimTypes.Name, payload.Name)
+            }),
+                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var refreshToken = Guid.NewGuid().ToString();
+
+
+
                 if (user == null)
                 {
                     user = new User
@@ -49,21 +74,31 @@ namespace Infrastructure.Services
                         Avatar = payload.Picture,
                         Email = payload.Email,
                         CreateDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                        RoleId = "MB"
+                        RoleId = "MB",
+                        RefreshToken = refreshToken,
+                        RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7)
+
                     };
 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                 }
 
+                var userId = user.UserId;
+
                 return new GoogleLoginDTO
                 {
-                    Sub = payload.Subject,
-                    FullName = payload.Name,
-                    Picture = payload.Picture,
-                    Email = payload.Email,
+                    UserId = userId,
+                    Sub = Sub,
+                    FullName = user.FullName,
+                    Picture = user.Avatar,
+                    Email = user.Email,
                     Email_verified = payload.EmailVerified,
-                    Locale = payload.Locale
+                    Locale = payload.Locale,
+                    Token = tokenHandler.WriteToken(token),
+                    RefreshToken = user.RefreshToken,
+                    ExpiresAcessToken = DateTime.UtcNow.AddHours(1),
+                    ExpiresRefreshToken = user.RefreshTokenExpiryTime
                 };
             }
             catch (Exception ex)

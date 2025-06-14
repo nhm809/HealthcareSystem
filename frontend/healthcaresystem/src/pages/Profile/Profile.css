@@ -1,0 +1,42 @@
+.profile-container {
+     max-width: 1000px;
+     margin: 20px auto;
+     padding: 24px;
+}
+
+.profile-loading {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+}
+
+.profile-error {
+     text-align: center;
+     color: red;
+}
+
+.profile-header {
+     display: flex;
+     align-items: center;
+     gap: 24px;
+     padding: 20px;
+}
+
+.profile-avatar {
+     margin-bottom: 16px;
+}
+
+.profile-info {
+     margin-bottom: 8px;
+}
+
+.profile-buttons {
+     display: flex;
+     gap: 8px;
+     margin-top: 8px;
+}
+
+.profile-edit-button {
+     margin-top: 0;
+}

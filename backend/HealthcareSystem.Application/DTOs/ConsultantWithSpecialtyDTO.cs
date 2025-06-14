@@ -1,0 +1,10 @@
+namespace Application.DTOs
+{
+    public class ConsultantWithSpecialtyDTO
+    {
+        public int ConsultantId { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public List<SpecialtyDTO> Specialties { get; set; }
+    }
+}

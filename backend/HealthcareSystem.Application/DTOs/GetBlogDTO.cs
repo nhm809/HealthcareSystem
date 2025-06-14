@@ -10,6 +10,7 @@ namespace Application.DTOs
         public required string? Topic { get; set; } // chủ để của bài blog 
         public DateTime? PublishDate { get; set; }
         public required string? ConsultantName { get; set; }
+
         public required string? ThumbnailImagePath { get; set; } // Ảnh ban cho bài content 
     }
 }
