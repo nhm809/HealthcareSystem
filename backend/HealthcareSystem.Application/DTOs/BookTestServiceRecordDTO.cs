@@ -1,5 +1,6 @@
 ﻿using System;
-namespace Application.DTOs
+
+namespace HealthcareSystem.Application.DTOs
 {
     public class BookTestServiceRecordDTO
     {

@@ -5,17 +5,23 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using HealthcareSystem.Application.DTOs;
 using System.Text.RegularExpressions;
-
+using HealthcareSystem.Application.Interfaces;
 namespace Infrastructure.Services
 {
+    
     public class TestServiceRecordService : ITestServiceRecord
     {
+        const int FIXED_SERVICE_ID = 1;
+        const int Number_TestOnDate = 80;
         public readonly AppDbContext _context;
-        public TestServiceRecordService(AppDbContext context)
+        private readonly INotiService _notiService;
+
+        public TestServiceRecordService(AppDbContext context, INotiService notiService)
         {
             _context = context;
+            _notiService = notiService;
         }
-
+        
         public async Task<IEnumerable<TestServiceRecordDTO>> GetTestServiceRecordsByMemberIdAsync(int MemberId)
         {
             return await _context.TestServiceRecords
@@ -85,8 +91,7 @@ namespace Infrastructure.Services
                 }
             };
         }
-
-
+        
         public async Task<int> BookTestServiceAsync(BookTestServiceRecordDTO request)
         {
             if (request == null)
@@ -98,6 +103,10 @@ namespace Infrastructure.Services
             if (request.Dob > DateOnly.FromDateTime(DateTime.Now))
                 throw new ArgumentException("Ngày sinh không hợp lệ");
 
+            
+            if(string.IsNullOrWhiteSpace(request.Gender)){
+                throw new ArgumentException("Vui lòng chọn giới tính");
+            }
             if(request.TestDate <= DateOnly.FromDateTime(DateTime.Now)){
                 throw new ArgumentException("Ngày khám không hợp lệ ");
             }
@@ -105,8 +114,20 @@ namespace Infrastructure.Services
             if (!Regex.IsMatch(request.PhoneNumber, @"^0\d{9}$"))
                 throw new ArgumentException("Số điện thoại không hợp lệ.");
 
-            // Fix cứng serviceId = 1 là Xét nghiệm tổng quát
-            const int FIXED_SERVICE_ID = 1;
+            
+            var numberOfTestsOnDate = await _context.TestServiceRecords
+                .CountAsync(x => x.TestDate == request.TestDate);
+            
+            if (numberOfTestsOnDate >= Number_TestOnDate)
+            {
+                throw new ArgumentException("Rất tiếc, ngày " + request.TestDate.ToString("dd/MM/yyyy") + 
+                " đã đạt giới hạn số lượng đặt lịch. Để đảm bảo chất lượng phục vụ tốt nhất,"
+                +"chúng tôi chỉ nhận tối đa " +Number_TestOnDate+" ca xét nghiệm mỗi ngày."
+                +" Quý khách vui lòng chọn ngày khác phù hợp hơn.");
+            }
+
+            
+            
 
             var testServiceRecord = new TestServiceRecord
             {
@@ -117,12 +138,26 @@ namespace Infrastructure.Services
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
                 MemberId = request.UserId, // UserId do FE quản lý
-                Status = "Ðang thanh toán",
+                Status = "Dang thanh toan",
                 RecordDate = DateTime.UtcNow.AddHours(7), // UTC+7 cho Việt Nam
                 Result = "",
                 StaffId = null, 
                 Notes = ""
             };
+
+            if (testServiceRecord.MemberId.HasValue)
+            {
+                var createNotiDTO = new CreateNotiDTO
+                {
+                    UserId = testServiceRecord.MemberId.Value,
+                    Title = "Đặt lịch xét nghiệm",
+                    Content = "Vui lòng hoàn tất thanh toán để xác nhận lịch xét nghiệm của bạn.",
+                    SendTime = DateTime.Now,
+                    IsRead = false
+                };
+
+                await _notiService.CreateNotiAsync(createNotiDTO);
+            }
 
             _context.TestServiceRecords.Add(testServiceRecord);
             await _context.SaveChangesAsync();
@@ -130,8 +165,154 @@ namespace Infrastructure.Services
             return testServiceRecord.TestServiceRecordId;
         }
 
+        public async Task<UpdateTestServiceRecordDTO> SelectTestServiceRecordAsync(int testServiceRecordId, int staffId)
+        {
+            var testServiceRecord = await _context.TestServiceRecords
+                .FirstOrDefaultAsync(x => x.TestServiceRecordId == testServiceRecordId);
 
+            if(testServiceRecord.Status != "Dang cho kham")
+                throw new ArgumentException("Bản ghi xét nghiệm chưa đủ điều kiện để thực hiện");
 
+            if (testServiceRecord == null)
+                throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm này.");
 
+            
+            if (testServiceRecord.StaffId == staffId)
+                throw new ArgumentException("Bạn đang thực hiện bản xét nghiệm này.");
+            else if (testServiceRecord.StaffId != null)
+                throw new ArgumentException("Bản ghi xét nghiệm đã được thực hiện bởi nhân viên khác.");
+            testServiceRecord.StaffId = staffId;
+            await _context.SaveChangesAsync();
+
+            return new UpdateTestServiceRecordDTO
+            {
+                TestServiceRecordId = testServiceRecord.TestServiceRecordId,
+                StaffId = staffId
+            };
+        }
+
+        public async Task<TestServiceRecordDetailDTO> UpdateTestResultAsync(UpdateTestResultDTO request, int staffId)
+        {
+            var testServiceRecord = await _context.TestServiceRecords
+                .Include(r => r.Staff)
+                .FirstOrDefaultAsync(x => x.TestServiceRecordId == request.TestServiceRecordId && x.StaffId == staffId);
+
+            if (testServiceRecord == null)
+                throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm .");
+
+            if (testServiceRecord.Status == "Đã hủy")
+                throw new ArgumentException("Không thể cập nhật bản ghi xét nghiệm đã bị hủy.");
+
+            testServiceRecord.Result = request.Result;
+            testServiceRecord.Notes = request.Notes;
+            
+            string notificationContent = "";
+            bool statusChanged = request.Status != testServiceRecord.Status;
+            bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != testServiceRecord.Notes;
+
+            Console.WriteLine($"Status changed: {statusChanged}, Notes changed: {notesChanged}");
+            Console.WriteLine($"Old status: {testServiceRecord.Status}, New status: {request.Status}");
+
+            if (statusChanged)
+            {
+                testServiceRecord.Status = request.Status;
+                switch (request.Status)
+                {
+                    case "Dang thuc hien":
+                        notificationContent = "Xét nghiệm của bạn đang được thực hiện.";
+                        break;
+                    case "Da hoan thanh":
+                        notificationContent = "Kết quả xét nghiệm của bạn đã có sẵn.";
+                        break;
+                    case "Da huy":
+                        notificationContent = "Xét nghiệm của bạn đã bị hủy.";
+                        break;
+                }
+            }
+            
+            if (notesChanged)
+            {
+                notificationContent = "Bác sĩ đã cập nhật thông tin xét nghiệm của bạn.";
+            }
+
+            await _context.SaveChangesAsync();
+
+            if (testServiceRecord.MemberId.HasValue && !string.IsNullOrEmpty(notificationContent))
+            {
+                var createNotiDTO = new CreateNotiDTO
+                {
+                    UserId = testServiceRecord.MemberId.Value,
+                    Title = "Cập nhật thông tin xét nghiệm",
+                    Content = notificationContent,
+                    SendTime = DateTime.Now,
+                    IsRead = false
+                };
+
+                await _notiService.CreateNotiAsync(createNotiDTO);
+            }
+
+            var specialtyNames = await _context.Users
+                .Where(u => u.UserId == testServiceRecord.StaffId)
+                .SelectMany(u => u.Specialties)
+                .Select(s => s.Name)
+                .ToListAsync();
+
+            return new TestServiceRecordDetailDTO
+            {
+                TestServiceRecordId = testServiceRecord.TestServiceRecordId,
+                ServiceId = testServiceRecord.ServiceId,
+                Result = testServiceRecord.Result,
+                RecordDate = testServiceRecord.RecordDate,
+                Notes = testServiceRecord.Notes,
+                Status = testServiceRecord.Status,
+                Staff = testServiceRecord.Staff == null ? null : new StaffDTO
+                {
+                    FullName = testServiceRecord.Staff.FullName,
+                    Email = testServiceRecord.Staff.Email,
+                    Avatar = testServiceRecord.Staff.Avatar,
+                    SpecialtyNames = specialtyNames
+                }
+            };
+        }
+
+        public async Task<bool> CancelTestResultAsync(int testServiceRecordId, int userId)
+        {
+            var testServiceRecord = await _context.TestServiceRecords
+                .FirstOrDefaultAsync(x => x.TestServiceRecordId == testServiceRecordId && x.MemberId == userId);
+
+            if (testServiceRecord == null)
+            {
+                throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm.");
+            }
+
+            if (testServiceRecord.Status == "Da huy ")
+            {
+                throw new ArgumentException("Bản ghi xét nghiệm đã bị hủy trước đó.");
+            }
+
+            if (testServiceRecord.Status == "Da hoan thanh"  || testServiceRecord.Status == "Dang cho kham" )
+            {
+                throw new ArgumentException("Bản ghi không thể hủy.");
+            }
+
+            testServiceRecord.Status = "Da huy";
+            await _context.SaveChangesAsync();
+
+            if (testServiceRecord.MemberId.HasValue)
+            {
+                var createNotiDTO = new CreateNotiDTO
+                {
+                    UserId = testServiceRecord.MemberId.Value,
+                    Title = "Hủy xét nghiệm",
+                    Content = "Xét nghiệm của bạn đã được hủy.",
+                    SendTime = DateTime.Now,
+                    IsRead = false
+                };
+
+                await _notiService.CreateNotiAsync(createNotiDTO);
+            }
+
+            return true;
+        }
     }
 }

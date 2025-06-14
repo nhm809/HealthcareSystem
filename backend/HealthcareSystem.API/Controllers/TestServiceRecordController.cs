@@ -1,9 +1,9 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
+﻿using HealthcareSystem.Application.DTOs;
+using HealthcareSystem.Application.Interfaces;
 //using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -74,6 +74,72 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "Đã xảy ra lỗi khi đặt lịch xét nghiệm." });
+            }
+        }
+        
+        [HttpPut("select")]
+        public async Task<IActionResult> SelectTestServiceRecord(int testServiceRecordId, int staffId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.SelectTestServiceRecordAsync(testServiceRecordId, staffId);
+                return Ok(new
+                {
+                    Message = "Bạn đã nhận thành công ca xét nghiệm này. Vui lòng thực hiện xét nghiệm theo đúng quy trình và cập nhật kết quả trong thời gian sớm nhất.",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật thông tin xét nghiệm." });
+            }
+        }
+
+        [HttpPut("update-result")]
+        public async Task<IActionResult> UpdateTestResult([FromBody] UpdateTestResultDTO request , int staffId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.UpdateTestResultAsync(request,staffId);
+                return Ok(new
+                {
+                    Message = "Đã cập nhật kết quả xét nghiệm thành công. Kết quả sẽ được gửi đến bệnh nhân.",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
+            }
+        }
+
+        [HttpPut("cancel")]
+        public async Task<IActionResult> UpdateTestResult(int testServiceRecordId, int userId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.CancelTestResultAsync(testServiceRecordId,userId);
+                return Ok(new
+                {
+                    Message = "Đã hủy bỏ bản ghi",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
             }
         }
     }
