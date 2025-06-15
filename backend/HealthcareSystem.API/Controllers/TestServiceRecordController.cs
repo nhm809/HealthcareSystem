@@ -21,7 +21,6 @@ namespace Api.Controllers
         }
         // GET /api/testservicerecord/member/5
         [HttpGet("member/{memberId}")]
-        //[Authorize(Roles = "MB")]
         public async Task<IActionResult> GetRecordsByMemberId(int memberId)
         {
             try
@@ -37,14 +36,13 @@ namespace Api.Controllers
 
         // GET /api/testservicerecord/5/2
         [HttpGet("{testServiceRecordId}/{memberId}")]
-        //[Authorize(Roles = "MB")]
         public async Task<IActionResult> GetTestRecordDetail(int testServiceRecordId, int memberId)
         {
             try
             {
                 var result = await _testServiceRecord.GetTestServiceRecordByIdAsync(testServiceRecordId, memberId);
                 if (result == null)
-                    return NotFound();
+                    return StatusCode(400, new { Message = "Bản xét nghiệm không tồn tại" });
                 return Ok(result);
             }
             catch (Exception ex)

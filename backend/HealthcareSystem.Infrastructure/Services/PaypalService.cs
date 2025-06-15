@@ -223,18 +223,20 @@ namespace HealthcareSystem.Infrastructure.Services
                     description = $"Thanh toán xét nghiệm - {testServiceRecord.FullNameOfMember}";
                 }
 
+
                 if (testServiceRecord.MemberId.HasValue)
                 {
-                    var createNotiDTO = new CreateNotiDTO
+                    var Notification = new Notification
                     {
                         UserId = testServiceRecord.MemberId.Value,
                         Title = "Thanh toán thành công",
                         Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
-                        SendTime = DateTime.Now,
+                        SendTime = DateTime.UtcNow.AddHours(7),///////////
                         IsRead = false
                     };
 
-                    await _notiService.CreateNotiAsync(createNotiDTO);
+                    _context.Notifications.Add(Notification);
+                    await _context.SaveChangesAsync();
                 }
             }
             else if (appointmentId.HasValue)
@@ -252,16 +254,17 @@ namespace HealthcareSystem.Infrastructure.Services
 
                 if (appointment.MemberId.HasValue)
                 {
-                    var createNotiDTO = new CreateNotiDTO
+                    var Notification = new Notification
                     {
                         UserId = appointment.MemberId.Value,
                         Title = "Thanh toán thành công",
-                        Content = "Bạn đã thanh toán thành công đặt lịch tư vấn.",
-                        SendTime = DateTime.Now,
+                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
+                        SendTime = DateTime.UtcNow.AddHours(7),///////////
                         IsRead = false
                     };
 
-                    await _notiService.CreateNotiAsync(createNotiDTO);
+                    _context.Notifications.Add(Notification);
+                    await _context.SaveChangesAsync();
                 }
             }
 

@@ -145,20 +145,6 @@ namespace Infrastructure.Services
                 Notes = ""
             };
 
-            if (testServiceRecord.MemberId.HasValue)
-            {
-                var createNotiDTO = new CreateNotiDTO
-                {
-                    UserId = testServiceRecord.MemberId.Value,
-                    Title = "Đặt lịch xét nghiệm",
-                    Content = "Vui lòng hoàn tất thanh toán để xác nhận lịch xét nghiệm của bạn.",
-                    SendTime = DateTime.Now,
-                    IsRead = false
-                };
-
-                await _notiService.CreateNotiAsync(createNotiDTO);
-            }
-
             _context.TestServiceRecords.Add(testServiceRecord);
             await _context.SaveChangesAsync();
 
@@ -179,8 +165,9 @@ namespace Infrastructure.Services
             
             if (testServiceRecord.StaffId == staffId)
                 throw new ArgumentException("Bạn đang thực hiện bản xét nghiệm này.");
-            else if (testServiceRecord.StaffId != null)
+            else if (testServiceRecord.StaffId != null && testServiceRecord.StaffId != staffId)
                 throw new ArgumentException("Bản ghi xét nghiệm đã được thực hiện bởi nhân viên khác.");
+
             testServiceRecord.StaffId = staffId;
             await _context.SaveChangesAsync();
 
@@ -224,6 +211,9 @@ namespace Infrastructure.Services
                     case "Da hoan thanh":
                         notificationContent = "Kết quả xét nghiệm của bạn đã có sẵn.";
                         break;
+                    case "Khach hang khong den":
+                        notificationContent = "Bản xét nghiệm của bạn đã quá hạn.";
+                        break;
                     case "Da huy":
                         notificationContent = "Xét nghiệm của bạn đã bị hủy.";
                         break;
@@ -234,21 +224,21 @@ namespace Infrastructure.Services
             {
                 notificationContent = "Bác sĩ đã cập nhật thông tin xét nghiệm của bạn.";
             }
-
             await _context.SaveChangesAsync();
 
             if (testServiceRecord.MemberId.HasValue && !string.IsNullOrEmpty(notificationContent))
             {
-                var createNotiDTO = new CreateNotiDTO
+                var Notification = new Notification
                 {
                     UserId = testServiceRecord.MemberId.Value,
                     Title = "Cập nhật thông tin xét nghiệm",
                     Content = notificationContent,
-                    SendTime = DateTime.Now,
+                    SendTime = DateTime.UtcNow.AddHours(7),///////////
                     IsRead = false
                 };
 
-                await _notiService.CreateNotiAsync(createNotiDTO);
+                _context.Notifications.Add(Notification);
+                await _context.SaveChangesAsync();
             }
 
             var specialtyNames = await _context.Users
@@ -285,14 +275,18 @@ namespace Infrastructure.Services
                 throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm.");
             }
 
-            if (testServiceRecord.Status == "Da huy ")
+            if (testServiceRecord.Status == "Da huy")
             {
                 throw new ArgumentException("Bản ghi xét nghiệm đã bị hủy trước đó.");
-            }
-
-            if (testServiceRecord.Status == "Da hoan thanh"  || testServiceRecord.Status == "Dang cho kham" )
+            }else if (testServiceRecord.Status == "Da hoan thanh")
             {
-                throw new ArgumentException("Bản ghi không thể hủy.");
+                throw new ArgumentException("Xét nghiệm đã hoàn thành.");
+            }else if (testServiceRecord.Status == "Dang cho kham")
+            {
+                throw new ArgumentException("Xét nghiệm đang trong quá trình chờ khám quý khách cân nhắc trước khi hủy .");
+            }else if (testServiceRecord.Status == "Khach hang khong den")
+            {
+                throw new ArgumentException("Bản ghi xét nghiệm đã quá hạn.");
             }
 
             testServiceRecord.Status = "Da huy";
@@ -300,16 +294,17 @@ namespace Infrastructure.Services
 
             if (testServiceRecord.MemberId.HasValue)
             {
-                var createNotiDTO = new CreateNotiDTO
+                var Notification = new Notification
                 {
                     UserId = testServiceRecord.MemberId.Value,
                     Title = "Hủy xét nghiệm",
                     Content = "Xét nghiệm của bạn đã được hủy.",
-                    SendTime = DateTime.Now,
+                    SendTime = DateTime.UtcNow.AddHours(7),
                     IsRead = false
                 };
 
-                await _notiService.CreateNotiAsync(createNotiDTO);
+                 _context.Notifications.Add(Notification);
+                await _context.SaveChangesAsync();
             }
 
             return true;
