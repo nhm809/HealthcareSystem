@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Home from "../pages/Home/Home";
+import StaffLayout from "../layouts/StaffLayout";
 
 const routers = [
     {
@@ -34,6 +35,11 @@ const routers = [
         path: 'test-sti',
         component: lazy(() => import('../pages/TestSti/PaypalCallback'))
     },
+    // Staff route: NO children, just component
+    {
+        path: '/staff',
+        component: StaffLayout
+    }
 ]
 
 export default routers;
