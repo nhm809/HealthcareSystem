@@ -12,19 +12,10 @@ function PaypalCallback() {
         const handler = params.get('handler');
         const testServiceRecordId = params.get('testServiceRecordId');
         const userId = Cookies.get('userId');
-        const now = new Date().toISOString();
+        // const now = new Date().toISOString();
 
         if (handler === 'success' && userId && testServiceRecordId) {
-            notiApi.createNoti({
-                userId: Number(userId),
-                title: 'Đặt lịch xét nghiệm thành công',
-                content: `Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: ${testServiceRecordId}`,
-                sendTime: now,
-                isRead: false
-            })
-            .finally(() => {
-                navigate('/');
-            });
+            navigate('/');
         } 
     }, [location, navigate]);
 

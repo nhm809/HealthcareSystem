@@ -12,6 +12,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import loginBanner from '../../../assets/imgs/loginBanner.png';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router-dom';
 
 function AuthModal({ open, onClose }) {
     const [tab, setTab] = useState(0);
@@ -29,6 +30,7 @@ function AuthModal({ open, onClose }) {
     const [isOtpSent, setIsOtpSent] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -72,6 +74,17 @@ function AuthModal({ open, onClose }) {
 
                 toast.success('Đăng nhập thành công');
                 onClose();
+
+                // Redirect based on role
+                if (roleId === 'ST') {
+                    navigate('/staff');
+                } else if (roleId === 'AD') {
+                    navigate('/admin/dashboard');
+                } else if (roleId === 'MG') {
+                    navigate('/manager/dashboard');
+                } else {
+                    navigate('/');
+                }
             }
         } catch (err) {
             console.error(err);
