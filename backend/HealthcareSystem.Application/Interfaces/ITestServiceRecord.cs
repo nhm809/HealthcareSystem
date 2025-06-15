@@ -7,8 +7,7 @@ namespace HealthcareSystem.Application.Interfaces
 {
     public interface ITestServiceRecord
     {
-        //Task<List<TestServiceRecordListDTO>> GetRecordsByStaffIdAsync(int staffId);
-        //Task<TestServiceRecordDetailDTO?> GetRecordByIdAsync(int recordId);
+
         Task<IEnumerable<TestServiceRecordDTO>> GetTestServiceRecordsByMemberIdAsync(int MemberId);
         Task<TestServiceRecordDetailDTO?> GetTestServiceRecordByIdAsync(int testServiceRecordId, int MemberId);
 
@@ -17,5 +16,8 @@ namespace HealthcareSystem.Application.Interfaces
         Task<UpdateTestServiceRecordDTO> SelectTestServiceRecordAsync(int testServiceRecordId, int staffId);
         Task<TestServiceRecordDetailDTO> UpdateTestResultAsync(UpdateTestResultDTO request , int staffId);
         Task<bool> CancelTestResultAsync(int testServiceRecordId, int userId);
+
+        Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync();
+        Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStaffIdAsync(int staffId);
     }
 }

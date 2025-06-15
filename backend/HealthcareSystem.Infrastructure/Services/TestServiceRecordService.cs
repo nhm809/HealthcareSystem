@@ -309,5 +309,48 @@ namespace Infrastructure.Services
 
             return true;
         }
+
+        public async Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync(){
+             return await _context.TestServiceRecords
+                .Where(r => r.Status == "Dang cho kham")
+                .Select(r => new TestServiceRecordStaffDTO
+                {
+                    TestServiceRecordId = r.TestServiceRecordId,
+                    ServiceId = r.ServiceId,
+                    Gender = r.Gender,
+                    PhoneNumber = r.PhoneNumber,
+                    FullNameOfMember = r.FullNameOfMember,
+                    Result = r.Result,
+                    StaffId = r.StaffId,
+                    TestDate = r.TestDate,
+                    MemberId = r.MemberId,
+                    Notes = r.Notes,
+                    RecordDate = r.RecordDate,
+                    Status = r.Status
+                })
+                .ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStaffIdAsync(int staffId){
+             return await _context.TestServiceRecords
+                .Where(r => r.StaffId == staffId)
+                .Select(r => new TestServiceRecordStaffDTO
+                {
+                    TestServiceRecordId = r.TestServiceRecordId,
+                    ServiceId = r.ServiceId,
+                    Gender = r.Gender,
+                    PhoneNumber = r.PhoneNumber,
+                    FullNameOfMember = r.FullNameOfMember,
+                    Result = r.Result,
+                    StaffId = r.StaffId,
+                    TestDate = r.TestDate,
+                    MemberId = r.MemberId,
+                    Notes = r.Notes,
+                    RecordDate = r.RecordDate,
+                    Status = r.Status
+                })
+                .ToListAsync();
+        }
     }
 }

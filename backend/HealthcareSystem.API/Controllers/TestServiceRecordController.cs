@@ -140,5 +140,41 @@ namespace Api.Controllers
                 return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
             }
         }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetRecordsByStatusAsync(){
+            
+            try
+            {
+                var result = await _testServiceRecord.GetTestServiceRecordByStatusAsync();
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
+            }
+        }
+
+        [HttpGet("staff/{staffId}")]
+        public async Task<IActionResult> GetRecordsByStaffIdAsync(int staffId){
+            
+            try
+            {
+                var result = await _testServiceRecord.GetTestServiceRecordByStaffIdAsync(staffId);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
+            }
+        }
     }
 }
