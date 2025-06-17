@@ -3,6 +3,9 @@ import { Row, Col, Card, Form, Select, Input, Button, Table, Tag, Avatar, Pagina
 import { ReloadOutlined, FilterOutlined } from '@ant-design/icons';
 import { getTestServiceRecordsByStatus, assignTestToStaff } from '../../services/api';
 import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -20,6 +23,7 @@ const StaffDashboard = () => {
   const [current, setCurrent] = useState(1);
   const pageSize = 8;
   const [searchName, setSearchName] = useState('');
+  const navigate = useNavigate();
 
   const fetchTestRecords = async () => {
     setLoading(true);
@@ -126,80 +130,93 @@ const StaffDashboard = () => {
   // Tính toán dữ liệu cho trang hiện tại
   const paginatedData = filteredData.slice((current - 1) * pageSize, current * pageSize);
 
+  const handleLogout = () => {
+    Cookies.remove('email');
+    Cookies.remove('userid');
+    Cookies.remove('userId');
+    Cookies.remove('token');
+    Cookies.remove('refreshToken');
+    localStorage.removeItem('userInfo');
+    navigate('/');
+    window.location.reload();
+  };
+
   return (
-    <Row gutter={32}>
-      {/* Filters */}
-      <Col xs={24} sm={8} md={7} lg={6} xl={5}>
-        <Card style={{ borderRadius: 16, marginBottom: 24 }} bodyStyle={{ padding: 24 }}>
-          <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16 }}><FilterOutlined style={{ marginRight: 8 }} />Filters</div>
-          <Form form={form} layout="vertical">
-            <Form.Item label="Test Type" name="testType">
-              <Select defaultValue="All">
-                <Option value="All">All</Option>
-                <Option value="Type1">Type 1</Option>
-                <Option value="Type2">Type 2</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item label="Status" name="status">
-              <Select defaultValue="All">
-                <Option value="All">All</Option>
-                <Option value="Pending">Pending</Option>
-                <Option value="InProgress">In Progress</Option>
-                <Option value="Completed">Completed</Option>
-                <Option value="Cancelled">Cancelled</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item label="Số điện thoại" name="customerName">
-              <Input
-                placeholder="Nhập số điện thoại..."
-                value={searchName}
-                onChange={e => {
-                  setSearchName(e.target.value);
-                  setCurrent(1); // Reset về trang 1 khi tìm kiếm
+    <>
+      <Row gutter={32}>
+        {/* Filters */}
+        <Col xs={24} sm={8} md={7} lg={6} xl={5}>
+          <Card style={{ borderRadius: 16, marginBottom: 24 }} bodyStyle={{ padding: 24 }}>
+            <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 16 }}><FilterOutlined style={{ marginRight: 8 }} />Filters</div>
+            <Form form={form} layout="vertical">
+              <Form.Item label="Test Type" name="testType">
+                <Select defaultValue="All">
+                  <Option value="All">All</Option>
+                  <Option value="Type1">Type 1</Option>
+                  <Option value="Type2">Type 2</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Status" name="status">
+                <Select defaultValue="All">
+                  <Option value="All">All</Option>
+                  <Option value="Pending">Pending</Option>
+                  <Option value="InProgress">In Progress</Option>
+                  <Option value="Completed">Completed</Option>
+                  <Option value="Cancelled">Cancelled</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Số điện thoại" name="customerName">
+                <Input
+                  placeholder="Nhập số điện thoại..."
+                  value={searchName}
+                  onChange={e => {
+                    setSearchName(e.target.value);
+                    setCurrent(1); // Reset về trang 1 khi tìm kiếm
+                  }}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" block icon={<FilterOutlined />}>Apply Filters</Button>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+        {/* Table section */}
+        <Col xs={24} sm={16} md={17} lg={18} xl={19}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <h2 style={{ fontWeight: 700, fontSize: 26, margin: 0 }}>Danh sách các xét nghiệm</h2>
+            <Button icon={<ReloadOutlined />} onClick={handleRefresh} style={{ borderRadius: 24, fontWeight: 500 }}>
+              Refresh
+            </Button>
+          </div>
+          <Card style={{ borderRadius: 16, boxShadow: '0 2px 12px #0001' }} bodyStyle={{ padding: 0 }}>
+            <Table
+              columns={columns}
+              dataSource={paginatedData}
+              loading={loading}
+              pagination={false}
+              rowKey="key"
+              style={{ borderRadius: 16 }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Pagination
+                current={current}
+                total={filteredData.length}
+                pageSize={pageSize}
+                onChange={setCurrent}
+                showSizeChanger={false}
+                itemRender={(page, type, originalElement) => {
+                  if (type === 'page') {
+                    return <Button shape="circle" type={page === current ? 'primary' : 'default'}>{page}</Button>;
+                  }
+                  return originalElement;
                 }}
               />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" block icon={<FilterOutlined />}>Apply Filters</Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </Col>
-      {/* Table section */}
-      <Col xs={24} sm={16} md={17} lg={18} xl={19}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h2 style={{ fontWeight: 700, fontSize: 26, margin: 0 }}>Danh sách các xét nghiệm</h2>
-          <Button icon={<ReloadOutlined />} onClick={handleRefresh} style={{ borderRadius: 24, fontWeight: 500 }}>
-            Refresh
-          </Button>
-        </div>
-        <Card style={{ borderRadius: 16, boxShadow: '0 2px 12px #0001' }} bodyStyle={{ padding: 0 }}>
-          <Table
-            columns={columns}
-            dataSource={paginatedData}
-            loading={loading}
-            pagination={false}
-            rowKey="key"
-            style={{ borderRadius: 16 }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-            <Pagination
-              current={current}
-              total={filteredData.length}
-              pageSize={pageSize}
-              onChange={setCurrent}
-              showSizeChanger={false}
-              itemRender={(page, type, originalElement) => {
-                if (type === 'page') {
-                  return <Button shape="circle" type={page === current ? 'primary' : 'default'}>{page}</Button>;
-                }
-                return originalElement;
-              }}
-            />
-          </div>
-        </Card>
-      </Col>
-    </Row>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 };
 

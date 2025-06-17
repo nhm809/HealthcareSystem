@@ -78,8 +78,8 @@ function AuthModal({ open, onClose }) {
                 // Redirect based on role
                 if (roleId === 'ST') {
                     navigate('/staff');
-                } else if (roleId === 'AD') {
-                    navigate('/admin/dashboard');
+                } else if (roleId === 'CS') {
+                    navigate('/consultant');
                 } else if (roleId === 'MG') {
                     navigate('/manager/dashboard');
                 } else {

@@ -7,7 +7,8 @@ import './assets/styles/main.scss'
 import { ToastProvider } from './contexts/ToastProvider';
 import { StoreProvider } from './contexts/StoreProvider';
 import routers from './routers/routers';
-import StaffLayout from './layouts/StaffLayout';
+import StaffLayout from './components/Layout/StaffLayout';
+import ConsultantLayout from './components/Layout/ConsultantLayout';
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           <Routes>
             {/* Route staff: render StaffLayout directly */}
             <Route path="/staff" element={<StaffLayout />} />
+
+            <Route path="/consultant" element= {<ConsultantLayout />}/>
+
             {/* Member routes with default layout */}
             <Route element={
               <div className="App">

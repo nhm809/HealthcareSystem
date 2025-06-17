@@ -1,4 +1,3 @@
-
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
@@ -32,7 +31,9 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    IsAnswered = q.IsAnswered
+                    IsAnswered = q.IsAnswered,
+                    Age = q.Age,
+                    Gender = q.Gender
                 })
                 .ToListAsync();
         }
@@ -69,7 +70,9 @@ namespace Infrastructure.Services
                 AttachmentPath = questionDto.AttachmentPath,
                 SubmitDate = DateTime.UtcNow,
                 ConsultantId = luckyPerson.UserId,
-                IsAnswered = false
+                IsAnswered = false,
+                Age = questionDto.Age,
+                Gender = questionDto.Gender
             };
             _context.Questions.Add(question);
             return await _context.SaveChangesAsync() > 0;
