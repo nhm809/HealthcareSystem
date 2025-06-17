@@ -82,6 +82,10 @@ export const updateTestResult = async (staffId, data) => {
      });
 };
 
+export const questionApi = {
+    getAllQuestions: () => api.get('/question/getAll'),
+};
+
 // Request interceptor
 api.interceptors.request.use(
      async (config) => {

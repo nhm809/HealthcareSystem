@@ -274,13 +274,17 @@ function Header() {
         <span className="logo" onClick={() => navigate('/')}>hello</span>
 
         <div className="menu">
+          <button onClick={() => navigate('/')}>Trang chủ</button>
           <div className="service-dropdown">
+            
             <button className="service-dropdown-button">
               Dịch vụ
               <FontAwesomeIcon icon={faAngleDown} id="service-icon" />
             </button>
 
-            <div className="service-dropdown-content">
+          
+
+          <div className="service-dropdown-content">
               <button className="stis-button" onClick={(() => navigate('/test-sti'))}>Xét Nghiệm STIs</button>
               <button onClick={() => navigate('/appointment')}>Tư vấn Trực Tuyến</button>
             </div>

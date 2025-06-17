@@ -24,6 +24,10 @@ namespace Domain.Entities
 
         public bool? IsAnswered { get; set; }
 
+        public int? Age { get; set; }
+
+        public string? Gender { get; set; }
+
         public virtual User? Consultant { get; set; }
 
         public virtual User? Member { get; set; }

@@ -149,7 +149,7 @@ const StaffSchedule = () => {
       setModalOpen(false);
       // Sau khi cập nhật, nên reload lại dữ liệu
       setTimeout(() => window.location.reload(), 500);
-    } catch (err) {
+    } catch {
       message.error('Cập nhật trạng thái thất bại!');
     }
   };
@@ -157,7 +157,7 @@ const StaffSchedule = () => {
   return (
     <Row gutter={32}>
       <Col span={24}>
-        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 0' }}>Lịch hẹn của tôi</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 0' }}>Các xét nghiệm đang thực hiện</h2>
         <Card style={{ borderRadius: 16, boxShadow: '0 2px 12px #0001' }} bodyStyle={{ padding: 0 }}>
           <Table
             columns={columns}

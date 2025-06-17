@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250615085543_database")]
+    [Migration("20250617083759_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -385,6 +385,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -394,6 +397,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnName("ConsultantID");
 
                     b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsAnswered")

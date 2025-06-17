@@ -20,7 +20,7 @@ function Profile() {
      const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
      const [form] = Form.useForm();
      const [passwordForm] = Form.useForm();
-     const [avatarFile, setAvatarFile] = useState(null);
+     const [setAvatarFile] = useState(null);
      const [uploading, setUploading] = useState(false);
      const [changingPassword, setChangingPassword] = useState(false);
      const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -114,7 +114,7 @@ function Profile() {
                const url = await uploadToCloudinary(file);
                form.setFieldValue('avatarPath', url);
                message.success('Tải ảnh lên thành công!');
-          } catch (err) {
+          } catch {
                message.error('Tải ảnh lên thất bại!');
           } finally {
                setUploadingAvatar(false);
@@ -212,11 +212,6 @@ function Profile() {
      return (
           <MainLayout>
                <Card className="profile-container">
-               <a onClick={() => navigate('/')} style={{color: '#333333'}}>
-                    <FontAwesomeIcon icon={faArrowLeft} style={{marginRight: "4px"}}/>
-                    Về trang chủ
-                    </a>
-                    
                     <div className="profile-header">
                          <div>
                               <Avatar

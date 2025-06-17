@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import Home from "../pages/Home/Home";
-import StaffLayout from "../layouts/StaffLayout";
+import StaffLayout from "../components/Layout/StaffLayout";
+import ConsultantLayout from "../components/Layout/ConsultantLayout";
 
 const routers = [
     {
@@ -39,6 +40,11 @@ const routers = [
     {
         path: '/staff',
         component: StaffLayout
+    },
+
+    {
+        path: '/consultant',
+        component: ConsultantLayout
     }
 ]
 

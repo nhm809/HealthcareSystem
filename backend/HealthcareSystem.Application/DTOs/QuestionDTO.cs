@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Application.DTOs
@@ -23,5 +22,7 @@ namespace Application.DTOs
 
         public bool? IsAnswered { get; set; }
 
+        public int? Age { get; set; }
+        public string? Gender { get; set; }
     }
 }
