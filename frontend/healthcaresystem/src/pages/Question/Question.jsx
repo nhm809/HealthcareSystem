@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, Button, Radio, Spin, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
 import { questionApi } from '@services/api';
 
@@ -9,6 +9,31 @@ function Question() {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 4;
+    const [selectedQuestion, setSelectedQuestion] = useState(null);
+
+    const mockAnswers = [
+        {
+            id: 1,
+            author: 'Hồ Minh Tâm',
+            content: 'Chào em, không biết triệu chứng đau đầu của em có diễn ra thường xuyên không và thường kéo dài khoảng bao lâu?',
+            date: '21/05/2025',
+            isConsultant: true,
+        },
+        {
+            id: 2,
+            author: 'Nữ, 16 tuổi',
+            content: 'Dạ em đau đầu cả 2 tuần nay liên tục suốt cả ngày ạ.',
+            date: '21/05/2025',
+            isConsultant: false,
+        },
+        {
+            id: 3,
+            author: 'Hồ Minh Tâm',
+            content: 'Ngoài đau đầu ra em còn có triệu chứng gì nữa không',
+            date: '21/05/2025',
+            isConsultant: true,
+        },
+    ];
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -18,17 +43,17 @@ function Question() {
                 // Chuyển đổi dữ liệu API sang format phù hợp để render
                 const data = res.data.map(q => ({
                     id: q.questionId,
-                    gender: q.gender || 'Ẩn', // Nếu có gender thì lấy, không thì để Ẩn
-                    age: q.age || 'Ẩn',
                     topic: q.specialty,
                     title: q.titleQuestion,
                     date: q.submitDate ? new Date(q.submitDate).toLocaleDateString('vi-VN') : '',
                     content: q.content,
-                    answers: q.isAnswered ? 1 : 0, // Nếu có trường số câu trả lời thì thay thế
-                    likes: 0, // Nếu có trường likes thì thay thế
+                    answers: q.isAnswered ? 1 : 0,
+                    gender: q.gender,
+                    age: q.age,
+                    likes: 0,
                 }));
                 setQuestions(data);
-            } catch (err) {
+            } catch {
                 message.error('Không thể tải danh sách câu hỏi');
             } finally {
                 setLoading(false);
@@ -46,43 +71,86 @@ function Question() {
             <Row gutter={24}>
                 <Col span={14}>
                     <Card>
-                        <Input.Search placeholder="Tìm kiếm từ khóa, chủ đề" style={{ marginBottom: 16 }} />
-                        <div style={{ marginBottom: 16 }}>
-                            <Tag>Hô hấp</Tag>
-                            <Tag>Chuyên khoa sản</Tag>
-                            <Tag>HPV</Tag>
-                            <Tag>Lậu</Tag>
-                        </div>
-                        {loading ? (
-                            <Spin style={{ width: '100%', margin: '32px 0' }} />
+                        {selectedQuestion ? (
+                            <div>
+                                <Button
+                                    icon={<ArrowLeftOutlined />}
+                                    type="link"
+                                    onClick={() => setSelectedQuestion(null)}
+                                    style={{ marginBottom: 8, padding: 0 }}
+                                >
+                                    Quay lại
+                                </Button>
+                                <div style={{ marginBottom: 8 }}>
+                                    <b>{selectedQuestion.gender}, {selectedQuestion.age} tuổi</b>
+                                    <Tag color="green">{selectedQuestion.topic}</Tag>
+                                    <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
+                                        {selectedQuestion.isAnswered ? 'Đã trả lời' : 'Đang mở'}
+                                    </Tag>
+                                </div>
+                                <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4 }}>{selectedQuestion.title}</div>
+                                <div style={{ marginBottom: 8 }}>{selectedQuestion.content}</div>
+                                <div style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
+                                    <span>{selectedQuestion.date}</span>
+                                    <span style={{ marginLeft: 16 }}>💬 {selectedQuestion.answers} câu trả lời</span>
+                                    <span style={{ marginLeft: 16 }}>❤️ {selectedQuestion.likes} Cảm ơn</span>
+                                </div>
+                                {/* Danh sách trả lời (mock) */}
+                                <div style={{ background: '#f6f6f6', borderRadius: 8, padding: 12, marginBottom: 8 }}>
+                                    {mockAnswers.map(ans => (
+                                        <div key={ans.id} style={{ marginBottom: 12 }}>
+                                            <div style={{ fontWeight: 500, color: ans.isConsultant ? '#2B7A4B' : '#888' }}>{ans.author}</div>
+                                            <div style={{ background: ans.isConsultant ? '#fff' : '#EAF7F0', borderRadius: 6, padding: 8, margin: '4px 0' }}>{ans.content}</div>
+                                            <div style={{ fontSize: 11, color: '#aaa', textAlign: 'right' }}>{ans.date}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         ) : (
-                            <List
-                                dataSource={pagedQuestions}
-                                locale={{ emptyText: 'Không có câu hỏi nào' }}
-                                renderItem={item => (
-                                    <Card key={item.id} style={{ marginBottom: 16, background: '#EAF7F0' }}>
-                                        <div>
-                                            <b>{item.gender}, {item.age} tuổi</b>
-                                            <Tag color="green">{item.topic}</Tag>
-                                        </div>
-                                        <div style={{ fontWeight: 600, color: '#2B7A4B' }}>{item.title}</div>
-                                        <div>{item.content}</div>
-                                        <div style={{ fontSize: 12, color: '#888', marginTop: 8 }}>
-                                            <span>{item.date}</span>
-                                            <span style={{ marginLeft: 16 }}>💬 {item.answers} câu trả lời</span>
-                                            <span style={{ marginLeft: 16 }}>❤️ {item.likes} Cảm ơn</span>
-                                        </div>
-                                    </Card>
+                            <>
+                                <Input.Search placeholder="Tìm kiếm từ khóa, chủ đề" style={{ marginBottom: 16 }} />
+                                <div style={{ marginBottom: 16 }}>
+                                    <Tag>Hô hấp</Tag>
+                                    <Tag>Chuyên khoa sản</Tag>
+                                    <Tag>HPV</Tag>
+                                    <Tag>Lậu</Tag>
+                                </div>
+                                {loading ? (
+                                    <Spin style={{ width: '100%', margin: '32px 0' }} />
+                                ) : (
+                                    <List
+                                        dataSource={pagedQuestions}
+                                        locale={{ emptyText: 'Không có câu hỏi nào' }}
+                                        renderItem={item => (
+                                            <Card
+                                                key={item.id}
+                                                style={{ marginBottom: 16, background: '#EAF7F0', cursor: 'pointer' }}
+                                                onClick={() => setSelectedQuestion(item)}
+                                            >
+                                                <div>
+                                                    <b>{item.gender}, {item.age} tuổi</b>
+                                                    <Tag color="green">{item.topic}</Tag>
+                                                </div>
+                                                <div style={{ fontWeight: 600, color: '#2B7A4B' }}>{item.title}</div>
+                                                <div>{item.content}</div>
+                                                <div style={{ fontSize: 12, color: '#888', marginTop: 8 }}>
+                                                    <span>{item.date}</span>
+                                                    <span style={{ marginLeft: 16 }}>💬 {item.answers} câu trả lời</span>
+                                                    <span style={{ marginLeft: 16 }}>❤️ {item.likes} Cảm ơn</span>
+                                                </div>
+                                            </Card>
+                                        )}
+                                    />
                                 )}
-                            />
+                                <Pagination
+                                    current={currentPage}
+                                    total={questions.length}
+                                    pageSize={pageSize}
+                                    onChange={page => setCurrentPage(page)}
+                                    style={{ textAlign: 'center', marginTop: 16 }}
+                                />
+                            </>
                         )}
-                        <Pagination
-                            current={currentPage}
-                            total={questions.length}
-                            pageSize={pageSize}
-                            onChange={page => setCurrentPage(page)}
-                            style={{ textAlign: 'center', marginTop: 16 }}
-                        />
                     </Card>
                 </Col>
                 <Col span={10}>
