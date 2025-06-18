@@ -399,6 +399,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("HeartCount")
+                        .HasColumnType("int");
+
                     b.Property<bool?>("IsAnswered")
                         .HasColumnType("bit")
                         .HasColumnName("IsAnswered");
@@ -406,6 +409,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
+
+                    b.Property<int?>("MessCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Specialty")
                         .HasMaxLength(50)

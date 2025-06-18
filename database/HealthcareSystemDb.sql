@@ -77,7 +77,7 @@ VALUES
 
 --Question --=====================================================================================================================================================
 INSERT INTO Question (
-   MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered, Age, Gender
+   MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered, Age, Gender, HeartCount, MessCount
 )
 VALUES
 (
@@ -90,7 +90,9 @@ VALUES
     4,
     1,
     16,
-    N'Nữ'
+    N'Nữ',
+	10,
+	1
 );
 
 --=====================================================================================================================================================

@@ -225,7 +225,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     ConsultantID = table.Column<int>(type: "int", nullable: true),
                     IsAnswered = table.Column<bool>(type: "bit", nullable: true),
                     Age = table.Column<int>(type: "int", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeartCount = table.Column<int>(type: "int", nullable: true),
+                    MessCount = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

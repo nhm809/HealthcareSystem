@@ -23,6 +23,12 @@ namespace Application.DTOs
         public bool? IsAnswered { get; set; }
 
         public int? Age { get; set; }
+
         public string? Gender { get; set; }
+
+        public int? HeartCount { get; set; }
+
+        public int? MessCount { get; set; }
+
     }
 }

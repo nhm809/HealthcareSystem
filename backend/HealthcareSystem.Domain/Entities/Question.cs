@@ -28,6 +28,10 @@ namespace Domain.Entities
 
         public string? Gender { get; set; }
 
+        public int? HeartCount { get; set; }
+
+        public int? MessCount { get; set; }
+
         public virtual User? Consultant { get; set; }
 
         public virtual User? Member { get; set; }

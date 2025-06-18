@@ -56,10 +56,13 @@ namespace Infrastructure.Services
             var random = new Random();
 
             if (!consultants.Any())
-                return false; 
+                return false;
 
             var luckyPerson = consultants[random.Next(consultants.Count)];
 
+            var countMess = await _context.Messages
+                .Where(m => m.QuestionId == questionDto.QuestionId)
+                .CountAsync();
 
             var question = new Question
             {
@@ -72,7 +75,9 @@ namespace Infrastructure.Services
                 ConsultantId = luckyPerson.UserId,
                 IsAnswered = false,
                 Age = questionDto.Age,
-                Gender = questionDto.Gender
+                Gender = questionDto.Gender,
+                HeartCount = 0,
+                MessCount = 0
             };
             _context.Questions.Add(question);
             return await _context.SaveChangesAsync() > 0;
@@ -83,7 +88,7 @@ namespace Infrastructure.Services
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null)
             {
-                return false; 
+                return false;
             }
             question.IsAnswered = true;
             _context.Questions.Update(question);
@@ -101,5 +106,42 @@ namespace Infrastructure.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<bool> GiveAHeart(QuestionDTO questionDto)
+        {
+            var question = await _context.Questions.FindAsync(questionDto.QuestionId);
+            if (question == null)
+            {
+                return false;
+            }
+            question.HeartCount = (question.HeartCount ?? 0) + 1;
+            _context.Questions.Update(question);
+            return await _context.SaveChangesAsync() > 0;
+
+        }
+
+        public async Task<QuestionDTO> GetQuestionById(int questionId)
+        {
+            var question = await _context.Questions.FindAsync(questionId);
+            if (question == null)
+            {
+                return null;
+            }
+            return new QuestionDTO
+            {
+                QuestionId = questionId,
+                MemberId = question.MemberId,
+                Specialty = question.Specialty,
+                TitleQuestion = question.TitleQuestion,
+                Content = question.Content,
+                AttachmentPath = question.AttachmentPath,
+                SubmitDate = question.SubmitDate,
+                ConsultantId = question.ConsultantId,
+                IsAnswered = question.IsAnswered,
+                Age = question.Age,
+                Gender = question.Gender,
+                HeartCount = question.HeartCount,
+                MessCount = question.MessCount
+            };
+        }
     }
 }
