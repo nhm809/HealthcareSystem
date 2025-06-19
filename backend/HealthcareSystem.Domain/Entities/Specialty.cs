@@ -14,5 +14,7 @@ namespace Domain.Entities
 
         public virtual ICollection<User> Users { get; set; } = new List<User>();
 
+        public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+
     }
 }

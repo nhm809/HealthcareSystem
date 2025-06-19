@@ -8,7 +8,7 @@ namespace Application.DTOs
 
         public int? MemberId { get; set; }
 
-        public string? Specialty { get; set; }
+        public int? SpecialtyId { get; set; }
 
         public string? TitleQuestion { get; set; }
 

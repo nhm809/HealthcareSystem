@@ -217,7 +217,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     QuestionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MemberID = table.Column<int>(type: "int", nullable: true),
-                    Specialty = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    SpecialtyId = table.Column<int>(type: "int", nullable: true),
                     TitleQuestion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AttachmentPath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
@@ -232,6 +232,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Question__0DC06F8C7085B3FF", x => x.QuestionID);
+                    table.ForeignKey(
+                        name: "FK_Question_Specialty_SpecialtyId",
+                        column: x => x.SpecialtyId,
+                        principalTable: "Specialty",
+                        principalColumn: "SpecialtyID");
                     table.ForeignKey(
                         name: "FK__Question__Consul__45F365D3",
                         column: x => x.ConsultantID,
@@ -569,6 +574,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 column: "MemberID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Question_SpecialtyId",
+                table: "Question",
+                column: "SpecialtyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReportServiceDetail_ServiceID",
                 table: "ReportServiceDetail",
                 column: "ServiceID");
@@ -658,10 +668,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "Question");
 
             migrationBuilder.DropTable(
-                name: "Specialty");
+                name: "Service");
 
             migrationBuilder.DropTable(
-                name: "Service");
+                name: "Specialty");
 
             migrationBuilder.DropTable(
                 name: "User");

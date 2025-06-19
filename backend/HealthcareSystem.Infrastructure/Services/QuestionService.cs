@@ -25,7 +25,7 @@ namespace Infrastructure.Services
                 {
                     QuestionId = q.QuestionId,
                     MemberId = q.MemberId,
-                    Specialty = q.Specialty,
+                    SpecialtyId = q.SpecialtyId,
                     TitleQuestion = q.TitleQuestion,
                     Content = q.Content,
                     AttachmentPath = q.AttachmentPath,
@@ -41,14 +41,14 @@ namespace Infrastructure.Services
         public async Task<bool> AddQuestionAsync(QuestionDTO questionDto)
         {
 
-            var specialtyId = await _context.Specialties
-                .Where(s => s.Name == questionDto.Specialty)
-                .Select(s => s.SpecialtyId)
-                .FirstOrDefaultAsync();
+            //var specialtyId = await _context.Specialties
+            //    .Where(s => s.Name == questionDto.Specialty)
+            //    .Select(s => s.SpecialtyId)
+            //    .FirstOrDefaultAsync();
 
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
-                .Where(u => u.Specialties.Any(s => s.SpecialtyId == specialtyId))
+                .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId))
                 .ToListAsync();
 
             var consultantIds = consultants.Select(c => c.UserId).ToList();
@@ -67,7 +67,7 @@ namespace Infrastructure.Services
             var question = new Question
             {
                 MemberId = questionDto.MemberId,
-                Specialty = questionDto.Specialty,
+                SpecialtyId = questionDto.SpecialtyId,
                 TitleQuestion = questionDto.TitleQuestion,
                 Content = questionDto.Content,
                 AttachmentPath = questionDto.AttachmentPath,
@@ -130,7 +130,7 @@ namespace Infrastructure.Services
             {
                 QuestionId = questionId,
                 MemberId = question.MemberId,
-                Specialty = question.Specialty,
+                SpecialtyId = question.SpecialtyId,
                 TitleQuestion = question.TitleQuestion,
                 Content = question.Content,
                 AttachmentPath = question.AttachmentPath,

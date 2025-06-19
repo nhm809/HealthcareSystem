@@ -77,12 +77,12 @@ VALUES
 
 --Question --=====================================================================================================================================================
 INSERT INTO Question (
-   MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered, Age, Gender, HeartCount, MessCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered, Age, Gender, HeartCount, MessCount
 )
 VALUES
 (
     5,
-    N'Sản phụ khoa',
+    1,
     N'Trễ kinh 7 ngày có phải mang thai không?',
     N'Chào bác sĩ, em bị trễ kinh 7 ngày, kèm đau bụng dưới và tức ngực. Không biết có nên thử thai chưa ạ?',
     NULL,
