@@ -84,6 +84,12 @@ export const updateTestResult = async (staffId, data) => {
 
 export const questionApi = {
     getAllQuestions: () => api.get('/question/getAll'),
+    addQuestion: (data) => api.post('/question/add', data),
+};
+
+export const messageApi = {
+    getHistory: (questionId) => api.get(`/message/getHistory/${questionId}`),
+    addMessage: (data) => api.post('/message/add', data),
 };
 
 // Request interceptor
