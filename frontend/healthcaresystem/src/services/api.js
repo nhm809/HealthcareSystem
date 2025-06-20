@@ -92,6 +92,10 @@ export const messageApi = {
     addMessage: (data) => api.post('/message/add', data),
 };
 
+export const specialtyApi = {
+    getAllSpecialties: () => api.get('/specialty/getAll'),
+};
+
 // Request interceptor
 api.interceptors.request.use(
      async (config) => {
