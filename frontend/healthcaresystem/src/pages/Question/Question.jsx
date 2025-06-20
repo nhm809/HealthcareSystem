@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, Button, Radio, Spin, message } from 'antd';
 import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
-import { questionApi, messageApi } from '@services/api';
+import { questionApi, messageApi, specialtyApi } from '@services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '@components/Header/AuthModal/AuthModal';
 import { ToastContext } from '../../contexts/ToastProvider';
@@ -25,30 +25,7 @@ function Question() {
     const userId = Cookies.get('userId');
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
     const userRole = userInfo.roleId;
-
-    const mockAnswers = [
-        {
-            id: 1,
-            author: 'Hồ Minh Tâm',
-            content: 'Chào em, không biết triệu chứng đau đầu của em có diễn ra thường xuyên không và thường kéo dài khoảng bao lâu?',
-            date: '21/05/2025',
-            isConsultant: true,
-        },
-        {
-            id: 2,
-            author: 'Nữ, 16 tuổi',
-            content: 'Dạ em đau đầu cả 2 tuần nay liên tục suốt cả ngày ạ.',
-            date: '21/05/2025',
-            isConsultant: false,
-        },
-        {
-            id: 3,
-            author: 'Hồ Minh Tâm',
-            content: 'Ngoài đau đầu ra em còn có triệu chứng gì nữa không',
-            date: '21/05/2025',
-            isConsultant: true,
-        },
-    ];
+    const [specialties, setSpecialties] = useState([]);
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -58,7 +35,7 @@ function Question() {
                 // Chuyển đổi dữ liệu API sang format phù hợp để render
                 const data = res.data.map(q => ({
                     id: q.questionId,
-                    topic: q.specialty,
+                    specialtyId: q.specialtyId || q.specialty,
                     title: q.titleQuestion,
                     date: q.submitDate ? new Date(q.submitDate).toLocaleDateString('vi-VN') : '',
                     content: q.content,
@@ -68,6 +45,7 @@ function Question() {
                     likes: 0,
                     submitDate: q.submitDate ? new Date(q.submitDate) : null,
                     memberId: q.memberId,
+                    attachmentPath: q.attachmentPath,
                 }));
                 // Sắp xếp mới nhất lên đầu
                 data.sort((a, b) => (b.submitDate?.getTime() || 0) - (a.submitDate?.getTime() || 0));
@@ -79,6 +57,16 @@ function Question() {
             }
         };
         fetchQuestions();
+        // Fetch specialties
+        const fetchSpecialties = async () => {
+            try {
+                const res = await specialtyApi.getAllSpecialties();
+                setSpecialties(res.data.data || []);
+            } catch {
+                setSpecialties([]);
+            }
+        };
+        fetchSpecialties();
     }, []);
 
     // Lọc câu hỏi theo searchText và filterSpecialty
@@ -86,7 +74,7 @@ function Question() {
         const matchSearch =
             q.title.toLowerCase().includes(searchText.toLowerCase()) ||
             q.content.toLowerCase().includes(searchText.toLowerCase());
-        const matchSpecialty = filterSpecialty ? q.topic === filterSpecialty : true;
+        const matchSpecialty = filterSpecialty ? q.specialtyId === filterSpecialty : true;
         return matchSearch && matchSpecialty;
     });
     const startIdx = (currentPage - 1) * pageSize;
@@ -132,34 +120,45 @@ function Question() {
             setAuthModalOpen(true);
             return;
         }
+        setLoading(true);
         let attachmentPath = '';
-        if (values.image && values.image.fileList && values.image.fileList.length > 0) {
-            const file = values.image.fileList[0].originFileObj;
+        if (values.image && values.image.length > 0) {
+            const file = values.image[0].originFileObj;
             if (file) {
                 try {
                     attachmentPath = await uploadToCloudinary(file);
                 } catch {
                     toast.error('Tải ảnh lên thất bại!');
+                    setLoading(false);
                     return;
                 }
             }
         }
+        // Tìm specialtyId từ specialties, ép kiểu về số
+        const selectedSpecialty = specialties.find(s => String(s.id) === String(values.specialty));
+        if (!selectedSpecialty) {
+            toast.error('Vui lòng chọn chuyên khoa hợp lệ!');
+            setLoading(false);
+            return;
+        }
         const payload = {
             memberId: Number(userId),
-            specialty: values.specialty,
+            specialtyId: Number(selectedSpecialty.id), // luôn là số
             titleQuestion: values.title,
             content: values.content,
             attachmentPath,
             age: Number(values.age),
             gender: values.gender,
         };
+        console.log('Payload gửi lên:', payload);
         try {
-            setLoading(true);
             await questionApi.addQuestion(payload);
             toast.success('Gửi câu hỏi thành công!');
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
             form.resetFields();
-        } catch (err) {
+        } catch {
             toast.error('Gửi câu hỏi thất bại!');
         } finally {
             setLoading(false);
@@ -187,6 +186,12 @@ function Question() {
         }
     };
 
+    // Hàm lấy tên chuyên khoa từ id
+    const getSpecialtyName = (id) => {
+        const found = specialties.find(s => String(s.id) === String(id));
+        return found ? found.name : 'Chuyên khoa khác';
+    };
+
     return (
         <MainLayout>
             <Row gutter={24}>
@@ -204,13 +209,18 @@ function Question() {
                                 </Button>
                                 <div style={{ marginBottom: 8 }}>
                                     <b>{selectedQuestion.gender}, {selectedQuestion.age} tuổi</b>
-                                    <Tag color="green">{selectedQuestion.topic}</Tag>
+                                    <Tag color="green">{getSpecialtyName(selectedQuestion.specialtyId)}</Tag>
                                     <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
                                         {selectedQuestion.isAnswered ? 'Đã trả lời' : 'Đang mở'}
                                     </Tag>
                                 </div>
                                 <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4 }}>{selectedQuestion.title}</div>
                                 <div style={{ marginBottom: 8 }}>{selectedQuestion.content}</div>
+                                {selectedQuestion.attachmentPath && (
+                                    <div style={{ marginBottom: 8 }}>
+                                        <img src={selectedQuestion.attachmentPath} alt="Ảnh câu hỏi" style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8, border: '1px solid #eee', marginTop: 8 }} />
+                                    </div>
+                                )}
                                 <div style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
                                     <span>{selectedQuestion.date}</span>
                                     <span style={{ marginLeft: 16 }}>💬 {selectedQuestion.answers} câu trả lời</span>
@@ -321,7 +331,7 @@ function Question() {
                                             >
                                                 <div>
                                                     <b>{item.gender}, {item.age} tuổi</b>
-                                                    <Tag color="green">{item.topic}</Tag>
+                                                    <Tag color="green">{getSpecialtyName(item.specialtyId)}</Tag>
                                                 </div>
                                                 <div style={{ fontWeight: 600, color: '#2B7A4B' }}>{item.title}</div>
                                                 <div>{item.content}</div>
@@ -348,27 +358,26 @@ function Question() {
                 <Col span={10}>
                     <Card>
                         <Form layout="vertical" form={form} onFinish={handleSubmit}>
-                            <Form.Item label="Tuổi" name="age" rules={[{ required: true, message: 'Nhập tuổi của bạn' }]}> 
+                            <Form.Item label="Tuổi" name="age" rules={[{ required: true, message: 'Nhập tuổi của bạn' }]}>
                                 <Input placeholder="Nhập tuổi của bạn" />
                             </Form.Item>
-                            <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Chọn giới tính' }]}> 
+                            <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Chọn giới tính' }]}>
                                 <Radio.Group>
                                     <Radio value="Nam">Nam</Radio>
                                     <Radio value="Nữ">Nữ</Radio>
                                 </Radio.Group>
                             </Form.Item>
-                            <Form.Item label="Chuyên khoa" name="specialty" rules={[{ required: true, message: 'Chọn chuyên khoa' }]}> 
+                            <Form.Item label="Chuyên khoa" name="specialty" rules={[{ required: true, message: 'Chọn chuyên khoa' }]}>
                                 <Select placeholder="Chọn chuyên khoa">
-                                    <Select.Option value="thần kinh">Thần kinh</Select.Option>
-                                    <Select.Option value="hô hấp">Hô hấp</Select.Option>
-                                    <Select.Option value="Sản phụ khoa">Sản phụ khoa</Select.Option>
-                                    {/* ... */}
+                                    {specialties.map(s => (
+                                        <Select.Option key={s.id} value={String(s.id)}>{s.name}</Select.Option>
+                                    ))}
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="Tiêu đề" name="title" rules={[{ required: true, message: 'Nhập tiêu đề' }]}> 
+                            <Form.Item label="Tiêu đề" name="title" rules={[{ required: true, message: 'Nhập tiêu đề' }]}>
                                 <Input placeholder="Tiêu đề (vd: Mọc mụn nước)" />
                             </Form.Item>
-                            <Form.Item label="Nội dung câu hỏi" name="content" rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}> 
+                            <Form.Item label="Nội dung câu hỏi" name="content" rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}>
                                 <Input.TextArea rows={4} placeholder="Nội dung câu hỏi..." />
                             </Form.Item>
                             <Form.Item label="Thêm ảnh" name="image" valuePropName="fileList" getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}>
