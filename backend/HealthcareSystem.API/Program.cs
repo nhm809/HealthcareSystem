@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 // Add HttpClient configuration
 builder.Services.AddHttpClient("PayPalClient", client =>
 {
@@ -26,10 +27,12 @@ builder.Services.AddHttpClient("PayPalClient", client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
+builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
+builder.Services.AddScoped<IReproductiveCycleService, ReproductiveCycleService>();
 builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
 builder.Services.AddScoped<IPayPalService, PayPalService>();
 builder.Services.AddScoped<IConsultantService, ConsultantService>();
-builder.Services.AddScoped<ITestServiceRecordService, TestServiceRecordService>();
+builder.Services.AddScoped<ITestServiceRecord, TestServiceRecordService>();
 builder.Services.AddScoped<IBlogManageService, BlogManageService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IBlogService, BlogService>();

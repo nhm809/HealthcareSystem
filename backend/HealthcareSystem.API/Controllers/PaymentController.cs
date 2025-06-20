@@ -14,13 +14,18 @@ namespace Api.Controllers
             _payPalService = payPalService;
         }
 
-        [HttpPost("create-paypal-url/{testServiceRecordId}")]
-        public async Task<IActionResult> CreatePayPalUrl(int testServiceRecordId)
+        [HttpPost("create-paypal-url")]
+        public async Task<IActionResult> CreatePayPalUrl([FromQuery] int? testServiceRecordId, [FromQuery] int? appointmentId)
         {
             try
             {
+                if (!testServiceRecordId.HasValue && !appointmentId.HasValue)
+                {
+                    return BadRequest(new { Message = "Phải cung cấp TestServiceRecordId hoặc AppointmentId" });
+                }
+
                 var returnUrl = $"{Request.Scheme}://{Request.Host}/api/payment/paypal-callback";
-                var url = await _payPalService.CreatePaymentUrlAsync(testServiceRecordId, returnUrl);
+                var url = await _payPalService.CreatePaymentUrlAsync(testServiceRecordId, appointmentId, returnUrl);
                 return Ok(new { PaymentUrl = url });
             }
             catch (ArgumentException ex)
@@ -34,14 +39,16 @@ namespace Api.Controllers
         }
 
         [HttpGet("paypal-callback")]
-        public async Task<IActionResult> PayPalCallback(string handler, string token, string PayerID, int testServiceRecordId)
+        public async Task<IActionResult> PayPalCallback(string handler, string token, string PayerID, int? testServiceRecordId, int? appointmentId)
         {
             if (handler == "success" && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(PayerID))
             {
-                var result = await _payPalService.ExecutePaymentAsync(token, PayerID, testServiceRecordId);
-                return Ok(new { Message = "Thanh toán PayPal thành công!", Result = result });
+                var result = await _payPalService.ExecutePaymentAsync(token, PayerID, testServiceRecordId, appointmentId);
+                var feUrl = $"http://localhost:5173/test-sti?handler=success&testServiceRecordId={testServiceRecordId}";
+                return Redirect(feUrl);
             }
-            return BadRequest(new { Message = "Thanh toán bị hủy hoặc thất bại." });
+            var cancelUrl = "http://localhost:5173/test-sti?handler=cancel";
+            return Redirect(cancelUrl);
         }
     }
 }

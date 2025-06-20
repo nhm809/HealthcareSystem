@@ -214,7 +214,7 @@ namespace Infrastructure.data {
                 entity.ToTable("Notification");
 
                 entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
-                entity.Property(e => e.Content).HasColumnType("text");
+                entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
                 entity.Property(e => e.SendTime).HasColumnType("datetime");
                 entity.Property(e => e.IsRead).HasColumnName("IsRead");
                 entity.Property(e => e.Title).HasMaxLength(50);
@@ -258,8 +258,8 @@ namespace Infrastructure.data {
                 entity.Property(e => e.AttachmentPath).HasMaxLength(200);
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
-                entity.Property(e => e.Specialty).HasMaxLength(50);
-                entity.Property(e => e.IsAnswered).HasColumnName("IsAnswered");
+                entity.Property(e => e.SpecialtyId).HasColumnName("SpecialtyId");
+                entity.Property(e => e.Status).HasColumnType("nvarchar(100)");
                 entity.Property(e => e.SubmitDate).HasColumnType("datetime");
                 entity.Property(e => e.TitleQuestion).HasMaxLength(200);
 

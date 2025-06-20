@@ -74,21 +74,25 @@ namespace Infrastructure.Services
             {
                 user.Address = dto.Address;
             }
+            if (dto.Avatar != null)
+            {
+                user.Avatar = dto.Avatar;
+            }
 
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
 
         }
 
-        public async Task<bool> ChangePassword(int userId, string oldPassword, string newPassword)
+        public async Task<bool> ChangePassword(int userId, ChangePasswordRequestDTO dto)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserId == userId);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash))
             {
                 return false; // User not found or old password does not match
             }
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }

@@ -49,13 +49,13 @@ public class UserController : ControllerBase
         return Ok(result);
     }
     [HttpPost("change-password/{userId}")]
-    public async Task<IActionResult> ChangePassword(int userId, [FromBody] string oldPassword, string newPassword)
+    public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordRequestDTO dto)
     {
-        if (userId <= 0 || string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword))
+        if (userId <= 0 || string.IsNullOrEmpty(dto.OldPassword) || string.IsNullOrEmpty(dto.NewPassword))
         {
             return BadRequest("User ID and password data cannot be null or empty.");
         }
-        var result = await _userService.ChangePassword(userId, oldPassword, newPassword);
+        var result = await _userService.ChangePassword(userId, dto);
         if (!result)
         {
             return NotFound($"User with ID {userId} not found or password change failed.");

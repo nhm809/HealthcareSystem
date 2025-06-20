@@ -5,9 +5,9 @@ export const ToastContext = createContext();
 
 export const ToastProvider = ({ children }) => {
 
-     const value = {
-          toast
-     }
+  const value = {
+    toast
+  }
 
   return (
 

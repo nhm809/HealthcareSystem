@@ -1,9 +1,9 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
+﻿using HealthcareSystem.Application.DTOs;
+using HealthcareSystem.Application.Interfaces;
 //using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -21,7 +21,6 @@ namespace Api.Controllers
         }
         // GET /api/testservicerecord/member/5
         [HttpGet("member/{memberId}")]
-        //[Authorize(Roles = "MB")]
         public async Task<IActionResult> GetRecordsByMemberId(int memberId)
         {
             try
@@ -37,14 +36,13 @@ namespace Api.Controllers
 
         // GET /api/testservicerecord/5/2
         [HttpGet("{testServiceRecordId}/{memberId}")]
-        //[Authorize(Roles = "MB")]
         public async Task<IActionResult> GetTestRecordDetail(int testServiceRecordId, int memberId)
         {
             try
             {
                 var result = await _testServiceRecord.GetTestServiceRecordByIdAsync(testServiceRecordId, memberId);
                 if (result == null)
-                    return NotFound();
+                    return StatusCode(400, new { Message = "Bản xét nghiệm không tồn tại" });
                 return Ok(result);
             }
             catch (Exception ex)
@@ -74,6 +72,108 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "Đã xảy ra lỗi khi đặt lịch xét nghiệm." });
+            }
+        }
+        
+        [HttpPut("select")]
+        public async Task<IActionResult> SelectTestServiceRecord(int testServiceRecordId, int staffId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.SelectTestServiceRecordAsync(testServiceRecordId, staffId);
+                return Ok(new
+                {
+                    Message = "Bạn đã nhận thành công ca xét nghiệm này. Vui lòng thực hiện xét nghiệm theo đúng quy trình và cập nhật kết quả trong thời gian sớm nhất.",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật thông tin xét nghiệm." });
+            }
+        }
+
+        [HttpPut("update-result")]
+        public async Task<IActionResult> UpdateTestResult([FromBody] UpdateTestResultDTO request , int staffId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.UpdateTestResultAsync(request,staffId);
+                return Ok(new
+                {
+                    Message = "Đã cập nhật kết quả xét nghiệm thành công. Kết quả sẽ được gửi đến bệnh nhân.",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
+            }
+        }
+
+        [HttpPut("cancel")]
+        public async Task<IActionResult> UpdateTestResult(int testServiceRecordId, int userId)
+        {
+            try
+            {
+                var result = await _testServiceRecord.CancelTestResultAsync(testServiceRecordId,userId);
+                return Ok(new
+                {
+                    Message = "Đã hủy bỏ bản ghi",
+                    Data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
+            }
+        }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetRecordsByStatusAsync(){
+            
+            try
+            {
+                var result = await _testServiceRecord.GetTestServiceRecordByStatusAsync();
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
+            }
+        }
+
+        [HttpGet("staff/{staffId}")]
+        public async Task<IActionResult> GetRecordsByStaffIdAsync(int staffId){
+            
+            try
+            {
+                var result = await _testServiceRecord.GetTestServiceRecordByStaffIdAsync(staffId);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
             }
         }
     }

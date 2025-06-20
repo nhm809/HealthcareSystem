@@ -77,18 +77,22 @@ VALUES
 
 --Question --=====================================================================================================================================================
 INSERT INTO Question (
-    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
 )
 VALUES
 (
     5,
-    N'Sản phụ khoa',
+    1,
     N'Trễ kinh 7 ngày có phải mang thai không?',
     N'Chào bác sĩ, em bị trễ kinh 7 ngày, kèm đau bụng dưới và tức ngực. Không biết có nên thử thai chưa ạ?',
     NULL,
     '2024-05-01 09:15:00',
     4,
-    1
+   N'Chưa trả lời',
+    16,
+    N'Nữ',
+	10,
+	1
 );
 
 --=====================================================================================================================================================
@@ -211,9 +215,14 @@ VALUES
 (4, N'Cập nhật hồ sơ', N'Hồ sơ của bạn đã được cập nhật thành công.', GETDATE(), 1),
 (5, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', GETDATE(), 0)
 
+INSERT INTO ReproductiveCycle (MemberID, StartDate, CycleLength, PeriodLength, PillTime, LastUpdated)
+VALUES 
+    (5, '2024-06-01', 28, 5, '08:00:00', GETDATE()),
+    (5, '2024-07-01', 30, 6, '09:30:00', GETDATE()),
+    (5, '2024-08-01', 26, 4, '07:45:00', GETDATE()),
+    (5, '2024-09-01', NULL, 5, NULL, GETDATE());
 
---Còn 6 bảng -=====================================================================================================================================================
---Table [dbo].[ReproductiveCycle] is empty
+--Còn 4 bảng -=====================================================================================================================================================
 --Table [dbo].[ReportServiceDetail] is empty
 --Table [dbo].[OTPRequest] is empty
 --Table [dbo].[Payment] is empty

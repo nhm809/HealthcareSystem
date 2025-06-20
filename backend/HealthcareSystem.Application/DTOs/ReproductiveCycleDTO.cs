@@ -6,14 +6,14 @@ namespace Application.DTOs
     {
         public int? CycleId { get; set; }
         public int? MemberId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public DateTime? ovulationDate { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public DateOnly? OvulationDate { get; set; }
         public int? CycleLength { get; set; }
         public int? PeriodLength { get; set; }
-        public int? PillTime { get; set; }
-        public DateTime? fertileStart { get; set; }
-        public DateTime? fertileEnd { get; set; }
+        public TimeOnly? PillTime { get; set; }
+        public DateOnly? FertileStart { get; set; }
+        public DateOnly? FertileEnd { get; set; }
         public DateTime? LastUpdated { get; set; }
 
     }

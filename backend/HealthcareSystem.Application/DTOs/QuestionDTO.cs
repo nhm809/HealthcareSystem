@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Application.DTOs
@@ -9,7 +8,7 @@ namespace Application.DTOs
 
         public int? MemberId { get; set; }
 
-        public string? Specialty { get; set; }
+        public int? SpecialtyId { get; set; }
 
         public string? TitleQuestion { get; set; }
 
@@ -21,7 +20,15 @@ namespace Application.DTOs
 
         public int? ConsultantId { get; set; }
 
-        public bool? IsAnswered { get; set; }
+        public string? Status { get; set; }
+
+        public int? Age { get; set; }
+
+        public string? Gender { get; set; }
+
+        public int? HeartCount { get; set; }
+
+        public int? MessCount { get; set; }
 
     }
 }

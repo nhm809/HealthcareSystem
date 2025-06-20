@@ -26,6 +26,8 @@ namespace Domain.Entities
 
         public DateTime? RecordDate { get; set; }
 
+        public DateOnly? TestDate { get; set; } //
+
         public string? Notes { get; set; }
 
         public string? Status { get; set; }

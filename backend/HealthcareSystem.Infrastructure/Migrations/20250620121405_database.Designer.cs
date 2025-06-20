@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250609062904_database")]
+    [Migration("20250620121405_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -311,7 +311,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
 
                     b.Property<string>("Content")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsRead")
                         .HasColumnType("bit")
@@ -385,6 +385,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -396,17 +399,25 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsAnswered")
-                        .HasColumnType("bit")
-                        .HasColumnName("IsAnswered");
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeartCount")
+                        .HasColumnType("int");
 
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
-                    b.Property<string>("Specialty")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("MessCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecialtyId")
+                        .HasColumnType("int")
+                        .HasColumnName("SpecialtyId");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -421,6 +432,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasIndex("ConsultantId");
 
                     b.HasIndex("MemberId");
+
+                    b.HasIndex("SpecialtyId");
 
                     b.ToTable("Question", (string)null);
                 });
@@ -621,6 +634,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<DateOnly?>("TestDate")
+                        .HasColumnType("date");
 
                     b.HasKey("TestServiceRecordId")
                         .HasName("PK__TestServ__F810175D4779B45B");
@@ -913,9 +929,15 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasForeignKey("MemberId")
                         .HasConstraintName("FK__Question__Member__44FF419A");
 
+                    b.HasOne("Domain.Entities.Specialty", "Specialty")
+                        .WithMany("Questions")
+                        .HasForeignKey("SpecialtyId");
+
                     b.Navigation("Consultant");
 
                     b.Navigation("Member");
+
+                    b.Navigation("Specialty");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReportServiceDetail", b =>
@@ -1028,6 +1050,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("ReportServiceDetails");
 
                     b.Navigation("TestServiceRecords");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Specialty", b =>
+                {
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("Domain.Entities.TestServiceRecord", b =>

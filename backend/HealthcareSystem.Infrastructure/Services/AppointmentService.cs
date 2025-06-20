@@ -21,7 +21,6 @@ namespace Infrastructure.Services
 
         public async Task<int> CreateAppointmentAsync(AppointmentCreateDto dto)
         {
-            // Chuyển DTO sang Entity
             var entity = new Appointment
             {
                 MemberId = dto.MemberId,
@@ -30,7 +29,7 @@ namespace Infrastructure.Services
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
                 MeetLink = dto.MeetLink,
-                Status = "Đã đặt"   // giá trị mặc định
+                Status = "Dang thanh toan"   // giá trị mặc định
             };
 
             await _context.Appointments.AddAsync(entity);

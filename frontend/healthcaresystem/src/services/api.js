@@ -23,11 +23,74 @@ export const authApi = {
                'Content-Type': 'application/json',
           },
      }),
+     changePassword: (userId, oldPassword, newPassword) =>
+          api.post(
+               `/user/change-password/${userId}`,
+               {
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+               }
+          ),
+
+     bookTestServiceRecord: (data) => 
+          api.post('/TestServiceRecord/book/', data),
+
+     createPaypalUrl: (testServiceRecordId, appointmentId) => 
+          api.post(`/Payment/create-paypal-url`, null, {
+          params: {
+               testServiceRecordId,
+               appointmentId,
+          }
+     }),     
+};
+
+export const notiApi = {
+     getNotifications: (userId) => api.get(`/Noti/getNoti/${userId}`, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
+     markAsRead: (notiId) => api.put(`/Noti/markAsRead/${notiId}`, {}, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
+     createNoti: (data) => api.post('/Noti/createNoti', data),
 };
      
 export const getInfo = async (userId) => {
      return await api.get(`/user/get/${userId}`)
 }
+
+export const getTestServiceRecordsByStatus = async () => {
+     return await axios.get('/api/TestServiceRecord/status');
+};
+
+export const getTestServiceRecordsByStaff = async (staffId) => {
+     return await axios.get(`/api/TestServiceRecord/staff/${staffId}`);
+};
+
+export const assignTestToStaff = async (testServiceRecordId, staffId) => {
+     return await axios.put('/api/TestServiceRecord/select', null, {
+          params: { testServiceRecordId, staffId }
+     });
+};
+
+export const updateTestResult = async (staffId, data) => {
+     return await axios.put('/api/TestServiceRecord/update-result', data, {
+          params: { staffId }
+     });
+};
+
+export const questionApi = {
+    getAllQuestions: () => api.get('/question/getAll'),
+    addQuestion: (data) => api.post('/question/add', data),
+};
+
+export const messageApi = {
+    getHistory: (questionId) => api.get(`/message/getHistory/${questionId}`),
+    addMessage: (data) => api.post('/message/add', data),
+};
 
 // Request interceptor
 api.interceptors.request.use(
@@ -36,17 +99,39 @@ api.interceptors.request.use(
           if (token) {
                config.headers.Authorization = `Bearer ${token}`;
           }
+          console.log('Request config:', {
+               url: config.url,
+               method: config.method,
+               headers: config.headers,
+               data: config.data,
+               token: token ? 'Present' : 'Missing'
+          });
           return config;
      }, 
      (err) => {
+          console.error('Request error:', err);
           return Promise.reject(err);
      }
 );
 
 // Response interceptor
 api.interceptors.response.use(
-     (response) => response,
+     (response) => {
+          console.log('Response:', {
+               url: response.config.url,
+               status: response.status,
+               data: response.data
+          });
+          return response;
+     },
      async (error) => {
+          console.error('Response error:', {
+               url: error.config?.url,
+               status: error.response?.status,
+               data: error.response?.data,
+               message: error.message,
+               token: Cookies.get('token') ? 'Present' : 'Missing'
+          });
           const originalRequest = error.config;
           // If error is 401 and we haven't tried to refresh token yet
           if (error.response?.status === 401 && !originalRequest._retry) {
