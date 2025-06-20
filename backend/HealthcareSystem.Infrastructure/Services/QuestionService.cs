@@ -1,4 +1,4 @@
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
@@ -31,7 +31,7 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    IsAnswered = q.IsAnswered,
+                    Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender
                 })
@@ -73,24 +73,45 @@ namespace Infrastructure.Services
                 AttachmentPath = questionDto.AttachmentPath,
                 SubmitDate = DateTime.UtcNow,
                 ConsultantId = luckyPerson.UserId,
-                IsAnswered = false,
+                Status = "Chưa trả lời",
                 Age = questionDto.Age,
                 Gender = questionDto.Gender,
                 HeartCount = 0,
                 MessCount = 0
             };
             _context.Questions.Add(question);
+            await _context.SaveChangesAsync();
+
+            var consNoti = new Notification
+            {
+                UserId = luckyPerson.UserId,
+                Content = $"You have a new question from member {questionDto.MemberId}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+
+            var memNoti = new Notification
+            {
+                UserId = questionDto.MemberId,
+                Content = $"Your question has been sent to consultant {luckyPerson.UserId}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+            _context.Notifications.AddRange(consNoti, memNoti);
+
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateQuestionStatusAsync(int questionId)
+        public async Task<bool> UpdateQuestionStatusAsync(int questionId, string status)
         {
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null)
             {
                 return false;
             }
-            question.IsAnswered = true;
+            question.Status = status;
             _context.Questions.Update(question);
             return await _context.SaveChangesAsync() > 0;
         }
@@ -136,12 +157,55 @@ namespace Infrastructure.Services
                 AttachmentPath = question.AttachmentPath,
                 SubmitDate = question.SubmitDate,
                 ConsultantId = question.ConsultantId,
-                IsAnswered = question.IsAnswered,
+                Status = question.Status,
                 Age = question.Age,
                 Gender = question.Gender,
                 HeartCount = question.HeartCount,
                 MessCount = question.MessCount
             };
         }
+
+        public async Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId)
+        {
+            return await _context.Questions
+                .Where(q => q.MemberId == memberId)
+                .Select(q => new QuestionDTO
+                {
+                    QuestionId = q.QuestionId,
+                    MemberId = q.MemberId,
+                    SpecialtyId = q.SpecialtyId,
+                    TitleQuestion = q.TitleQuestion,
+                    Content = q.Content,
+                    AttachmentPath = q.AttachmentPath,
+                    SubmitDate = q.SubmitDate,
+                    ConsultantId = q.ConsultantId,
+                    Status = q.Status,
+                    Age = q.Age,
+                    Gender = q.Gender
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId)
+        {
+            return await _context.Questions
+                .Where(q => q.ConsultantId == consultantId)
+                .Select(q => new QuestionDTO
+                {
+                    QuestionId = q.QuestionId,
+                    MemberId = q.MemberId,
+                    SpecialtyId = q.SpecialtyId,
+                    TitleQuestion = q.TitleQuestion,
+                    Content = q.Content,
+                    AttachmentPath = q.AttachmentPath,
+                    SubmitDate = q.SubmitDate,
+                    ConsultantId = q.ConsultantId,
+                    Status = q.Status,
+                    Age = q.Age,
+                    Gender = q.Gender
+                })
+                .ToListAsync();
+        }
+
     }
 }

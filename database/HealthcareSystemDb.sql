@@ -77,7 +77,7 @@ VALUES
 
 --Question --=====================================================================================================================================================
 INSERT INTO Question (
-   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, IsAnswered, Age, Gender, HeartCount, MessCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
 )
 VALUES
 (
@@ -88,7 +88,7 @@ VALUES
     NULL,
     '2024-05-01 09:15:00',
     4,
-    1,
+   N'Chưa trả lời',
     16,
     N'Nữ',
 	10,
