@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using System.Net.Http.Headers;
 using HealthcareSystem.Application.Interfaces;
 using HealthcareSystem.Infrastructure.Services;
+using HealthcareSystem.Infrastructure.BackgroundServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,8 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+
+builder.Services.AddHostedService<StaffAssignmentService>();
 
 // Thêm CORS
 builder.Services.AddCors(options =>

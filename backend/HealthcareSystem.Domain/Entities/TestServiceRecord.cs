@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -27,6 +28,9 @@ namespace Domain.Entities
         public DateTime? RecordDate { get; set; }
 
         public DateOnly? TestDate { get; set; } //
+
+        [Column(TypeName = "TIME")]
+        public TimeSpan? TimeSlot { get; set; }
 
         public string? Notes { get; set; }
 

@@ -6,13 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using HealthcareSystem.Application.DTOs;
 using System.Text.RegularExpressions;
 using HealthcareSystem.Application.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace Infrastructure.Services
 {
     
     public class TestServiceRecordService : ITestServiceRecord
     {
         const int FIXED_SERVICE_ID = 1;
-        const int Number_TestOnDate = 80;
+        const int MAX_BOOKINGS_PER_SHIFT = 40; // Tối đa 40 booking per ca
         public readonly AppDbContext _context;
         private readonly INotiService _notiService;
 
@@ -92,42 +97,92 @@ namespace Infrastructure.Services
             };
         }
         
+        public async Task<bool> CanBookTestService(BookTestServiceRecordDTO request)
+        {
+            var testDate = request.TestDate;
+            var shift = request.Shift;
+
+            if (shift != 1 && shift != 2)
+            {
+                return false;
+            }
+
+            // Check 1: Kiểm tra xem user đã có booking nào trong ca này chưa
+            var existingUserBookingInShift = await _context.TestServiceRecords
+                .Where(r => r.TestDate == testDate && 
+                           r.MemberId == request.UserId &&
+                           r.Status != "Da huy" && 
+                           r.Status != "Khach hang khong den" &&
+                           (shift == 1 ? 
+                               (r.TimeSlot >= new TimeSpan(8, 0, 0) && r.TimeSlot < new TimeSpan(12, 0, 0)) :
+                               (r.TimeSlot >= new TimeSpan(13, 0, 0) && r.TimeSlot < new TimeSpan(17, 0, 0))))
+                .FirstOrDefaultAsync();
+
+            if (existingUserBookingInShift != null)
+            {
+                return false; // User đã có booking trong ca này
+            }
+
+            // Check 2: Kiểm tra giới hạn số lượng booking trong ca
+            var count = await _context.TestServiceRecords
+                .Where(r => r.TestDate == testDate && 
+                           r.Status == "Dang cho kham" &&
+                           (shift == 1 ? 
+                               (r.TimeSlot >= new TimeSpan(8, 0, 0) && r.TimeSlot < new TimeSpan(12, 0, 0)) :
+                               (r.TimeSlot >= new TimeSpan(13, 0, 0) && r.TimeSlot < new TimeSpan(17, 0, 0))))
+                .CountAsync();
+
+            return count < MAX_BOOKINGS_PER_SHIFT;
+        }
+
         public async Task<int> BookTestServiceAsync(BookTestServiceRecordDTO request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            if (string.IsNullOrWhiteSpace(request.FullName))
-                throw new ArgumentException("Họ và tên không được để trống.");
+            var testDate = request.TestDate;
+            var shift = request.Shift;
 
-            if (request.Dob > DateOnly.FromDateTime(DateTime.Now))
-                throw new ArgumentException("Ngày sinh không hợp lệ");
-
-            
-            if(string.IsNullOrWhiteSpace(request.Gender)){
-                throw new ArgumentException("Vui lòng chọn giới tính");
-            }
-            if(request.TestDate <= DateOnly.FromDateTime(DateTime.Now)){
-                throw new ArgumentException("Ngày khám không hợp lệ ");
-            }
-
-            if (!Regex.IsMatch(request.PhoneNumber, @"^0\d{9}$"))
-                throw new ArgumentException("Số điện thoại không hợp lệ.");
-
-            
-            var numberOfTestsOnDate = await _context.TestServiceRecords
-                .CountAsync(x => x.TestDate == request.TestDate);
-            
-            if (numberOfTestsOnDate >= Number_TestOnDate)
+            if (shift != 1 && shift != 2)
             {
-                throw new ArgumentException("Rất tiếc, ngày " + request.TestDate.ToString("dd/MM/yyyy") + 
-                " đã đạt giới hạn số lượng đặt lịch. Để đảm bảo chất lượng phục vụ tốt nhất,"
-                +"chúng tôi chỉ nhận tối đa " +Number_TestOnDate+" ca xét nghiệm mỗi ngày."
-                +" Quý khách vui lòng chọn ngày khác phù hợp hơn.");
+                throw new ArgumentException("Chỉ có thể chọn Ca 1 hoặc Ca 2");
             }
 
-            
-            
+            // Check 1: Kiểm tra xem user đã có booking nào trong ca này chưa
+            var existingUserBookingInShift = await _context.TestServiceRecords
+                .Where(r => r.TestDate == testDate && 
+                           r.MemberId == request.UserId &&
+                           r.Status != "Da huy" && 
+                           r.Status != "Khach hang khong den" &&
+                           (shift == 1 ? 
+                               (r.TimeSlot >= new TimeSpan(8, 0, 0) && r.TimeSlot < new TimeSpan(12, 0, 0)) :
+                               (r.TimeSlot >= new TimeSpan(13, 0, 0) && r.TimeSlot < new TimeSpan(17, 0, 0))))
+                .FirstOrDefaultAsync();
+
+            if (existingUserBookingInShift != null)
+            {
+                throw new ArgumentException($"Bạn đã có lịch xét nghiệm vào Ca {shift} ngày {request.TestDate.ToString("dd/MM/yyyy")}. " +
+                    "Mỗi khách hàng chỉ có thể đặt 1 lịch xét nghiệm mỗi ca.");
+            }
+
+            // Check 2: Kiểm tra giới hạn số lượng booking trong ca
+            var count = await _context.TestServiceRecords
+                .Where(r => r.TestDate == testDate && 
+                           r.Status == "Dang cho kham" &&
+                           (shift == 1 ? 
+                               (r.TimeSlot >= new TimeSpan(8, 0, 0) && r.TimeSlot < new TimeSpan(12, 0, 0)) :
+                               (r.TimeSlot >= new TimeSpan(13, 0, 0) && r.TimeSlot < new TimeSpan(17, 0, 0))))
+                .CountAsync();
+
+            if (count >= MAX_BOOKINGS_PER_SHIFT)
+            {
+                throw new ArgumentException($"Rất tiếc, Ca {shift} ngày {request.TestDate.ToString("dd/MM/yyyy")} " +
+                    $"đã đạt giới hạn số lượng đặt lịch ({MAX_BOOKINGS_PER_SHIFT} ca). " +
+                    "Quý khách vui lòng chọn ca khác hoặc ngày khác phù hợp hơn.");
+            }
+
+            // Tạo TimeSlot mặc định cho ca (có thể random hoặc theo logic cụ thể)
+            var timeSlot = GetDefaultTimeSlotForShift(shift);
 
             var testServiceRecord = new TestServiceRecord
             {
@@ -137,9 +192,10 @@ namespace Infrastructure.Services
                 TestDate = request.TestDate,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
-                MemberId = request.UserId, // UserId do FE quản lý
+                MemberId = request.UserId, 
                 Status = "Dang thanh toan",
-                RecordDate = DateTime.UtcNow.AddHours(7), // UTC+7 cho Việt Nam
+                TimeSlot = timeSlot,
+                RecordDate = DateTime.UtcNow.AddHours(7), 
                 Result = "",
                 StaffId = null, 
                 Notes = ""
@@ -151,30 +207,60 @@ namespace Infrastructure.Services
             return testServiceRecord.TestServiceRecordId;
         }
 
-        public async Task<UpdateTestServiceRecordDTO> SelectTestServiceRecordAsync(int testServiceRecordId, int staffId)
+        public async Task<IEnumerable<WorkShiftDTO>> GetWorkShiftsAsync(DateOnly date)
         {
-            var testServiceRecord = await _context.TestServiceRecords
-                .FirstOrDefaultAsync(x => x.TestServiceRecordId == testServiceRecordId);
+            var shifts = new List<WorkShiftDTO>();
 
-            if(testServiceRecord.Status != "Dang cho kham")
-                throw new ArgumentException("Bản ghi xét nghiệm chưa đủ điều kiện để thực hiện");
+            var shift1Bookings = await _context.TestServiceRecords
+                .Where(r => r.TestDate == date && 
+                           r.Status == "Dang cho kham" &&
+                           r.TimeSlot >= new TimeSpan(8, 0, 0) && 
+                           r.TimeSlot < new TimeSpan(12, 0, 0))
+                .CountAsync();
 
-            if (testServiceRecord == null)
-                throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm này.");
-
-            
-            if (testServiceRecord.StaffId == staffId)
-                throw new ArgumentException("Bạn đang thực hiện bản xét nghiệm này.");
-            else if (testServiceRecord.StaffId != null && testServiceRecord.StaffId != staffId)
-                throw new ArgumentException("Bản ghi xét nghiệm đã được thực hiện bởi nhân viên khác.");
-
-            testServiceRecord.StaffId = staffId;
-            await _context.SaveChangesAsync();
-
-            return new UpdateTestServiceRecordDTO
+            shifts.Add(new WorkShiftDTO
             {
-                TestServiceRecordId = testServiceRecord.TestServiceRecordId,
-                StaffId = staffId
+                ShiftId = 1,
+                ShiftName = "Ca 1",
+                StartTime = "08:00",
+                EndTime = "12:00",
+                CurrentBookings = shift1Bookings,
+                MaxBookings = MAX_BOOKINGS_PER_SHIFT,
+                IsAvailable = shift1Bookings < MAX_BOOKINGS_PER_SHIFT,
+                Status = shift1Bookings < MAX_BOOKINGS_PER_SHIFT ? "Còn chỗ" : "Hết chỗ"
+            });
+
+            // Ca 2: 13:00 - 17:00
+            var shift2Bookings = await _context.TestServiceRecords
+                .Where(r => r.TestDate == date && 
+                           r.Status == "Dang cho kham" &&
+                           r.TimeSlot >= new TimeSpan(13, 0, 0) && 
+                           r.TimeSlot < new TimeSpan(17, 0, 0))
+                .CountAsync();
+
+            shifts.Add(new WorkShiftDTO
+            {
+                ShiftId = 2,
+                ShiftName = "Ca 2",
+                StartTime = "13:00",
+                EndTime = "17:00",
+                CurrentBookings = shift2Bookings,
+                MaxBookings = MAX_BOOKINGS_PER_SHIFT,
+                IsAvailable = shift2Bookings < MAX_BOOKINGS_PER_SHIFT,
+                Status = shift2Bookings < MAX_BOOKINGS_PER_SHIFT ? "Còn chỗ" : "Hết chỗ"
+            });
+
+            return shifts;
+        }
+
+
+        private TimeSpan GetDefaultTimeSlotForShift(int shift)
+        {
+            return shift switch
+            {
+                1 => new TimeSpan(8, 0, 0), // Ca 1: 8:00
+                2 => new TimeSpan(13, 0, 0), // Ca 2: 13:00
+                _ => new TimeSpan(8, 0, 0) // Mặc định 8:00
             };
         }
 
@@ -196,9 +282,6 @@ namespace Infrastructure.Services
             string notificationContent = "";
             bool statusChanged = request.Status != testServiceRecord.Status;
             bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != testServiceRecord.Notes;
-
-            Console.WriteLine($"Status changed: {statusChanged}, Notes changed: {notesChanged}");
-            Console.WriteLine($"Old status: {testServiceRecord.Status}, New status: {request.Status}");
 
             if (statusChanged)
             {
