@@ -25,7 +25,7 @@ const routers = [
         component: lazy(() => import('../pages/TestSti/TestSti'))
     },
     {
-        path: '/question',
+        path: '/question/:questionId?',
         component: lazy(() => import('../pages/Question/Question'))
     },
     {
