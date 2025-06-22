@@ -85,6 +85,7 @@ export const updateTestResult = async (staffId, data) => {
 export const questionApi = {
     getAllQuestions: () => api.get('/question/getAll'),
     addQuestion: (data) => api.post('/question/add', data),
+    getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
 };
 
 export const messageApi = {

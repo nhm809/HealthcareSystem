@@ -33,7 +33,9 @@ namespace Infrastructure.Services
                     ConsultantId = q.ConsultantId,
                     IsAnswered = q.IsAnswered,
                     Age = q.Age,
-                    Gender = q.Gender
+                    Gender = q.Gender,
+                    HeartCount = q.HeartCount,
+                    MessCount = q.MessCount
                 })
                 .ToListAsync();
         }

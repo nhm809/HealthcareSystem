@@ -14,6 +14,9 @@ import {
      Badge,
      List,
      Typography,
+     Modal,
+     Spin,
+     Image,
 } from 'antd';
 import {
      ReloadOutlined,
@@ -23,9 +26,14 @@ import {
      CloseCircleOutlined,
      BellOutlined,
 } from '@ant-design/icons';
-import { questionApi } from '../../services/api';
+import { questionApi, messageApi, specialtyApi } from '../../services/api';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import Cookies from 'js-cookie';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -39,6 +47,13 @@ const QuestionManagement = () => {
           status: 'all',
           searchText: '',
      });
+     const [isModalVisible, setIsModalVisible] = useState(false);
+     const [selectedQuestion, setSelectedQuestion] = useState(null);
+     const [messages, setMessages] = useState([]);
+     const [loadingMessages, setLoadingMessages] = useState(false);
+     const [replyContent, setReplyContent] = useState('');
+     const [specialties, setSpecialties] = useState([]);
+     const consultantId = Cookies.get('userId');
 
      useEffect(() => {
           const fetchQuestions = async () => {
@@ -49,15 +64,23 @@ const QuestionManagement = () => {
                          .map((q) => ({
                               key: q.questionId,
                               sender: {
-                                   name: q.member?.fullName || q.member?.name || 'Ẩn danh',
+                                   name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
                                    avatar: q.member?.avatar,
                               },
-                              sentTime: dayjs(q.submitDate),
+                              sentTime: q.submitDate,
                               summary: q.titleQuestion || q.content,
                               isAnswered: q.isAnswered,
                               isClosed: q.isClosed,
+                              title: q.titleQuestion,
+                              content: q.content,
+                              gender: q.gender,
+                              age: q.age,
+                              specialtyId: q.specialtyId,
+                              memberId: q.memberId,
+                              consultantId: q.consultantId,
+                              attachmentPath: q.attachmentPath,
                          }))
-                         .sort((a, b) => b.sentTime.diff(a.sentTime)); // Sort by date descending
+                         .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
                     setAllQuestions(formattedQuestions);
                } catch {
                     message.error('Không thể tải danh sách câu hỏi');
@@ -65,8 +88,41 @@ const QuestionManagement = () => {
                     setLoading(false);
                }
           };
+          const fetchSpecialties = async () => {
+               try {
+                    const res = await specialtyApi.getAllSpecialties();
+                    setSpecialties(res.data.data || []);
+               } catch {
+                    setSpecialties([]);
+               }
+          };
           fetchQuestions();
+          fetchSpecialties();
      }, []);
+
+     const getSpecialtyName = (id) => {
+          const found = specialties.find((s) => String(s.id) === String(id));
+          return found ? found.name : 'Chuyên khoa khác';
+     };
+
+     useEffect(() => {
+          const fetchMessages = async () => {
+               if (!selectedQuestion) return;
+               setLoadingMessages(true);
+               try {
+                    const res = await messageApi.getHistory(selectedQuestion.key);
+                    setMessages(res.data);
+               } catch {
+                    setMessages([]);
+                    message.error('Không thể tải lịch sử tin nhắn');
+               } finally {
+                    setLoadingMessages(false);
+               }
+          };
+          if (isModalVisible) {
+               fetchMessages();
+          }
+     }, [selectedQuestion, isModalVisible]);
 
      const getStatus = (record) => {
           if (record.isClosed) return 'closed';
@@ -78,7 +134,7 @@ const QuestionManagement = () => {
 
      const filteredQuestions = useMemo(() => {
           return allQuestions.filter((item) => {
-               const dateMatch = filters.date ? item.sentTime.isSame(filters.date, 'day') : true;
+               const dateMatch = filters.date ? dayjs(item.sentTime).isSame(filters.date, 'day') : true;
                const searchMatch = item.sender.name.toLowerCase().includes(filters.searchText.toLowerCase());
                const statusMatch = filters.status === 'all' || getStatus(item) === filters.status;
                return dateMatch && searchMatch && statusMatch;
@@ -127,12 +183,38 @@ const QuestionManagement = () => {
           }
      };
 
+     const handleReplyClick = (record) => {
+          setSelectedQuestion(record);
+          setIsModalVisible(true);
+     };
+
+     const handleSendMessage = async () => {
+          if (!replyContent.trim() || !selectedQuestion) return;
+          try {
+               await messageApi.addMessage({
+                    questionId: selectedQuestion.key,
+                    content: replyContent,
+                    senderId: Number(consultantId),
+               });
+               setReplyContent('');
+               // Reload messages
+               setLoadingMessages(true);
+               const res = await messageApi.getHistory(selectedQuestion.key);
+               setMessages(res.data);
+               message.success('Gửi tin nhắn thành công');
+          } catch {
+               message.error('Gửi tin nhắn thất bại!');
+          } finally {
+               setLoadingMessages(false);
+          }
+     };
+
      const getAction = (record) => {
           const status = getStatus(record);
           if (status === 'closed' || status === 'answered') {
-               return <a>Xem chi tiết</a>;
+               return <a onClick={() => handleReplyClick(record)}>Xem chi tiết</a>;
           }
-          return <a>Trả lời</a>;
+          return <a onClick={() => handleReplyClick(record)}>Trả lời</a>;
      };
 
      const columns = [
@@ -140,10 +222,12 @@ const QuestionManagement = () => {
                title: 'Người gửi',
                dataIndex: 'sender',
                key: 'sender',
-               render: (sender) => (
+               render: (sender, record) => (
                     <Space>
                          <Avatar src={sender.avatar} />
-                         <span>{sender.name}</span>
+                         <span>
+                              {record.gender && record.age ? `${record.gender}, ${record.age} tuổi` : sender.name}
+                         </span>
                     </Space>
                ),
           },
@@ -151,7 +235,7 @@ const QuestionManagement = () => {
                title: 'Thời gian gửi',
                dataIndex: 'sentTime',
                key: 'sentTime',
-               render: (time) => time.format('YYYY-MM-DD, HH:mm'),
+               render: (time) => (time ? dayjs.utc(time).local().format('HH:mm:ss DD/MM/YYYY') : ''),
           },
           {
                title: 'Nội dung tóm tắt',
@@ -226,6 +310,135 @@ const QuestionManagement = () => {
                          showSizeChanger={false}
                     />
                </div>
+               {selectedQuestion && (
+                    <Modal
+                         title="Chi tiết câu hỏi"
+                         open={isModalVisible}
+                         onCancel={() => {
+                              setIsModalVisible(false);
+                              setSelectedQuestion(null);
+                         }}
+                         footer={null}
+                         width={720}
+                    >
+                         <div>
+                              <div style={{ marginBottom: 8 }}>
+                                   <b>
+                                        {selectedQuestion.gender}, {selectedQuestion.age} tuổi
+                                   </b>
+                                   <Tag color="cyan">{getSpecialtyName(selectedQuestion.specialtyId)}</Tag>
+                                   <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
+                                        {selectedQuestion.isAnswered ? 'Đã phản hồi' : 'Chưa trả lời'}
+                                   </Tag>
+                              </div>
+                              <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4, fontSize: '1.2rem' }}>
+                                   {selectedQuestion.title}
+                              </div>
+                              <div style={{ marginBottom: 8, borderBottom: '1px solid #f0f0f0', paddingBottom: 16 }}>
+                                   {selectedQuestion.content}
+                              </div>
+                              {selectedQuestion.attachmentPath && (
+                                   <div style={{ marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}>
+                                        <Image width={200} src={selectedQuestion.attachmentPath} alt="Attachment" />
+                                   </div>
+                              )}
+                              <div
+                                   style={{
+                                        background: '#f6f6f6',
+                                        borderRadius: 8,
+                                        padding: 12,
+                                        marginBottom: 8,
+                                        minHeight: 120,
+                                        maxHeight: '40vh',
+                                        overflowY: 'auto',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                   }}
+                              >
+                                   {loadingMessages ? (
+                                        <Spin />
+                                   ) : messages.length === 0 ? (
+                                        <div style={{ color: '#888', textAlign: 'center', marginTop: 20 }}>
+                                             Chưa có trao đổi nào.
+                                        </div>
+                                   ) : (
+                                        messages.map((msg, idx) => {
+                                             const isConsultant = msg.senderId?.toString() === consultantId;
+                                             return (
+                                                  <div
+                                                       key={idx}
+                                                       style={{
+                                                            marginBottom: 12,
+                                                            display: 'flex',
+                                                            justifyContent: isConsultant ? 'flex-end' : 'flex-start',
+                                                       }}
+                                                  >
+                                                       <div style={{ maxWidth: '70%' }}>
+                                                            <div
+                                                                 style={{
+                                                                      fontWeight: 500,
+                                                                      color: '#888',
+                                                                      marginBottom: 4,
+                                                                      textAlign: isConsultant ? 'right' : 'left',
+                                                                 }}
+                                                            >
+                                                                 {isConsultant ? 'Bạn' : selectedQuestion.sender.name}
+                                                            </div>
+                                                            <div
+                                                                 style={{
+                                                                      background: isConsultant ? '#e6f7ff' : '#fff',
+                                                                      borderRadius: 6,
+                                                                      padding: '8px 12px',
+                                                                      display: 'inline-block',
+                                                                      textAlign: 'left',
+                                                                      border: '1px solid #f0f0f0',
+                                                                 }}
+                                                            >
+                                                                 {msg.content}
+                                                            </div>
+                                                            <div
+                                                                 style={{
+                                                                      fontSize: 11,
+                                                                      color: '#aaa',
+                                                                      marginTop: 4,
+                                                                      textAlign: isConsultant ? 'right' : 'left',
+                                                                 }}
+                                                            >
+                                                                 {msg.sentAt
+                                                                      ? dayjs
+                                                                           .utc(msg.sentAt)
+                                                                           .local()
+                                                                           .format('HH:mm:ss DD/MM/YYYY')
+                                                                      : ''}
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                             );
+                                        })
+                                   )}
+                              </div>
+                              <div style={{ marginTop: 16 }}>
+                                   <Input.TextArea
+                                        rows={3}
+                                        value={replyContent}
+                                        onChange={(e) => setReplyContent(e.target.value)}
+                                        placeholder="Nhập nội dung trả lời..."
+                                        disabled={selectedQuestion.isClosed}
+                                   />
+                                   <div style={{ marginTop: 8, textAlign: 'right' }}>
+                                        <Button
+                                             type="primary"
+                                             onClick={handleSendMessage}
+                                             disabled={!replyContent.trim() || selectedQuestion.isClosed}
+                                             loading={loadingMessages}
+                                        >
+                                             Trả lời
+                                        </Button>
+                                   </div>
+                              </div>
+                         </div>
+                    </Modal>
+               )}
           </div>
      );
 };

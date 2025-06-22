@@ -1,11 +1,18 @@
 import { useState, useEffect, useContext } from 'react';
-import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, Button, Radio, Spin, message } from 'antd';
-import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, Button, Radio, Spin, message, Image, Avatar } from 'antd';
+import { PlusOutlined, ArrowLeftOutlined, ClockCircleOutlined, MessageOutlined, HeartOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
-import { questionApi, messageApi, specialtyApi } from '@services/api';
+import { questionApi, messageApi, specialtyApi, getInfo } from '@services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '@components/Header/AuthModal/AuthModal';
 import { ToastContext } from '../../contexts/ToastProvider';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { useParams, useNavigate } from 'react-router-dom';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function Question() {
     const [questions, setQuestions] = useState([]);
@@ -22,52 +29,81 @@ function Question() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [showReplyBox, setShowReplyBox] = useState(false);
     const [replyContent, setReplyContent] = useState('');
+    const [sendersInfo, setSendersInfo] = useState({});
+    const [hoveredItemId, setHoveredItemId] = useState(null);
     const userId = Cookies.get('userId');
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
     const userRole = userInfo.roleId;
     const [specialties, setSpecialties] = useState([]);
+    const { questionId } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchQuestions = async () => {
+        const fetchInitialData = async () => {
             setLoading(true);
             try {
-                const res = await questionApi.getAllQuestions();
-                // Chuyển đổi dữ liệu API sang format phù hợp để render
-                const data = res.data.map(q => ({
-                    id: q.questionId,
-                    specialtyId: q.specialtyId || q.specialty,
-                    title: q.titleQuestion,
-                    date: q.submitDate ? new Date(q.submitDate).toLocaleDateString('vi-VN') : '',
-                    content: q.content,
-                    answers: q.isAnswered ? 1 : 0,
-                    gender: q.gender,
-                    age: q.age,
-                    likes: 0,
-                    submitDate: q.submitDate ? new Date(q.submitDate) : null,
-                    memberId: q.memberId,
-                    attachmentPath: q.attachmentPath,
-                }));
-                // Sắp xếp mới nhất lên đầu
-                data.sort((a, b) => (b.submitDate?.getTime() || 0) - (a.submitDate?.getTime() || 0));
-                setQuestions(data);
-            } catch {
-                message.error('Không thể tải danh sách câu hỏi');
+                // Fetch specialties first, as they are needed for both views
+                const specialtyRes = await specialtyApi.getAllSpecialties();
+                setSpecialties(specialtyRes.data.data || []);
+
+                if (questionId) {
+                    // If an ID is in the URL, fetch that specific question
+                    const questionRes = await questionApi.getQuestionById(questionId);
+                    const q = questionRes.data;
+                    const formattedQuestion = {
+                        id: q.questionId,
+                        specialtyId: q.specialtyId || q.specialty,
+                        title: q.titleQuestion,
+                        date: q.submitDate ? dayjs(q.submitDate).format('DD/MM/YYYY') : '',
+                        content: q.content,
+                        answers: q.isAnswered,
+                        gender: q.gender,
+                        age: q.age,
+                        likes: q.heartCount,
+                        answersCount: q.messCount,
+                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
+                        memberId: q.memberId,
+                        attachmentPath: q.attachmentPath,
+                        consultantId: q.consultantId,
+                        consultant: q.consultant,
+                    };
+                    setSelectedQuestion(formattedQuestion);
+                } else {
+                    // Otherwise, fetch the list of all questions
+                    const res = await questionApi.getAllQuestions();
+                    console.log('Raw API response:', res.data);
+                    const data = res.data.map((q) => ({
+                        id: q.questionId,
+                        specialtyId: q.specialtyId || q.specialty,
+                        title: q.titleQuestion,
+                        date: q.submitDate ? dayjs(q.submitDate).format('DD/MM/YYYY') : '',
+                        content: q.content,
+                        answers: q.isAnswered,
+                        gender: q.gender,
+                        age: q.age,
+                        likes: q.heartCount,
+                        answersCount: q.messCount,
+                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
+                        memberId: q.memberId,
+                        attachmentPath: q.attachmentPath,
+                        consultantId: q.consultantId,
+                        consultant: q.consultant,
+                    }));
+                    console.log('Processed questions data:', data); // Debug log
+                    data.sort((a, b) => (b.submitDate?.getTime() || 0) - (a.submitDate?.getTime() || 0));
+                    setQuestions(data);
+                }
+            } catch (error) {
+                message.error('Không thể tải dữ liệu câu hỏi');
+                console.error('Fetch error:', error);
+                navigate('/question'); // Redirect to base page on error
             } finally {
                 setLoading(false);
             }
         };
-        fetchQuestions();
-        // Fetch specialties
-        const fetchSpecialties = async () => {
-            try {
-                const res = await specialtyApi.getAllSpecialties();
-                setSpecialties(res.data.data || []);
-            } catch {
-                setSpecialties([]);
-            }
-        };
-        fetchSpecialties();
-    }, []);
+
+        fetchInitialData();
+    }, [questionId, navigate]);
 
     // Lọc câu hỏi theo searchText và filterSpecialty
     const filteredQuestions = questions.filter(q => {
@@ -83,19 +119,41 @@ function Question() {
 
     // Lấy message khi chọn câu hỏi
     useEffect(() => {
-        const fetchMessages = async () => {
+        const fetchMessagesAndSenders = async () => {
             if (!selectedQuestion) return;
             setLoadingMessages(true);
+            setSendersInfo({}); // Reset on new question
             try {
-                const res = await messageApi.getHistory(selectedQuestion.id);
-                setMessages(res.data);
-            } catch {
+                // 1. Fetch messages
+                const messagesRes = await messageApi.getHistory(selectedQuestion.id);
+                const fetchedMessages = messagesRes.data || [];
+                setMessages(fetchedMessages);
+
+                // 2. Get unique sender IDs
+                const senderIds = [...new Set(fetchedMessages.map((m) => m.senderId))];
+
+                // 3. Fetch info for each sender
+                const senderInfoPromises = senderIds.map((id) => getInfo(id));
+                const senderInfoResponses = await Promise.all(senderInfoPromises);
+
+                // 4. Create a map from senderId to senderInfo
+                const sendersData = senderInfoResponses.reduce((acc, response) => {
+                    const userInfo = response.data;
+                    if (userInfo) {
+                        acc[userInfo.userId] = userInfo;
+                    }
+                    return acc;
+                }, {});
+                setSendersInfo(sendersData);
+            } catch (error) {
                 setMessages([]);
+                message.error('Không thể tải lịch sử trao đổi');
+                console.error(error);
             } finally {
                 setLoadingMessages(false);
             }
         };
-        fetchMessages();
+        fetchMessagesAndSenders();
     }, [selectedQuestion]);
 
     // Hàm upload ảnh lên Cloudinary
@@ -202,7 +260,10 @@ function Question() {
                                 <Button
                                     icon={<ArrowLeftOutlined />}
                                     type="link"
-                                    onClick={() => setSelectedQuestion(null)}
+                                    onClick={() => {
+                                        setSelectedQuestion(null);
+                                        navigate('/question');
+                                    }}
                                     style={{ marginBottom: 8, padding: 0 }}
                                 >
                                     Quay lại
@@ -218,16 +279,26 @@ function Question() {
                                 <div style={{ marginBottom: 8 }}>{selectedQuestion.content}</div>
                                 {selectedQuestion.attachmentPath && (
                                     <div style={{ marginBottom: 8 }}>
-                                        <img src={selectedQuestion.attachmentPath} alt="Ảnh câu hỏi" style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8, border: '1px solid #eee', marginTop: 8 }} />
+                                        <Image
+                                            width={200}
+                                            src={selectedQuestion.attachmentPath}
+                                            alt="Ảnh câu hỏi"
+                                        />
                                     </div>
                                 )}
                                 <div style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
                                     <span>{selectedQuestion.date}</span>
-                                    <span style={{ marginLeft: 16 }}>💬 {selectedQuestion.answers} câu trả lời</span>
-                                    <span style={{ marginLeft: 16 }}>❤️ {selectedQuestion.likes} Cảm ơn</span>
+                                    <span style={{ marginLeft: 16 }}>
+                                        <MessageOutlined style={{ marginRight: 4 }} />
+                                        {selectedQuestion.answersCount || 0} câu trả lời
+                                    </span>
+                                    <span style={{ marginLeft: 16 }}>
+                                        <HeartOutlined style={{ marginRight: 4 }} />
+                                        {selectedQuestion.likes || 0} Cảm ơn
+                                    </span>
                                 </div>
                                 {/* Danh sách message thực tế */}
-                                <div style={{ background: '#f6f6f6', borderRadius: 8, padding: 12, marginBottom: 8, minHeight: 120 }}>
+                                <div style={{ borderRadius: 8, padding: 12, marginBottom: 8, minHeight: 120 }}>
                                     {loadingMessages ? (
                                         <Spin />
                                     ) : (
@@ -235,14 +306,55 @@ function Question() {
                                             <div style={{ color: '#888' }}>Chưa có trao đổi nào.</div>
                                         ) : (
                                             messages.map((msg, idx) => {
-                                                const isConsultant = msg.senderId === selectedQuestion.consultantId;
+                                                const senderInfo = sendersInfo[msg.senderId];
+                                                if (!senderInfo) {
+                                                    return <Spin key={idx} size="small" style={{ display: 'block' }} />;
+                                                }
+                                                const isConsultant = senderInfo.role === 'CS';
+
                                                 return (
-                                                    <div key={idx} style={{ marginBottom: 12 }}>
-                                                        <div style={{ fontWeight: 500, color: isConsultant ? '#2B7A4B' : '#888' }}>
-                                                            {isConsultant ? `Bác sĩ (${selectedQuestion.consultantId || 'ID'})` : `Thành viên (${msg.senderId})`}
+                                                    <div
+                                                        key={idx}
+                                                        style={{
+                                                            background: isConsultant ? '#f0f5ff' : '#f6ffed',
+                                                            borderRadius: '12px',
+                                                            padding: '16px',
+                                                            marginBottom: '16px',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'space-between',
+                                                                alignItems: 'center',
+                                                                marginBottom: '12px',
+                                                            }}
+                                                        >
+                                                            <div style={{ display: 'flex', alignItems: 'center', fontWeight: 500 }}>
+                                                                {isConsultant ? (
+                                                                    <Avatar src={senderInfo.avatarPath} style={{ marginRight: '8px' }} />
+                                                                ) : (
+                                                                    <Avatar
+                                                                        icon={<PlusOutlined />}
+                                                                        style={{
+                                                                            marginRight: '8px',
+                                                                            backgroundColor: '#e6f7ff',
+                                                                            color: '#1890ff',
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                                <span>
+                                                                    {isConsultant
+                                                                        ? senderInfo.fullName || 'Bác sĩ'
+                                                                        : `${selectedQuestion.gender}, ${selectedQuestion.age} tuổi`}
+                                                                </span>
+                                                            </div>
+                                                            <div style={{ fontSize: '12px', color: '#888' }}>
+                                                                <ClockCircleOutlined style={{ marginRight: '4px' }} />
+                                                                {msg.sentAt ? dayjs.utc(msg.sentAt).local().format('DD/MM/YYYY') : ''}
+                                                            </div>
                                                         </div>
-                                                        <div style={{ background: isConsultant ? '#fff' : '#EAF7F0', borderRadius: 6, padding: 8, margin: '4px 0' }}>{msg.content}</div>
-                                                        <div style={{ fontSize: 11, color: '#aaa', textAlign: 'right' }}>{msg.sentAt ? new Date(msg.sentAt).toLocaleString('vi-VN') : ''}</div>
+                                                        <div style={{ color: '#595959' }}>{msg.content}</div>
                                                     </div>
                                                 );
                                             })
@@ -250,32 +362,50 @@ function Question() {
                                     )}
                                 </div>
                                 {/* Nút trả lời cho member */}
-                                {userId && userRole === 'MB' && selectedQuestion && Number(userId) === Number(selectedQuestion.memberId) && (
-                                    <>
-                                        {!showReplyBox ? (
-                                            <Button type="primary" onClick={() => setShowReplyBox(true)}>Trả lời</Button>
-                                        ) : (
-                                            <div style={{ marginTop: 8 }}>
-                                                <Input.TextArea
-                                                    rows={2}
-                                                    value={replyContent}
-                                                    onChange={e => setReplyContent(e.target.value)}
-                                                    placeholder="Nhập nội dung trả lời..."
-                                                />
-                                                <div style={{ marginTop: 8, textAlign: 'right' }}>
+                                {userId &&
+                                    userRole === 'MB' &&
+                                    selectedQuestion &&
+                                    Number(userId) === Number(selectedQuestion.memberId) && (
+                                        <>
+                                            {!showReplyBox ? (
+                                                <div style={{ textAlign: 'right', marginTop: '16px' }}>
                                                     <Button
                                                         type="primary"
-                                                        onClick={handleSendMessage}
-                                                        disabled={!replyContent.trim()}
+                                                        onClick={() => setShowReplyBox(true)}
+                                                        style={{
+                                                            background: '#4CAF50',
+                                                            borderColor: '#4CAF50',
+                                                            borderRadius: '8px',
+                                                            padding: '0 24px',
+                                                        }}
                                                     >
-                                                        Gửi
+                                                        Trả lời
                                                     </Button>
-                                                    <Button style={{ marginLeft: 8 }} onClick={() => setShowReplyBox(false)}>Hủy</Button>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </>
-                                )}
+                                            ) : (
+                                                <div style={{ marginTop: 8 }}>
+                                                    <Input.TextArea
+                                                        rows={2}
+                                                        value={replyContent}
+                                                        onChange={(e) => setReplyContent(e.target.value)}
+                                                        placeholder="Nhập nội dung trả lời..."
+                                                    />
+                                                    <div style={{ marginTop: 8, textAlign: 'right' }}>
+                                                        <Button
+                                                            type="primary"
+                                                            onClick={handleSendMessage}
+                                                            disabled={!replyContent.trim()}
+                                                        >
+                                                            Gửi
+                                                        </Button>
+                                                        <Button style={{ marginLeft: 8 }} onClick={() => setShowReplyBox(false)}>
+                                                            Hủy
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
                             </div>
                         ) : (
                             <>
@@ -327,7 +457,10 @@ function Question() {
                                             <Card
                                                 key={item.id}
                                                 style={{ marginBottom: 16, background: '#EAF7F0', cursor: 'pointer' }}
-                                                onClick={() => setSelectedQuestion(item)}
+                                                onClick={() => {
+                                                    setSelectedQuestion(item);
+                                                    navigate(`/question/${item.id}`);
+                                                }}
                                             >
                                                 <div>
                                                     <b>{item.gender}, {item.age} tuổi</b>
@@ -337,8 +470,32 @@ function Question() {
                                                 <div>{item.content}</div>
                                                 <div style={{ fontSize: 12, color: '#888', marginTop: 8 }}>
                                                     <span>{item.date}</span>
-                                                    <span style={{ marginLeft: 16 }}>💬 {item.answers} câu trả lời</span>
-                                                    <span style={{ marginLeft: 16 }}>❤️ {item.likes} Cảm ơn</span>
+                                                    
+                                                    <a 
+                                                        href={`/question/${item.id}`}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            navigate(`/question/${item.id}`);
+                                                        }}
+                                                        style={{ 
+                                                            marginLeft: 16, 
+                                                            color: hoveredItemId === item.id ? '#1890ff' : '#555', 
+                                                            cursor: 'pointer', 
+                                                            textDecoration: 'none',
+                                                            transition: 'color 0.2s'
+                                                        }}
+                                                        onMouseEnter={() => setHoveredItemId(item.id)}
+                                                        onMouseLeave={() => setHoveredItemId(null)}
+                                                    >
+                                                        <MessageOutlined style={{ marginRight: 4}} />
+                                                        {item.answersCount || 0} câu trả lời
+                                                    </a>
+                                                    
+                                                    <span style={{ marginLeft: 16 }}>
+                                                        <HeartOutlined style={{ marginRight: 4 }} />
+                                                        {item.likes || 0} Cảm ơn
+                                                    </span>
                                                 </div>
                                             </Card>
                                         )}
