@@ -1,0 +1,19 @@
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities
+{
+    public class WeeklyOverrideSchedule
+    {
+        public int WeeklyOverrideScheduleId { get; set; }
+        public int UserId { get; set; }
+        public DateTime Date { get; set; }
+        [Column(TypeName = "TIME")]
+        public TimeSpan? NewStartTime { get; set; }
+        [Column(TypeName = "TIME")]
+        public TimeSpan? NewEndTime { get; set; }
+        public string? OverrideType { get; set; } 
+        public string? Reason { get; set; }  
+        public virtual User User { get; set; }
+    }
+}

@@ -34,6 +34,7 @@ namespace Domain.Entities
 
         public string? Notes { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         public string? Status { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();

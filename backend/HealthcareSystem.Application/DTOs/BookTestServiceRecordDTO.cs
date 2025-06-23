@@ -4,7 +4,7 @@ namespace HealthcareSystem.Application.DTOs
 {
     public class BookTestServiceRecordDTO
     {
-        public int ServiceId { get; set; } = 1; // Giá trị mặc định là 1
+        public int ServiceId { get; set; } // Giá trị mặc định là 1
         public string FullName { get; set; } = string.Empty;
         public DateOnly Dob { get; set; }
         public string Gender { get; set; } = string.Empty;

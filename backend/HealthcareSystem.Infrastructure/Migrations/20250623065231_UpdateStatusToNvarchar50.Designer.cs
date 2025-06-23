@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623065231_UpdateStatusToNvarchar50")]
+    partial class UpdateStatusToNvarchar50
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -719,94 +722,29 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.WeeklyOverrideSchedule", b =>
-                {
-                    b.Property<int>("WeeklyOverrideScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeeklyOverrideScheduleId"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan?>("NewEndTime")
-                        .HasColumnType("TIME");
-
-                    b.Property<TimeSpan?>("NewStartTime")
-                        .HasColumnType("TIME");
-
-                    b.Property<string>("OverrideType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("WeeklyOverrideScheduleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WeeklyOverrideSchedules");
-                });
-
-            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
-                {
-                    b.Property<int>("WeeklyScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeeklyScheduleId"));
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("TIME");
-
-                    b.Property<string>("OverrideType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShiftType")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("TIME");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("WeeklyScheduleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WeeklySchedules");
-                });
-
             modelBuilder.Entity("Domain.Entities.WorkSchedule", b =>
                 {
                     b.Property<int>("WorkScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("WorkScheduleID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkScheduleId"));
 
                     b.Property<int?>("ConsultantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ConsultantID");
 
                     b.Property<TimeOnly?>("EndTime")
                         .HasColumnType("time");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ShiftType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<TimeOnly?>("StartTime")
                         .HasColumnType("time");
@@ -814,11 +752,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateOnly?>("WorkDate")
                         .HasColumnType("date");
 
-                    b.HasKey("WorkScheduleId");
+                    b.HasKey("WorkScheduleId")
+                        .HasName("PK__WorkSche__C6AC635EDF22BB92");
 
                     b.HasIndex("ConsultantId");
 
-                    b.ToTable("WorkSchedules");
+                    b.ToTable("WorkSchedule", (string)null);
                 });
 
             modelBuilder.Entity("UserSpecialty", b =>
@@ -1042,33 +981,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Domain.Entities.WeeklyOverrideSchedule", b =>
-                {
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
-                {
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Entities.WorkSchedule", b =>
                 {
                     b.HasOne("Domain.Entities.User", "Consultant")
                         .WithMany("WorkSchedules")
-                        .HasForeignKey("ConsultantId");
+                        .HasForeignKey("ConsultantId")
+                        .HasConstraintName("FK__WorkSched__Consu__31EC6D26");
 
                     b.Navigation("Consultant");
                 });
