@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateNoti : Migration
+    public partial class database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -278,6 +278,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     Result = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     StaffID = table.Column<int>(type: "int", nullable: true),
                     RecordDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    TestDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Status = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
                 },

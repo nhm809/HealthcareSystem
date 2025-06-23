@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import MainLayout from '@components/Layout/Layout'
 
-import "./Appointment.css";
+import "./ConsultantsList.css";
 
 const { Option } = Select;
 const { Search } = Input;

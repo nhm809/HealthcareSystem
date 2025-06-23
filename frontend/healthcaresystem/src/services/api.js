@@ -25,18 +25,23 @@ export const authApi = {
      }),
      changePassword: (userId, oldPassword, newPassword) =>
           api.post(
-               `/user/change-password/${userId}?newPassword=${encodeURIComponent(newPassword)}`,
-               oldPassword,
+               `/user/change-password/${userId}`,
                {
-                    headers: {
-                         'Content-Type': 'text/plain'
-                    },
-                    transformRequest: [(data) => data]
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
                }
           ),
 
      bookTestServiceRecord: (data) => 
           api.post('/TestServiceRecord/book/', data),
+
+     createPaypalUrl: (testServiceRecordId, appointmentId) => 
+          api.post(`/Payment/create-paypal-url`, null, {
+          params: {
+               testServiceRecordId,
+               appointmentId,
+          }
+     }),     
 };
 
 export const notiApi = {
@@ -50,6 +55,7 @@ export const notiApi = {
                'Authorization': `Bearer ${Cookies.get('token')}`
           }
      }),
+     createNoti: (data) => api.post('/Noti/createNoti', data),
 };
      
 export const getInfo = async (userId) => {

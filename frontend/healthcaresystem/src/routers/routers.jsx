@@ -16,11 +16,11 @@ const routers = [
      },
      {
           path: '/appointment',
-          component: lazy(() => import('../pages/Appointment/Appointment'))
+          component: lazy(() => import('../pages/Appointment/ConsultantsList'))
      },
      {
           path: '/appointment/:id',
-          component: lazy(() => import('../pages/Appointment/DoctorDetailPage'))
+          component: lazy(() => import('../pages/Appointment/ConsultantDetail'))
      },
      {
           path: '/test-sti',
@@ -33,7 +33,19 @@ const routers = [
      {
           path: '/blog/:id',
           component: lazy(() => import('../pages/Blog/BlogDetail'))
-     }
+     },
+     {
+          path: 'test-sti',
+          component: lazy(() => import('../pages/TestSti/PaypalCallback'))
+     },
+     {
+          path: '/reproductive-cycle',
+          component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))
+     },
+     {
+          path: '/booking-confirmation',
+          component: lazy(() => import('../pages/Appointment/BookingConfirmation'))
+     },
 ]
 
 export default routers;

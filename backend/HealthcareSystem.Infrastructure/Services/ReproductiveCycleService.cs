@@ -39,9 +39,9 @@ namespace Infrastructure.Services
                 var startDate = cycle.StartDate.Value;
                 var cycleLength = cycle.CycleLength.Value;
                 var endDate = startDate.AddDays(cycleLength);
-                var ovulationDate = startDate.AddDays(cycleLength - 14);
-                var fertileStart = ovulationDate.AddDays(-5);
-                var fertileEnd = ovulationDate;
+                var ovulationDate = startDate.AddDays((cycleLength + 1) - 14);
+                var fertileStart = ovulationDate.AddDays(-2);
+                var fertileEnd = ovulationDate.AddDays(2);
 
                 result.Add(new ReproductiveCycleDTO
                 {

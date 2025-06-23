@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useSearchParams  } from 'react-router-dom';
 import './BlogPage.css';
 import MainLayout from '../../components/Layout/Layout';
+import api from '../../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Pagination } from 'antd';
 import axios from 'axios';
@@ -50,9 +51,9 @@ function BlogPage() {
       try {
         const url =
           selectedTopic === 'Tất cả'
-            ? 'http://localhost:5173/api/blogs'
-            : `http://localhost:5173/api/blogs/topic/${encodeURIComponent(selectedTopic)}`;
-        const res = await axios.get(url);
+            ? '/blogs'
+            : `/blogs/topic/${encodeURIComponent(selectedTopic)}`;
+        const res = api.get(url);
         setBlogs(res.data);
       } catch (error) {
         console.error('Lỗi khi lấy blog:', error);
@@ -68,7 +69,7 @@ function BlogPage() {
   useEffect(() => {
     const fetchAllCounts = async () => {
       try {
-        const res = await axios.get('http://localhost:5173/api/blogs');
+        const res = api.get('/blogs');
         const counts = res.data.reduce((acc, blog) => {
           acc[blog.topic] = (acc[blog.topic] || 0) + 1;
           return acc;

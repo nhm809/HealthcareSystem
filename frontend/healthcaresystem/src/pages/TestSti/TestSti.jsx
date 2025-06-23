@@ -1,27 +1,32 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Collapse, theme, Modal, Form, Input, DatePicker, Radio, message } from 'antd';
 import MainLayout from '@components/Layout/Layout';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CaretRightOutlined, CalendarOutlined } from '@ant-design/icons';
 import './TestSti.css';
-import { useState } from 'react';
-import { authApi } from '../../services/api';
+import { useState, useEffect, useRef } from 'react';
+import { notiApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
+import ConfirmTestModal from './ConfirmTestModal';
 
 function TestSti() {
      const navigate = useNavigate();
+     const location = useLocation();
+     const notiSentRef = useRef({});
 
      // get token from Ant
      const { token } = theme.useToken(); 
 
      const [isModalOpen, setIsModalOpen] = useState(false);
+     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
      const [form] = Form.useForm();
      const [loading, setLoading] = useState(false);
      const userId = Cookies.get('userId');
      const [authModalOpen, setAuthModalOpen] = useState(false);
      const [defaultTab, setDefaultTab] = useState(0);
+     const [formData, setFormData] = useState(null);
      
 
      const panelStyle = {
@@ -68,33 +73,37 @@ function TestSti() {
      };
      
      const handleFinish = async (values) => {
-          setLoading(true);
-          try {
-               const data = {
-                    serviceId: 0, 
-                    fullName: values.fullName,
-                    dob: values.dob.format('YYYY-MM-DD'),
-                    gender: values.gender,
-                    phoneNumber: values.phone,
-                    userId: userId
-               };
-
-               console.log(data);
-               const response = await authApi.bookTestServiceRecord(data);
-
-               if (response.data.message === "Thông tin đặt lịch đã được lưu. Vui lòng tiến hành thanh toán.") {
-                    console.log("Đặt lịch thành công");
-
-               }
-               message.success('Đăng ký thành công!');
-               setIsModalOpen(false);
-               form.resetFields();
-          } catch (e) {
-               message.error('Đăng ký thất bại!');
-          } finally {
-               setLoading(false);
-          }
+          setFormData(values);
+          setIsModalOpen(false);
+          setIsConfirmModalOpen(true);
      };
+
+     // Tạo notification nếu thanh toán thành công
+     useEffect(() => {
+          const params = new URLSearchParams(location.search);
+          const handler = params.get('handler');
+          const testServiceRecordId = params.get('testServiceRecordId');
+          const userId = Cookies.get('userId');
+          if (handler === 'success' && testServiceRecordId && userId) {
+               const sentKey = `noti_sent_${testServiceRecordId}`;
+               if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
+                    notiSentRef.current[sentKey] = true; // Đánh dấu đã gửi trong phiên này
+                    const now = new Date().toISOString();
+                    notiApi.createNoti({
+                         userId: Number(userId),
+                         title: 'Đặt lịch xét nghiệm thành công',
+                         content: `Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: ${testServiceRecordId}`,
+                         sendTime: now,
+                         isRead: false
+                    }).finally(() => {
+                         sessionStorage.setItem(sentKey, '1');
+                         window.history.replaceState({}, document.title, '/test-sti');
+                    });
+               } else {
+                    window.history.replaceState({}, document.title, '/test-sti');
+               }
+          }
+     }, [location]);
 
      return (
           <MainLayout>
@@ -200,12 +209,19 @@ function TestSti() {
                               <div className="button-register">
                                    <Button onClick={handleCancel}>Hủy</Button>
                                    <Button type="primary" htmlType="submit" loading={loading} style={{ minWidth: 100 }}>
-                                        Đăng ký
+                                        Tiếp tục
                                    </Button>
                               </div>
                          </Form>
                     </Modal>
                </div>
+
+               <ConfirmTestModal 
+                    open={isConfirmModalOpen}
+                    onClose={() => setIsConfirmModalOpen(false)}
+                    formData={formData}
+                    userId={userId}
+               />
 
                <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={defaultTab} />
 

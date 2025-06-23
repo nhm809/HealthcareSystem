@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import './BlogDetail.css';
 import MainLayout from '../../components/Layout/Layout';
+import api from '../../services/api';
 
 function BlogDetail() {
   const { id } = useParams();
@@ -15,7 +16,7 @@ function BlogDetail() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(`http://localhost:5011/api/blogs/${id}`);
+        const res = api.get(`/blogs/${id}`);
         setBlog(res.data);
       } catch (error) {
         console.error('Lỗi khi lấy chi tiết blog:', error);

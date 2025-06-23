@@ -287,7 +287,7 @@ function Header() {
           </div>
 
           <button onClick={() => navigate('/question')}>Hỏi đáp bác sĩ</button>
-          <button>Theo dõi chu kỳ sinh sản</button>
+          <button className="cycle-button" onClick={(() => navigate('/reproductive-cycle'))}>Theo dõi chu kỳ sinh sản</button>
           <button onClick={() => navigate('/blog')}>Blog</button>
         </div>
       </div>

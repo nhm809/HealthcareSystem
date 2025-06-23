@@ -244,7 +244,6 @@ function AuthModal({ open, onClose }) {
                                             onSuccess={async (credentialResponse) => {
                                                 try {
                                                     console.log("Google Token:", credentialResponse.credential);
-                                                    console.log("Google Token Response:", credentialResponse);
                                                     if (!credentialResponse.credential) {
                                                         toast.error('Không nhận được token từ Google');
                                                         return;
@@ -252,32 +251,35 @@ function AuthModal({ open, onClose }) {
 
                                                     // Gửi token trực tiếp
                                                     const response = await authApi.googleLogin(credentialResponse.credential);
+                                                    console.log("Backend Response:", response.data);
 
                                                     if (response.data.success) {
-                                                        const { token, refreshToken, user } = response.data.data;
+                                                        const googleUser = response.data.data;
+                                                        console.log("Google User Data:", googleUser);
 
-                                                        // Save tokens
-                                                        Cookies.set('token', token);
-                                                        Cookies.set('refreshToken', refreshToken);
-                                                        Cookies.set('email', user.email);
-                                                        Cookies.set('userId', user.id);
-
-                                                        // Save user info
+                                                        // Lưu thông tin user
                                                         const userInfo = {
-                                                            email: user.email,
-                                                            roleId: user.roleId,
-                                                            phoneNumber: user.phoneNumber,
-                                                            avatarPath: user.avatarPath
+                                                            email: googleUser.email,
+                                                            roleId: "MB", // Default role cho Google users
+                                                            phoneNumber: "", // Empty phone number
+                                                            avatarPath: googleUser.picture
                                                         };
+                                                        console.log("User Info to save:", userInfo);
                                                         localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+                                                        // Lưu email và ID
+                                                        Cookies.set('email', googleUser.email);
+                                                        Cookies.set('userId', googleUser.userId); // Sử dụng userId từ backend
+                                                        Cookies.set('token', googleUser.token); // Lưu JWT token
 
                                                         // Update user state in Header
                                                         const headerUser = {
-                                                            email: user.email,
-                                                            roleId: user.roleId,
-                                                            phoneNumber: user.phoneNumber,
-                                                            avatar: user.avatarPath
+                                                            email: googleUser.email,
+                                                            roleId: "MB",
+                                                            phoneNumber: "",
+                                                            avatar: googleUser.picture
                                                         };
+                                                        console.log("Header User:", headerUser);
                                                         window.dispatchEvent(new CustomEvent('userLogin', { detail: headerUser }));
 
                                                         toast.success('Đăng nhập thành công');

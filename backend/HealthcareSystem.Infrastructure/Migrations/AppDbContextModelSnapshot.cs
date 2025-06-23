@@ -619,6 +619,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
+                    b.Property<DateOnly?>("TestDate")
+                        .HasColumnType("date");
+
                     b.HasKey("TestServiceRecordId")
                         .HasName("PK__TestServ__F810175D4779B45B");
 

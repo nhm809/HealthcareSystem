@@ -172,9 +172,9 @@ function Profile() {
           try {
                setChangingPassword(true);
                const userId = Cookies.get('userId');
-               await authApi.changePassword(userId, String(values.currentPassword), values.newPassword);
-
-               message.success('Đổi mật khẩu thành công!');
+               await authApi.changePassword(userId, values.currentPassword, values.newPassword);
+               
+               toast.success('Cập nhật thông tin thành công!');
                setIsPasswordModalVisible(false);
                passwordForm.resetFields();
           } catch (err) {
