@@ -38,6 +38,8 @@ namespace Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
+        public bool IsAvailable { get; set; } = true;
+
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 
         public virtual ICollection<Appointment> AppointmentMembers { get; set; } = new List<Appointment>();

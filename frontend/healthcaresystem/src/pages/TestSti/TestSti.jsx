@@ -174,16 +174,47 @@ function TestSti() {
                               <Form.Item
                                    label="Họ và tên"
                                    name="fullName"
-                                   rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+                                   rules={[
+                                        { required: true, message: 'Vui lòng nhập họ và tên' },
+                                        { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự' }
+                                   ]}
                               >
                                    <Input placeholder="Nhập họ và tên" />
                               </Form.Item>
                               <Form.Item
                                    label="Ngày sinh"
                                    name="dob"
-                                   rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}
+                                   rules={[
+                                        { required: true, message: 'Vui lòng chọn ngày sinh' },
+                                        {
+                                             validator: (_, value) => {
+                                                  if (value) {
+                                                       const today = new Date();
+                                                       const birthDate = value.toDate();
+                                                       if (birthDate >= today) {
+                                                            return Promise.reject('Ngày sinh không được trong tương lai');
+                                                       }
+                                                       const age = today.getFullYear() - birthDate.getFullYear();
+                                                       if (age < 18) {
+                                                            return Promise.reject('Bạn phải từ 18 tuổi trở lên');
+                                                       }
+                                                       if (age > 100) {
+                                                            return Promise.reject('Ngày sinh không hợp lệ');
+                                                       }
+                                                  }
+                                                  return Promise.resolve();
+                                             }
+                                        }
+                                   ]}
                               >
-                                   <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="dd/mm/yyyy" />
+                                   <DatePicker 
+                                        format="DD/MM/YYYY" 
+                                        style={{ width: '100%' }} 
+                                        placeholder="dd/mm/yyyy"
+                                        disabledDate={(current) => {
+                                             return current && current >= new Date();
+                                        }}
+                                   />
                               </Form.Item>
                               <Form.Item
                                    label="Giới tính"
@@ -201,10 +232,41 @@ function TestSti() {
                                    name="phone"
                                    rules={[
                                         { required: true, message: 'Vui lòng nhập số điện thoại' },
-                                        { pattern: /^\d{9,11}$/, message: 'Số điện thoại không hợp lệ' }
+                                        { pattern: /^0\d{9}$/, message: 'Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số' }
                                    ]}
                               >
                                    <Input placeholder="Nhập số điện thoại" />
+                              </Form.Item>
+                              <Form.Item
+                                   label="Ngày lấy mẫu"
+                                   name="testDate"
+                                   rules={[
+                                        { required: true, message: 'Vui lòng chọn ngày lấy mẫu' },
+                                        {
+                                             validator: (_, value) => {
+                                                  if (value) {
+                                                       const today = new Date();
+                                                       today.setHours(0, 0, 0, 0);
+                                                       const selectedDate = value.toDate();
+                                                       selectedDate.setHours(0, 0, 0, 0);
+                                                       
+                                                       if (selectedDate <= today) {
+                                                            return Promise.reject('Ngày lấy mẫu phải sau ngày hiện tại');
+                                                       }
+                                                  }
+                                                  return Promise.resolve();
+                                             }
+                                        }
+                                   ]}
+                              >
+                                   <DatePicker 
+                                        format="DD/MM/YYYY" 
+                                        style={{ width: '100%' }} 
+                                        placeholder="dd/mm/yyyy"
+                                        disabledDate={(current) => {
+                                             return current && current <= new Date();
+                                        }}
+                                   />
                               </Form.Item>
                               <div className="button-register">
                                    <Button onClick={handleCancel}>Hủy</Button>

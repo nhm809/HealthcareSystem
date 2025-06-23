@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import Home from "../pages/Home/Home";
+import StaffLayout from "../components/Layout/StaffLayout";
+import ConsultantLayout from "../components/Layout/ConsultantLayout";
 
 const routers = [
      {
@@ -27,7 +29,7 @@ const routers = [
           component: lazy(() => import('../pages/TestSti/TestSti'))
      },
      {
-          path: '/question',
+          path: '/question/:questionId?',
           component: lazy(() => import('../pages/Question/Question'))
      },
      {
@@ -38,6 +40,16 @@ const routers = [
           path: 'test-sti',
           component: lazy(() => import('../pages/TestSti/PaypalCallback'))
      },
+    // Staff route: NO children, just component
+    {
+        path: '/staff',
+        component: StaffLayout
+    },
+
+    {
+        path: '/consultant',
+        component: ConsultantLayout
+    }
      {
           path: '/reproductive-cycle',
           component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))

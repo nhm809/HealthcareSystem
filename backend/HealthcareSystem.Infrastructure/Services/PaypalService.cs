@@ -1,6 +1,5 @@
 ﻿using Google;
 using Google.Apis.Http;
-using HealthcareSystem.Application.Interfaces;
 using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +14,9 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Application.DTOs;
 using Domain.Entities;
+using HealthcareSystem.Application.Interfaces;
+
+using Application.Interfaces;
 
 namespace HealthcareSystem.Infrastructure.Services
 {
@@ -24,14 +26,16 @@ namespace HealthcareSystem.Infrastructure.Services
         private readonly AppDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly ILogger<PayPalService> _logger;
-        private const string PAYMENT_PENDING_STATUS = "Ðang thanh toán";
+        private const string PAYMENT_PENDING_STATUS = "Dang thanh toan";
+        private readonly INotiService _notiService;
 
-        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger)
+        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger,INotiService notiService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _httpClient = httpClientFactory.CreateClient("PayPalClient");
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _notiService = notiService;
         }
 
         private bool IsPaymentPendingStatus(string status)
@@ -214,9 +218,25 @@ namespace HealthcareSystem.Infrastructure.Services
                     .FirstOrDefaultAsync(r => r.TestServiceRecordId == testServiceRecordId);
                 if (testServiceRecord != null)
                 {
-                    testServiceRecord.Status = "Đang cho kham";
+                    testServiceRecord.Status = "Dang cho kham";
                     amount = testServiceRecord.Service?.Price ?? 0;
                     description = $"Thanh toán xét nghiệm - {testServiceRecord.FullNameOfMember}";
+                }
+
+
+                if (testServiceRecord.MemberId.HasValue)
+                {
+                    var Notification = new Notification
+                    {
+                        UserId = testServiceRecord.MemberId.Value,
+                        Title = "Thanh toán thành công",
+                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
+                        SendTime = DateTime.UtcNow.AddHours(7),///////////
+                        IsRead = false
+                    };
+
+                    _context.Notifications.Add(Notification);
+                    await _context.SaveChangesAsync();
                 }
             }
             else if (appointmentId.HasValue)
@@ -227,9 +247,24 @@ namespace HealthcareSystem.Infrastructure.Services
                     .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 if (appointment != null)
                 {
-                    appointment.Status = "Đã thanh toán";
+                    appointment.Status = "Dang cho kham";
                     amount = appointment.Service?.Price ?? 0;
                     description = $"Thanh toán khám - {appointment.Member?.FullName}";
+                }
+
+                if (appointment.MemberId.HasValue)
+                {
+                    var Notification = new Notification
+                    {
+                        UserId = appointment.MemberId.Value,
+                        Title = "Thanh toán thành công",
+                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
+                        SendTime = DateTime.UtcNow.AddHours(7),///////////
+                        IsRead = false
+                    };
+
+                    _context.Notifications.Add(Notification);
+                    await _context.SaveChangesAsync();
                 }
             }
 
@@ -247,6 +282,8 @@ namespace HealthcareSystem.Infrastructure.Services
                 TaxRate = amount * 0.05m,
                 Status = 1
             };
+
+            
             _context.Invoices.Add(invoice);
 
             await _context.SaveChangesAsync();

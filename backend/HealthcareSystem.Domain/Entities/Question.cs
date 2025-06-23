@@ -10,7 +10,7 @@ namespace Domain.Entities
 
         public int? MemberId { get; set; }
 
-        public string? Specialty { get; set; }
+        public int? SpecialtyId { get; set; }
 
         public string? TitleQuestion { get; set; }
 
@@ -24,9 +24,19 @@ namespace Domain.Entities
 
         public bool? IsAnswered { get; set; }
 
+        public int? Age { get; set; }
+
+        public string? Gender { get; set; }
+
+        public int? HeartCount { get; set; }
+
+        public int? MessCount { get; set; }
+
         public virtual User? Consultant { get; set; }
 
         public virtual User? Member { get; set; }
+
+        public virtual Specialty? Specialty { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
     }

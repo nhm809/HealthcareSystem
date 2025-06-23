@@ -73,4 +73,34 @@ public class QuestionController : ControllerBase
         return Ok(true);
     }
 
+    [HttpPost("giveHeart")]
+    public async Task<ActionResult<bool>> GiveAHeart([FromBody] QuestionDTO questionDto)
+    {
+        if (questionDto == null || questionDto.QuestionId <= 0)
+        {
+            return BadRequest("Invalid question data.");
+        }
+        var result = await _questionService.GiveAHeart(questionDto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while giving a heart.");
+        }
+        return Ok(true);
+    }
+
+    [HttpGet("getQuestion/{questionId}")]
+    public async Task<ActionResult<QuestionDTO>> GetQuestionById(int questionId)
+    {
+        if (questionId <= 0)
+        {
+            return BadRequest("Invalid question ID.");
+        }
+        var question = await _questionService.GetQuestionById(questionId);
+        if (question == null)
+        {
+            return NotFound("Question not found.");
+        }
+        return Ok(question);
+    }
+
 }

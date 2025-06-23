@@ -42,6 +42,12 @@ namespace Infrastructure.Services
                 SentAt = messageDto.SentAt ?? DateTime.UtcNow
             };
             _context.Messages.Add(message);
+
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q => q.QuestionId == messageDto.QuestionId);
+            question.MessCount += 1;
+            _context.Questions.Update(question);
+
             return await _context.SaveChangesAsync() > 0;
         }
     }

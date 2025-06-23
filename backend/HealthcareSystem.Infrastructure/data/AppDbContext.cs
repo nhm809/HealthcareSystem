@@ -258,7 +258,7 @@ namespace Infrastructure.data {
                 entity.Property(e => e.AttachmentPath).HasMaxLength(200);
                 entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
-                entity.Property(e => e.Specialty).HasMaxLength(50);
+                entity.Property(e => e.SpecialtyId).HasColumnName("SpecialtyId");
                 entity.Property(e => e.IsAnswered).HasColumnName("IsAnswered");
                 entity.Property(e => e.SubmitDate).HasColumnType("datetime");
                 entity.Property(e => e.TitleQuestion).HasMaxLength(200);

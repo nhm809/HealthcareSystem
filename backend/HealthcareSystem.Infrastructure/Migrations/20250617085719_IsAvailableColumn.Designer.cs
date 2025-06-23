@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250613075647_database")]
-    partial class database
+    [Migration("20250617085719_IsAvailableColumn")]
+    partial class IsAvailableColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -625,6 +625,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateOnly?>("TestDate")
                         .HasColumnType("date");
 
+                    b.Property<TimeSpan?>("TimeSlot")
+                        .HasColumnType("TIME");
+
                     b.HasKey("TestServiceRecordId")
                         .HasName("PK__TestServ__F810175D4779B45B");
 
@@ -681,6 +684,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")

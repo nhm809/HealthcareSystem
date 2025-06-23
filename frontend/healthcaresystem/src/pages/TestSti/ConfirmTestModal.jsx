@@ -1,6 +1,7 @@
 import { Modal, Descriptions, Button, message } from 'antd';
 import { authApi } from '../../services/api';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 function ConfirmTestModal({ open, onClose, formData, userId }) {
     const [loading, setLoading] = useState(false);
@@ -8,14 +9,43 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
     const handleConfirm = async () => {
         setLoading(true);
         try {
+            // Kiểm tra token
+            const token = Cookies.get('token');
+            if (!token) {
+                message.error('Vui lòng đăng nhập lại!');
+                setLoading(false);
+                return;
+            }
+
+            // Kiểm tra và xử lý ngày tháng
+            if (!formData.dob || !formData.testDate) {
+                message.error('Vui lòng chọn đầy đủ ngày tháng!');
+                setLoading(false);
+                return;
+            }
+
+            // Validate dữ liệu
+            if (!formData.fullName || !formData.gender || !formData.phone) {
+                message.error('Vui lòng điền đầy đủ thông tin!');
+                setLoading(false);
+                return;
+            }
+
             const data = {
-                serviceId: 0,
+                serviceId: 1,
                 fullName: formData.fullName,
                 dob: formData.dob.format('YYYY-MM-DD'),
                 gender: formData.gender,
                 phoneNumber: formData.phone,
-                userId: userId
+                testDate: formData.testDate.format('YYYY-MM-DD'),
+                userId: parseInt(userId)
             };
+
+            // Log dữ liệu gửi đi
+            console.log('Form data:', formData);
+            console.log('Sending data:', data);
+            console.log('User ID:', userId);
+            console.log('Token:', token ? 'Present' : 'Missing');
 
             const response = await authApi.bookTestServiceRecord(data);
             console.log('Book response:', response.data);
@@ -38,8 +68,12 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                 }
             }
         } catch (error) {
-            console.error('Error:', error);
-            message.error('Đăng ký thất bại!');
+            console.error('Error details:', error.response?.data || error);
+            if (error.response?.data?.message) {
+                message.error(error.response.data.message);
+            } else {
+                message.error('Đã xảy ra lỗi khi đặt lịch. Vui lòng thử lại sau!');
+            }
         } finally {
             setLoading(false);
         }
@@ -70,6 +104,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                 <Descriptions.Item label="Ngày sinh">{formData?.dob?.format('DD/MM/YYYY')}</Descriptions.Item>
                 <Descriptions.Item label="Giới tính">{formData?.gender}</Descriptions.Item>
                 <Descriptions.Item label="Số điện thoại">{formData?.phone}</Descriptions.Item>
+                <Descriptions.Item label="Ngày lấy mẫu">{formData?.testDate?.format('DD/MM/YYYY')}</Descriptions.Item>
                 <Descriptions.Item label="Dịch vụ">Gói xét nghiệm STIs</Descriptions.Item>
                 <Descriptions.Item label="Giá tiền">450,000đ</Descriptions.Item>
             </Descriptions>

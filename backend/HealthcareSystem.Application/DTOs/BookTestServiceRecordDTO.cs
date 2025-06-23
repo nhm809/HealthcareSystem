@@ -1,14 +1,16 @@
 ﻿using System;
-namespace Application.DTOs
+
+namespace HealthcareSystem.Application.DTOs
 {
     public class BookTestServiceRecordDTO
     {
         public int ServiceId { get; set; } = 1; // Giá trị mặc định là 1
-        public string FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
         public DateOnly Dob { get; set; }
-        public string Gender { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Gender { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public DateOnly TestDate { get; set; }
-        public int UserId { get; set; } //FE gửi cái này
+        public int UserId { get; set; } 
+        public int Shift { get; set; } 
     }
 }

@@ -11,6 +11,8 @@ namespace Application.Interfaces
         Task<bool> AddQuestionAsync(QuestionDTO questionDto);
         Task<bool> UpdateQuestionStatusAsync(int  questionId);
         Task<bool> DeleteQuestionAsync(int questionId);
+        Task<bool> GiveAHeart(QuestionDTO questionDto);
+        Task<QuestionDTO> GetQuestionById(int questionId);
     }
 
 }
