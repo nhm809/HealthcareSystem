@@ -52,6 +52,10 @@ namespace Infrastructure.data {
 
         public virtual DbSet<WorkSchedule> WorkSchedules { get; set; }
 
+        public virtual DbSet<WeeklySchedule> WeeklySchedules { get; set; }
+
+        public virtual DbSet<WeeklyOverrideSchedule> WeeklyOverrideSchedules { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Appointment>(entity =>
@@ -429,21 +433,21 @@ namespace Infrastructure.data {
                         });
             });
 
-            modelBuilder.Entity<WorkSchedule>(entity =>
-            {
-                entity.HasKey(e => e.WorkScheduleId).HasName("PK__WorkSche__C6AC635EDF22BB92");
+            // modelBuilder.Entity<WorkSchedule>(entity =>
+            // {
+            //     entity.HasKey(e => e.WorkScheduleId).HasName("PK__WorkSche__C6AC635EDF22BB92");
 
-                entity.ToTable("WorkSchedule");
+            //     entity.ToTable("WorkSchedule");
 
-                entity.Property(e => e.WorkScheduleId).HasColumnName("WorkScheduleID");
-                entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
-                entity.Property(e => e.Note).HasMaxLength(100);
-                entity.Property(e => e.ShiftType).HasMaxLength(50);
+            //     entity.Property(e => e.WorkScheduleId).HasColumnName("WorkScheduleID");
+            //     entity.Property(e => e.ConsultantId).HasColumnName("ConsultantID");
+            //     entity.Property(e => e.Note).HasMaxLength(100);
+            //     entity.Property(e => e.ShiftType).HasMaxLength(50);
 
-                entity.HasOne(d => d.Consultant).WithMany(p => p.WorkSchedules)
-                    .HasForeignKey(d => d.ConsultantId)
-                    .HasConstraintName("FK__WorkSched__Consu__31EC6D26");
-            });
+            //     entity.HasOne(d => d.Consultant).WithMany(p => p.WorkSchedules)
+            //         .HasForeignKey(d => d.ConsultantId)
+            //         .HasConstraintName("FK__WorkSched__Consu__31EC6D26");
+            // });
 
             OnModelCreatingPartial(modelBuilder);
         }

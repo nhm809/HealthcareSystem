@@ -16,12 +16,12 @@ namespace Infrastructure.Services
     
     public class TestServiceRecordService : ITestServiceRecord
     {
-        const int FIXED_SERVICE_ID = 1;
-        const int MAX_BOOKINGS_PER_SHIFT = 40; // Tối đa 40 booking per ca
+        // const int FIXED_SERVICE_ID = 1;
+        const int MAX_BOOKINGS_PER_SHIFT = 40;  
         public readonly AppDbContext _context;
         private readonly INotiService _notiService;
 
-        public TestServiceRecordService(AppDbContext context, INotiService notiService)
+            public TestServiceRecordService(AppDbContext context, INotiService notiService)
         {
             _context = context;
             _notiService = notiService;
@@ -107,7 +107,6 @@ namespace Infrastructure.Services
                 return false;
             }
 
-            // Check 1: Kiểm tra xem user đã có booking nào trong ca này chưa
             var existingUserBookingInShift = await _context.TestServiceRecords
                 .Where(r => r.TestDate == testDate && 
                            r.MemberId == request.UserId &&
@@ -120,10 +119,9 @@ namespace Infrastructure.Services
 
             if (existingUserBookingInShift != null)
             {
-                return false; // User đã có booking trong ca này
+                return false; 
             }
 
-            // Check 2: Kiểm tra giới hạn số lượng booking trong ca
             var count = await _context.TestServiceRecords
                 .Where(r => r.TestDate == testDate && 
                            r.Status == "Dang cho kham" &&
@@ -148,7 +146,6 @@ namespace Infrastructure.Services
                 throw new ArgumentException("Chỉ có thể chọn Ca 1 hoặc Ca 2");
             }
 
-            // Check 1: Kiểm tra xem user đã có booking nào trong ca này chưa
             var existingUserBookingInShift = await _context.TestServiceRecords
                 .Where(r => r.TestDate == testDate && 
                            r.MemberId == request.UserId &&
@@ -157,7 +154,7 @@ namespace Infrastructure.Services
                            (shift == 1 ? 
                                (r.TimeSlot >= new TimeSpan(8, 0, 0) && r.TimeSlot < new TimeSpan(12, 0, 0)) :
                                (r.TimeSlot >= new TimeSpan(13, 0, 0) && r.TimeSlot < new TimeSpan(17, 0, 0))))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(); 
 
             if (existingUserBookingInShift != null)
             {
@@ -165,7 +162,6 @@ namespace Infrastructure.Services
                     "Mỗi khách hàng chỉ có thể đặt 1 lịch xét nghiệm mỗi ca.");
             }
 
-            // Check 2: Kiểm tra giới hạn số lượng booking trong ca
             var count = await _context.TestServiceRecords
                 .Where(r => r.TestDate == testDate && 
                            r.Status == "Dang cho kham" &&
@@ -181,12 +177,11 @@ namespace Infrastructure.Services
                     "Quý khách vui lòng chọn ca khác hoặc ngày khác phù hợp hơn.");
             }
 
-            // Tạo TimeSlot mặc định cho ca (có thể random hoặc theo logic cụ thể)
             var timeSlot = GetDefaultTimeSlotForShift(shift);
 
             var testServiceRecord = new TestServiceRecord
             {
-                ServiceId = FIXED_SERVICE_ID,
+                ServiceId = request.ServiceId,
                 FullNameOfMember = request.FullName,
                 Dob = request.Dob,
                 TestDate = request.TestDate,
@@ -230,7 +225,6 @@ namespace Infrastructure.Services
                 Status = shift1Bookings < MAX_BOOKINGS_PER_SHIFT ? "Còn chỗ" : "Hết chỗ"
             });
 
-            // Ca 2: 13:00 - 17:00
             var shift2Bookings = await _context.TestServiceRecords
                 .Where(r => r.TestDate == date && 
                            r.Status == "Dang cho kham" &&
@@ -258,9 +252,9 @@ namespace Infrastructure.Services
         {
             return shift switch
             {
-                1 => new TimeSpan(8, 0, 0), // Ca 1: 8:00
-                2 => new TimeSpan(13, 0, 0), // Ca 2: 13:00
-                _ => new TimeSpan(8, 0, 0) // Mặc định 8:00
+                1 => new TimeSpan(8, 0, 0),  
+                2 => new TimeSpan(13, 0, 0),  
+                _ => new TimeSpan(8, 0, 0) // default 8:00
             };
         }
 
@@ -273,39 +267,30 @@ namespace Infrastructure.Services
             if (testServiceRecord == null)
                 throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm .");
 
-            if (testServiceRecord.Status == "Đã hủy")
+            if (testServiceRecord.Status == "Da huy")
                 throw new ArgumentException("Không thể cập nhật bản ghi xét nghiệm đã bị hủy.");
 
-            testServiceRecord.Result = request.Result;
-            testServiceRecord.Notes = request.Notes;
-            
-            string notificationContent = "";
-            bool statusChanged = request.Status != testServiceRecord.Status;
-            bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != testServiceRecord.Notes;
+            var oldStatus = testServiceRecord.Status;
+            var oldNotes = testServiceRecord.Notes;
+            var oldResult = testServiceRecord.Result;
 
-            if (statusChanged)
+            bool statusChanged = request.Status != oldStatus;
+            bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != oldNotes;
+            bool resultChanged = request.Result != oldResult;
+
+            testServiceRecord.Status = request.Status;
+            testServiceRecord.Notes = request.Notes;
+            testServiceRecord.Result = request.Result;
+
+            List<string> changedFields = new();
+            if (statusChanged) changedFields.Add("trạng thái");
+            if (notesChanged) changedFields.Add("ghi chú");
+            if (resultChanged) changedFields.Add("kết quả xét nghiệm");
+
+            string notificationContent = "";
+            if (changedFields.Count > 0)
             {
-                testServiceRecord.Status = request.Status;
-                switch (request.Status)
-                {
-                    case "Dang thuc hien":
-                        notificationContent = "Xét nghiệm của bạn đang được thực hiện.";
-                        break;
-                    case "Da hoan thanh":
-                        notificationContent = "Kết quả xét nghiệm của bạn đã có sẵn.";
-                        break;
-                    case "Khach hang khong den":
-                        notificationContent = "Bản xét nghiệm của bạn đã quá hạn.";
-                        break;
-                    case "Da huy":
-                        notificationContent = "Xét nghiệm của bạn đã bị hủy.";
-                        break;
-                }
-            }
-            
-            if (notesChanged)
-            {
-                notificationContent = "Bác sĩ đã cập nhật thông tin xét nghiệm của bạn.";
+                notificationContent = $"Bác sĩ đã cập nhật {string.Join(", ", changedFields)} cho xét nghiệm của bạn.";
             }
             await _context.SaveChangesAsync();
 
@@ -316,7 +301,7 @@ namespace Infrastructure.Services
                     UserId = testServiceRecord.MemberId.Value,
                     Title = "Cập nhật thông tin xét nghiệm",
                     Content = notificationContent,
-                    SendTime = DateTime.UtcNow.AddHours(7),///////////
+                    SendTime = DateTime.UtcNow.AddHours(7),
                     IsRead = false
                 };
 
