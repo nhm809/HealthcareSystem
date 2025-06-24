@@ -73,7 +73,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     RoleID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,6 +289,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     StaffID = table.Column<int>(type: "int", nullable: true),
                     RecordDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     TestDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    TimeSlot = table.Column<TimeSpan>(type: "TIME", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Status = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
                 },

@@ -40,3 +40,72 @@
 .profile-edit-button {
      margin-top: 0;
 }
+
+.service-history-container {
+     margin-top: 24px;
+}
+
+.service-history-title {
+     font-size: 20px;
+     font-weight: 600;
+     margin-bottom: 20px;
+     display: flex;
+     align-items: center;
+     color: #333;
+}
+
+.service-history-list .service-record-card {
+     margin-bottom: 16px;
+     border-radius: 8px;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+     transition: box-shadow 0.3s;
+}
+
+.service-history-list .service-record-card:hover {
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.service-record-card .ant-card-body {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     flex-wrap: wrap;
+}
+
+.service-record-header {
+     display: flex;
+     align-items: center;
+     gap: 16px;
+     flex-grow: 1;
+}
+
+.service-record-info .service-name {
+     font-size: 1rem;
+     font-weight: 600;
+     margin: 0 0 4px 0;
+}
+
+.service-record-info .service-date {
+     color: #888;
+     font-size: 0.875rem;
+     display: flex;
+     align-items: center;
+     margin: 0;
+}
+
+.service-record-status {
+     white-space: nowrap;
+}
+
+.service-record-action {
+     margin-left: 16px;
+}
+
+.service-cancelled-text {
+     color: #d9534f;
+     background-color: #f8d7da;
+     padding: 6px 12px;
+     border-radius: 16px;
+     font-weight: 500;
+     font-size: 0.875rem;
+}
