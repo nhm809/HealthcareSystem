@@ -9,5 +9,7 @@ namespace Application.DTOs
         public TimeSpan? NewEndTime { get; set; }
         public string? OverrideType { get; set; } 
         public string? Reason { get; set; }
+        public int? ShiftType { get; set; }
+        public string? Status { get; set; }
     }
 } 

@@ -525,5 +525,7 @@ INSERT INTO  [dbo].[WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, Shi
 
 --WeeklyOverrideSchedule--=====================================================================================================================================================
 -- Staff (UserID = 3) takes leave on 2024-07-29 (Monday)
-INSERT INTO [dbo].[WeeklyOverrideSchedules] (UserId, [Date], OverrideType, Reason) VALUES
-(3, '2024-07-29', N'Nghỉ', N'Lý do cá nhân');
+INSERT INTO [dbo].[WeeklyOverrideSchedules] (UserId, [Date], OverrideType, Reason,[ShiftType],[Status]) VALUES
+(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân',3,N'Đang chờ duyệt'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân',1 ,N'Đang chờ duyệt'),
+(9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân',2,N'Đang chờ duyệt');
