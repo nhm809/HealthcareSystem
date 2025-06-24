@@ -13,8 +13,7 @@ namespace Domain.Entities
         [Column(TypeName = "TIME")]
         public TimeSpan EndTime { get; set; }
         public int ShiftType { get; set; } // 1: Ca 1, 2: Ca 2
-        public string? OverrideType { get; set; } 
-        public string? Reason { get; set; } 
+        public string? Note { get; set; } 
         public virtual User User { get; set; }
     }
 } 

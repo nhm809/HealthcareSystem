@@ -8,5 +8,6 @@ namespace Application.DTOs
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public int ShiftType { get; set; }
+        public string? Note { get; set; }
     }
 } 

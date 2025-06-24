@@ -59,17 +59,43 @@ CREATE TABLE ReproductiveCycle (
 
 
 
--- 6. WorkSchedule
-CREATE TABLE WorkSchedule (
-    WorkScheduleID INT PRIMARY KEY Identity(1,1),
-    ConsultantID INT ,
-    WorkDate DATE,
+-- -- 6. WorkSchedule
+-- CREATE TABLE WorkSchedule (
+--     WorkScheduleID INT PRIMARY KEY Identity(1,1),
+--     ConsultantID INT ,
+--     WorkDate DATE,
+--     StartTime TIME,
+--     EndTime TIME,
+--     ShiftType NVARCHAR(50),
+--     Note NVARCHAR(100),
+--     FOREIGN KEY (ConsultantID) REFERENCES [User](UserID)
+-- );
+
+-- WeeklySchedule Table
+CREATE TABLE WeeklySchedule (
+    WeeklyScheduleId INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT,
+    DayOfWeek INT, -- 0: Sunday, 1: Monday, ..., 6: Saturday
     StartTime TIME,
     EndTime TIME,
-    ShiftType NVARCHAR(50),
-    Note NVARCHAR(100),
-    FOREIGN KEY (ConsultantID) REFERENCES [User](UserID)
+    ShiftType INT, -- 1: Morning Shift, 2: Afternoon Shift 3 : OT
+    Note NVARCHAR(255) NULL,
+    FOREIGN KEY (UserId) REFERENCES [User](UserID)
 );
+GO
+
+-- WeeklyOverrideSchedule Table
+CREATE TABLE WeeklyOverrideSchedule (
+    WeeklyOverrideScheduleId INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT,
+    [Date] DATE,
+    NewStartTime TIME NULL,
+    NewEndTime TIME NULL,
+    OverrideType NVARCHAR(50) NULL, -- absent , swap shift
+    Reason NVARCHAR(255) NULL,
+    FOREIGN KEY (UserId) REFERENCES [User](UserID)
+);
+GO
 
 
 -- 7. Blog
@@ -305,7 +331,14 @@ INSERT INTO [dbo].[UserSpecialty] (UserID, SpecialtyID)
 VALUES
 (3, 1), -- Sản Phụ Khoa
 (3, 2), -- Nam Khoa
-(3, 4); -- Tâm lý học
+(3, 4), -- Tâm lý học
+-- Assigning specialties to other staff members
+(6, 8), -- Staff2: Xét nghiệm y khoa
+(6, 3), -- Staff2: Da liễu - STIs
+(7, 8), -- Staff3: Xét nghiệm y khoa
+(7, 5), -- Staff3: Y học tổng quát
+(8, 8), -- Staff4: Xét nghiệm y khoa
+(9, 8); -- Staff5: Xét nghiệm y khoa
 
 
 --Appointment--=====================================================================================================================================================
@@ -478,3 +511,19 @@ VALUES
 --Table [dbo].[OTPRequest] is empty
 --Table [dbo].[Payment] is empty
 --Table [dbo].[Invoice] is empty
+
+--WeeklySchedule--=====================================================================================================================================================
+-- Staff (UserID = 3, 6) works morning shift from Mon to Fri
+INSERT INTO [dbo].[WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType) VALUES
+(3, 1, '08:00:00', '12:00:00', 1), (3, 2, '08:00:00', '12:00:00', 1), (3, 3, '08:00:00', '12:00:00', 1), (3, 4, '08:00:00', '12:00:00', 1), (3, 5, '08:00:00', '12:00:00', 1),
+(6, 1, '08:00:00', '12:00:00', 1), (6, 2, '08:00:00', '12:00:00', 1), (6, 3, '08:00:00', '12:00:00', 1), (6, 4, '08:00:00', '12:00:00', 1), (6, 5, '08:00:00', '12:00:00', 1);
+
+-- Staff (UserID = 7, 8) works afternoon shift from Mon to Fri
+INSERT INTO  [dbo].[WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType) VALUES
+(7, 1, '13:00:00', '17:00:00', 2), (7, 2, '13:00:00', '17:00:00', 2), (7, 3, '13:00:00', '17:00:00', 2), (7, 4, '13:00:00', '17:00:00', 2), (7, 5, '13:00:00', '17:00:00', 2),
+(8, 1, '13:00:00', '17:00:00', 2), (8, 2, '13:00:00', '17:00:00', 2), (8, 3, '13:00:00', '17:00:00', 2), (8, 4, '13:00:00', '17:00:00', 2), (8, 5, '13:00:00', '17:00:00', 2);
+
+--WeeklyOverrideSchedule--=====================================================================================================================================================
+-- Staff (UserID = 3) takes leave on 2024-07-29 (Monday)
+INSERT INTO [dbo].[WeeklyOverrideSchedules] (UserId, [Date], OverrideType, Reason) VALUES
+(3, '2024-07-29', N'Nghỉ', N'Lý do cá nhân');
