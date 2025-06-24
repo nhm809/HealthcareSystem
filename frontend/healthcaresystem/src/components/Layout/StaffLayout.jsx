@@ -33,21 +33,16 @@ const StaffLayout = () => {
 
   const menuItems = [
     {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Dashboard',
-    },
-    {
       key: 'my-schedule',
       icon: <CalendarOutlined />,
       label: 'Các xét nghiệm đang thực hiện',
     },
     
-    {
-      key: 'test-done',
-      icon: <CalendarOutlined />,
-      label: "Test Đã hoàn thành"
-    },
+    // {
+    //   key: 'test-done',
+    //   icon: <CalendarOutlined />,
+    //   label: "Test Đã hoàn thành"
+    // },
 
     {
       key: 'my-profile',
@@ -58,8 +53,6 @@ const StaffLayout = () => {
 
   const renderContent = () => {
     switch (selectedKey) {
-      case 'dashboard':
-        return <Dashboard />;
       case 'my-schedule':
         return <StaffSchedule />;
       case 'my-profile':
@@ -69,7 +62,7 @@ const StaffLayout = () => {
       case 'services':
         return <Services />;
       default:
-        return <Dashboard />;
+        return <StaffSchedule />;
     }
   };
 

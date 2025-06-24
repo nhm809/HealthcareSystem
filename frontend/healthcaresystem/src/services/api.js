@@ -32,6 +32,8 @@ export const authApi = {
                }
           ),
 
+     getTestServiceRecordsByMember: (memberId) => api.get(`/TestServiceRecord/member/${memberId}`),
+
      bookTestServiceRecord: (data) => 
           api.post('/TestServiceRecord/book/', data),
 
@@ -41,7 +43,12 @@ export const authApi = {
                testServiceRecordId,
                appointmentId,
           }
-     }),     
+     }),
+
+     getWorkShifts: (date) => 
+          api.get(`/TestServiceRecord/work-shifts`, {
+               params: { date }
+          }),
 };
 
 export const notiApi = {

@@ -6,16 +6,18 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const statusMap = {
   'Dang cho kham': { color: 'gold', icon: '⏳', text: 'Đang chờ khám' },
-  'In Progress': { color: 'blue', icon: '•', text: 'Đang phân tích' },
-  'Completed': { color: 'green', icon: '✔', text: 'Đã hoàn thành' },
-  'Cancelled': { color: 'red', icon: '✖', text: 'Đã huỷ' },
+  'Dang thuc hien': { color: 'blue', icon: '•', text: 'Đang thực hiện' },
+  'Da hoan thanh': { color: 'green', icon: '✔', text: 'Đã hoàn thành' },
+  'Khach hang khong den': { color: 'red', icon: 'no', text: 'Khách hàng không đến'},
+  'Da huy': { color: 'red', icon: '✖', text: 'Đã huỷ' }
 };
 
 const statusOptions = [
   { value: 'Dang cho kham', label: 'Đang chờ khám' },
-  { value: 'In Progress', label: 'Đang phân tích' },
-  { value: 'Completed', label: 'Đã hoàn thành' },
-  { value: 'Cancelled', label: 'Đã huỷ' },
+  { value: 'Dang thuc hien', label: 'Đang thực hiện' },
+  { value: 'Da hoan thanh', label: 'Đã hoàn thành' },
+  { value: 'Khach hang khong den', label: 'Khách hàng không đến' },
+  { value: 'Da huy', label: 'Đã hủy'}
 ];
 
 const columnsBase = [

@@ -6,6 +6,18 @@ import Cookies from 'js-cookie';
 function ConfirmTestModal({ open, onClose, formData, userId }) {
     const [loading, setLoading] = useState(false);
 
+    // Hàm lấy tên ca làm việc từ shiftId
+    const getShiftName = (shiftId) => {
+        switch (shiftId) {
+            case 1:
+                return 'Ca 1 (8h - 12h)';
+            case 2:
+                return 'Ca 2 (13h - 17h)';
+            default:
+                return 'Không xác định';
+        }
+    };
+
     const handleConfirm = async () => {
         setLoading(true);
         try {
@@ -25,7 +37,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
             }
 
             // Validate dữ liệu
-            if (!formData.fullName || !formData.gender || !formData.phone) {
+            if (!formData.fullName || !formData.gender || !formData.phone || !formData.shift) {
                 message.error('Vui lòng điền đầy đủ thông tin!');
                 setLoading(false);
                 return;
@@ -38,7 +50,8 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                 gender: formData.gender,
                 phoneNumber: formData.phone,
                 testDate: formData.testDate.format('YYYY-MM-DD'),
-                userId: parseInt(userId)
+                userId: parseInt(userId),
+                shift: parseInt(formData.shift)
             };
 
             // Log dữ liệu gửi đi
@@ -105,6 +118,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                 <Descriptions.Item label="Giới tính">{formData?.gender}</Descriptions.Item>
                 <Descriptions.Item label="Số điện thoại">{formData?.phone}</Descriptions.Item>
                 <Descriptions.Item label="Ngày lấy mẫu">{formData?.testDate?.format('DD/MM/YYYY')}</Descriptions.Item>
+                <Descriptions.Item label="Ca làm việc">{formData?.shift ? getShiftName(formData.shift) : 'Chưa chọn'}</Descriptions.Item>
                 <Descriptions.Item label="Dịch vụ">Gói xét nghiệm STIs</Descriptions.Item>
                 <Descriptions.Item label="Giá tiền">450,000đ</Descriptions.Item>
             </Descriptions>
