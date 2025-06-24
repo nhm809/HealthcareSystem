@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace Api.Controllers
 {
@@ -217,6 +218,40 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi lấy thông tin ca làm việc.", details = ex.Message });
+            }
+        }
+
+        [HttpGet("available-staff")]
+        public async Task<IActionResult> GetAvailableStaffByDay([FromQuery] string date)
+        {
+            try
+            {
+                if (!DateOnly.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                {
+                    return BadRequest("Định dạng ngày không hợp lệ. Vui lòng sử dụng định dạng yyyy-MM-dd.");
+                }
+
+                var workShifts = await _testServiceRecord.GetWorkShiftsAsync(parsedDate);
+                var result = new List<object>();
+
+                foreach (var shift in workShifts)
+                {
+                    var staffIds = await _testServiceRecord.GetAvailableStaffForShiftAsync(parsedDate, shift.ShiftId);
+                    result.Add(new 
+                    {
+                        ShiftId = shift.ShiftId,
+                        ShiftName = shift.ShiftName,
+                        StartTime = shift.StartTime,
+                        EndTime = shift.EndTime,
+                        AvailableStaff = staffIds
+                    });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi khi lấy danh sách nhân viên có thể làm việc.", details = ex.Message });
             }
         }
     }
