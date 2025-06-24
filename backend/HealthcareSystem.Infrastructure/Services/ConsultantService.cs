@@ -57,7 +57,7 @@ namespace Infrastructure.Services
         }
 
         // ✅ Get detail of one consultant (chuyên môn + lịch làm việc)
-        public async Task<ConsultantDetailDTO?> GetConsultantDetailWithWorkScheduleAsync(int consultantId)
+        public async Task<ConsultantDetailDTO?> GetConsultantDetailAsync(int consultantId)
         {
             var u = await _context.Users.FirstOrDefaultAsync(x => x.UserId == consultantId);
             if (u == null) return null;
@@ -69,8 +69,12 @@ namespace Infrastructure.Services
                     WHERE us.UserID = {0}", consultantId)
                 .ToListAsync();
 
-            var schedules = await _context.WorkSchedules
-                .Where(ws => ws.ConsultantId == consultantId)
+            var weeklySchedules = await _context.WeeklySchedules
+                .Where(ws => ws.UserId == consultantId)
+                .ToListAsync();
+
+            var overrideSchedules = await _context.WeeklyOverrideSchedules
+                .Where(os => os.UserId == consultantId && os.Date >= DateTime.Today)
                 .ToListAsync();
 
             return new ConsultantDetailDTO
@@ -83,13 +87,20 @@ namespace Infrastructure.Services
                     Id = s.SpecialtyId,
                     Name = s.Name
                 }).ToList(),
-                WorkSchedules = schedules.Select(ws => new WorkScheduleDTO
+                WeeklySchedules = weeklySchedules.Select(ws => new WeeklyScheduleDTO
                 {
-                    WorkDate = ws.WorkDate,
+                    DayOfWeek = ws.DayOfWeek,
                     StartTime = ws.StartTime,
                     EndTime = ws.EndTime,
-                    ShiftType = ws.ShiftType ?? "",
-                    Note = ws.Note ?? ""
+                    ShiftType = ws.ShiftType
+                }).ToList(),
+                OverrideSchedules = overrideSchedules.Select(os => new WeeklyOverrideScheduleDTO
+                {
+                    Date = os.Date,
+                    NewStartTime = os.NewStartTime,
+                    NewEndTime = os.NewEndTime,
+                    OverrideType = os.OverrideType,
+                    Reason = os.Reason
                 }).ToList()
             };
         }

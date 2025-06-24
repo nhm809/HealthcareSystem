@@ -25,7 +25,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultantDetail(int id)
         {
-            var result = await _consultantService.GetConsultantDetailWithWorkScheduleAsync(id);
+            var result = await _consultantService.GetConsultantDetailAsync(id);
             if (result == null)
                 return NotFound(new { message = "Consultant không tồn tại." });
 

@@ -50,7 +50,7 @@ namespace Infrastructure.data {
 
         public virtual DbSet<User> Users { get; set; }
 
-        public virtual DbSet<WorkSchedule> WorkSchedules { get; set; }
+        // public virtual DbSet<WorkSchedule> WorkSchedules { get; set; }
 
         public virtual DbSet<WeeklySchedule> WeeklySchedules { get; set; }
 
