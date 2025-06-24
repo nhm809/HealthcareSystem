@@ -395,37 +395,37 @@ VALUES
 
 
 ---Blog-=====================================================================================================================================================
-INSERT INTO Blog (Title, Content, [Description], ConsultantID, PublishDate, Topic)
+INSERT INTO Blog (Title, Content, [Description], ConsultantID, PublishDate, Topic, Status)
 VALUES 
 -- Bài 1
 (N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
  N'Nắm rõ chu kỳ kinh nguyệt giúp bạn dự đoán thời gian rụng trứng và khả năng mang thai. Trong bài viết này, chúng tôi hướng dẫn bạn cách theo dõi và sử dụng công cụ tính chu kỳ hiệu quả.',
  N'Hướng dẫn theo dõi chu kỳ kinh nguyệt để nhận biết thời điểm rụng trứng và tránh thai tự nhiên.',
- 4, '2025-05-20', N'Sức khỏe'),
+ 4, '2025-05-20', N'Sức khỏe',0),
 
 -- Bài 2
 (N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
  N'STIs là các bệnh nguy hiểm có thể ảnh hưởng đến sức khỏe sinh sản và cuộc sống tình dục. Bài viết giúp bạn hiểu rõ về dấu hiệu, cách phòng ngừa và thời điểm cần xét nghiệm.',
  N'Hiểu đúng về STIs – dấu hiệu, cách lây và phòng ngừa hiệu quả.',
- 4, '2025-05-18', N'STIs'),
+ 4, '2025-05-18', N'STIs',0),
 
 -- Bài 3
 (N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
  N'Không chỉ uống đúng giờ, người dùng thuốc tránh thai còn cần lưu ý nhiều điều khác để đảm bảo hiệu quả tránh thai. Bài viết giải đáp chi tiết những thắc mắc thường gặp.',
  N'Giải đáp mọi thắc mắc về việc sử dụng thuốc tránh thai an toàn và hiệu quả.',
- 4, '2025-05-15', N'Sức khỏe'),
+ 4, '2025-05-15', N'Sức khỏe',1),
 
 -- Bài 4
 (N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
  N'Nhiều người lo lắng hoặc ngại ngùng khi đi xét nghiệm STIs. Bài viết chia sẻ quy trình, những điều cần chuẩn bị và cách lấy kết quả an toàn, bảo mật.',
  N'Chuẩn bị tâm lý và hiểu quy trình khi đi xét nghiệm STIs lần đầu.',
- 4, '2025-05-12', N'Hướng dẫn'),
+ 4, '2025-05-12', N'Hướng dẫn',0),
 
 -- Bài 5
 (N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
  N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
  N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 4, '2025-05-10', N'Tâm lý');
+ 4, '2025-05-10', N'Tâm lý',1);
 
 
 

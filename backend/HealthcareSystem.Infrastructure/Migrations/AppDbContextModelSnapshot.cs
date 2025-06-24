@@ -92,6 +92,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateOnly?>("PublishDate")
                         .HasColumnType("date");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");

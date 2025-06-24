@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250624090641_ShiftTypePropertyForWeeklyOverrideSchedule")]
-    partial class ShiftTypePropertyForWeeklyOverrideSchedule
+    [Migration("20250624161818_database")]
+    partial class database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<DateOnly?>("PublishDate")
                         .HasColumnType("date");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200)
@@ -759,8 +762,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShiftType")
+                    b.Property<int?>("ShiftType")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
