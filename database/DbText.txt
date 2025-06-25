@@ -1,1 +1,1 @@
-Server=DESKTOP-HE04ECS\\NHM809;Database=HealthcareSystem;User Id=sa;Password=12345;TrustServerCertificate=True;
+Server=.;Database=HealthcareSystem;User Id=sa;Password=12345;TrustServerCertificate=True;
