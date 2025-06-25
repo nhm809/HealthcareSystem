@@ -6,6 +6,8 @@ public interface IConsultantService
 {
     Task<List<ConsultantWithSpecialtyDTO>> GetAllConsultantsWithSpecialtiesAsync();
     Task<ConsultantDetailDTO?> GetConsultantDetailAsync(int consultantId);
+    Task<List<FreeSlotDTO>> GetAvailableTimeSlotsByDateAsync(int consultantId, DateTime date);
+
 }
 
 

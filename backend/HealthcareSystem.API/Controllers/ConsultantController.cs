@@ -31,5 +31,22 @@ namespace Api.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{id}/available-slots")]
+        public async Task<IActionResult> GetFreeSlotsByDate(int id, [FromQuery] DateTime date)
+        {
+            var result = await _consultantService.GetAvailableTimeSlotsByDateAsync(id, date);
+
+            var startTimesOnly = result
+                .Select(s => $"{s.Start:HH\\:mm}") // chỉ lấy giờ bắt đầu
+                .Distinct()
+                .ToList();
+
+            return Ok(new
+            {
+                success = true,
+                data = startTimesOnly
+            });
+        }
+
     }
 }

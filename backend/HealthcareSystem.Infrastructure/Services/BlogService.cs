@@ -42,7 +42,7 @@ namespace Infrastructure.Services
                 .ToListAsync();
         }
 
-        public async Task<GetBlogContentDTO?> GetBlogContentByIdAsync(int blogId)
+        public async Task<BlogContentDTO?> GetBlogContentByIdAsync(int blogId)
         {
             var blog = await _context.Blogs
                 .Include(b => b.BlogImages)
@@ -52,10 +52,11 @@ namespace Infrastructure.Services
 
             if (blog == null) return null;
 
-            return new GetBlogContentDTO
+            return new BlogContentDTO
             {
                 BlogID = blog.BlogId,
                 Title = blog.Title ?? string.Empty,
+                Description = blog.Description ?? string.Empty,
                 Content = blog.Content ?? string.Empty,
                 Topic = blog.Topic ?? string.Empty,
                 PublishDate = blog.PublishDate.HasValue ?
@@ -156,7 +157,7 @@ namespace Infrastructure.Services
                 })
                 .ToListAsync();
         }
-        public async Task<GetBlogContentDTO?> GetBlogByTitleAsync(string title)
+        public async Task<BlogContentDTO?> GetBlogByTitleAsync(string title)
 {
     var blog = await _context.Blogs
         .Include(b => b.BlogImages)
@@ -166,10 +167,11 @@ namespace Infrastructure.Services
 
     if (blog == null) return null;
 
-    return new GetBlogContentDTO
+    return new BlogContentDTO
     {
         BlogID = blog.BlogId,
         Title = blog.Title ?? string.Empty,
+        Description = blog.Description ?? string.Empty,
         Content = blog.Content ?? string.Empty,
         Topic = blog.Topic ?? string.Empty,
         PublishDate = blog.PublishDate.HasValue ?

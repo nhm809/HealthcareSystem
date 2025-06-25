@@ -36,7 +36,7 @@ namespace Api.Controllers
 
         // Phương thức GET để lấy chi tiết bài blog theo ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetBlogContentDTO>> GetBlogById(int id)
+        public async Task<ActionResult<BlogContentDTO>> GetBlogById(int id)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace Api.Controllers
             }
         }
         [HttpGet("title/{title}")]
-        public async Task<ActionResult<GetBlogContentDTO>> GetBlogByTitle(string title)
+        public async Task<ActionResult<BlogContentDTO>> GetBlogByTitle(string title)
 {
     try
     {

@@ -103,5 +103,58 @@ namespace Infrastructure.Services
                 }).ToList()
             };
         }
+        public async Task<List<FreeSlotDTO>> GetAvailableTimeSlotsByDateAsync(int consultantId, DateTime date)
+        {
+            if (date.DayOfWeek == DayOfWeek.Sunday) return new List<FreeSlotDTO>();
+
+            int dayOfWeek = (int)date.DayOfWeek;
+
+            var schedules = await _context.WeeklySchedules
+                .Where(ws => ws.UserId == consultantId && ws.DayOfWeek == dayOfWeek)
+                .ToListAsync();
+
+            var overrideDay = await _context.WeeklyOverrideSchedules
+                .FirstOrDefaultAsync(o => o.UserId == consultantId && o.Date == date);
+
+            if (overrideDay?.OverrideType?.ToLower() == "nghỉ") return new List<FreeSlotDTO>();
+
+            var appointments = await _context.Appointments
+                .Where(a => a.ConsultantId == consultantId &&
+                            a.StartTime.HasValue &&
+                            a.StartTime.Value.Date == date &&
+                            a.Status != "Đã hủy")
+                .ToListAsync();
+
+            var freeSlots = new List<FreeSlotDTO>();
+
+            foreach (var s in schedules)
+            {
+                var startTime = overrideDay?.NewStartTime ?? s.StartTime;
+                var endTime = overrideDay?.NewEndTime ?? s.EndTime;
+
+                for (var time = startTime; time + TimeSpan.FromMinutes(30) <= endTime; time += TimeSpan.FromMinutes(30))
+                {
+                    var startDateTime = date + time;
+                    var endDateTime = startDateTime.AddMinutes(30);
+
+                    bool hasAppointment = appointments.Any(a =>
+                        a.StartTime < endDateTime && a.EndTime > startDateTime);
+
+                    if (!hasAppointment)
+                    {
+                        freeSlots.Add(new FreeSlotDTO
+                        {
+                            Date = date,
+                            Start = startDateTime,
+                            End = endDateTime
+                        });
+                    }
+                }
+            }
+
+            return freeSlots;
+        }
+
+
     }
 }

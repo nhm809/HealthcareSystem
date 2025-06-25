@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250624072030_updateWeeklySchedule")]
-    partial class updateWeeklySchedule
+    [Migration("20250625112853_database")]
+    partial class database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<DateOnly?>("PublishDate")
                         .HasColumnType("date");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200)
@@ -268,39 +271,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("Invoice", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MessageID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("QuestionID");
-
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("int")
-                        .HasColumnName("SenderID");
-
-                    b.Property<DateTime?>("SentAt")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("MessageId")
-                        .HasName("PK__Message__C87C037C57A9A3C6");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Message", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -385,6 +355,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -396,6 +369,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HeartCount")
+                        .HasColumnType("int");
+
                     b.Property<bool?>("IsAnswered")
                         .HasColumnType("bit")
                         .HasColumnName("IsAnswered");
@@ -404,9 +383,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
-                    b.Property<string>("Specialty")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int?>("MessCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecialtyId")
+                        .HasColumnType("int")
+                        .HasColumnName("SpecialtyId");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -422,7 +404,46 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.HasIndex("MemberId");
 
+                    b.HasIndex("SpecialtyId");
+
                     b.ToTable("Question", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionThreadItem", b =>
+                {
+                    b.Property<int>("ThreadItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ThreadItemID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThreadItemId"));
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool?>("IsAnswered")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int")
+                        .HasColumnName("QuestionID");
+
+                    b.Property<string>("QuestionText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("ThreadItemId")
+                        .HasName("PK__QuestionThreadItem");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionThreadItem", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ReportServiceDetail", b =>
@@ -745,6 +766,13 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ShiftType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -901,23 +929,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("TestServiceRecord");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.HasOne("Domain.Entities.Question", "Question")
-                        .WithMany("Messages")
-                        .HasForeignKey("QuestionId")
-                        .HasConstraintName("FK__Message__Questio__5FB337D6");
-
-                    b.HasOne("Domain.Entities.User", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
-                        .HasConstraintName("FK__Message__SenderI__60A75C0F");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
@@ -950,9 +961,25 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasForeignKey("MemberId")
                         .HasConstraintName("FK__Question__Member__44FF419A");
 
+                    b.HasOne("Domain.Entities.Specialty", "Specialty")
+                        .WithMany("Questions")
+                        .HasForeignKey("SpecialtyId");
+
                     b.Navigation("Consultant");
 
                     b.Navigation("Member");
+
+                    b.Navigation("Specialty");
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionThreadItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Question", "Question")
+                        .WithMany("QuestionThreadItems")
+                        .HasForeignKey("QuestionId")
+                        .HasConstraintName("FK__QuestionThreadItem__Question");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReportServiceDetail", b =>
@@ -1062,7 +1089,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("QuestionThreadItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -1077,6 +1104,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("ReportServiceDetails");
 
                     b.Navigation("TestServiceRecords");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Specialty", b =>
+                {
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("Domain.Entities.TestServiceRecord", b =>
@@ -1095,8 +1127,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("BlogViews");
 
                     b.Navigation("Blogs");
-
-                    b.Navigation("Messages");
 
                     b.Navigation("Notifications");
 
