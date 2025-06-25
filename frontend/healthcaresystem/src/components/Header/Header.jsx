@@ -6,6 +6,8 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faFlask } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -137,6 +139,14 @@ function Header() {
     navigate('/profile');
   };
 
+  const handleViewQuestions = () => {
+    navigate('/question');
+  };
+
+  const handleViewTestHistory = () => {
+    navigate('/test-history'); // navigate đến trang lịch xét nghiệm
+  };
+
   const handleNotificationClick = async (notiId) => {
     try {
       await notiApi.markAsRead(notiId);
@@ -216,6 +226,18 @@ function Header() {
     },
     {
       key: '2',
+      label: 'Câu hỏi đã đặt',
+      icon: <FontAwesomeIcon icon={faQuestionCircle} style={{ marginRight: '8px' }} />,
+      onClick: handleViewQuestions
+    },
+    {
+      key: '3',
+      label: 'Lịch xét nghiệm',
+      icon: <FontAwesomeIcon icon={faFlask} style={{ marginRight: '8px' }} />,
+      onClick: handleViewTestHistory
+    },
+    {
+      key: '4',
       label: 'Đăng xuất',
       icon: <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />,
       onClick: handleLogout
