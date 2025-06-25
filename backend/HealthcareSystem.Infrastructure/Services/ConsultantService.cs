@@ -97,8 +97,7 @@ namespace Infrastructure.Services
                 OverrideSchedules = overrideSchedules.Select(os => new WeeklyOverrideScheduleDTO
                 {
                     Date = os.Date,
-                    NewStartTime = os.NewStartTime,
-                    NewEndTime = os.NewEndTime,
+                    ShiftType = os.ShiftType,//Tốt sửa vì đã cập nhật DB(đã xóa 2 cột StartTime và EndTime)
                     OverrideType = os.OverrideType,
                     Reason = os.Reason
                 }).ToList()

@@ -9,7 +9,7 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
 --User
-INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID,[RefreshToken],[RefreshTokenExpiryTime],[IsActive],[IsAvailable])Add commentMore actions
+INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID,[RefreshToken],[RefreshTokenExpiryTime],[IsActive],[IsAvailable])
 VALUES
 (N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD',NULL,NULL,0,1),
 (N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG',NULL,NULL,0,1),
@@ -20,7 +20,7 @@ VALUES
 (N'Staff3', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
 (N'Staff4', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
 (N'Staff5', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'ST',NULL,NULL,0,1);
-Add comment
+
 
 --Specialty--=====================================================================================================================================================
 INSERT INTO Specialty ([Name], [Description]) VALUES
@@ -48,9 +48,16 @@ VALUES
 --[UserSpecialty]--=====================================================================================================================================================
 INSERT INTO [dbo].[UserSpecialty] (UserID, SpecialtyID)
 VALUES
-(4, 1), -- Sản Phụ Khoa
-(4, 2), -- Nam Khoa
-(4, 4); -- Tâm lý học
+(3, 1), -- Sản Phụ Khoa
+(3, 2), -- Nam Khoa
+(3, 4), -- Tâm lý học
+-- Assigning specialties to other staff members
+(6, 8), -- Staff2: Xét nghiệm y khoa
+(6, 3), -- Staff2: Da liễu - STIs
+(7, 8), -- Staff3: Xét nghiệm y khoa
+(7, 5), -- Staff3: Y học tổng quát
+(8, 8), -- Staff4: Xét nghiệm y khoa
+(9, 8); -- Staff5: Xét nghiệm y khoa
 
 
 --Appointment--=====================================================================================================================================================
@@ -226,8 +233,50 @@ VALUES
     (5, '2024-08-01', 26, 4, '07:45:00', GETDATE()),
     (5, '2024-09-01', NULL, 5, NULL, GETDATE());
 
---Còn 4 bảng -=====================================================================================================================================================
---Table [dbo].[ReportServiceDetail] is empty
---Table [dbo].[OTPRequest] is empty
---Table [dbo].[Payment] is empty
---Table [dbo].[Invoice] is empty
+
+
+--WeeklySchedule--=====================================================================================================================================================
+-- Staff (UserID = 3, 6) works morning shift from Mon to Fri
+INSERT INTO [WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType, Note)
+VALUES
+(3, 1, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(3, 2, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(3, 3, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(3, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 3, 5, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 6, 1, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 6, 2, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 6, 3, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 6, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(6, 5, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 6, 6, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 7, 0, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+(7, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 7, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 7, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 7, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 7, 5, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 0, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 8, 5, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 9, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 9, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 9, 5, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 9, 6, '13:00:00.0000000', '17:00:00.0000000', 2, NULL);
+
+
+
+--WeeklyOverrideSchedule--=====================================================================================================================================================
+INSERT INTO [dbo].[WeeklyOverrideSchedules] 
+(UserId, [Date], OverrideType, Reason, ShiftType, [Status]) 
+VALUES
+(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
+(9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
+(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved');
+(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Approved');--nghỉ cả ngày
