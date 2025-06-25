@@ -19,7 +19,7 @@ public class QuestionThreadItemController : ControllerBase
         _iQuestionThreadItemService = questionThreadItemService;
     }
 
-    [HttpGet("{questionId}")]
+    [HttpGet("get/{questionId}")]
     public async Task<ActionResult<List<QuestionThreadItemDTO>>> GetSubQuestionAsync(int questionId)
     {
         var subQuestions = await _iQuestionThreadItemService.GetSubQuestionAsync(questionId);
@@ -30,7 +30,7 @@ public class QuestionThreadItemController : ControllerBase
         return Ok(subQuestions);
     }
 
-    [HttpPost]
+    [HttpPost("add")]
     public async Task<ActionResult<bool>> AddSubQuestionAsync([FromBody] QuestionThreadItemDTO dto)
     {
         if (dto == null || string.IsNullOrEmpty(dto.QuestionText))

@@ -26,6 +26,7 @@ namespace Infrastructure.Services
                 .Select(q => new QuestionThreadItemDTO
                 {
                     ThreadItemId = q.ThreadItemId,
+                    QuestionId = q.QuestionId,
                     QuestionText = q.QuestionText,
                     AnswerText = q.AnswerText,
                     SentAt = q.SentAt,
@@ -41,14 +42,36 @@ namespace Infrastructure.Services
                 return false;
             var subQuestion = new QuestionThreadItem
             {
-                QuestionId = dto.ThreadItemId, // Assuming ThreadItemId is the QuestionId here
+                QuestionId = dto.QuestionId,
                 QuestionText = dto.QuestionText,
-                AnswerText = dto.AnswerText,
-                SentAt = dto.SentAt,
+                SentAt = DateTime.UtcNow,
                 AttachmentPath = dto.AttachmentPath,
-                IsAnswered = dto.IsAnswered
+                IsAnswered = false 
             };
             _context.QuestionThreadItems.Add(subQuestion);
+
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q => q.QuestionId == dto.QuestionId);
+
+
+            var memNoti = new Notification
+            {
+                UserId = question.MemberId,
+                Content = $"You have successfully asked the question {dto.QuestionText}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+            var consNoti = new Notification
+            {
+                UserId = question.ConsultantId,
+                Content = $"You have a new question from {dto.QuestionText}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+            await _context.Notifications.AddRangeAsync(memNoti, consNoti);
+
             return await _context.SaveChangesAsync() > 0;
         }
 
