@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography } from 'antd';
 import QuestionManagement from '../../pages/Consultant/QuestionManagement';
+import BlogManagement from '../../pages/Consultant/BlogManagement';
 import {
      CalendarOutlined,
      QuestionCircleOutlined,
@@ -11,7 +12,6 @@ import {
 } from '@ant-design/icons';
 import ConsultantDashboard from '../../pages/Consultant/ConsultantDashboard';
 // Placeholder components for other menu items
-const BlogManagement = () => <div>Quản lý Blog (đang phát triển)</div>;
 import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -209,7 +209,7 @@ const ConsultantLayout = () => {
                               CONSULTANT
                          </div>
                          <div style={{ textAlign: 'center', marginBottom: 16 }}>
-                              <Avatar size={80} src={userInfo?.avatar || 'https://randomuser.me/api/portraits/men/32.jpg'} />
+                              <Avatar size={80} src={userInfo?.avatar} />
                               <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
                                    {userInfo?.fullName || 'Dr. Nguyễn Văn A'}
                               </div>
