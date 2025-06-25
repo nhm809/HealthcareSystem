@@ -1,5 +1,5 @@
 // src/pages/Blog/BlogPage.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, useSearchParams  } from 'react-router-dom';
 import './BlogPage.css';
 import MainLayout from '../../components/Layout/Layout';
@@ -16,6 +16,7 @@ import {
      faMagnifyingGlass,
      faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
 
 const iconMap = {
   'Sức khỏe': faHeart,
@@ -163,9 +164,8 @@ function BlogPage() {
                       <img src={blog.thumbnailImagePath} alt={blog.title} className='blog-image' />
                       <div className='blog-content'>
                         <span className='blog-category'>{blog.topic}</span>
-                        <h3 className='blog-heading'></h3>
-                        <p className='blog-desc'>{blog.description}</p>
-                        <span className='blog-time'>{blog.publishDate}</span>
+                        <h3 className='blog-heading'>{blog.title}</h3>
+                        <span className='blog-time'>{blog.publishDate ? dayjs(blog.publishDate).format('DD/MM/YYYY') : '-'}</span>
                       </div>
                     </div>
                   ))
