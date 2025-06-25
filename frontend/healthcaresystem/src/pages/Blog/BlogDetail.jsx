@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import './BlogDetail.css';
 import MainLayout from '../../components/Layout/Layout';
+import dayjs from 'dayjs';
 import api from '../../services/api';
 
 function BlogDetail() {
@@ -46,7 +47,7 @@ function BlogDetail() {
           <ArrowLeftOutlined onClick={goBack} className="back-icon" />
           <h1>{blog.title}</h1>
           <div className="meta">
-            <span>{blog.consultantName}</span> | <span>{blog.publishDate}</span> | <span>{blog.topic}</span>
+            <span>{blog.consultantName}</span> | <span>{blog.publishDate ? dayjs(blog.publishDate).format('DD/MM/YYYY') : '-'}</span> | <span>{blog.topic}</span>
           </div>
         </div>
         <img className="blog-detail-image" src={blog.images[0].imagePath} alt={blog.title} />

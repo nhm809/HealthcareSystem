@@ -104,6 +104,19 @@ export const specialtyApi = {
     getAllSpecialties: () => api.get('/specialty/getAll'),
 };
 
+export const consultantBlogApi = {
+    createBlog: (data) => api.post('/ConsultantBlog', data),
+    getBlogsByConsultant: (consultantId) => api.get(`/ConsultantBlog/consultant/${consultantId}`),
+    updateBlog: (data) => api.put('/ConsultantBlog', data),
+    getBlogById: (blogID) => api.get(`/blogs/${blogID}`),
+    deleteBlog: (blogId, consultantId) => api.delete(`/ConsultantBlog`, { data: { BlogID: blogId, ConsultantId: consultantId } }),
+    getDeletedBlogs: (consultantId) => api.get(`/ConsultantBlog/deleted/${consultantId}`),
+    restoreBlog: (blogId, consultantId) => api.patch(`/ConsultantBlog/restore`, null, { params: { blogId, consultantId } }),
+};
+
+export const cancelTestRecord = (testServiceRecordId, userId) =>
+  api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
+
 // Request interceptor
 api.interceptors.request.use(
      async (config) => {
