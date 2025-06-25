@@ -43,7 +43,7 @@ builder.Services.AddScoped<IService, ServiceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
-builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IQuestionThreadItemService, QuestionThreadItemService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();

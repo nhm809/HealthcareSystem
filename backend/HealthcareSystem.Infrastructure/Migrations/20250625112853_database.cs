@@ -434,29 +434,26 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Message",
+                name: "QuestionThreadItem",
                 columns: table => new
                 {
-                    MessageID = table.Column<int>(type: "int", nullable: false)
+                    ThreadItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QuestionID = table.Column<int>(type: "int", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SenderID = table.Column<int>(type: "int", nullable: true),
-                    SentAt = table.Column<DateTime>(type: "datetime", nullable: true)
+                    SentAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    IsAnswered = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Message__C87C037C57A9A3C6", x => x.MessageID);
+                    table.PrimaryKey("PK__QuestionThreadItem", x => x.ThreadItemID);
                     table.ForeignKey(
-                        name: "FK__Message__Questio__5FB337D6",
+                        name: "FK__QuestionThreadItem__Question",
                         column: x => x.QuestionID,
                         principalTable: "Question",
                         principalColumn: "QuestionID");
-                    table.ForeignKey(
-                        name: "FK__Message__SenderI__60A75C0F",
-                        column: x => x.SenderID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateTable(
@@ -574,16 +571,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 column: "TestServiceRecordID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_QuestionID",
-                table: "Message",
-                column: "QuestionID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_SenderID",
-                table: "Message",
-                column: "SenderID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserID",
                 table: "Notification",
                 column: "UserID");
@@ -607,6 +594,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "IX_Question_SpecialtyId",
                 table: "Question",
                 column: "SpecialtyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionThreadItem_QuestionID",
+                table: "QuestionThreadItem",
+                column: "QuestionID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReportServiceDetail_ServiceID",
@@ -670,13 +662,13 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "Invoice");
 
             migrationBuilder.DropTable(
-                name: "Message");
-
-            migrationBuilder.DropTable(
                 name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "OTPRequest");
+
+            migrationBuilder.DropTable(
+                name: "QuestionThreadItem");
 
             migrationBuilder.DropTable(
                 name: "ReportServiceDetail");

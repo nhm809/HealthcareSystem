@@ -31,7 +31,7 @@ public class ReproductiveCycleController : ControllerBase
         return Ok(cycles);
     }
 
-    [HttpPost("/add")]
+    [HttpPost("add")]
     public async Task<IActionResult> AddReproductiveCycleInfo([FromBody] ReproductiveCycleDTO cycleDto)
     {
         if (cycleDto == null || cycleDto.MemberId <= 0)

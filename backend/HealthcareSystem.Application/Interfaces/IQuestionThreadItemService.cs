@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public interface IMessageService
+    public interface IQuestionThreadItemService
     {
-        Task<List<MessageDTO>> GetMessagesHistoryAsync(int questionId);
-        Task<bool> AddMessageAsync(MessageDTO messageDto);
+        Task<List<QuestionThreadItemDTO>> GetSubQuestionAsync(int questionId);
+        Task<bool> AddSubQuestionAsync(QuestionThreadItemDTO dto);
         //Task<bool> UpdateMessageAsync(MessageDTO messageDto);
     }
 }
