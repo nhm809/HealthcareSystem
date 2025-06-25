@@ -51,12 +51,15 @@ namespace Infrastructure.Services
                 {
                     r.TestServiceRecordId,
                     r.ServiceId,
+                    ServiceName = r.Service.Name,
                     r.MemberId,
                     r.Result,
                     r.RecordDate,
                     r.Notes,
                     r.Status,
                     r.StaffId,
+                    r.TestDate,
+                    r.TimeSlot,
                     Staff = r.Staff == null ? null : new
                     {
                         r.Staff.FullName,
@@ -81,10 +84,13 @@ namespace Infrastructure.Services
             {
                 TestServiceRecordId = record.TestServiceRecordId,
                 ServiceId = record.ServiceId,
+                ServiceName = record.ServiceName,
                 Result = record.Result,
                 RecordDate = record.RecordDate,
                 Notes = record.Notes,
                 Status = record.Status,
+                TestDate = record.TestDate,
+                TimeSlot = record.TimeSlot,
                 Staff  = record.Staff == null ? null : new StaffDTO
                 {
                     FullName = record.Staff.FullName,
@@ -398,6 +404,8 @@ namespace Infrastructure.Services
                 RecordDate = testServiceRecord.RecordDate,
                 Notes = testServiceRecord.Notes,
                 Status = testServiceRecord.Status,
+                TestDate = testServiceRecord.TestDate,
+                TimeSlot = testServiceRecord.TimeSlot,
                 Staff = testServiceRecord.Staff == null ? null : new StaffDTO
                 {
                     FullName = testServiceRecord.Staff.FullName,
