@@ -49,7 +49,7 @@ const routers = [
     {
         path: '/consultant',
         component: ConsultantLayout
-    }
+    },
      {
           path: '/reproductive-cycle',
           component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))

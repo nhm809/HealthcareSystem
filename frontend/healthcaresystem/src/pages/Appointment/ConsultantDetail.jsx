@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';   
 import { Card, Select, Button } from 'antd';
 import './ConsultantDetail.css';
@@ -11,12 +11,39 @@ import {
     faVideo
 } from '@fortawesome/free-solid-svg-icons'
 import MainLayout from "../../components/Layout/Layout";
+import api from '../../services/api';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
 function DoctorDetail() {
     const [selectedTime, setSelectedTime] = useState(null);
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [doctor, setDoctor] = useState(null);
+
+    const today = dayjs();
+    const [selectedDate, setSelectedDate] = useState(today.format('YYYY-MM-DD'));
+
+    const dateOptions = Array.from({ length: 7 }, (_, i) => {
+        const date = today.add(i, 'day');
+        return {
+            value: date.format('YYYY-MM-DD'),
+            label: `Ngày ${date.format('DD/MM/YYYY')}`
+        };
+    });
+
+    useEffect(() => {
+        const fetchDoctor = async () => {
+            try {
+                const response = await api.get(`consultants/${id}`);
+                setDoctor(response.data);
+            } catch (error) {
+                console.error("Lỗi tải thông tin bác sĩ:", error);
+            }
+        };
+        fetchDoctor();
+    }, [id]);
 
     const handleTimeSelect = (time) => {
         setSelectedTime(time);
@@ -51,8 +78,12 @@ function DoctorDetail() {
                             className="doctor-image"
                         />
                         <div className="doctor-details">
-                            <h3>BS. Nguyễn Văn Minh</h3>
-                            <span className="specialty-tag">Sản phụ khoa</span>
+                            <h3>{doctor?.fullName}</h3>
+                            <div className="specialty-tags">
+                                {doctor?.specialties?.map((spec) => (
+                                <span className="specialty-tag">{spec.name}</span>
+                                ))}
+                            </div>
                             <div className="doctor-stats">
                             <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>47</strong></p>
                             <p><FontAwesomeIcon icon={faStar} /> Đánh giá: <strong>5</strong> (<em>17 đánh giá</em>)</p>
@@ -73,9 +104,16 @@ function DoctorDetail() {
                     <div className="date-select-container">
                         <div className="date-select-row">
                             <span className="schedule-label">Lịch tư vấn trực tuyến</span>
-                            <Select defaultValue="2025-06-09" className="date-select">
-                                <Option value="2025-06-09">Ngày 09/06/2025</Option>
-                                <Option value="2025-06-10">Ngày 10/06/2025</Option>
+                            <Select
+                            value={selectedDate}
+                            onChange={value => setSelectedDate(value)}
+                            className="date-select"
+                            >
+                            {dateOptions.map((date) => (
+                                <Option key={date.value} value={date.value}>
+                                {date.label}
+                                </Option>
+                            ))}
                             </Select>
                         </div>
 
@@ -89,9 +127,19 @@ function DoctorDetail() {
                                     <span>
                                         <FontAwesomeIcon icon={faCircleCheck} />
                                     </span>
-                                    <strong>Tư vấn trực tuyến với BS. Nguyễn Văn Minh</strong> 150.000 đ
+                                    <strong>Tư vấn trực tuyến với {doctor?.fullName}</strong> 150.000 đ
                                 </p>
-                                <Button type="primary" className="confirm-button" onClick={() => navigate('/booking-confirmation')}>
+                                <Button
+                                    type="primary"
+                                    className="confirm-button"
+                                    onClick={() => navigate('/booking-confirmation', {
+                                        state: {
+                                        doctor: doctor,
+                                        selectedDate,
+                                        selectedTime,
+                                        }
+                                    })}
+                                >
                                     <span><FontAwesomeIcon icon={faVideo} size='xl' /> </span>
                                     <span className="button-text"><strong>Tư vấn</strong> trực tuyến</span>
                                 </Button>

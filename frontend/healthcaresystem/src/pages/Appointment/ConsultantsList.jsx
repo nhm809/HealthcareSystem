@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import MainLayout from '@components/Layout/Layout'
 
 import "./ConsultantsList.css";
+import api from '../../services/api';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -16,19 +17,23 @@ function Appointment() {
      const navigate = useNavigate();
 
      useEffect(() => {
-          const fetchDoctors = () => {
-               // Mock data for now
-               const dummyDoctors = Array.from({ length: 8 }, (_, i) => ({
-                    id: i + 1,
-                    name: "BS. Nguyễn Văn Minh",
-                    specialization: "Sản phụ khoa",
-                    image: "https://ddk.1cdn.vn/2023/05/31/image.daidoanket.vn-images-upload-vanht-05312023-_0-e90c.jpg", // Replace with real image path
-               }));
-
-               setDoctors(dummyDoctors);
+          const fetchDoctors = async () => {
+               try {
+                    const response = await api.get('/consultants');
+                    const data = response.data;
+                    const mappedDoctors = data.map((item) => ({
+                         id: item.consultantId,
+                         name: item.fullName,
+                         specialization: item.specialties[0].name,
+                         image: `https://randomuser.me/api/portraits/men/${item.consultantId}.jpg`,
+                    }));
+                    setDoctors(mappedDoctors);
+               } catch (error) {
+                    console.error("Lỗi khi lấy danh sách bác sĩ:", error);
+               }
           }; 
           fetchDoctors();
-     }, [currentPage]);
+     }, []);
 
      return (
           <MainLayout>
@@ -71,7 +76,7 @@ function Appointment() {
                                    <Card hoverable cover={<img alt='doctor' src={doctor.image} onClick={() => navigate(`/appointment/${doctor.id}`)}/>}>
                                         <Card.Meta title={doctor.name} description={doctor.specialization} />
                                         <div className='book-button-container'>
-                                             <button className='book-button'>Đặt tư vấn</button>
+                                             <button className='book-button' onClick={() => navigate(`/appointment/${doctor.id}`)}>Đặt tư vấn</button>
                                         </div>
                                    </Card>
                               </Col>
@@ -82,7 +87,7 @@ function Appointment() {
                          <Pagination
                               current={currentPage}
                               onChange={setCurrentPage}
-                              total={10}
+                              total={doctors.length}
                               pageSize={8}
                          />
                     </div>
