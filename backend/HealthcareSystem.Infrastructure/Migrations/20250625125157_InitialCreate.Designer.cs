@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+<<<<<<<< HEAD:backend/HealthcareSystem.Infrastructure/Migrations/20250625125157_InitialCreate.Designer.cs
+    [Migration("20250625125157_InitialCreate")]
+    partial class InitialCreate
+========
+    [Migration("20250625144505_database")]
+    partial class database
+>>>>>>>> 15537e7ab94669385301124d01dd351cc507dffe:backend/HealthcareSystem.Infrastructure/Migrations/20250625144505_database.Designer.cs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -750,6 +758,12 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan?>("NewEndTime")
+                        .HasColumnType("TIME");
+
+                    b.Property<TimeSpan?>("NewStartTime")
+                        .HasColumnType("TIME");
 
                     b.Property<string>("OverrideType")
                         .HasColumnType("nvarchar(max)");

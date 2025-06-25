@@ -23,35 +23,21 @@ namespace Infrastructure.Services
         public async Task<List<ConsultantWithSpecialtyDTO>> GetAllConsultantsWithSpecialtiesAsync()
         {
             var users = await _context.Users
-                .FromSqlRaw(@"
-                    SELECT DISTINCT u.* FROM [User] u
-                    INNER JOIN UserSpecialty us ON us.UserID = u.UserID
-                ")
+                .Where(u => u.RoleId == "CS")
+                .Include(u => u.Specialties) // Eager load specialties qua User.Specialties
                 .ToListAsync();
 
-            var result = new List<ConsultantWithSpecialtyDTO>();
-
-            foreach (var u in users)
+            var result = users.Select(u => new ConsultantWithSpecialtyDTO
             {
-                var specialties = await _context.Specialties
-                    .FromSqlRaw(@"
-                        SELECT s.* FROM Specialty s
-                        INNER JOIN UserSpecialty us ON us.SpecialtyID = s.SpecialtyID
-                        WHERE us.UserID = {0}", u.UserId)
-                    .ToListAsync();
-
-                result.Add(new ConsultantWithSpecialtyDTO
+                ConsultantId = u.UserId,
+                FullName = u.FullName,
+                Email = u.Email,
+                Specialties = u.Specialties.Select(s => new SpecialtyDTO
                 {
-                    ConsultantId = u.UserId,
-                    FullName = u.FullName,
-                    Email = u.Email,
-                    Specialties = specialties.Select(s => new SpecialtyDTO
-                    {
-                        Id = s.SpecialtyId,
-                        Name = s.Name
-                    }).ToList()
-                });
-            }
+                    Id = s.SpecialtyId,
+                    Name = s.Name
+                }).ToList()
+            }).ToList();
 
             return result;
         }
@@ -97,8 +83,7 @@ namespace Infrastructure.Services
                 OverrideSchedules = overrideSchedules.Select(os => new WeeklyOverrideScheduleDTO
                 {
                     Date = os.Date,
-                    NewStartTime = os.NewStartTime,
-                    NewEndTime = os.NewEndTime,
+                    ShiftType = os.ShiftType,//Tốt sửa vì đã cập nhật DB(đã xóa 2 cột StartTime và EndTime)
                     OverrideType = os.OverrideType,
                     Reason = os.Reason
                 }).ToList()

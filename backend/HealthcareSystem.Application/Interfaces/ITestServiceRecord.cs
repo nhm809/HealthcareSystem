@@ -20,10 +20,11 @@ namespace HealthcareSystem.Application.Interfaces
         Task<TestServiceRecordDetailDTO> UpdateTestResultAsync(UpdateTestResultDTO request , int staffId);
         Task<bool> CancelTestResultAsync(int testServiceRecordId, int userId);
 
-        Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync();
+        Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync(string status);
         Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStaffIdAsync(int staffId);
         Task<List<int>> GetAvailableStaffForShiftAsync(DateOnly date, int shift);
    
         Task<bool> CanBookTestService(BookTestServiceRecordDTO request);
+        Task AssignStaffToTestRecordAsync(int testServiceRecordId);
     }
 }

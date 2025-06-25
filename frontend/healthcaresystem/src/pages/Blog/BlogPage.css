@@ -2,7 +2,6 @@
   display: flex;
   /* max-width: 1200px; */
   margin: 40px auto;
-  padding: 0 20px;
   gap: 40px;
   font-family: Arial, sans-serif;
 }
@@ -201,13 +200,13 @@
 }
 
 .blog-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
-  background-color: #b7e3d8; /* màu nền khi hover */
+  background-color: #b7e3d8;
   border-radius: 50%;
 }
 
 .blog-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
 .blog-pagination .ant-pagination-next .ant-pagination-item-link:hover {
-  background-color: #b7e3d8; /* màu nền hover */
+  background-color: #b7e3d8;
   border-radius: 50%;
   color: #008080;
 }

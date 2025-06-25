@@ -167,11 +167,11 @@ namespace Api.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<IActionResult> GetRecordsByStatusAsync(){
-            
+        public async Task<IActionResult> GetRecordsByStatusAsync([FromQuery] string status)
+        {
             try
             {
-                var result = await _testServiceRecord.GetTestServiceRecordByStatusAsync();
+                var result = await _testServiceRecord.GetTestServiceRecordByStatusAsync(status);
                 return Ok(result);
             }
             catch (ArgumentException ex)

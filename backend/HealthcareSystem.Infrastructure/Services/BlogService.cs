@@ -21,7 +21,7 @@ namespace Infrastructure.Services
                 .Include(b => b.BlogImages)
                 .Include(b => b.BlogViews)
                 .Include(b => b.Consultant)
-                .Where(b => b.PublishDate != null)
+                .Where(b => b.PublishDate != null && b.Status)
                 .OrderByDescending(b => b.PublishDate)
                 .Select(b => new GetBlogDTO
                 {
@@ -48,7 +48,7 @@ namespace Infrastructure.Services
                 .Include(b => b.BlogImages)
                 .Include(b => b.BlogViews)
                 .Include(b => b.Consultant)
-                .FirstOrDefaultAsync(b => b.BlogId == blogId);
+                .FirstOrDefaultAsync(b => b.BlogId == blogId && b.Status);
 
             if (blog == null) return null;
 
@@ -103,7 +103,7 @@ namespace Infrastructure.Services
                 .Include(b => b.BlogImages)
                 .Include(b => b.BlogViews)
                 .Include(b => b.Consultant)
-                .Where(b => b.PublishDate != null)
+                .Where(b => b.PublishDate != null && b.Status)
                 .OrderByDescending(b => b.BlogViews.Count)
                 .ThenByDescending(b => b.PublishDate)
                 .Take(count)
@@ -137,7 +137,7 @@ namespace Infrastructure.Services
                 .Include(b => b.BlogImages)
                 .Include(b => b.BlogViews)
                 .Include(b => b.Consultant)
-                .Where(b => b.PublishDate != null && b.Topic == topic)
+                .Where(b => b.PublishDate != null && b.Topic == topic && b.Status)
                 .OrderByDescending(b => b.PublishDate)
                 .Select(b => new GetBlogDTO
                 {
@@ -158,40 +158,40 @@ namespace Infrastructure.Services
                 .ToListAsync();
         }
         public async Task<BlogContentDTO?> GetBlogByTitleAsync(string title)
-{
-    var blog = await _context.Blogs
-        .Include(b => b.BlogImages)
-        .Include(b => b.BlogViews)
-        .Include(b => b.Consultant)
-        .FirstOrDefaultAsync(b => b.Title != null && b.Title.ToLower() == title.ToLower());
+        {
+            var blog = await _context.Blogs
+                .Include(b => b.BlogImages)
+                .Include(b => b.BlogViews)
+                .Include(b => b.Consultant)
+                .FirstOrDefaultAsync(b => b.Title != null && b.Title.ToLower() == title.ToLower() && b.Status);
 
-    if (blog == null) return null;
+            if (blog == null) return null;
 
-    return new BlogContentDTO
-    {
-        BlogID = blog.BlogId,
-        Title = blog.Title ?? string.Empty,
-        Description = blog.Description ?? string.Empty,
-        Content = blog.Content ?? string.Empty,
-        Topic = blog.Topic ?? string.Empty,
-        PublishDate = blog.PublishDate.HasValue ?
-            blog.PublishDate.Value.ToDateTime(TimeOnly.MinValue) :
-            DateTime.MinValue,
-        ConsultantName = blog.Consultant != null ?
-            blog.Consultant.FullName ?? "Unknown" :
-            "Unknown",
-        Images = blog.BlogImages
-            .OrderBy(i => i.OrderIndex ?? 0)
-            .Select(i => new BlogImageDTO
+            return new BlogContentDTO
             {
-                ImageID = i.ImageId,
-                ImagePath = i.ImagePath ?? string.Empty,
-                ImageCaption = i.ImageCaption ?? string.Empty,
-                UploadDate = i.UploadDate ?? DateTime.MinValue,
-                OrderIndex = i.OrderIndex ?? 0
-            }).ToList()
-    };
-}
+                BlogID = blog.BlogId,
+                Title = blog.Title ?? string.Empty,
+                Description = blog.Description ?? string.Empty,
+                Content = blog.Content ?? string.Empty,
+                Topic = blog.Topic ?? string.Empty,
+                PublishDate = blog.PublishDate.HasValue ?
+                    blog.PublishDate.Value.ToDateTime(TimeOnly.MinValue) :
+                    DateTime.MinValue,
+                ConsultantName = blog.Consultant != null ?
+                    blog.Consultant.FullName ?? "Unknown" :
+                    "Unknown",
+                Images = blog.BlogImages
+                    .OrderBy(i => i.OrderIndex ?? 0)
+                    .Select(i => new BlogImageDTO
+                    {
+                        ImageID = i.ImageId,
+                        ImagePath = i.ImagePath ?? string.Empty,
+                        ImageCaption = i.ImageCaption ?? string.Empty,
+                        UploadDate = i.UploadDate ?? DateTime.MinValue,
+                        OrderIndex = i.OrderIndex ?? 0
+                    }).ToList()
+            };
+        }
 
        
 
