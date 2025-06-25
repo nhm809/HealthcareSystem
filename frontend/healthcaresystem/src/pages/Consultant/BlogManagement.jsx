@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Input, Button, Select, Form, List, Card, message, Spin, Modal, Typography, Space, Row, Col, Divider, Upload } from 'antd';
-import { PlusOutlined, FileTextOutlined, PictureOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Input, Button, Select, Form, List, Card, message, Spin, Modal, Typography, Space, Row, Col, Divider, Upload, Tabs, Popconfirm, Dropdown, Menu } from 'antd';
+import { PlusOutlined, FileTextOutlined, PictureOutlined, LoadingOutlined, MoreOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import { consultantBlogApi } from '../../services/api';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import { ToastContext } from '../../contexts/ToastProvider';
 
 const { Option } = Select;
 const { Title, Paragraph } = Typography;
+const { TabPane } = Tabs;
 
 const topicOptions = [
      'Sức khỏe',
@@ -39,15 +40,21 @@ const BlogManagement = () => {
      const [searchText, setSearchText] = useState('');
      const [searchDate, setSearchDate] = useState(null);
      const { toast } = useContext(ToastContext);
+     const [activeTab, setActiveTab] = useState('active');
+     const [deletedBlogs, setDeletedBlogs] = useState([]);
 
      const fetchBlogs = async () => {
           setLoading(true);
           try {
                const res = await consultantBlogApi.getBlogsByConsultant(consultantId);
                setBlogs(res.data);
+               // Lấy blog đã xóa
+               const deletedRes = await consultantBlogApi.getDeletedBlogs(consultantId);
+               setDeletedBlogs(deletedRes.data);
           } catch {
                message.error('Lỗi khi tải danh sách blog');
                setBlogs([]);
+               setDeletedBlogs([]);
           } finally {
                setLoading(false);
           }
@@ -187,6 +194,26 @@ const BlogManagement = () => {
           }
      };
 
+     const handleDeleteBlog = async (blogId) => {
+          try {
+               await consultantBlogApi.deleteBlog(blogId, consultantId);
+               toast.success('Đã xóa blog!');
+               fetchBlogs();
+          } catch {
+               toast.error('Xóa blog thất bại!');
+          }
+     };
+
+     const handleRestoreBlog = async (blogId) => {
+          try {
+               await consultantBlogApi.restoreBlog(blogId, consultantId);
+               toast.success('Khôi phục blog thành công!');
+               fetchBlogs();
+          } catch {
+               toast.error('Khôi phục blog thất bại!');
+          }
+     };
+
      // Filter blogs by search text and date
      const filteredBlogs = blogs.filter(blog => {
           const matchTitle = blog.title.toLowerCase().includes(searchText.toLowerCase());
@@ -209,59 +236,121 @@ const BlogManagement = () => {
                               Tạo blog mới
                          </Button>
                     </div>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
-                         <Input.Search
-                              placeholder="Tìm kiếm tiêu đề blog..."
-                              allowClear
-                              value={searchText}
-                              onChange={e => setSearchText(e.target.value)}
-                              style={{ width: 320 }}
-                         />
-                         <DatePicker
-                              placeholder="Chọn ngày đăng"
-                              allowClear
-                              value={searchDate}
-                              onChange={date => setSearchDate(date)}
-                              style={{ width: 180 }}
-                              format="DD/MM/YYYY"
-                         />
-                    </div>
-                    <Card
-                         title={<span style={{ fontWeight: 600, fontSize: 20, color: '#1a3e72' }}><FileTextOutlined style={{ marginRight: 8 }} />Các blog đã tạo</span>}
-                         style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.07)', borderRadius: 12 }}
-                         bodyStyle={{ padding: 24 }}
-                    >
-                         {loading ? (
-                              <div style={{ textAlign: 'center', padding: 32 }}><Spin size="large" /></div>
-                         ) : (
-                              <List
-                                   grid={{ gutter: 24, column: 2 }}
-                                   dataSource={filteredBlogs}
-                                   locale={{ emptyText: 'Chưa có blog nào.' }}
-                                   renderItem={blog => (
-                                        <List.Item>
-                                             <Card
-                                                  hoverable
-                                                  style={{ borderRadius: 10, boxShadow: '0 1px 8px rgba(24,144,255,0.08)', transition: 'box-shadow 0.2s', minHeight: 320 }}
-                                                  cover={<img alt={blog.title} src={blog.thumbnailImagePath} style={{ height: 200, objectFit: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10 }} />}
-                                                  onClick={() => openEditModal(blog)}
-                                             >
-                                                  <Card.Meta
-                                                       title={<span style={{ fontWeight: 600, fontSize: 18, color: '#1a3e72' }}>{blog.title}</span>}
-                                                       description={
-                                                            <>
-                                                                 <div style={{ margin: '8px 0', color: '#5fc9a7', fontWeight: 500 }}>{blog.topic}</div>
-                                                                 <Paragraph ellipsis={{ rows: 2, expandable: false }} style={{ marginBottom: 8 }}>{blog.description}</Paragraph>
-                                                                 <div style={{ color: '#888', fontSize: 13 }}><b>Ngày đăng:</b> {blog.publishDate?.split('T')[0]}</div>
-                                                            </>
-                                                       }
-                                                  />
-                                             </Card>
-                                        </List.Item>
+                    <Tabs activeKey={activeTab} onChange={setActiveTab}>
+                         <TabPane tab="Blog hiện tại" key="active">
+                              <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
+                                   <Input.Search
+                                        placeholder="Tìm kiếm tiêu đề blog..."
+                                        allowClear
+                                        value={searchText}
+                                        onChange={e => setSearchText(e.target.value)}
+                                        style={{ width: 320 }}
+                                   />
+                                   <DatePicker
+                                        placeholder="Chọn ngày đăng"
+                                        allowClear
+                                        value={searchDate}
+                                        onChange={date => setSearchDate(date)}
+                                        style={{ width: 180 }}
+                                        format="DD/MM/YYYY"
+                                   />
+                              </div>
+                              <Card
+                                   title={<span style={{ fontWeight: 600, fontSize: 20, color: '#1a3e72' }}><FileTextOutlined style={{ marginRight: 8 }} />Các blog đã tạo</span>}
+                                   style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.07)', borderRadius: 12 }}
+                                   bodyStyle={{ padding: 24 }}
+                              >
+                                   {loading ? (
+                                        <div style={{ textAlign: 'center', padding: 32 }}><Spin size="large" /></div>
+                                   ) : (
+                                        <List
+                                             grid={{ gutter: 24, column: 2 }}
+                                             dataSource={filteredBlogs}
+                                             locale={{ emptyText: 'Chưa có blog nào.' }}
+                                             renderItem={blog => (
+                                                  <List.Item>
+                                                       <div style={{ position: 'relative' }}>
+                                                            <Card
+                                                                 hoverable
+                                                                 style={{ borderRadius: 10, boxShadow: '0 1px 8px rgba(24,144,255,0.08)', transition: 'box-shadow 0.2s', minHeight: 320 }}
+                                                                 cover={<img alt={blog.title} src={blog.thumbnailImagePath} style={{ height: 200, objectFit: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10 }} />}
+                                                                 onClick={() => openEditModal(blog)}
+                                                            >
+                                                                 <Card.Meta
+                                                                      title={<span style={{ fontWeight: 600, fontSize: 18, color: '#1a3e72' }}>{blog.title}</span>}
+                                                                      description={
+                                                                           <>
+                                                                                <div style={{ margin: '8px 0', color: '#5fc9a7', fontWeight: 500 }}>{blog.topic}</div>
+                                                                                <Paragraph ellipsis={{ rows: 2, expandable: false }} style={{ marginBottom: 8 }}>{blog.description}</Paragraph>
+                                                                                <div style={{ color: '#888', fontSize: 13 }}><b>Ngày đăng:</b> {blog.publishDate?.split('T')[0]}</div>
+                                                                           </>
+                                                                      }
+                                                                 />
+                                                            </Card>
+                                                            <Dropdown
+                                                                 overlay={
+                                                                      <Menu>
+                                                                           <Menu.Item key="edit" onClick={e => { e.domEvent.stopPropagation(); openEditModal(blog); }}>
+                                                                                Cập nhật
+                                                                           </Menu.Item>
+                                                                           <Menu.Item key="delete">
+                                                                                <Popconfirm title="Bạn chắc chắn muốn xóa blog này?" onConfirm={e => { e.stopPropagation(); handleDeleteBlog(blog.blogID); }} onCancel={e => e.stopPropagation()} okText="Xóa" cancelText="Hủy">
+                                                                                     <span onClick={e => e.stopPropagation()}>Xóa</span>
+                                                                                </Popconfirm>
+                                                                           </Menu.Item>
+                                                                      </Menu>
+                                                                 }
+                                                                 trigger={["click"]}
+                                                            >
+                                                                 <Button type="text" icon={<MoreOutlined />} onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 8, right: 8, zIndex: 2 }} />
+                                                            </Dropdown>
+                                                       </div>
+                                                  </List.Item>
+                                             )}
+                                        />
                                    )}
-                              />
-                         )}
-                    </Card>
+                              </Card>
+                         </TabPane>
+                         <TabPane tab="Blog đã xóa" key="deleted">
+                              <Card
+                                   title={<span style={{ fontWeight: 600, fontSize: 20, color: '#d9534f' }}><FileTextOutlined style={{ marginRight: 8 }} />Các blog đã xóa</span>}
+                                   style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.07)', borderRadius: 12 }}
+                                   bodyStyle={{ padding: 24 }}
+                              >
+                                   {loading ? (
+                                        <div style={{ textAlign: 'center', padding: 32 }}><Spin size="large" /></div>
+                                   ) : (
+                                        <List
+                                             grid={{ gutter: 24, column: 2 }}
+                                             dataSource={deletedBlogs}
+                                             locale={{ emptyText: 'Không có blog đã xóa.' }}
+                                             renderItem={blog => (
+                                                  <List.Item>
+                                                       <Card
+                                                            style={{ borderRadius: 10, boxShadow: '0 1px 8px rgba(24,144,255,0.08)', transition: 'box-shadow 0.2s', minHeight: 320, opacity: 0.7 }}
+                                                            cover={<img alt={blog.title} src={blog.thumbnailImagePath} style={{ height: 200, objectFit: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10, filter: 'grayscale(1)' }} />}
+                                                            actions={[
+                                                                 <Button type="primary" onClick={() => handleRestoreBlog(blog.blogID)}>Khôi phục</Button>
+                                                            ]}
+                                                       >
+                                                            <Card.Meta
+                                                                 title={<span style={{ fontWeight: 600, fontSize: 18, color: '#d9534f' }}>{blog.title}</span>}
+                                                                 description={
+                                                                      <>
+                                                                           <div style={{ margin: '8px 0', color: '#5fc9a7', fontWeight: 500 }}>{blog.topic}</div>
+                                                                           <Paragraph ellipsis={{ rows: 2, expandable: false }} style={{ marginBottom: 8 }}>{blog.description}</Paragraph>
+                                                                           <div style={{ color: '#888', fontSize: 13 }}><b>Ngày đăng:</b> {blog.publishDate?.split('T')[0]}</div>
+                                                                      </>
+                                                                 }
+                                                            />
+                                                       </Card>
+                                                  </List.Item>
+                                             )}
+                                        />
+                                   )}
+                              </Card>
+                         </TabPane>
+                    </Tabs>
                </Space>
                <Modal
                     title={<span style={{ fontWeight: 700, fontSize: 22, color: '#1a3e72' }}>Tạo blog mới</span>}

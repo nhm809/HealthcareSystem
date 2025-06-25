@@ -15,7 +15,7 @@ import ConsultantDashboard from '../../pages/Consultant/ConsultantDashboard';
 import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { notiApi, authApi } from '../../services/api';
+import { notiApi, authApi, getInfo } from '../../services/api';
 import dayjs from 'dayjs';
 
 const { Sider, Content, Header } = Layout;
@@ -30,9 +30,21 @@ const ConsultantLayout = () => {
 
      useEffect(() => {
           const info = JSON.parse(localStorage.getItem('userInfo'));
-          setUserInfo(info);
           if (!info || info.roleId !== 'CS') {
                navigate('/login');
+               return;
+          }
+          // Fetch user info from API
+          const userId = Cookies.get('userId');
+          if (userId) {
+               getInfo(userId)
+                    .then((res) => {
+                         setUserInfo(res.data);
+                    })
+                    .catch((err) => {
+                         console.error('Error fetching user info:', err);
+                         setUserInfo(info); // fallback to localStorage if API fails
+                    });
           }
      }, [navigate]);
 
@@ -209,9 +221,9 @@ const ConsultantLayout = () => {
                               CONSULTANT
                          </div>
                          <div style={{ textAlign: 'center', marginBottom: 16 }}>
-                              <Avatar size={80} src={userInfo?.avatar} />
+                              <Avatar size={80} src={userInfo?.avatarPath || userInfo?.avatar} />
                               <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
-                                   {userInfo?.fullName || 'Dr. Nguyễn Văn A'}
+                                   {userInfo?.fullName}
                               </div>
                          </div>
                          <Menu

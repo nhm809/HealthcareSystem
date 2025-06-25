@@ -1,0 +1,119 @@
+.test-history-container {
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.test-history-container .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  width: 100%;
+}
+
+.test-history-container .ant-card-body {
+  padding: 24px;
+  width: 100%;
+}
+
+.test-history-table {
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.test-history-table .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.test-history-table .ant-table-thead > tr > th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #1a3e72;
+  border-bottom: 2px solid #e8f4fd;
+  padding: 16px 12px;
+}
+
+.test-history-table .ant-table-tbody > tr > td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.test-history-table .ant-table-tbody > tr:hover > td {
+  background-color: #f0f9ff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(26, 62, 114, 0.1);
+  transition: all 0.2s ease;
+}
+
+.test-history-table .ant-table-tbody > tr {
+  transition: all 0.2s ease;
+}
+
+.test-history-table .ant-table-tbody > tr:hover {
+  background-color: #f0f9ff;
+}
+
+.test-history-container .ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+
+.test-history-container .ant-pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.test-history-container .ant-pagination .ant-pagination-item {
+  border-radius: 6px;
+}
+
+.test-history-container .ant-pagination .ant-pagination-item-active {
+  border-color: #1a3e72;
+  background-color: #1a3e72;
+}
+
+.test-history-container .ant-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+/* Modal styling */
+.test-history-container .ant-modal-header {
+  border-bottom: 2px solid #e8f4fd;
+}
+
+.test-history-container .ant-descriptions-item-label {
+  background-color: #f8fafc !important;
+  font-weight: 600;
+  color: #1a3e72;
+}
+
+.test-history-container .ant-descriptions-item-content {
+  padding: 12px 16px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .test-history-container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .test-history-container {
+    padding: 0 5px;
+  }
+  
+  .test-history-table .ant-table {
+    font-size: 12px;
+  }
+  
+  .test-history-table .ant-table-thead > tr > th,
+  .test-history-table .ant-table-tbody > tr > td {
+    padding: 8px 6px;
+  }
+} 

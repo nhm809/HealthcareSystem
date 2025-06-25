@@ -8,5 +8,6 @@ public interface IBlogManageService
 
     Task<bool> UpdateBlogAsync(UpdateBlogDTO dto);
     Task<bool> DeleteBlogAsync(DeleteBlogDTO dto);
-    
+    Task<List<GetBlogDTO>> GetDeletedBlogsByConsultantIdAsync(int consultantId);
+    Task<bool> RestoreBlogAsync(int blogId, int consultantId);
 }
