@@ -48,8 +48,6 @@ namespace Domain.Entities
 
         public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
 
-        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
-
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
         public virtual ICollection<Otprequest> Otprequests { get; set; } = new List<Otprequest>();

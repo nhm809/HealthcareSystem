@@ -42,29 +42,17 @@ namespace Infrastructure.Services
 
         public async Task<bool> AddQuestionAsync(QuestionDTO questionDto)
         {
-
-            //var specialtyId = await _context.Specialties
-            //    .Where(s => s.Name == questionDto.Specialty)
-            //    .Select(s => s.SpecialtyId)
-            //    .FirstOrDefaultAsync();
+            if (questionDto == null || questionDto.MemberId == null)
+                return false;
 
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
                 .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId))
                 .ToListAsync();
 
-            var consultantIds = consultants.Select(c => c.UserId).ToList();
+            if (!consultants.Any()) return false;
 
-            var random = new Random();
-
-            if (!consultants.Any())
-                return false;
-
-            var luckyPerson = consultants[random.Next(consultants.Count)];
-
-            var countMess = await _context.Messages
-                .Where(m => m.QuestionId == questionDto.QuestionId)
-                .CountAsync();
+            var luckyPerson = consultants[new Random().Next(consultants.Count)];
 
             var question = new Question
             {
@@ -81,9 +69,32 @@ namespace Infrastructure.Services
                 HeartCount = 0,
                 MessCount = 0
             };
-            _context.Questions.Add(question);
+
+            await _context.Questions.AddAsync(question);
+
+            var notifications = new[]
+            {
+                new Notification
+                {
+                    UserId = luckyPerson.UserId,
+                    Content = $"You have a new question from {questionDto.MemberId}",
+                    IsRead = false,
+                    SendTime = DateTime.UtcNow
+                },
+                new Notification
+                {
+                    UserId = questionDto.MemberId.Value,
+                    Content = "Your question has been sent successfully and will be answered shortly.",
+                    IsRead = false,
+                    SendTime = DateTime.UtcNow
+                }
+            };
+
+            await _context.Notifications.AddRangeAsync(notifications);
+
             return await _context.SaveChangesAsync() > 0;
         }
+
 
         public async Task<bool> UpdateQuestionStatusAsync(int questionId)
         {
@@ -94,6 +105,17 @@ namespace Infrastructure.Services
             }
             question.IsAnswered = true;
             _context.Questions.Update(question);
+
+            var notification = new Notification
+            {
+                UserId = question.MemberId ?? 0,
+                Content = "Your question has been answered.",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+            await _context.Notifications.AddAsync(notification);
+
             return await _context.SaveChangesAsync() > 0;
         }
 

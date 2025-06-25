@@ -28,7 +28,7 @@ namespace Infrastructure.data {
 
         public virtual DbSet<Invoice> Invoices { get; set; }
 
-        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<QuestionThreadItem> QuestionThreadItems { get; set; }
 
         public virtual DbSet<Notification> Notifications { get; set; }
 
@@ -191,25 +191,26 @@ namespace Infrastructure.data {
                     .HasConstraintName("FK__Invoice__TestSer__5535A963");
             });
 
-            modelBuilder.Entity<Message>(entity =>
+            modelBuilder.Entity<QuestionThreadItem>(entity =>
             {
-                entity.HasKey(e => e.MessageId).HasName("PK__Message__C87C037C57A9A3C6");
+                entity.HasKey(e => e.ThreadItemId).HasName("PK__QuestionThreadItem");
 
-                entity.ToTable("Message");
+                entity.ToTable("QuestionThreadItem");
 
-                entity.Property(e => e.MessageId).HasColumnName("MessageID");
+                entity.Property(e => e.ThreadItemId).HasColumnName("ThreadItemID");
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
-                entity.Property(e => e.SenderId).HasColumnName("SenderID");
                 entity.Property(e => e.SentAt).HasColumnType("datetime");
+                entity.Property(e => e.QuestionText).HasColumnType("nvarchar(max)");
+                entity.Property(e => e.AnswerText).HasColumnType("nvarchar(max)");
+                entity.Property(e => e.AttachmentPath).HasMaxLength(255);
+                entity.Property(e => e.IsAnswered);
 
-                entity.HasOne(d => d.Question).WithMany(p => p.Messages)
+                entity.HasOne(d => d.Question)
+                    .WithMany(p => p.QuestionThreadItems)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__Message__Questio__5FB337D6");
-
-                entity.HasOne(d => d.Sender).WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("FK__Message__SenderI__60A75C0F");
+                    .HasConstraintName("FK__QuestionThreadItem__Question");
             });
+
 
             modelBuilder.Entity<Notification>(entity =>
             {
