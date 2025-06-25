@@ -2,8 +2,13 @@ import { Card, Row, Col, Pagination, Select, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import MainLayout from '@components/Layout/Layout'
-
+import MainLayout from '@components/Layout/Layout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+     faStethoscope,
+     faUserNurse
+ } from '@fortawesome/free-solid-svg-icons'
+import defaultdoctoravatar from '../../assets/imgs/defaultdoctoravatar.png';
 import "./ConsultantsList.css";
 import api from '../../services/api';
 
@@ -25,7 +30,7 @@ function Appointment() {
                          id: item.consultantId,
                          name: item.fullName,
                          specialization: item.specialties[0].name,
-                         image: `https://randomuser.me/api/portraits/men/${item.consultantId}.jpg`,
+                         image: defaultdoctoravatar,
                     }));
                     setDoctors(mappedDoctors);
                } catch (error) {
@@ -73,12 +78,24 @@ function Appointment() {
                     <Row gutter={[16,16]}>
                          {doctors.map((doctor) => (
                               <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
-                                   <Card hoverable cover={<img alt='doctor' src={doctor.image} onClick={() => navigate(`/appointment/${doctor.id}`)}/>}>
+                                   <Card 
+                                        hoverable
+                                        cover={
+                                             doctor.image ? (
+                                                  <img alt="doctor" src={doctor.image} onClick={() => navigate(`/appointment/${doctor.id}`)} />
+                                             ) : (
+                                                  <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`)}>
+                                                       <FontAwesomeIcon icon={faUserNurse} size="2xl" />
+                                                  </div>
+                                             )
+                                        }
+                                   >
                                         <Card.Meta title={doctor.name} description={doctor.specialization} />
-                                        <div className='book-button-container'>
-                                             <button className='book-button' onClick={() => navigate(`/appointment/${doctor.id}`)}>Đặt tư vấn</button>
-                                        </div>
-                                   </Card>
+                                        <button className="book-button" onClick={() => navigate(`/appointment/${doctor.id}`)}>
+                                             <FontAwesomeIcon icon={faStethoscope} className="icon" />
+                                             Đặt tư vấn
+                                        </button>
+                                   </Card>  
                               </Col>
                          ))}
                     </Row>

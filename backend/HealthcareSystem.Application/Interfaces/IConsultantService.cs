@@ -5,7 +5,9 @@ using Application.DTOs;
 public interface IConsultantService
 {
     Task<List<ConsultantWithSpecialtyDTO>> GetAllConsultantsWithSpecialtiesAsync();
-    Task<ConsultantDetailDTO?> GetConsultantDetailWithWorkScheduleAsync(int consultantId);
+    Task<ConsultantDetailDTO?> GetConsultantDetailAsync(int consultantId);
+    Task<List<FreeSlotDTO>> GetAvailableTimeSlotsByDateAsync(int consultantId, DateTime date);
+
 }
 
 

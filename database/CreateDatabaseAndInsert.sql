@@ -59,17 +59,43 @@ CREATE TABLE ReproductiveCycle (
 
 
 
--- 6. WorkSchedule
-CREATE TABLE WorkSchedule (
-    WorkScheduleID INT PRIMARY KEY Identity(1,1),
-    ConsultantID INT ,
-    WorkDate DATE,
+-- -- 6. WorkSchedule
+-- CREATE TABLE WorkSchedule (
+--     WorkScheduleID INT PRIMARY KEY Identity(1,1),
+--     ConsultantID INT ,
+--     WorkDate DATE,
+--     StartTime TIME,
+--     EndTime TIME,
+--     ShiftType NVARCHAR(50),
+--     Note NVARCHAR(100),
+--     FOREIGN KEY (ConsultantID) REFERENCES [User](UserID)
+-- );
+
+-- WeeklySchedule Table
+CREATE TABLE WeeklySchedule (
+    WeeklyScheduleId INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT,
+    DayOfWeek INT, -- 0: Sunday, 1: Monday, ..., 6: Saturday
     StartTime TIME,
     EndTime TIME,
-    ShiftType NVARCHAR(50),
-    Note NVARCHAR(100),
-    FOREIGN KEY (ConsultantID) REFERENCES [User](UserID)
+    ShiftType INT, -- 1: Morning Shift, 2: Afternoon Shift 3 : OT
+    Note NVARCHAR(255) NULL,
+    FOREIGN KEY (UserId) REFERENCES [User](UserID)
 );
+GO
+
+-- WeeklyOverrideSchedule Table
+CREATE TABLE WeeklyOverrideSchedule (
+    WeeklyOverrideScheduleId INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT,
+    [Date] DATE,
+    NewStartTime TIME NULL,
+    NewEndTime TIME NULL,
+    OverrideType NVARCHAR(50) NULL, -- absent , swap shift
+    Reason NVARCHAR(255) NULL,
+    FOREIGN KEY (UserId) REFERENCES [User](UserID)
+);
+GO
 
 
 -- 7. Blog
@@ -305,7 +331,14 @@ INSERT INTO [dbo].[UserSpecialty] (UserID, SpecialtyID)
 VALUES
 (3, 1), -- Sản Phụ Khoa
 (3, 2), -- Nam Khoa
-(3, 4); -- Tâm lý học
+(3, 4), -- Tâm lý học
+-- Assigning specialties to other staff members
+(6, 8), -- Staff2: Xét nghiệm y khoa
+(6, 3), -- Staff2: Da liễu - STIs
+(7, 8), -- Staff3: Xét nghiệm y khoa
+(7, 5), -- Staff3: Y học tổng quát
+(8, 8), -- Staff4: Xét nghiệm y khoa
+(9, 8); -- Staff5: Xét nghiệm y khoa
 
 
 --Appointment--=====================================================================================================================================================
@@ -362,37 +395,37 @@ VALUES
 
 
 ---Blog-=====================================================================================================================================================
-INSERT INTO Blog (Title, Content, [Description], ConsultantID, PublishDate, Topic)
+INSERT INTO Blog (Title, Content, [Description], ConsultantID, PublishDate, Topic, Status)
 VALUES 
 -- Bài 1
 (N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
  N'Nắm rõ chu kỳ kinh nguyệt giúp bạn dự đoán thời gian rụng trứng và khả năng mang thai. Trong bài viết này, chúng tôi hướng dẫn bạn cách theo dõi và sử dụng công cụ tính chu kỳ hiệu quả.',
  N'Hướng dẫn theo dõi chu kỳ kinh nguyệt để nhận biết thời điểm rụng trứng và tránh thai tự nhiên.',
- 4, '2025-05-20', N'Sức khỏe'),
+ 4, '2025-05-20', N'Sức khỏe',0),
 
 -- Bài 2
 (N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
  N'STIs là các bệnh nguy hiểm có thể ảnh hưởng đến sức khỏe sinh sản và cuộc sống tình dục. Bài viết giúp bạn hiểu rõ về dấu hiệu, cách phòng ngừa và thời điểm cần xét nghiệm.',
  N'Hiểu đúng về STIs – dấu hiệu, cách lây và phòng ngừa hiệu quả.',
- 4, '2025-05-18', N'STIs'),
+ 4, '2025-05-18', N'STIs',0),
 
 -- Bài 3
 (N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
  N'Không chỉ uống đúng giờ, người dùng thuốc tránh thai còn cần lưu ý nhiều điều khác để đảm bảo hiệu quả tránh thai. Bài viết giải đáp chi tiết những thắc mắc thường gặp.',
  N'Giải đáp mọi thắc mắc về việc sử dụng thuốc tránh thai an toàn và hiệu quả.',
- 4, '2025-05-15', N'Sức khỏe'),
+ 4, '2025-05-15', N'Sức khỏe',1),
 
 -- Bài 4
 (N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
  N'Nhiều người lo lắng hoặc ngại ngùng khi đi xét nghiệm STIs. Bài viết chia sẻ quy trình, những điều cần chuẩn bị và cách lấy kết quả an toàn, bảo mật.',
  N'Chuẩn bị tâm lý và hiểu quy trình khi đi xét nghiệm STIs lần đầu.',
- 4, '2025-05-12', N'Hướng dẫn'),
+ 4, '2025-05-12', N'Hướng dẫn',0),
 
 -- Bài 5
 (N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
  N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
  N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 4, '2025-05-10', N'Tâm lý');
+ 4, '2025-05-10', N'Tâm lý',1);
 
 
 
@@ -478,3 +511,21 @@ VALUES
 --Table [dbo].[OTPRequest] is empty
 --Table [dbo].[Payment] is empty
 --Table [dbo].[Invoice] is empty
+
+--WeeklySchedule--=====================================================================================================================================================
+-- Staff (UserID = 3, 6) works morning shift from Mon to Fri
+INSERT INTO [dbo].[WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType) VALUES
+(3, 1, '08:00:00', '12:00:00', 1), (3, 2, '08:00:00', '12:00:00', 1), (3, 3, '08:00:00', '12:00:00', 1), (3, 4, '08:00:00', '12:00:00', 1), (3, 5, '08:00:00', '12:00:00', 1),
+(6, 1, '08:00:00', '12:00:00', 1), (6, 2, '08:00:00', '12:00:00', 1), (6, 3, '08:00:00', '12:00:00', 1), (6, 4, '08:00:00', '12:00:00', 1), (6, 5, '08:00:00', '12:00:00', 1);
+
+-- Staff (UserID = 7, 8) works afternoon shift from Mon to Fri
+INSERT INTO  [dbo].[WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType) VALUES
+(7, 1, '13:00:00', '17:00:00', 2), (7, 2, '13:00:00', '17:00:00', 2), (7, 3, '13:00:00', '17:00:00', 2), (7, 4, '13:00:00', '17:00:00', 2), (7, 5, '13:00:00', '17:00:00', 2),
+(8, 1, '13:00:00', '17:00:00', 2), (8, 2, '13:00:00', '17:00:00', 2), (8, 3, '13:00:00', '17:00:00', 2), (8, 4, '13:00:00', '17:00:00', 2), (8, 5, '13:00:00', '17:00:00', 2);
+
+--WeeklyOverrideSchedule--=====================================================================================================================================================
+-- Staff (UserID = 3) takes leave on 2024-07-29 (Monday)
+INSERT INTO [dbo].[WeeklyOverrideSchedules] (UserId, [Date], OverrideType, Reason,[ShiftType],[Status]) VALUES
+(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân',3,N'Đang chờ duyệt'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân',1 ,N'Đang chờ duyệt'),
+(9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân',2,N'Đang chờ duyệt');

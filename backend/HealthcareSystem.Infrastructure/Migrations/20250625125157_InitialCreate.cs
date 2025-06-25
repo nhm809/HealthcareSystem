@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class database : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -154,7 +154,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsultantID = table.Column<int>(type: "int", nullable: true),
                     PublishDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    Topic = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    Topic = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -291,7 +292,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     TestDate = table.Column<DateOnly>(type: "date", nullable: true),
                     TimeSlot = table.Column<TimeSpan>(type: "TIME", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Status = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(50)", unicode: false, maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -336,26 +337,53 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkSchedule",
+                name: "WeeklyOverrideSchedules",
                 columns: table => new
                 {
-                    WorkScheduleID = table.Column<int>(type: "int", nullable: false)
+                    WeeklyOverrideScheduleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ConsultantID = table.Column<int>(type: "int", nullable: true),
-                    WorkDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    StartTime = table.Column<TimeOnly>(type: "time", nullable: true),
-                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true),
-                    ShiftType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NewStartTime = table.Column<TimeSpan>(type: "TIME", nullable: true),
+                    NewEndTime = table.Column<TimeSpan>(type: "TIME", nullable: true),
+                    OverrideType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ShiftType = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(30)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__WorkSche__C6AC635EDF22BB92", x => x.WorkScheduleID);
+                    table.PrimaryKey("PK_WeeklyOverrideSchedules", x => x.WeeklyOverrideScheduleId);
                     table.ForeignKey(
-                        name: "FK__WorkSched__Consu__31EC6D26",
-                        column: x => x.ConsultantID,
+                        name: "FK_WeeklyOverrideSchedules_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WeeklySchedules",
+                columns: table => new
+                {
+                    WeeklyScheduleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "TIME", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "TIME", nullable: false),
+                    ShiftType = table.Column<int>(type: "int", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeeklySchedules", x => x.WeeklyScheduleId);
+                    table.ForeignKey(
+                        name: "FK_WeeklySchedules_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -406,29 +434,26 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Message",
+                name: "QuestionThreadItem",
                 columns: table => new
                 {
-                    MessageID = table.Column<int>(type: "int", nullable: false)
+                    ThreadItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QuestionID = table.Column<int>(type: "int", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SenderID = table.Column<int>(type: "int", nullable: true),
-                    SentAt = table.Column<DateTime>(type: "datetime", nullable: true)
+                    SentAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    IsAnswered = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Message__C87C037C57A9A3C6", x => x.MessageID);
+                    table.PrimaryKey("PK__QuestionThreadItem", x => x.ThreadItemID);
                     table.ForeignKey(
-                        name: "FK__Message__Questio__5FB337D6",
+                        name: "FK__QuestionThreadItem__Question",
                         column: x => x.QuestionID,
                         principalTable: "Question",
                         principalColumn: "QuestionID");
-                    table.ForeignKey(
-                        name: "FK__Message__SenderI__60A75C0F",
-                        column: x => x.SenderID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateTable(
@@ -546,16 +571,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 column: "TestServiceRecordID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_QuestionID",
-                table: "Message",
-                column: "QuestionID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_SenderID",
-                table: "Message",
-                column: "SenderID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserID",
                 table: "Notification",
                 column: "UserID");
@@ -579,6 +594,11 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "IX_Question_SpecialtyId",
                 table: "Question",
                 column: "SpecialtyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionThreadItem_QuestionID",
+                table: "QuestionThreadItem",
+                column: "QuestionID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReportServiceDetail_ServiceID",
@@ -616,9 +636,14 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 column: "SpecialtyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkSchedule_ConsultantID",
-                table: "WorkSchedule",
-                column: "ConsultantID");
+                name: "IX_WeeklyOverrideSchedules_UserId",
+                table: "WeeklyOverrideSchedules",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WeeklySchedules_UserId",
+                table: "WeeklySchedules",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -637,13 +662,13 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "Invoice");
 
             migrationBuilder.DropTable(
-                name: "Message");
-
-            migrationBuilder.DropTable(
                 name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "OTPRequest");
+
+            migrationBuilder.DropTable(
+                name: "QuestionThreadItem");
 
             migrationBuilder.DropTable(
                 name: "ReportServiceDetail");
@@ -655,7 +680,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 name: "UserSpecialty");
 
             migrationBuilder.DropTable(
-                name: "WorkSchedule");
+                name: "WeeklyOverrideSchedules");
+
+            migrationBuilder.DropTable(
+                name: "WeeklySchedules");
 
             migrationBuilder.DropTable(
                 name: "Blog");

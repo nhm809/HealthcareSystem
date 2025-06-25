@@ -10,7 +10,7 @@ namespace Application.Interfaces
         Task<IEnumerable<GetBlogDTO>> GetAllBlogsAsync();
 
         // Lấy blog theo ID
-        Task<GetBlogContentDTO?> GetBlogContentByIdAsync(int blogId);
+        Task<BlogContentDTO?> GetBlogContentByIdAsync(int blogId);
 
         // Thêm lượt xem blog (sử dụng trong Controller)
         Task AddBlogViewAsync(int blogId, int memberId);
@@ -21,7 +21,7 @@ namespace Application.Interfaces
         // Lấy blog theo chủ đề
         Task<IEnumerable<GetBlogDTO>> GetBlogsByTopicAsync(string topic);
         // Lấy blog theo Title
-        Task<GetBlogContentDTO?> GetBlogByTitleAsync(string title);
+        Task<BlogContentDTO?> GetBlogByTitleAsync(string title);
         
 
 

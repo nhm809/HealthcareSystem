@@ -5,8 +5,8 @@
 
 .doctor-list-title {
     text-align: center;
-    color: #4CAF50;
-    font-size: 24px;
+    color: #54AA7F;
+    font-size: 30px;
     margin-bottom: 24px;
 }
 
@@ -29,13 +29,14 @@
 }
 
 .doctor-list-filters {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .doctor-list-filters p {
+    font-size: 18px;
     margin: 0;
     font-weight: bold;
 }
@@ -46,7 +47,8 @@
 
 .ant-card {
     overflow: hidden;
-    border-radius: 12px;
+    border: none !important;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     text-align: center;
 }
@@ -58,31 +60,34 @@
 
 .ant-card-body {
     padding: 0 !important;
-    height: 100px;
 }
 
 .ant-card-meta-title {
-    margin: 12px 0 4px 0 !important;
-    font-weight: bold;
+    margin: 8px 0 2px 0 !important;
+    font-weight: bold !important;
     font-size: 16px;
 }
 
 .ant-card-meta-description {
-    margin: 0 0 12px 0 !important;
-    color: gray;
+    margin: 0 0 8px 0 !important;
+    color: #325BAF !important;
+    font-weight: 500;
     font-size: 14px;
 }
 
 .book-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
     width: 100%;
-    background-color: #4CAF50;
+    background: linear-gradient(to right, #54AA7F, #4ADE80);
     color: white;
     padding: 6px 16px;
     border: none;
     border-radius: 0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    gap: 8px;
 }
 
 .book-button:hover {

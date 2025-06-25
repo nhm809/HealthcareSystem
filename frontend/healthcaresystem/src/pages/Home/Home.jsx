@@ -73,21 +73,21 @@ const sampleDoctors = [
     name: 'BS. Nguyễn Văn Minh',
     degree: 'Tiến sĩ Y học',
     specialty: 'Sản phụ khoa',
-    image: 'https://avatar-ex-swe.nixcdn.com/singer/avatar/2024/12/11/8/6/k/8/1733889850656.jpg',
+    image: 'https://www.fvhospital.com/wp-content/uploads/2018/03/dr-vo-trieu-dat-2020.jpg',
   },
   {
     id: 2,
     name: 'BS. Trần Thị Lan',
     degree: 'Tiến sĩ Y học',
     specialty: 'Nhi khoa',
-    image: 'https://ddk.1cdn.vn/2023/05/31/image.daidoanket.vn-images-upload-vanht-05312023-_0-e90c.jpg',
+    image: 'https://images2.thanhnien.vn/thumb_w/686/528068263637045248/2024/3/7/41498385661961282804899348165590311304931596n-17098051418122006775403-0-286-2048-1822-crop-1709805739243640175866.jpg',
   },
   {
     id: 3,
     name: 'BS. Lê Văn Hùng',
     degree: 'Thạc sĩ Y học',
     specialty: 'Nội tổng quát',
-    image: 'https://afamilycdn.com/150157425591193600/2024/8/8/photo-15-17189574386341215245071-17230910052851878089711-1723097950258-1723097950463248101075.jpg',
+    image: 'https://benhvienyhoccotruyentrunguong.vn/wp-content/uploads/2023/02/z4116185322565_271625759017eab5b27d099b7f49e49a-scaled.jpg',
   },
 ];
 

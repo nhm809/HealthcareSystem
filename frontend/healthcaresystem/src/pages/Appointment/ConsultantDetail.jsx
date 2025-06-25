@@ -11,6 +11,7 @@ import {
     faVideo
 } from '@fortawesome/free-solid-svg-icons'
 import MainLayout from "../../components/Layout/Layout";
+import defaultdoctoravatar from '../../assets/imgs/defaultdoctoravatar.png';
 import api from '../../services/api';
 import dayjs from 'dayjs';
 
@@ -21,6 +22,7 @@ function DoctorDetail() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [doctor, setDoctor] = useState(null);
+    const [availableSlots, setAvailableSlots] = useState([]);
 
     const today = dayjs();
     const [selectedDate, setSelectedDate] = useState(today.format('YYYY-MM-DD'));
@@ -32,6 +34,36 @@ function DoctorDetail() {
             label: `Ngày ${date.format('DD/MM/YYYY')}`
         };
     });
+
+    useEffect(() => {
+        const fetchAvailableSlots = async () => {
+            try {
+                const response = await api.get(`consultants/${id}/available-slots`, {
+                    params: { date: selectedDate }
+                });
+
+                let slots = response.data.data || [];
+
+                const now = dayjs();
+                const todayStr = now.format('YYYY-MM-DD');
+
+                if (selectedDate === todayStr) {
+                    slots = slots.filter((timeStr) => {
+                        const slotTime = dayjs(`${selectedDate}T${timeStr}`);
+                        return slotTime.isAfter(now.add(1, 'hour'));
+                    });
+                }
+                setAvailableSlots(slots);
+            } catch (error) {
+                console.error("Lỗi tải khung giờ trống:", error);
+                setAvailableSlots([]);
+            }
+        };
+
+        if (selectedDate && id) {
+            fetchAvailableSlots();
+        }
+    }, [selectedDate, id]);
 
     useEffect(() => {
         const fetchDoctor = async () => {
@@ -50,13 +82,16 @@ function DoctorDetail() {
     };
 
     const renderTimeSlots = () => {
-        const times = [
-            "13:30", "13:45", "14:00", "14:15", "14:30", "14:45", "15:00",
-            "15:15", "15:30", "15:45", "16:00", "16:15", "16:30", "16:45",
-            "17:00", "17:15"
-        ];
+        if (availableSlots.length === 0) {
+            // Nếu là hôm nay và không còn slot => hiển thị thông báo
+            if (selectedDate === dayjs().format('YYYY-MM-DD')) {
+                return <p className="no-slot-text">Không còn khung giờ phù hợp hôm nay, vui lòng chọn ngày khác.</p>;
+            }
+            // Các ngày khác nhưng rỗng (ví dụ backend không có) => hiển thị chung
+            return <p className="no-slot-text">Không có khung giờ trống cho ngày này.</p>;
+        }
 
-        return times.map((time) => (
+        return availableSlots.map((time) => (
             <Button
                 key={time}
                 className={`time-slot ${selectedTime === time ? 'selected' : ''}`}
@@ -70,24 +105,22 @@ function DoctorDetail() {
     return (
         <MainLayout>
             <div className="doctor-detail-container">
-                <div className="doctor-info-card">
-                    <div className="doctor-info">
-                        <img
-                            src="https://via.placeholder.com/120x160"
-                            alt="doctor"
-                            className="doctor-image"
-                        />
-                        <div className="doctor-details">
-                            <h3>{doctor?.fullName}</h3>
-                            <div className="specialty-tags">
-                                {doctor?.specialties?.map((spec) => (
-                                <span className="specialty-tag">{spec.name}</span>
-                                ))}
-                            </div>
-                            <div className="doctor-stats">
-                            <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>47</strong></p>
-                            <p><FontAwesomeIcon icon={faStar} /> Đánh giá: <strong>5</strong> (<em>17 đánh giá</em>)</p>
-                            </div>
+                <div className="doctor-info">
+                    <img
+                        src={defaultdoctoravatar}
+                        alt="doctor"
+                        className="doctor-image"
+                    />
+                    <div className="doctor-details">
+                        <h3>{doctor?.fullName}</h3>
+                        <div className="specialty-tags">
+                            {doctor?.specialties?.map((spec, index) => (
+                                <span key={spec.id || index} className="specialty-tag">{spec.name}</span>
+                            ))}
+                        </div>
+                        <div className="doctor-stats">
+                        <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>47</strong></p>
+                        <p><FontAwesomeIcon icon={faStar} /> Đánh giá: <strong>5</strong> (<em>17 đánh giá</em>)</p>
                         </div>
                     </div>
                 </div>

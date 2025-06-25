@@ -15,6 +15,7 @@ import { getInfo } from '../../services/api';
 import { notiApi } from '../../services/api';
 import dayjs from 'dayjs';
 import { authApi } from '../../services/api';
+import  logo  from '../../assets/imgs/logo.png'
 
 const { Text } = Typography;
 
@@ -271,7 +272,9 @@ function Header() {
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
 
       <div className="top-bar">
-        <span className="logo" onClick={() => navigate('/')}>hello</span>
+        <span className="logo" onClick={() => navigate('/')}>
+          <img src={logo} alt="" style={{width: '50px', height: '50px'}}/>
+        </span>
 
         <div className="menu">
           <button onClick={() => navigate('/')}>Trang chủ</button>

@@ -56,7 +56,7 @@ const routers = [
      },
      {
           path: '/booking-confirmation',
-          component: lazy(() => import('../pages/Appointment/BookingConfirmation'))
+          component: lazy(() => import('../pages/Appointment/BookingInformation'))
      },
 ]
 

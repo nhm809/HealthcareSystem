@@ -1,0 +1,221 @@
+.booking-confirmation-container {
+  margin: 40px auto;    
+  background-color: #fff;
+}
+
+.section-title {
+  text-align: center;
+  color: #54AA7F;
+  font-size: 30px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-label {
+  font-size: 18px;
+  color: gray;
+}
+
+.user-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 !important;
+}
+
+.user-warning {
+  font-size: 18px;
+  font-style: italic;
+  margin: 0 !important;
+}
+
+.login-button {
+  background-color: #d1e7ff;
+  color: #3d49d0;
+  border: none;
+  padding: 2px 8px;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 600;
+  border-radius: 4px;
+  height: auto;
+  line-height: normal;
+}
+
+.update-button {
+  background-color: #FFDDDD;
+  color: #E30D19;
+  border: none;
+  padding: 2px 8px;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 600;
+  border-radius: 4px;
+  height: auto;
+  line-height: normal;
+}
+
+.update-button:hover {
+  background-color: #E30D19 !important;
+  color: white !important;
+}
+
+.appointment-info {
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 16px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background: white;
+}
+
+.time-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.time-label {
+  font-weight: 500;
+}
+
+.time-box .time-value {
+  background-color: #00CBA7;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.time-box .date-value {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: #dad9d9;
+  color: #3161AD;
+}
+
+.separator {
+  border-top: 1px solid #ccc;
+}
+
+.doctor-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none ;
+  box-shadow: none;
+}
+
+.doctor-avatar {
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.doctor-details {
+  font-size: 16px;
+  flex: 1;
+}
+
+.service-title {
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.clinic-name {
+  margin-bottom: 8px;
+}
+
+.doctor-specialties {
+  margin-bottom: 8px;
+}
+
+.doctor-name {
+  margin-bottom: 0;
+}
+
+.price {
+  align-self: flex-start;
+  color: #00CBA7;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.symptom-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 24px;
+}
+
+.symptom-label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+}
+
+.symptom-textarea {
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  resize: none;
+  font-size: 14px;
+}
+
+.symptom-textarea:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-button1 {
+  width: 160px;
+  height: 36px;
+  background-color: #00CBA7;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 24px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.confirm-button1:hover {
+  background-color: #5ed4b9 !important;
+}

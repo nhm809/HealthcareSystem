@@ -24,5 +24,8 @@ namespace Domain.Entities
         public virtual ICollection<BlogView> BlogViews { get; set; } = new List<BlogView>();
 
         public virtual User? Consultant { get; set; }
+
+        public Boolean Status { get; set; }
+
     }
 }
