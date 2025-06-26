@@ -66,7 +66,8 @@ public class BlogManageService : IBlogManageService
             Content = dto.Content,
             Topic = dto.Topic,
             ConsultantId = dto.ConsultantId,
-            PublishDate = DateOnly.FromDateTime(DateTime.UtcNow)
+            PublishDate = DateOnly.FromDateTime(DateTime.UtcNow),
+            Status = true
         };
 
         _context.Blogs.Add(blog);
