@@ -29,7 +29,7 @@ function Appointment() {
                     const mappedDoctors = data.map((item) => ({
                          id: item.consultantId,
                          name: item.fullName,
-                         specialization: item.specialties[0].name,
+                         specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
                          image: defaultdoctoravatar,
                     }));
                     setDoctors(mappedDoctors);
