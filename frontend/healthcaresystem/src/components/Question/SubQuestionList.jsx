@@ -3,6 +3,7 @@ import { Collapse, Button, Input, Form, Spin, message, Avatar } from 'antd';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import api from '../../services/api';
+import { subQuestionApi } from '../../services/api';
 
 const { Panel } = Collapse;
 
@@ -59,7 +60,7 @@ const SubQuestionList = ({ question, isConsultant }) => {
   const handleAnswer = async (values) => {
     setAnsweringId('');
     try {
-      await api.post('/subQuestion/add', {
+      await subQuestionApi.answerSubQuestion({
         threadItemId: values.threadItemId,
         questionId: question.id,
         questionText: values.questionText,

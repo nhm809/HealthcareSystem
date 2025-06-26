@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class database : Migration
+    public partial class dataabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
