@@ -44,13 +44,13 @@ public class QuestionController : ControllerBase
     }
 
     [HttpPut("updateStatus/{questionId}")]
-    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId)
+    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId, [FromBody] string status)
     {
-        if (questionId <= 0)
+        if (questionId <= 0 || string.IsNullOrEmpty(status))
         {
-            return BadRequest("Invalid question ID.");
+            return BadRequest("Invalid question ID or status.");
         }
-        var result = await _questionService.UpdateQuestionStatusAsync(questionId);
+        var result = await _questionService.UpdateQuestionStatusAsync(questionId, status);
         if (!result)
         {
             return StatusCode(500, "An error occurred while updating the question status.");
@@ -101,6 +101,36 @@ public class QuestionController : ControllerBase
             return NotFound("Question not found.");
         }
         return Ok(question);
+    }
+
+    [HttpGet("member/{memberId}")]
+    public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByMemberIdAsync(int memberId)
+    {
+        if (memberId <= 0)
+        {
+            return BadRequest("Invalid member ID.");
+        }
+        var questions = await _questionService.GetQuestionsByMemberIdAsync(memberId);
+        if (questions == null || questions.Count == 0)
+        {
+            return NotFound("No questions found for this member.");
+        }
+        return Ok(questions);
+    }
+
+    [HttpGet("consultant/{consultantId}")]
+    public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByConsultantIdAsync(int consultantId)
+    {
+        if (consultantId <= 0)
+        {
+            return BadRequest("Invalid consultant ID.");
+        }
+        var questions = await _questionService.GetQuestionsByConsultantIdAsync(consultantId);
+        if (questions == null || questions.Count == 0)
+        {
+            return NotFound("No questions found for this consultant.");
+        }
+        return Ok(questions);
     }
 
 }
