@@ -1,4 +1,4 @@
-
+﻿
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
@@ -57,7 +57,7 @@ namespace Infrastructure.Services
             var memNoti = new Notification
             {
                 UserId = question.MemberId,
-                Content = $"You have successfully asked the question {dto.QuestionText}",
+                Content = $"Bạn đã đặt câu hỏi thành công {dto.QuestionText}",
                 IsRead = false,
                 SendTime = DateTime.UtcNow
             };
@@ -65,7 +65,7 @@ namespace Infrastructure.Services
             var consNoti = new Notification
             {
                 UserId = question.ConsultantId,
-                Content = $"You have a new question from {dto.QuestionText}",
+                Content = $"Bạn có một câu hỏi mới từ {dto.QuestionText}",
                 IsRead = false,
                 SendTime = DateTime.UtcNow
             };

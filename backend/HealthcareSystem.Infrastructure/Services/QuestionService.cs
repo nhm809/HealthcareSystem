@@ -1,4 +1,4 @@
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
@@ -77,14 +77,14 @@ namespace Infrastructure.Services
                 new Notification
                 {
                     UserId = luckyPerson.UserId,
-                    Content = $"You have a new question from {questionDto.MemberId}",
+                    Content = $"Bạn có một câu hỏi mới từ {questionDto.MemberId}",
                     IsRead = false,
                     SendTime = DateTime.UtcNow
                 },
                 new Notification
                 {
                     UserId = questionDto.MemberId.Value,
-                    Content = "Your question has been sent successfully and will be answered shortly.",
+                    Content = "Câu hỏi của bạn đã được gửi thành công và sẽ sớm được trả lời.",
                     IsRead = false,
                     SendTime = DateTime.UtcNow
                 }
@@ -109,7 +109,7 @@ namespace Infrastructure.Services
             var notification = new Notification
             {
                 UserId = question.MemberId ?? 0,
-                Content = "Your question has been answered.",
+                Content = "Câu hỏi của bạn đã được trả lời.",
                 IsRead = false,
                 SendTime = DateTime.UtcNow
             };
