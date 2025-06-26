@@ -49,6 +49,9 @@ export const authApi = {
           api.get(`/TestServiceRecord/work-shifts`, {
                params: { date }
           }),
+
+     getTestServiceRecordDetail: (testServiceRecordId, memberId) =>
+          api.get(`/TestServiceRecord/${testServiceRecordId}/${memberId}`),
 };
 
 export const notiApi = {
@@ -116,6 +119,10 @@ export const consultantBlogApi = {
 
 export const cancelTestRecord = (testServiceRecordId, userId) =>
   api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
+
+export const subQuestionApi = {
+    answerSubQuestion: (data) => api.post('/subQuestion/answer', data),
+};
 
 // Request interceptor
 api.interceptors.request.use(
