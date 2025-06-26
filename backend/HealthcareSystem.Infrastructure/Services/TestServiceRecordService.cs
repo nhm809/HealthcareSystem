@@ -6,13 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using HealthcareSystem.Application.DTOs;
 using System.Text.RegularExpressions;
 using HealthcareSystem.Application.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace Infrastructure.Services
 {
-    
     public class TestServiceRecordService : ITestServiceRecord
     {
-        const int FIXED_SERVICE_ID = 1;
-        const int Number_TestOnDate = 80;
+        const int MAX_TESTS_PER_HOUR_PER_STAFF = 2;
         public readonly AppDbContext _context;
         private readonly INotiService _notiService;
 
@@ -48,12 +51,15 @@ namespace Infrastructure.Services
                 {
                     r.TestServiceRecordId,
                     r.ServiceId,
+                    ServiceName = r.Service.Name,
                     r.MemberId,
                     r.Result,
                     r.RecordDate,
                     r.Notes,
                     r.Status,
                     r.StaffId,
+                    r.TestDate,
+                    r.TimeSlot,
                     Staff = r.Staff == null ? null : new
                     {
                         r.Staff.FullName,
@@ -78,10 +84,13 @@ namespace Infrastructure.Services
             {
                 TestServiceRecordId = record.TestServiceRecordId,
                 ServiceId = record.ServiceId,
+                ServiceName = record.ServiceName,
                 Result = record.Result,
                 RecordDate = record.RecordDate,
                 Notes = record.Notes,
                 Status = record.Status,
+                TestDate = record.TestDate,
+                TimeSlot = record.TimeSlot,
                 Staff  = record.Staff == null ? null : new StaffDTO
                 {
                     FullName = record.Staff.FullName,
@@ -92,56 +101,95 @@ namespace Infrastructure.Services
             };
         }
         
+        public async Task<bool> CanBookTestService(BookTestServiceRecordDTO request)
+        {
+            var testDate = request.TestDate;
+            var shift = request.Shift;
+
+            if (shift != 1 && shift != 2)
+            {
+                return false; 
+            }
+            //tránh spam,đặt ca đó rồi mà đặt nữa là hổng cho 
+            var shiftStartTime = GetDefaultTimeSlotForShift(shift);
+            var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
+            
+            var existingUserBookingInShift = await _context.TestServiceRecords
+                .AnyAsync(r => r.TestDate == testDate &&
+                           r.MemberId == request.UserId &&
+                           r.Status != "Da huy" &&
+                           r.Status != "Khach hang khong den" &&
+                           r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime);
+
+            if (existingUserBookingInShift)
+            {
+                return false;
+            }
+
+            var availableStaffIds = await GetAvailableStaffIdsForShiftAsync(testDate, shift);
+            var shiftDurationHours = (shiftEndTime - shiftStartTime).TotalHours;
+            var maxBookings = (int)(availableStaffIds.Count * shiftDurationHours * MAX_TESTS_PER_HOUR_PER_STAFF);
+
+
+            var currentBookings = await _context.TestServiceRecords
+                .CountAsync(r => r.TestDate == testDate &&
+                                 (r.Status == "Dang cho kham") &&
+                                 r.TimeSlot >= shiftStartTime &&
+                                 r.TimeSlot < shiftEndTime);
+
+            return currentBookings < maxBookings;
+        }
+        
         public async Task<int> BookTestServiceAsync(BookTestServiceRecordDTO request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            if (string.IsNullOrWhiteSpace(request.FullName))
-                throw new ArgumentException("Họ và tên không được để trống.");
+            var testDate = request.TestDate;
+            var shift = request.Shift;
 
-            if (request.Dob > DateOnly.FromDateTime(DateTime.Now))
-                throw new ArgumentException("Ngày sinh không hợp lệ");
-
-            
-            if(string.IsNullOrWhiteSpace(request.Gender)){
-                throw new ArgumentException("Vui lòng chọn giới tính");
-            }
-            if(request.TestDate <= DateOnly.FromDateTime(DateTime.Now)){
-                throw new ArgumentException("Ngày khám không hợp lệ ");
-            }
-
-            if (!Regex.IsMatch(request.PhoneNumber, @"^0\d{9}$"))
-                throw new ArgumentException("Số điện thoại không hợp lệ.");
-
-            
-            var numberOfTestsOnDate = await _context.TestServiceRecords
-                .CountAsync(x => x.TestDate == request.TestDate);
-            
-            if (numberOfTestsOnDate >= Number_TestOnDate)
+            if (shift != 1 && shift != 2)
             {
-                throw new ArgumentException("Rất tiếc, ngày " + request.TestDate.ToString("dd/MM/yyyy") + 
-                " đã đạt giới hạn số lượng đặt lịch. Để đảm bảo chất lượng phục vụ tốt nhất,"
-                +"chúng tôi chỉ nhận tối đa " +Number_TestOnDate+" ca xét nghiệm mỗi ngày."
-                +" Quý khách vui lòng chọn ngày khác phù hợp hơn.");
+                throw new ArgumentException("Ca làm việc không hợp lệ. Chỉ chấp nhận ca 1 hoặc ca 2.");
+            }
+            var shiftStartTime = GetDefaultTimeSlotForShift(shift);
+            var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
+
+            var existingUserBookingInShift = await _context.TestServiceRecords
+                .AnyAsync(r => r.TestDate == testDate && 
+                           r.MemberId == request.UserId &&
+                           r.Status != "Da huy" && 
+                           r.Status != "Khach hang khong den" &&
+                           r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime);
+
+            if (existingUserBookingInShift)
+            {
+                throw new ArgumentException($"Bạn đã có lịch xét nghiệm vào ca này ngày {request.TestDate.ToString("dd/MM/yyyy")}. " +
+                    "Mỗi khách hàng chỉ có thể đặt 1 lịch xét nghiệm mỗi ca.");
             }
 
-            
-            
+            // Check overall capacity without assigning staff
+            var canBook = await CanBookTestService(request);
+            if (!canBook)
+            {
+                 throw new ArgumentException($"Rất tiếc, ca bạn chọn trong ngày {request.TestDate.ToString("dd/MM/yyyy")} đã hết chỗ. " +
+                    "Quý khách vui lòng chọn ca khác hoặc ngày khác phù hợp hơn.");
+            }
 
             var testServiceRecord = new TestServiceRecord
             {
-                ServiceId = FIXED_SERVICE_ID,
+                ServiceId = request.ServiceId,
                 FullNameOfMember = request.FullName,
                 Dob = request.Dob,
                 TestDate = request.TestDate,
                 Gender = request.Gender,
                 PhoneNumber = request.PhoneNumber,
-                MemberId = request.UserId, // UserId do FE quản lý
-                Status = "Dang thanh toan",
-                RecordDate = DateTime.UtcNow.AddHours(7), // UTC+7 cho Việt Nam
+                MemberId = request.UserId, 
+                Status = "Dang thanh toan", 
+                TimeSlot = shiftStartTime,
+                RecordDate = DateTime.UtcNow.AddHours(7), 
                 Result = "",
-                StaffId = null, 
+                StaffId = null,
                 Notes = ""
             };
 
@@ -151,33 +199,146 @@ namespace Infrastructure.Services
             return testServiceRecord.TestServiceRecordId;
         }
 
-        public async Task<UpdateTestServiceRecordDTO> SelectTestServiceRecordAsync(int testServiceRecordId, int staffId)
+        public async Task AssignStaffToTestRecordAsync(int testServiceRecordId)
         {
-            var testServiceRecord = await _context.TestServiceRecords
-                .FirstOrDefaultAsync(x => x.TestServiceRecordId == testServiceRecordId);
+            var record = await _context.TestServiceRecords
+                .FirstOrDefaultAsync(r => r.TestServiceRecordId == testServiceRecordId);
 
-            if(testServiceRecord.Status != "Dang cho kham")
-                throw new ArgumentException("Bản ghi xét nghiệm chưa đủ điều kiện để thực hiện");
-
-            if (testServiceRecord == null)
-                throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm này.");
-
-            
-            if (testServiceRecord.StaffId == staffId)
-                throw new ArgumentException("Bạn đang thực hiện bản xét nghiệm này.");
-            else if (testServiceRecord.StaffId != null && testServiceRecord.StaffId != staffId)
-                throw new ArgumentException("Bản ghi xét nghiệm đã được thực hiện bởi nhân viên khác.");
-
-            testServiceRecord.StaffId = staffId;
-            await _context.SaveChangesAsync();
-
-            return new UpdateTestServiceRecordDTO
+            if (record == null || record.StaffId.HasValue)
             {
-                TestServiceRecordId = testServiceRecord.TestServiceRecordId,
-                StaffId = staffId
-            };
+                return;
+            }
+
+            if (!record.TestDate.HasValue)
+            {
+                record.Notes += " [Lỗi hệ thống: Bản ghi thiếu ngày xét nghiệm, không thể phân công.]";
+                await _context.SaveChangesAsync();
+                return;
+            }
+
+            var testDate = record.TestDate.Value;
+            var shift = (record.TimeSlot < new TimeSpan(12, 0, 0)) ? 1 : 2;
+
+            var availableStaffIds = await GetAvailableStaffIdsForShiftAsync(testDate, shift);
+
+            if (!availableStaffIds.Any())
+            {
+                record.Notes += " [Lỗi hệ thống: Không tìm thấy nhân viên phù hợp để phân công.]";
+                await _context.SaveChangesAsync();
+                return;
+            }
+
+            // Round-robin assignment based on staff workload for that specific shift
+            var shiftStartTime = GetDefaultTimeSlotForShift(shift);
+            var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
+            
+            var assignedRecordsInShift = await _context.TestServiceRecords
+                .Where(r => r.TestDate == testDate &&
+                            r.StaffId.HasValue &&
+                            availableStaffIds.Contains(r.StaffId.Value) &&
+                            r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime &&
+                            r.Status != "Da huy" && r.Status != "Khach hang khong den")
+                .OrderBy(r => r.TestServiceRecordId)
+                .ToListAsync();
+            
+            int assignedCount = assignedRecordsInShift.Count;
+            int staffIndex = assignedCount % availableStaffIds.Count;
+            int selectedStaffId = availableStaffIds[staffIndex];
+
+            record.StaffId = selectedStaffId;
+            await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<WorkShiftDTO>> GetWorkShiftsAsync(DateOnly date)
+        {
+            var shifts = new List<WorkShiftDTO>();
+
+            for (int shift = 1; shift <= 2; shift++)
+            {
+                var shiftStartTime = GetDefaultTimeSlotForShift(shift);
+                var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
+
+                var availableStaffIds = await GetAvailableStaffIdsForShiftAsync(date, shift);
+                
+                if (availableStaffIds.Any())
+                {
+                    var shiftDurationHours = (shiftEndTime - shiftStartTime).TotalHours;
+                    var maxBookings = (int)(availableStaffIds.Count * shiftDurationHours * MAX_TESTS_PER_HOUR_PER_STAFF);
+
+                     var currentBookings = await _context.TestServiceRecords
+                        .CountAsync(r => r.TestDate == date &&
+                                         (r.Status == "Dang cho kham") &&
+                                         r.TimeSlot >= shiftStartTime &&
+                                         r.TimeSlot < shiftEndTime);
+                    
+                    shifts.Add(new WorkShiftDTO
+                    {
+                        ShiftId = shift,
+                        ShiftName = $"Ca {shift}",
+                        StartTime = shiftStartTime.ToString(@"hh\:mm"),
+                        EndTime = shiftEndTime.ToString(@"hh\:mm"),
+                        CurrentBookings = currentBookings,
+                        MaxBookings = maxBookings,
+                        IsAvailable = currentBookings < maxBookings,
+                        Status = currentBookings < maxBookings ? "Còn chỗ" : "Hết chỗ"
+                    });
+                }
+            }
+
+            return shifts;
+        }
+
+        private TimeSpan GetDefaultTimeSlotForShift(int shift)
+        {
+            if (shift == 1)
+                return new TimeSpan(8, 0, 0); 
+            else if (shift == 2)
+                return new TimeSpan(13, 0, 0); 
+            else
+                throw new ArgumentException("Ca làm việc không hợp lệ. Chỉ chấp nhận ca 1 hoặc ca 2.");
+        }
+
+
+        public async Task<List<int>> GetAvailableStaffForShiftAsync(DateOnly date, int shift)
+        {
+            return await GetAvailableStaffIdsForShiftAsync(date, shift);
+        }
+
+        private async Task<List<int>> GetAvailableStaffIdsForShiftAsync(DateOnly date, int shift)
+        {
+            var dayOfWeek = (int)date.DayOfWeek;
+
+            // lấy từ lịch làm việc bth
+            var regularStaffIds = await _context.WeeklySchedules
+                .Where(ws => ws.DayOfWeek == dayOfWeek && ws.ShiftType == shift && ws.User.IsAvailable)
+                .Select(ws => ws.UserId)
+                .ToListAsync();
+
+            var overrides = await _context.WeeklyOverrideSchedules
+                .Where(os => DateOnly.FromDateTime(os.Date) == date && os.Status == "Approved")
+                .ToListAsync();
+
+            var staffOnLeaveIds = overrides
+                .Where(o => o.OverrideType == "Nghỉ" && (o.ShiftType == shift || o.ShiftType == 3))
+                .Select(o => o.UserId)
+                .ToHashSet();
+
+
+            var extraWorkStaffIds = overrides
+                .Where(o => o.OverrideType == "Làm thêm" && o.ShiftType == shift)
+                .Select(o => o.UserId)
+                .ToList();
+
+            // 5. Combine lists: start with regular staff, add extra work staff, then remove those on leave
+            var availableStaffIds = new HashSet<int>(regularStaffIds);
+            availableStaffIds.UnionWith(extraWorkStaffIds);
+            availableStaffIds.ExceptWith(staffOnLeaveIds);
+
+            Console.WriteLine("Available staff for {0} ca {1}: {2}", date, shift, string.Join(",", availableStaffIds));
+
+            return availableStaffIds.OrderBy(id => id).ToList();
+        }
+        
         public async Task<TestServiceRecordDetailDTO> UpdateTestResultAsync(UpdateTestResultDTO request, int staffId)
         {
             var testServiceRecord = await _context.TestServiceRecords
@@ -187,42 +348,30 @@ namespace Infrastructure.Services
             if (testServiceRecord == null)
                 throw new ArgumentException("Không tìm thấy bản ghi xét nghiệm .");
 
-            if (testServiceRecord.Status == "Đã hủy")
+            if (testServiceRecord.Status == "Da huy")
                 throw new ArgumentException("Không thể cập nhật bản ghi xét nghiệm đã bị hủy.");
 
-            testServiceRecord.Result = request.Result;
+            var oldStatus = testServiceRecord.Status;
+            var oldNotes = testServiceRecord.Notes;
+            var oldResult = testServiceRecord.Result;
+
+            bool statusChanged = request.Status != oldStatus;
+            bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != oldNotes;
+            bool resultChanged = request.Result != oldResult;
+
+            testServiceRecord.Status = request.Status;
             testServiceRecord.Notes = request.Notes;
-            
+            testServiceRecord.Result = request.Result;
+
+            List<string> changedFields = new();
+            if (statusChanged) changedFields.Add("trạng thái");
+            if (notesChanged) changedFields.Add("ghi chú");
+            if (resultChanged) changedFields.Add("kết quả xét nghiệm");
+
             string notificationContent = "";
-            bool statusChanged = request.Status != testServiceRecord.Status;
-            bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != testServiceRecord.Notes;
-
-            Console.WriteLine($"Status changed: {statusChanged}, Notes changed: {notesChanged}");
-            Console.WriteLine($"Old status: {testServiceRecord.Status}, New status: {request.Status}");
-
-            if (statusChanged)
+            if (changedFields.Count > 0)
             {
-                testServiceRecord.Status = request.Status;
-                switch (request.Status)
-                {
-                    case "Dang thuc hien":
-                        notificationContent = "Xét nghiệm của bạn đang được thực hiện.";
-                        break;
-                    case "Da hoan thanh":
-                        notificationContent = "Kết quả xét nghiệm của bạn đã có sẵn.";
-                        break;
-                    case "Khach hang khong den":
-                        notificationContent = "Bản xét nghiệm của bạn đã quá hạn.";
-                        break;
-                    case "Da huy":
-                        notificationContent = "Xét nghiệm của bạn đã bị hủy.";
-                        break;
-                }
-            }
-            
-            if (notesChanged)
-            {
-                notificationContent = "Bác sĩ đã cập nhật thông tin xét nghiệm của bạn.";
+                notificationContent = $"Bác sĩ đã cập nhật {string.Join(", ", changedFields)} cho xét nghiệm của bạn.";
             }
             await _context.SaveChangesAsync();
 
@@ -233,7 +382,7 @@ namespace Infrastructure.Services
                     UserId = testServiceRecord.MemberId.Value,
                     Title = "Cập nhật thông tin xét nghiệm",
                     Content = notificationContent,
-                    SendTime = DateTime.UtcNow.AddHours(7),///////////
+                    SendTime = DateTime.UtcNow.AddHours(7),
                     IsRead = false
                 };
 
@@ -255,6 +404,8 @@ namespace Infrastructure.Services
                 RecordDate = testServiceRecord.RecordDate,
                 Notes = testServiceRecord.Notes,
                 Status = testServiceRecord.Status,
+                TestDate = testServiceRecord.TestDate,
+                TimeSlot = testServiceRecord.TimeSlot,
                 Staff = testServiceRecord.Staff == null ? null : new StaffDTO
                 {
                     FullName = testServiceRecord.Staff.FullName,
@@ -264,7 +415,7 @@ namespace Infrastructure.Services
                 }
             };
         }
-
+        
         public async Task<bool> CancelTestResultAsync(int testServiceRecordId, int userId)
         {
             var testServiceRecord = await _context.TestServiceRecords
@@ -310,9 +461,10 @@ namespace Infrastructure.Services
             return true;
         }
 
-        public async Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync(){
-             return await _context.TestServiceRecords
-                .Where(r => r.Status == "Dang cho kham")
+        public async Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync(string status)
+        {
+            return await _context.TestServiceRecords
+                .Where(r => r.Status == status)
                 .Select(r => new TestServiceRecordStaffDTO
                 {
                     TestServiceRecordId = r.TestServiceRecordId,
@@ -329,7 +481,6 @@ namespace Infrastructure.Services
                     Status = r.Status
                 })
                 .ToListAsync();
-
         }
 
         public async Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStaffIdAsync(int staffId){

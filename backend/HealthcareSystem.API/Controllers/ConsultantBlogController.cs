@@ -50,6 +50,18 @@ public class ConsultantBlogController : ControllerBase
         return Ok();
     }
 
-    
+    [HttpGet("deleted/{consultantId}")]
+    public async Task<ActionResult<List<GetBlogDTO>>> GetDeletedBlogs(int consultantId)
+    {
+        var blogs = await _service.GetDeletedBlogsByConsultantIdAsync(consultantId);
+        return Ok(blogs);
+    }
 
+    [HttpPatch("restore")]
+    public async Task<IActionResult> RestoreBlog([FromQuery] int blogId, [FromQuery] int consultantId)
+    {
+        var success = await _service.RestoreBlogAsync(blogId, consultantId);
+        if (!success) return Forbid();
+        return Ok();
+    }
 }

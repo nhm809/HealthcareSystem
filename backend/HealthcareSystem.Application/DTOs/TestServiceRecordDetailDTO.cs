@@ -8,6 +8,8 @@ namespace  HealthcareSystem.Application.DTOs
 
         public int? ServiceId { get; set; }
 
+        public string? ServiceName { get; set; }
+
         public string? Result { get; set; }
 
         public DateTime? RecordDate { get; set; }
@@ -15,6 +17,10 @@ namespace  HealthcareSystem.Application.DTOs
         public string? Notes { get; set; }
 
         public string? Status { get; set; }
+
+        public DateOnly? TestDate { get; set; }
+
+        public TimeSpan? TimeSlot { get; set; }
 
         public StaffDTO? Staff {get; set; }
     }

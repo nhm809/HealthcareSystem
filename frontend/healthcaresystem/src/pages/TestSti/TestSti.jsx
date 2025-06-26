@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CaretRightOutlined, CalendarOutlined } from '@ant-design/icons';
 import './TestSti.css';
 import { useState, useEffect, useRef } from 'react';
-import { notiApi } from '../../services/api';
+import { notiApi, authApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
 import ConfirmTestModal from './ConfirmTestModal';
@@ -27,6 +27,9 @@ function TestSti() {
      const [authModalOpen, setAuthModalOpen] = useState(false);
      const [defaultTab, setDefaultTab] = useState(0);
      const [formData, setFormData] = useState(null);
+     const [workShifts, setWorkShifts] = useState([]);
+     const [shiftsLoading, setShiftsLoading] = useState(false);
+     const [selectedDate, setSelectedDate] = useState(null);
      
 
      const panelStyle = {
@@ -59,6 +62,25 @@ function TestSti() {
           },
      ];
 
+     // Hàm lấy work shifts cho ngày được chọn
+     const fetchWorkShifts = async (date) => {
+          if (!date) return;
+          
+          setShiftsLoading(true);
+          try {
+               const formattedDate = date.format('YYYY-MM-DD');
+               const response = await authApi.getWorkShifts(formattedDate);
+               setWorkShifts(response.data);
+               setSelectedDate(date);
+          } catch (error) {
+               console.error('Error fetching work shifts:', error);
+               message.error('Không thể tải thông tin ca làm việc. Vui lòng thử lại!');
+               setWorkShifts([]);
+          } finally {
+               setShiftsLoading(false);
+          }
+     };
+
      const handleOpenModal = () => {
           if (!userId) {
                setDefaultTab(0);
@@ -67,15 +89,29 @@ function TestSti() {
           }
           setIsModalOpen(true);
      };
+     
      const handleCancel = () => {
           setIsModalOpen(false);
           form.resetFields();
+          setWorkShifts([]);
+          setSelectedDate(null);
      };
      
      const handleFinish = async (values) => {
           setFormData(values);
           setIsModalOpen(false);
           setIsConfirmModalOpen(true);
+     };
+
+     // Xử lý khi ngày lấy mẫu thay đổi
+     const handleTestDateChange = (date) => {
+          form.setFieldsValue({ shift: undefined }); // Reset shift selection
+          if (date) {
+               fetchWorkShifts(date);
+          } else {
+               setWorkShifts([]);
+               setSelectedDate(null);
+          }
      };
 
      // Tạo notification nếu thanh toán thành công
@@ -266,8 +302,43 @@ function TestSti() {
                                         disabledDate={(current) => {
                                              return current && current <= new Date();
                                         }}
+                                        onChange={handleTestDateChange}
                                    />
                               </Form.Item>
+                              
+                              {/* Hiển thị ca làm việc khi đã chọn ngày */}
+                              {selectedDate && (
+                                   <Form.Item
+                                        label="Ca làm việc"
+                                        name="shift"
+                                        rules={[{ required: true, message: 'Vui lòng chọn ca làm việc' }]}
+                                   >
+                                        <Radio.Group disabled={shiftsLoading}>
+                                             {shiftsLoading ? (
+                                                  <div>Đang tải thông tin ca làm việc...</div>
+                                             ) : workShifts.length > 0 ? (
+                                                  workShifts.map((shift) => (
+                                                       <Radio 
+                                                            key={shift.shiftId} 
+                                                            value={shift.shiftId}
+                                                            disabled={!shift.isAvailable}
+                                                            style={{ 
+                                                                 display: 'block', 
+                                                                 marginBottom: 8,
+                                                                 opacity: shift.isAvailable ? 1 : 0.5
+                                                            }}
+                                                       >
+                                                            {shift.shiftName} ({shift.startTime} - {shift.endTime}) - {shift.status}
+                                                            {!shift.isAvailable && ' (Hết chỗ)'}
+                                                       </Radio>
+                                                  ))
+                                             ) : (
+                                                  <div>Không có ca làm việc nào cho ngày này</div>
+                                             )}
+                                        </Radio.Group>
+                                   </Form.Item>
+                              )}
+                              
                               <div className="button-register">
                                    <Button onClick={handleCancel}>Hủy</Button>
                                    <Button type="primary" htmlType="submit" loading={loading} style={{ minWidth: 100 }}>

@@ -38,6 +38,8 @@ namespace Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
+        public bool IsAvailable { get; set; } = true;
+
         public virtual ICollection<Appointment> AppointmentConsultants { get; set; } = new List<Appointment>();
 
         public virtual ICollection<Appointment> AppointmentMembers { get; set; } = new List<Appointment>();
@@ -45,8 +47,6 @@ namespace Domain.Entities
         public virtual ICollection<BlogView> BlogViews { get; set; } = new List<BlogView>();
 
         public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
-
-        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
@@ -64,7 +64,11 @@ namespace Domain.Entities
 
         public virtual ICollection<TestServiceRecord> TestServiceRecordStaffs { get; set; } = new List<TestServiceRecord>();
 
-        public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
+        // public virtual ICollection<WorkSchedule> WorkSchedules { get; set; } = new List<WorkSchedule>();
+
+        public virtual ICollection<WeeklySchedule> WeeklySchedules { get; set; } = new List<WeeklySchedule>();
+
+        public virtual ICollection<WeeklyOverrideSchedule> WeeklyOverrideSchedules { get; set; } = new List<WeeklyOverrideSchedule>();
 
         public virtual ICollection<Specialty> Specialties { get; set; } = new List<Specialty>();
 

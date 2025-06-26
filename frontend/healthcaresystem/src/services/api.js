@@ -32,6 +32,8 @@ export const authApi = {
                }
           ),
 
+     getTestServiceRecordsByMember: (memberId) => api.get(`/TestServiceRecord/member/${memberId}`),
+
      bookTestServiceRecord: (data) => 
           api.post('/TestServiceRecord/book/', data),
 
@@ -41,7 +43,12 @@ export const authApi = {
                testServiceRecordId,
                appointmentId,
           }
-     }),     
+     }),
+
+     getWorkShifts: (date) => 
+          api.get(`/TestServiceRecord/work-shifts`, {
+               params: { date }
+          }),
 };
 
 export const notiApi = {
@@ -85,12 +92,30 @@ export const updateTestResult = async (staffId, data) => {
 export const questionApi = {
     getAllQuestions: () => api.get('/question/getAll'),
     addQuestion: (data) => api.post('/question/add', data),
+    getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
 };
 
 export const messageApi = {
     getHistory: (questionId) => api.get(`/message/getHistory/${questionId}`),
     addMessage: (data) => api.post('/message/add', data),
 };
+
+export const specialtyApi = {
+    getAllSpecialties: () => api.get('/specialty/getAll'),
+};
+
+export const consultantBlogApi = {
+    createBlog: (data) => api.post('/ConsultantBlog', data),
+    getBlogsByConsultant: (consultantId) => api.get(`/ConsultantBlog/consultant/${consultantId}`),
+    updateBlog: (data) => api.put('/ConsultantBlog', data),
+    getBlogById: (blogID) => api.get(`/blogs/${blogID}`),
+    deleteBlog: (blogId, consultantId) => api.delete(`/ConsultantBlog`, { data: { BlogID: blogId, ConsultantId: consultantId } }),
+    getDeletedBlogs: (consultantId) => api.get(`/ConsultantBlog/deleted/${consultantId}`),
+    restoreBlog: (blogId, consultantId) => api.patch(`/ConsultantBlog/restore`, null, { params: { blogId, consultantId } }),
+};
+
+export const cancelTestRecord = (testServiceRecordId, userId) =>
+  api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
 
 // Request interceptor
 api.interceptors.request.use(

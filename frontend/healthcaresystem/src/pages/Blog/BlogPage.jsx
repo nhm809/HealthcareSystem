@@ -1,8 +1,9 @@
 // src/pages/Blog/BlogPage.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, useSearchParams  } from 'react-router-dom';
 import './BlogPage.css';
 import MainLayout from '../../components/Layout/Layout';
+import api from '../../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Pagination } from 'antd';
 import axios from 'axios';
@@ -16,6 +17,7 @@ import {
      faMagnifyingGlass,
      faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
 
 const iconMap = {
   'Sức khỏe': faHeart,
@@ -50,9 +52,9 @@ function BlogPage() {
       try {
         const url =
           selectedTopic === 'Tất cả'
-            ? 'http://localhost:5011/api/blogs'
-            : `http://localhost:5011/api/blogs/topic/${encodeURIComponent(selectedTopic)}`;
-        const res = await axios.get(url);
+            ? '/blogs'
+            : `/blogs/topic/${encodeURIComponent(selectedTopic)}`;
+        const res = api.get(url);
         setBlogs(res.data);
       } catch (error) {
         console.error('Lỗi khi lấy blog:', error);
@@ -68,7 +70,7 @@ function BlogPage() {
   useEffect(() => {
     const fetchAllCounts = async () => {
       try {
-        const res = await axios.get('http://localhost:5011/api/blogs');
+        const res = api.get('/blogs');
         const counts = res.data.reduce((acc, blog) => {
           acc[blog.topic] = (acc[blog.topic] || 0) + 1;
           return acc;
@@ -163,9 +165,8 @@ function BlogPage() {
                       <img src={blog.thumbnailImagePath} alt={blog.title} className='blog-image' />
                       <div className='blog-content'>
                         <span className='blog-category'>{blog.topic}</span>
-                        <h3 className='blog-heading'></h3>
-                        <p className='blog-desc'>{blog.description}</p>
-                        <span className='blog-time'>{blog.publishDate}</span>
+                        <h3 className='blog-heading'>{blog.title}</h3>
+                        <span className='blog-time'>{blog.publishDate ? dayjs(blog.publishDate).format('DD/MM/YYYY') : '-'}</span>
                       </div>
                     </div>
                   ))

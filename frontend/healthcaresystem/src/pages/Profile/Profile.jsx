@@ -1,4 +1,4 @@
-import { Card, Descriptions, Avatar, Button, Divider, Spin, Modal, Form, Input, Upload, message, DatePicker, Select } from 'antd';
+import { Card, Descriptions, Avatar, Button, Divider, Spin, Modal, Form, Input, Upload, message, DatePicker, Select, Tag } from 'antd';
 import { UserOutlined, UploadOutlined, LockOutlined, HomeOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
 import React, { useEffect, useState, useContext } from 'react';
@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import dayjs from 'dayjs';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faStethoscope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ToastContext } from '../../contexts/ToastProvider';
 
@@ -25,32 +25,50 @@ function Profile() {
      const [changingPassword, setChangingPassword] = useState(false);
      const [uploadingAvatar, setUploadingAvatar] = useState(false);
      const { toast } = useContext(ToastContext);
+     const [serviceHistory, setServiceHistory] = useState([]);
+     const [historyLoading, setHistoryLoading] = useState(true);
 
      useEffect(() => {
           const userId = Cookies.get('userId');
 
+          const fetchServiceHistory = async (memberId) => {
+               try {
+                    const response = await authApi.getTestServiceRecordsByMember(memberId);
+                    setServiceHistory(response.data);
+                    console.log(response.data);
+               } catch (error) {
+                    console.error('Failed to fetch service history:', error);
+                    message.error('Không thể tải lịch sử dịch vụ');
+               } finally {
+                    setHistoryLoading(false);
+               }
+          };
+
           const fetchUserInfo = async () => {
                try {
                     setLoading(true);
-                    if (userId.length < 100000) {
-                         const response = await getInfo(userId);
-                         setUser({
-                              ...response.data,
-                              dateOfBirth: response.data.doB || response.data.DoB,
-                              avatar: response.data.avatarPath || response.data.avatar
-                         });
+                    setHistoryLoading(true);
+                    
+                    const response = await getInfo(userId);
+                    
+                    const userData = {
+                         ...response.data,
+                         dateOfBirth: response.data.doB || response.data.DoB,
+                         avatar: response.data.avatarPath || response.data.avatar,
+                         role: response.data.role
+                    };
+                    setUser(userData);
+
+                    if (userData.role === 'MB') {
+                         await fetchServiceHistory(userId);
                     } else {
-                         const response = await getInfoGoogle(userId);
-                         setUser({
-                              ...response.data,
-                              dateOfBirth: response.data.doB || response.data.DoB,
-                              avatar: response.data.avatarPath || response.data.avatar
-                         });
+                         setHistoryLoading(false);
                     }
                     setError(null);
                } catch (err) {
                     console.error('Error fetching user info:', err);
                     setError('Failed to load user information');
+                    setHistoryLoading(false);
                } finally {
                     setLoading(false);
                }
@@ -61,6 +79,7 @@ function Profile() {
           } else {
                setError('User ID not found');
                setLoading(false);
+               setHistoryLoading(false);
           }
      }, []);
 
@@ -209,6 +228,43 @@ function Profile() {
           return null;
      }
 
+     const renderServiceStatus = (status) => {
+          const lowerCaseStatus = status?.toLowerCase() || '';
+          switch (lowerCaseStatus) {
+               case 'da hoan tat':
+               case 'completed':
+                    return <Tag color="success">Đã hoàn tất</Tag>;
+               case 'dang cho kham':
+               case 'processing':
+               case 'waiting':
+                    return <Tag color="processing">Đang thực hiện</Tag>;
+               case 'dang thanh toan':
+               case 'pending':
+                    return <Tag color="warning">Chờ thanh toán</Tag>;
+               case 'da huy':
+               case 'cancelled':
+               case 'khach hang khong den':
+                    return <Tag color="default">Đã hủy</Tag>;
+               default:
+                    return <Tag>{status}</Tag>;
+          }
+     };
+
+     const renderServiceAction = (record) => {
+          const lowerCaseStatus = record.status?.toLowerCase() || '';
+          switch (lowerCaseStatus) {
+               case 'da hoan tat':
+               case 'completed':
+                    return <Button type="primary" ghost>Đánh giá dịch vụ</Button>;
+               case 'da huy':
+               case 'cancelled':
+               case 'khach hang khong den':
+                    return <span className="service-cancelled-text">Dịch vụ đã bị hủy</span>;
+               default:
+                    return null;
+          }
+     };
+
      return (
           <MainLayout>
                <Card className="profile-container">
@@ -252,6 +308,46 @@ function Profile() {
                          </Descriptions.Item>
                          <Descriptions.Item label="Giới tính">{user.gender === 'MALE' ? 'Nam' : user.gender === 'FEMALE' ? 'Nữ' : 'Khác'}</Descriptions.Item>
                     </Descriptions>
+
+                    {user && user.role === 'MB' && (
+                         <>
+                              <Divider />
+                              <div className="service-history-container">
+                                   <h3 className="service-history-title">
+                                        <FontAwesomeIcon icon={faStethoscope} style={{ marginRight: '8px' }} /> Lịch sử dịch vụ
+                                   </h3>
+                                   {historyLoading ? (
+                                        <div className="profile-loading" style={{marginTop: '20px'}}>
+                                             <Spin />
+                                        </div>
+                                   ) : serviceHistory.length > 0 ? (
+                                        <div className="service-history-list">
+                                             {serviceHistory.map(record => (
+                                                  <Card key={record.testServiceRecordId} className="service-record-card" bodyStyle={{ padding: '20px' }}>
+                                                       <div className="service-record-header">
+                                                            <div className="service-record-info">
+                                                                 <p className="service-name">{record.serviceName}</p>
+                                                                 <p className="service-date">
+                                                                      <i className="far fa-calendar-alt" style={{ marginRight: '8px' }}></i>
+                                                                      {dayjs(record.recordDate).format('DD/MM/YYYY')}
+                                                                 </p>
+                                                            </div>
+                                                            <div className="service-record-status">
+                                                                 {renderServiceStatus(record.status)}
+                                                            </div>
+                                                       </div>
+                                                       <div className="service-record-action" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flexGrow: 1 }}>
+                                                            {renderServiceAction(record)}
+                                                       </div>
+                                                  </Card>
+                                             ))}
+                                        </div>
+                                   ) : (
+                                        <p>Không có lịch sử dịch vụ để hiển thị.</p>
+                                   )}
+                              </div>
+                         </>
+                    )}
 
                     <Modal
                          title="Chỉnh sửa thông tin"

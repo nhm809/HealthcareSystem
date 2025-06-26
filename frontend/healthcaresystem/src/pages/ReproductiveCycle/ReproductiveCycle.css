@@ -1,0 +1,353 @@
+.ant-picker-calendar-date-value {
+  display: none;
+}
+
+.header1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.icon-wrapper {
+  background-color: #ffe5e5;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titlejr {
+  margin: 0 8px !important;
+  color: #2563eb;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.ant-picker-panel {
+  border: none !important;
+}
+
+.ant-picker-body {
+  border-radius: 12px;
+  padding: 8px 0 16px 0 !important;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ant-picker-content th {
+  font-weight: bold !important;
+  padding: 6px 0 !important;
+}
+
+.ant-picker-calendar-date-today::before {
+  border: none !important;
+}
+
+.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.reproductive-cycle-container {
+  margin: 40px auto;
+  background: #ffffff;
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #54AA7F;
+  font-weight: bold;
+}
+
+.calendar-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 16px 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.calendar-header-wrapper {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.calendar-select {
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.calendar-section {
+  flex: 2;
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.calendar-header {
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.cycle-calendar .ant-picker-cell-inner {
+  border-radius: 8px;
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.cycle-cell-wrapper.menstruation {
+  font-weight: bold;
+  background-color: #ffe0e0;
+  border-radius: 8px;
+}
+.cycle-cell-wrapper.ovulation {
+  font-weight: bold;
+  background-color: #fff5d1;
+  border-radius: 8px;
+}
+.cycle-cell-wrapper.fertile {
+  font-weight: bold;
+  background-color: #d1f5d1;
+  border-radius: 8px;
+}
+.cycle-cell-wrapper.predicted-menstruation,
+.cycle-cell-wrapper.predicted-fertile,
+.cycle-cell-wrapper.predicted-ovulation {
+  font-weight: bold;
+  background-color: #e0f0ff;
+  border-radius: 8px;
+}
+
+.date-number {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.legend {
+  padding-top: 16px;
+  display: flex;
+  gap: 16px; /* khoảng cách giữa các cặp */
+  font-size: 14px;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* khoảng cách giữa dot và label */
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.menstruation { background: #f87171; }
+.dot.ovulation { background: #facc15; }
+.dot.fertile { background: #4ade80; }
+.dot.predicted { background: #60a5fa; }
+
+.prediction-card {
+  flex: 1;
+  background: linear-gradient(to right, #A2DFD4, #ffffff);
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 14px;
+  min-width: 280px;
+}
+
+.prediction-card-header{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  padding: 8px 0 24px 0;
+  font-size: 17px;
+  color: #54AA7F;
+}
+
+.prediction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .prediction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .text-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .label {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000;
+    }
+  }
+}
+
+.history-section {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.history-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #54AA7F;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.history-header .icon {
+  color: #54AA7F;
+}
+
+.view-all {
+  font-size: 13px;
+  color: #54AA7F;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.view-all:hover {
+  text-decoration: underline;
+}
+
+/* Tuỳ chỉnh bảng */
+.custom-cycle-table .ant-table {
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.custom-cycle-table .ant-table-thead > tr > th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.custom-cycle-table .ant-table-thead > tr > th,
+.custom-cycle-table .ant-table-tbody > tr > td {
+  text-align: center;
+}
+
+.custom-cycle-table .ant-table-cell {
+  padding: 12px;
+  font-size: 14px;
+}
+
+.cycle-form-modal .ant-modal-content {
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.cycle-form-modal .modal-title {
+  color: #54AA7F;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.cycle-form-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #444;
+  font-size: 14px;
+}
+
+.cycle-form-modal .custom-input {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  height: 40px;
+}
+
+.cycle-form-modal .ant-btn-primary {
+  padding: 0 40px;
+  background-color: #54AA7F;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  height: 40px;
+  margin-top: 12px;
+  margin-left: 0 !important;
+}
+
+.cycle-form-modal .ant-modal-footer {
+  display: flex;
+  justify-content: center;
+}

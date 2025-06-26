@@ -31,38 +31,28 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    Status = q.Status,
+                    IsAnswered = q.IsAnswered,
                     Age = q.Age,
-                    Gender = q.Gender
+                    Gender = q.Gender,
+                    HeartCount = q.HeartCount,
+                    MessCount = q.MessCount
                 })
                 .ToListAsync();
         }
 
         public async Task<bool> AddQuestionAsync(QuestionDTO questionDto)
         {
-
-            //var specialtyId = await _context.Specialties
-            //    .Where(s => s.Name == questionDto.Specialty)
-            //    .Select(s => s.SpecialtyId)
-            //    .FirstOrDefaultAsync();
+            if (questionDto == null || questionDto.MemberId == null)
+                return false;
 
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
                 .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId))
                 .ToListAsync();
 
-            var consultantIds = consultants.Select(c => c.UserId).ToList();
+            if (!consultants.Any()) return false;
 
-            var random = new Random();
-
-            if (!consultants.Any())
-                return false;
-
-            var luckyPerson = consultants[random.Next(consultants.Count)];
-
-            var countMess = await _context.Messages
-                .Where(m => m.QuestionId == questionDto.QuestionId)
-                .CountAsync();
+            var luckyPerson = consultants[new Random().Next(consultants.Count)];
 
             var question = new Question
             {
@@ -73,46 +63,59 @@ namespace Infrastructure.Services
                 AttachmentPath = questionDto.AttachmentPath,
                 SubmitDate = DateTime.UtcNow,
                 ConsultantId = luckyPerson.UserId,
-                Status = "Chưa trả lời",
+                IsAnswered = false,
                 Age = questionDto.Age,
                 Gender = questionDto.Gender,
                 HeartCount = 0,
                 MessCount = 0
             };
-            _context.Questions.Add(question);
-            await _context.SaveChangesAsync();
 
-            var consNoti = new Notification
+            await _context.Questions.AddAsync(question);
+
+            var notifications = new[]
             {
-                UserId = luckyPerson.UserId,
-                Content = $"You have a new question from member {questionDto.MemberId}",
-                IsRead = false,
-                SendTime = DateTime.UtcNow
+                new Notification
+                {
+                    UserId = luckyPerson.UserId,
+                    Content = $"Bạn có một câu hỏi mới từ {questionDto.MemberId}",
+                    IsRead = false,
+                    SendTime = DateTime.UtcNow
+                },
+                new Notification
+                {
+                    UserId = questionDto.MemberId.Value,
+                    Content = "Câu hỏi của bạn đã được gửi thành công và sẽ sớm được trả lời.",
+                    IsRead = false,
+                    SendTime = DateTime.UtcNow
+                }
             };
 
-
-            var memNoti = new Notification
-            {
-                UserId = questionDto.MemberId,
-                Content = $"Your question has been sent to consultant {luckyPerson.UserId}",
-                IsRead = false,
-                SendTime = DateTime.UtcNow
-            };
-
-            _context.Notifications.AddRange(consNoti, memNoti);
+            await _context.Notifications.AddRangeAsync(notifications);
 
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateQuestionStatusAsync(int questionId, string status)
+
+        public async Task<bool> UpdateQuestionStatusAsync(int questionId)
         {
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null)
             {
                 return false;
             }
-            question.Status = status;
+            question.IsAnswered = true;
             _context.Questions.Update(question);
+
+            var notification = new Notification
+            {
+                UserId = question.MemberId ?? 0,
+                Content = "Câu hỏi của bạn đã được trả lời.",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+
+            await _context.Notifications.AddAsync(notification);
+
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -157,55 +160,12 @@ namespace Infrastructure.Services
                 AttachmentPath = question.AttachmentPath,
                 SubmitDate = question.SubmitDate,
                 ConsultantId = question.ConsultantId,
-                Status = question.Status,
+                IsAnswered = question.IsAnswered,
                 Age = question.Age,
                 Gender = question.Gender,
                 HeartCount = question.HeartCount,
                 MessCount = question.MessCount
             };
         }
-
-        public async Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId)
-        {
-            return await _context.Questions
-                .Where(q => q.MemberId == memberId)
-                .Select(q => new QuestionDTO
-                {
-                    QuestionId = q.QuestionId,
-                    MemberId = q.MemberId,
-                    SpecialtyId = q.SpecialtyId,
-                    TitleQuestion = q.TitleQuestion,
-                    Content = q.Content,
-                    AttachmentPath = q.AttachmentPath,
-                    SubmitDate = q.SubmitDate,
-                    ConsultantId = q.ConsultantId,
-                    Status = q.Status,
-                    Age = q.Age,
-                    Gender = q.Gender
-                })
-                .ToListAsync();
-        }
-
-        public async Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId)
-        {
-            return await _context.Questions
-                .Where(q => q.ConsultantId == consultantId)
-                .Select(q => new QuestionDTO
-                {
-                    QuestionId = q.QuestionId,
-                    MemberId = q.MemberId,
-                    SpecialtyId = q.SpecialtyId,
-                    TitleQuestion = q.TitleQuestion,
-                    Content = q.Content,
-                    AttachmentPath = q.AttachmentPath,
-                    SubmitDate = q.SubmitDate,
-                    ConsultantId = q.ConsultantId,
-                    Status = q.Status,
-                    Age = q.Age,
-                    Gender = q.Gender
-                })
-                .ToListAsync();
-        }
-
     }
 }

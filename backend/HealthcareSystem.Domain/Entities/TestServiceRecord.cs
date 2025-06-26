@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -28,8 +29,12 @@ namespace Domain.Entities
 
         public DateOnly? TestDate { get; set; } //
 
+        [Column(TypeName = "TIME")]
+        public TimeSpan? TimeSlot { get; set; }
+
         public string? Notes { get; set; }
 
+        [Column(TypeName = "nvarchar(50)")]
         public string? Status { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();

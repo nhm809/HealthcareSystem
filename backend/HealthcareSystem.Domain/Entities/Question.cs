@@ -38,6 +38,6 @@ namespace Domain.Entities
 
         public virtual Specialty? Specialty { get; set; }
 
-        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+        public virtual ICollection<QuestionThreadItem> QuestionThreadItems { get; set; } = new List<QuestionThreadItem>();
     }
 }

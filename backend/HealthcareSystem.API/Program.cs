@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using System.Net.Http.Headers;
 using HealthcareSystem.Application.Interfaces;
 using HealthcareSystem.Infrastructure.Services;
+using HealthcareSystem.Infrastructure.BackgroundServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,17 +43,19 @@ builder.Services.AddScoped<IService, ServiceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
-builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IQuestionThreadItemService, QuestionThreadItemService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+
+builder.Services.AddHostedService<StaffAssignmentService>();
 
 // Thêm CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5174")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -108,5 +111,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
-
 app.Run();  

@@ -16,7 +16,7 @@ public class BlogManageService : IBlogManageService
     public async Task<List<GetBlogDTO>> GetBlogsByConsultantIdAsync(int consultantId)
     {
         return await _context.Blogs
-            .Where(b => b.ConsultantId == consultantId)
+            .Where(b => b.ConsultantId == consultantId && b.Status)
             .Include(b => b.Consultant)
             .Include(b => b.BlogImages)
             .OrderByDescending(b => b.PublishDate)
@@ -132,13 +132,43 @@ public class BlogManageService : IBlogManageService
 
         if (blog == null) return false;
 
-        var images = await _context.BlogImages.Where(i => i.BlogId == dto.BlogID).ToListAsync();
-        _context.BlogImages.RemoveRange(images);
-
-        _context.Blogs.Remove(blog);
+        blog.Status = false;
         await _context.SaveChangesAsync();
         return true;
     }
-   
 
+    public async Task<List<GetBlogDTO>> GetDeletedBlogsByConsultantIdAsync(int consultantId)
+    {
+        return await _context.Blogs
+            .Where(b => b.ConsultantId == consultantId && !b.Status)
+            .Include(b => b.Consultant)
+            .Include(b => b.BlogImages)
+            .OrderByDescending(b => b.PublishDate)
+            .Select(b => new GetBlogDTO
+            {
+                BlogID = b.BlogId,
+                Title = b.Title,
+                Description = b.Description,
+                Topic = b.Topic,
+                PublishDate = b.PublishDate.HasValue ? b.PublishDate.Value.ToDateTime(TimeOnly.MinValue) : null,
+                ConsultantName = b.Consultant != null ? b.Consultant.FullName ?? "Không rõ" : "Không xác định",
+                ThumbnailImagePath = b.BlogImages
+                    .OrderBy(i => i.OrderIndex)
+                    .Select(i => i.ImagePath)
+                    .FirstOrDefault() ?? ""
+            })
+            .ToListAsync();
+    }
+
+    public async Task<bool> RestoreBlogAsync(int blogId, int consultantId)
+    {
+        var blog = await _context.Blogs
+            .FirstOrDefaultAsync(b => b.BlogId == blogId && b.ConsultantId == consultantId);
+
+        if (blog == null) return false;
+
+        blog.Status = true;
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

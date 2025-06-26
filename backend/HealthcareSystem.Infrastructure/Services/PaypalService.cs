@@ -28,14 +28,16 @@ namespace HealthcareSystem.Infrastructure.Services
         private readonly ILogger<PayPalService> _logger;
         private const string PAYMENT_PENDING_STATUS = "Dang thanh toan";
         private readonly INotiService _notiService;
+        private readonly ITestServiceRecord _testServiceRecordService;
 
-        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger,INotiService notiService)
+        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger,INotiService notiService, ITestServiceRecord testServiceRecordService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _httpClient = httpClientFactory.CreateClient("PayPalClient");
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _notiService = notiService;
+            _testServiceRecordService = testServiceRecordService;
         }
 
         private bool IsPaymentPendingStatus(string status)
@@ -221,6 +223,11 @@ namespace HealthcareSystem.Infrastructure.Services
                     testServiceRecord.Status = "Dang cho kham";
                     amount = testServiceRecord.Service?.Price ?? 0;
                     description = $"Thanh toán xét nghiệm - {testServiceRecord.FullNameOfMember}";
+                    
+                    await _context.SaveChangesAsync(); // Save status change first
+                    
+                    // Assign staff after payment confirmation
+                    await _testServiceRecordService.AssignStaffToTestRecordAsync(testServiceRecordId.Value);
                 }
 
 

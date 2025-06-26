@@ -1,6 +1,6 @@
 .top-bar {
   background-color: #FFFFFF;
-  padding: 10px 0px;
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,8 +54,7 @@
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: bold;
+  cursor: pointer;
 }
 
 .auth-buttons button {

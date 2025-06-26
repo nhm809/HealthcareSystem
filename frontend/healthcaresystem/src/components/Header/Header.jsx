@@ -6,6 +6,8 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faFlask } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -15,6 +17,7 @@ import { getInfo } from '../../services/api';
 import { notiApi } from '../../services/api';
 import dayjs from 'dayjs';
 import { authApi } from '../../services/api';
+import  logo  from '../../assets/imgs/logo.png'
 
 const { Text } = Typography;
 
@@ -136,6 +139,14 @@ function Header() {
     navigate('/profile');
   };
 
+  const handleViewQuestions = () => {
+    navigate('/question');
+  };
+
+  const handleViewTestHistory = () => {
+    navigate('/test-history'); // navigate đến trang lịch xét nghiệm
+  };
+
   const handleNotificationClick = async (notiId) => {
     try {
       await notiApi.markAsRead(notiId);
@@ -215,6 +226,18 @@ function Header() {
     },
     {
       key: '2',
+      label: 'Câu hỏi đã đặt',
+      icon: <FontAwesomeIcon icon={faQuestionCircle} style={{ marginRight: '8px' }} />,
+      onClick: handleViewQuestions
+    },
+    {
+      key: '3',
+      label: 'Lịch xét nghiệm',
+      icon: <FontAwesomeIcon icon={faFlask} style={{ marginRight: '8px' }} />,
+      onClick: handleViewTestHistory
+    },
+    {
+      key: '4',
       label: 'Đăng xuất',
       icon: <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />,
       onClick: handleLogout
@@ -271,7 +294,9 @@ function Header() {
       <AuthModal open={modalOpen} onClose={handleCloseModal} defaultTab={defaultTab} />
 
       <div className="top-bar">
-        <span className="logo" onClick={() => navigate('/')}>hello</span>
+        <span className="logo" onClick={() => navigate('/')}>
+          <img src={logo} alt="" style={{width: '50px', height: '50px'}}/>
+        </span>
 
         <div className="menu">
           <button onClick={() => navigate('/')}>Trang chủ</button>
@@ -291,7 +316,7 @@ function Header() {
           </div>
 
           <button onClick={() => navigate('/question')}>Hỏi đáp bác sĩ</button>
-          <button>Theo dõi chu kỳ sinh sản</button>
+          <button className="cycle-button" onClick={(() => navigate('/reproductive-cycle'))}>Theo dõi chu kỳ sinh sản</button>
           <button onClick={() => navigate('/blog')}>Blog</button>
         </div>
       </div>
