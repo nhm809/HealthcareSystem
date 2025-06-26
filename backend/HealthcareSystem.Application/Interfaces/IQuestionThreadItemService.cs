@@ -8,6 +8,6 @@ namespace Application.Interfaces
     {
         Task<List<QuestionThreadItemDTO>> GetSubQuestionAsync(int questionId);
         Task<bool> AddSubQuestionAsync(QuestionThreadItemDTO dto);
-        //Task<bool> UpdateMessageAsync(MessageDTO messageDto);
+        Task<bool> AnswerSubQuestionAsync(QuestionThreadItemDTO dto);
     }
 }
