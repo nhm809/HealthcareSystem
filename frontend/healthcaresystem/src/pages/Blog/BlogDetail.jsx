@@ -17,7 +17,7 @@ function BlogDetail() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = api.get(`/blogs/${id}`);
+        const res = await api.get(`/blogs/${id}`);
         setBlog(res.data);
       } catch (error) {
         console.error('Lỗi khi lấy chi tiết blog:', error);
