@@ -50,7 +50,7 @@ namespace Domain.Entities
 
         public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-        public virtual ICollection<Otprequest> Otprequests { get; set; } = new List<Otprequest>();
+        public virtual ICollection<OtpRequest> OtpRequests { get; set; } = new List<OtpRequest>();
 
         public virtual ICollection<Question> QuestionConsultants { get; set; } = new List<Question>();
 

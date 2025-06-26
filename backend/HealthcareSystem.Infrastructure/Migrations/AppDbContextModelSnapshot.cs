@@ -303,14 +303,14 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("Notification", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
+            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
                 {
-                    b.Property<int>("Otpid")
+                    b.Property<int>("OtpId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("OTPID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Otpid"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OtpId"));
 
                     b.Property<string>("Code")
                         .HasMaxLength(15)
@@ -335,7 +335,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserID");
 
-                    b.HasKey("Otpid")
+                    b.HasKey("OtpId")
                         .HasName("PK__OTPReque__5C2EC562B070925E");
 
                     b.HasIndex("UserId");
@@ -930,10 +930,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
+            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Otprequests")
+                        .WithMany("OtpRequests")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
 
@@ -1121,7 +1121,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("Otprequests");
+                    b.Navigation("OtpRequests");
 
                     b.Navigation("QuestionConsultants");
 
