@@ -7,7 +7,7 @@ using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
-
+using HealthcareSystem.Application.DTOs;
 namespace Infrastructure.Services
 {
     public class ConsultantService : IConsultantService
