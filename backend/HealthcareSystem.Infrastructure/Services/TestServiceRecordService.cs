@@ -310,12 +310,14 @@ namespace Infrastructure.Services
 
             // lấy từ lịch làm việc bth
             var regularStaffIds = await _context.WeeklySchedules
-                .Where(ws => ws.DayOfWeek == dayOfWeek && ws.ShiftType == shift && ws.User.IsAvailable)
+                .Include(ws => ws.User)
+                .Where(ws => ws.DayOfWeek == dayOfWeek && ws.ShiftType == shift && ws.User.IsAvailable && ws.User.RoleId == "ST")
                 .Select(ws => ws.UserId)
                 .ToListAsync();
 
             var overrides = await _context.WeeklyOverrideSchedules
-                .Where(os => DateOnly.FromDateTime(os.Date) == date && os.Status == "Approved")
+                .Include(os => os.User)
+                .Where(os => DateOnly.FromDateTime(os.Date) == date && os.Status == "Approved" && os.User.RoleId == "ST")
                 .ToListAsync();
 
             var staffOnLeaveIds = overrides
