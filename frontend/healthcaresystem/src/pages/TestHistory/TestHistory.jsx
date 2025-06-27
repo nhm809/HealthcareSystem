@@ -50,7 +50,7 @@ const TestHistory = () => {
       'cancelled': { color: 'default', text: 'Đã hủy' },
       'da hoan thanh': { color: 'success', text: 'Đã hoàn thành' },
       'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
-      'dang thanh toan': { color: 'warning', text: 'Chờ thanh toán' },
+      'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
       'da huy': { color: 'default', text: 'Đã hủy' },
       'khach hang khong den': { color: 'default', text: 'Đã hủy' }
     };
@@ -67,11 +67,23 @@ const TestHistory = () => {
       const response = await authApi.getTestServiceRecordDetail(record.testServiceRecordId, userId);
       setSelectedRecord(response.data);
       setDetailModalVisible(true);
-    } catch (error) {
+    } catch {
       message.error('Không thể tải chi tiết xét nghiệm');
     } finally {
       setDetailLoading(false);
     }
+  };
+
+  const handlePayment = (record) => {
+    // Navigate to payment page with test record info
+    navigate('/test-sti', { 
+      state: { 
+        testRecordId: record.testServiceRecordId,
+        serviceName: record.serviceName,
+        amount: record.price || 0,
+        isFromHistory: true
+      } 
+    });
   };
 
   // Helper để hiển thị ca làm việc
@@ -108,6 +120,30 @@ const TestHistory = () => {
       render: (status) => renderStatus(status),
       width: 120,
     },
+    {
+      title: 'Thao tác',
+      key: 'actions',
+      width: 120,
+      render: (_, record) => {
+        const status = (record.status || '').toLowerCase();
+        if (status === 'dang thanh toan' || status === 'pending') {
+          return (
+            <Button 
+              type="primary" 
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePayment(record);
+              }}
+              style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+            >
+              Thanh toán
+            </Button>
+          );
+        }
+        return null;
+      },
+    },
   ];
 
   // Helper để lọc theo trạng thái
@@ -115,6 +151,27 @@ const TestHistory = () => {
     testRecords.filter(r => statusList.includes((r.status || '').toLowerCase()));
 
   const tabItems = [
+    {
+      key: 'dang-thanh-toan',
+      label: 'Đang thanh toán',
+      children: (
+        <Table
+          columns={columns}
+          dataSource={filterByStatus(['dang thanh toan', 'pending'])}
+          rowKey="testServiceRecordId"
+          pagination={{
+            pageSize: 10,
+            showQuickJumper: true,
+            showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bản ghi`,
+          }}
+          onRow={(record) => ({
+            onClick: () => handleRowClick(record),
+            style: { cursor: 'pointer' }
+          })}
+          className="test-history-table"
+        />
+      )
+    },
     {
       key: 'dang-cho-kham',
       label: 'Đang chờ khám',
@@ -223,7 +280,7 @@ const TestHistory = () => {
             </div>
 
             {testRecords.length > 0 ? (
-              <Tabs defaultActiveKey="dang-cho-kham" items={tabItems} />
+              <Tabs defaultActiveKey="dang-thanh-toan" items={tabItems} />
             ) : (
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <p>Bạn chưa có lịch sử xét nghiệm nào.</p>
@@ -244,6 +301,19 @@ const TestHistory = () => {
           footer={[
             (selectedRecord && ['dang thanh toan', 'pending'].includes((selectedRecord.status || '').toLowerCase())) && (
               <Button
+                key="payment"
+                type="primary"
+                style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+                onClick={() => {
+                  setDetailModalVisible(false);
+                  handlePayment(selectedRecord);
+                }}
+              >
+                Thanh toán
+              </Button>
+            ),
+            (selectedRecord && ['dang thanh toan', 'pending'].includes((selectedRecord.status || '').toLowerCase())) && (
+              <Button
                 key="cancel"
                 danger
                 onClick={async () => {
@@ -259,7 +329,7 @@ const TestHistory = () => {
                         message.success('Đã hủy lịch xét nghiệm!');
                         setDetailModalVisible(false);
                         fetchTestHistory();
-                      } catch (err) {
+                      } catch {
                         message.error('Hủy lịch thất bại!');
                       }
                     },
