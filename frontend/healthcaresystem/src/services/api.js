@@ -62,7 +62,11 @@ export const notiApi = {
                'Authorization': `Bearer ${Cookies.get('token')}`
           }
      }),
-     createNoti: (data) => api.post('/Noti/createNoti', data),
+     createNoti: (data) => api.post('/Noti/createNoti', data, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
 };
      
 export const getInfo = async (userId) => {

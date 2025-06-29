@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Input, Spin, Modal, Form, DatePicker, Radio } from 'antd';
 import './BookingInformation.css';
 import ConfirmAppointmentModal from './ConfirmAppointmentModal';
 import MainLayout from '../../components/Layout/Layout';
 import Cookies from 'js-cookie';
-import { getInfo, authApi } from '../../services/api';
+import { getInfo, authApi, notiApi } from '../../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
@@ -22,10 +22,67 @@ function BookingConfirmation() {
     const [symptom, setSymptom] = useState('');
     const [form] = Form.useForm();
 
+    // const notiSentRef = useRef({});
     const navigate = useNavigate();
     const location = useLocation();
     const { doctor, selectedDate, selectedTime } = location.state || {};
     const userId = Cookies.get('userId');
+
+    // useEffect(() => {
+    //     console.log('useEffect PAYMENT chạy');
+
+    //     const params = new URLSearchParams(location.search);
+    //     const handler = params.get('handler');
+    //     const appointmentId = params.get('appointmentId');
+
+    //     console.log('Handler:', handler);
+    //     console.log('AppointmentId:', appointmentId);
+    //     console.log('UserId:', userId);
+
+    //     if (!appointmentId || !userId) return;
+
+    //     const now = new Date().toISOString();
+
+    //     if (handler === 'success') {
+    //         const sentKey = `noti_sent_appointment_${appointmentId}`;
+    //         if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
+    //             notiSentRef.current[sentKey] = true;
+
+    //             notiApi.createNoti({
+    //                 userId: Number(userId),
+    //                 title: 'Đặt lịch tư vấn thành công',
+    //                 content: `Bạn đã đặt lịch tư vấn thành công. Mã lịch hẹn: ${appointmentId}`,
+    //                 sendTime: now,
+    //                 isRead: false
+    //             }).finally(() => {
+    //                 sessionStorage.setItem(sentKey, '1');
+    //                 window.history.replaceState({}, document.title, '/appointment');
+    //             });
+    //         } else {
+    //             window.history.replaceState({}, document.title, '/appointment');
+    //         }
+    //     }
+
+    //     if (handler === 'cancel') {
+    //         const cancelKey = `noti_cancel_appointment_${appointmentId}`;
+    //         if (!sessionStorage.getItem(cancelKey) && !notiSentRef.current[cancelKey]) {
+    //             notiSentRef.current[cancelKey] = true;
+
+    //             notiApi.createNoti({
+    //                 userId: Number(userId),
+    //                 title: 'Thanh toán chưa hoàn tất',
+    //                 content: `Bạn đã đặt lịch tư vấn (Mã: ${appointmentId}) nhưng chưa hoàn tất thanh toán. Vui lòng thanh toán để được tư vấn đúng giờ.`,
+    //                 sendTime: now,
+    //                 isRead: false
+    //             }).finally(() => {
+    //                 sessionStorage.setItem(cancelKey, '1');
+    //                 window.history.replaceState({}, document.title, '/appointment');
+    //             });
+    //         } else {
+    //             window.history.replaceState({}, document.title, '/appointment');
+    //         }
+    //     }
+    // }, [location]);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -182,13 +239,13 @@ function BookingConfirmation() {
 
                     <div className="separator" />
 
-                    <div className="doctor-info">
+                    <div className="doctor-info1">
                         <img
                             src={defaultdoctoravatar}
                             alt="doctor"
                             className="doctor-avatar"
                         />
-                        <div className="doctor-details">
+                        <div className="doctor-details1">
                             <p className="service-title">
                                 Tư vấn trực tuyến với <strong>{doctor?.fullName}</strong>
                             </p>
@@ -226,12 +283,12 @@ function BookingConfirmation() {
                 <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab={defaultTab} />
 
                 <ConfirmAppointmentModal
-                open={showConfirmModal}
-                onClose={() => setShowConfirmModal(false)}
-                doctor={doctor}
-                user={user}
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
+                    open={showConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
+                    doctor={doctor}
+                    user={user}
+                    selectedDate={selectedDate}
+                    selectedTime={selectedTime}
                 />
 
                 {/* Modal cập nhật thông tin */}

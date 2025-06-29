@@ -2,6 +2,8 @@ import { lazy } from "react";
 import Home from "../pages/Home/Home";
 import StaffLayout from "../components/Layout/StaffLayout";
 import ConsultantLayout from "../components/Layout/ConsultantLayout";
+import { useLocation } from "react-router-dom";
+import BookingInformation from '../pages/Appointment/BookingInformation';
 
 const routers = [
      {
@@ -27,6 +29,14 @@ const routers = [
      {
           path: '/appointment/:id',
           component: lazy(() => import('../pages/Appointment/ConsultantDetail'))
+     },
+     {
+          path: '/booking-confirmation',
+          component: lazy(() => import('../pages/Appointment/BookingInformation'))
+     },
+     {
+          path: '/appointment-payment-result',
+          component: lazy(() => import('../pages/Appointment/AppointmentResultHandler'))
      },
      {
           path: '/test-sti',
@@ -57,10 +67,6 @@ const routers = [
      {
           path: '/reproductive-cycle',
           component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))
-     },
-     {
-          path: '/booking-confirmation',
-          component: lazy(() => import('../pages/Appointment/BookingInformation'))
      },
 ]
 
