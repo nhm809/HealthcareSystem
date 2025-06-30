@@ -44,13 +44,13 @@ public class QuestionController : ControllerBase
     }
 
     [HttpPut("updateStatus/{questionId}")]
-    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId)
+    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId, [FromBody] string status)
     {
         if (questionId <= 0)
         {
             return BadRequest("Invalid question ID.");
         }
-        var result = await _questionService.UpdateQuestionStatusAsync(questionId);
+        var result = await _questionService.UpdateQuestionStatusAsync(questionId, status);
         if (!result)
         {
             return StatusCode(500, "An error occurred while updating the question status.");

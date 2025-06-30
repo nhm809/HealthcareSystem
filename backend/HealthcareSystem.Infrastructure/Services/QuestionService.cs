@@ -31,7 +31,7 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    IsAnswered = q.IsAnswered,
+                    Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,
@@ -64,8 +64,8 @@ namespace Infrastructure.Services
                 AttachmentPath = questionDto.AttachmentPath,
                 SubmitDate = DateTime.UtcNow,
                 ConsultantId = luckyPerson.UserId,
-                IsAnswered = false,
                 Age = questionDto.Age,
+                Status = "Chưa trả lời",
                 Gender = questionDto.Gender,
                 HeartCount = 0,
                 MessCount = 0
@@ -97,20 +97,20 @@ namespace Infrastructure.Services
         }
 
 
-        public async Task<bool> UpdateQuestionStatusAsync(int questionId)
+        public async Task<bool> UpdateQuestionStatusAsync(int questionId, string status)
         {
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null)
             {
                 return false;
             }
-            question.IsAnswered = true;
+            question.Status = status;
             _context.Questions.Update(question);
 
             var notification = new Notification
             {
                 UserId = question.MemberId ?? 0,
-                Content = "Câu hỏi của bạn đã được trả lời.",
+                Content = "Câu hỏi của bạn: " + status,
                 IsRead = false,
                 SendTime = DateTime.UtcNow
             };
@@ -161,7 +161,7 @@ namespace Infrastructure.Services
                 AttachmentPath = question.AttachmentPath,
                 SubmitDate = question.SubmitDate,
                 ConsultantId = question.ConsultantId,
-                IsAnswered = question.IsAnswered,
+                Status = question.Status,
                 Age = question.Age,
                 Gender = question.Gender,
                 HeartCount = question.HeartCount,
@@ -183,7 +183,7 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    IsAnswered = q.IsAnswered,
+                    Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,
@@ -206,7 +206,7 @@ namespace Infrastructure.Services
                     AttachmentPath = q.AttachmentPath,
                     SubmitDate = q.SubmitDate,
                     ConsultantId = q.ConsultantId,
-                    IsAnswered = q.IsAnswered,
+                    Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,

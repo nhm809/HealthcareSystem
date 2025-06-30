@@ -83,7 +83,6 @@ VALUES
 
 
 --Question --=====================================================================================================================================================
-<<<<<<< blog-page
 --INSERT INTO Question (
 --    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status]
 --)
@@ -98,7 +97,6 @@ VALUES
 --    4,
 --    N'Đã trả lời'
 --);
-=======
 INSERT INTO Question (
    MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
 )
@@ -117,7 +115,6 @@ VALUES
 	10,
 	1
 );
->>>>>>> main
 
 --=====================================================================================================================================================
 -- Message trao đổi giữa thành viên và tư vấn viên
