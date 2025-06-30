@@ -96,6 +96,7 @@ export const questionApi = {
     getAllQuestions: () => api.get('/question/getAll'),
     addQuestion: (data) => api.post('/question/add', data),
     getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
+    getQuestionsByMember: (memberId) => api.get(`/question/getByMember/${memberId}`),
 };
 
 export const messageApi = {

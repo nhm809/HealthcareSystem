@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography } from 'antd';
 import {
   DashboardOutlined,
   CalendarOutlined,
   TeamOutlined,
   MedicineBoxOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import Dashboard from '../../pages/Staff/StaffDashboard';
-import Appointments from '../../pages/Staff/Appointments';
-import Patients from '../../pages/Staff/Patients';
-import Services from '../../pages/Staff/Services';
 import StaffSchedule from '../../pages/Staff/StaffSchedule';
 import TestDone from '../../pages/Staff/TestDone';
 import Profile from '../../pages/Profile/Profile';
@@ -17,19 +15,150 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
+import { notiApi, authApi, getInfo } from '../../services/api';
+import dayjs from 'dayjs';
 
-const { Sider, Content } = Layout;
+const { Sider, Content, Header } = Layout;
+const { Text } = Typography;
 
 const StaffLayout = () => {
   const [selectedKey, setSelectedKey] = useState('dashboard');
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (!userInfo || userInfo.roleId !== 'ST') {
+    const info = JSON.parse(localStorage.getItem('userInfo'));
+    if (!info || info.roleId !== 'ST') {
       navigate('/login');
+      return;
+    }
+    // Fetch user info from API
+    const userId = Cookies.get('userId');
+    if (userId) {
+      getInfo(userId)
+        .then((res) => {
+          setUserInfo(res.data);
+        })
+        .catch((err) => {
+          console.error('Error fetching user info:', err);
+          setUserInfo(info); // fallback to localStorage if API fails
+        });
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+    const userId = Cookies.get('userId');
+
+    const fetchNotifications = (userId) => {
+      notiApi
+        .getNotifications(userId)
+        .then((res) => {
+          const sortedNotifications = res.data.sort((a, b) => new Date(b.sendTime) - new Date(a.sendTime));
+          const newUnreadCount = sortedNotifications.filter((n) => !n.isRead).length;
+
+          if (newUnreadCount > unreadCount) {
+            const newNotifications = sortedNotifications
+              .filter((n) => !n.isRead)
+              .slice(0, newUnreadCount - unreadCount);
+            newNotifications.forEach((noti) => {
+              if (Notification.permission === 'granted') {
+                new Notification(noti.title, { body: noti.content });
+              }
+            });
+          }
+          setNotifications(sortedNotifications);
+          setUnreadCount(newUnreadCount);
+        })
+        .catch((err) => {
+          console.error('Error fetching notifications:', err);
+          if (err.response?.status === 401) {
+            const refreshToken = Cookies.get('refreshToken');
+            if (refreshToken) {
+              authApi.refreshToken(refreshToken).then((response) => {
+                const { token } = response.data;
+                Cookies.set('token', token);
+                fetchNotifications(userId);
+              });
+            }
+          }
+        });
+    };
+
+    if (userId) {
+      fetchNotifications(userId);
+      const pollInterval = setInterval(() => fetchNotifications(userId), 5000);
+      return () => clearInterval(pollInterval);
+    }
+  }, [unreadCount, navigate]);
+
+  const handleNotificationClick = async (notiId) => {
+    try {
+      await notiApi.markAsRead(notiId);
+      setNotifications((prev) => prev.map((n) => (n.notificationId === notiId ? { ...n, isRead: true } : n)));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
+  };
+
+  const notificationItems = [
+    {
+      key: 'notifications',
+      label: (
+        <List
+          style={{
+            width: 300,
+            maxHeight: 400,
+            overflow: 'auto',
+            overflowX: 'hidden',
+          }}
+          dataSource={notifications}
+          renderItem={(item) => (
+            <List.Item
+              onClick={() => handleNotificationClick(item.notificationId)}
+              style={{
+                cursor: 'pointer',
+                backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
+                padding: '8px 12px',
+                borderBottom: '1px solid #f0f0f0',
+              }}
+            >
+              <List.Item.Meta
+                title={
+                  <div
+                    style={{
+                      color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
+                      fontWeight: item.isRead ? 'normal' : 'bold',
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                }
+                description={
+                  <>
+                    <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                      {item.content}
+                    </Text>
+                    <br />
+                    <Text type="secondary" style={{ fontSize: '12px' }}>
+                      {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
+                    </Text>
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      ),
+    },
+  ];
 
   const menuItems = [
     {
@@ -37,13 +166,6 @@ const StaffLayout = () => {
       icon: <CalendarOutlined />,
       label: 'Các xét nghiệm đang thực hiện',
     },
-    
-    // {
-    //   key: 'test-done',
-    //   icon: <CalendarOutlined />,
-    //   label: "Test Đã hoàn thành"
-    // },
-
     {
       key: 'my-profile',
       icon: <CalendarOutlined />,
@@ -57,10 +179,6 @@ const StaffLayout = () => {
         return <StaffSchedule />;
       case 'my-profile':
         return <Profile hideBackButton={true} />; 
-      case 'test-done':
-        return <TestDone />;
-      case 'services':
-        return <Services />;
       default:
         return <StaffSchedule />;
     }
@@ -88,13 +206,19 @@ const StaffLayout = () => {
           }}>
             STAFF
           </div>
+          <div style={{ textAlign: 'center', marginBottom: 16 }}>
+            <Avatar size={80} src={userInfo?.avatarPath || userInfo?.avatar} />
+            <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
+              {userInfo?.fullName}
+            </div>
+          </div>
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[selectedKey]}
             items={menuItems}
             onClick={({ key }) => setSelectedKey(key)}
-            style={{ borderRight: 0, fontSize: 16 }}
+            style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
           />
         </div>
         <div style={{ padding: 16 }}>
@@ -133,6 +257,13 @@ const StaffLayout = () => {
         </div>
       </Sider>
       <Layout>
+        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+            <Badge count={unreadCount}>
+              <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+            </Badge>
+          </Dropdown>
+        </Header>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div
             style={{
