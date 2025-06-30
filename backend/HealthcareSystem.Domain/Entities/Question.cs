@@ -22,7 +22,7 @@ namespace Domain.Entities
 
         public int? ConsultantId { get; set; }
 
-        public bool? IsAnswered { get; set; }
+        public string? Status { get; set; }
 
         public int? Age { get; set; }
 

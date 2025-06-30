@@ -9,7 +9,7 @@ namespace Application.Interfaces
     {
         Task<List<QuestionDTO>> GetAllQuestionsAsync();
         Task<bool> AddQuestionAsync(QuestionDTO questionDto);
-        Task<bool> UpdateQuestionStatusAsync(int  questionId);
+        Task<bool> UpdateQuestionStatusAsync(int  questionId, string status);
         Task<bool> DeleteQuestionAsync(int questionId);
         Task<bool> GiveAHeart(QuestionDTO questionDto);
         Task<QuestionDTO> GetQuestionById(int questionId);

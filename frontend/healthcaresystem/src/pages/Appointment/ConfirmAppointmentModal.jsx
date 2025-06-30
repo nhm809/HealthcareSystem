@@ -27,8 +27,8 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
         memberId: parseInt(userId),
         serviceId: 2, // giả định mã dịch vụ tư vấn online là 2
         consultantId: doctor.consultantId,
-        startTime: start.toISOString(),
-        endTime: end.toISOString(),
+        startTime: start.format('YYYY-MM-DDTHH:mm:ss'),
+        endTime: end.format('YYYY-MM-DDTHH:mm:ss'),
         meetLink: ""
       };
 

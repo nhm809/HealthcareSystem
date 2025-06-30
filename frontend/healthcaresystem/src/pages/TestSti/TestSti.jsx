@@ -30,6 +30,8 @@ function TestSti() {
      const [workShifts, setWorkShifts] = useState([]);
      const [shiftsLoading, setShiftsLoading] = useState(false);
      const [selectedDate, setSelectedDate] = useState(null);
+     const [isFromHistory, setIsFromHistory] = useState(false);
+     const [existingTestRecord, setExistingTestRecord] = useState(null);
      
 
      const panelStyle = {
@@ -38,6 +40,25 @@ function TestSti() {
           borderRadius: token.borderRadiusLG,
           border: 'none',
      };
+
+     // Kiểm tra xem có phải từ lịch sử xét nghiệm không
+     useEffect(() => {
+          if (location.state?.isFromHistory) {
+               setIsFromHistory(true);
+               setExistingTestRecord({
+                    testRecordId: location.state.testRecordId,
+                    serviceName: location.state.serviceName,
+                    amount: location.state.amount
+               });
+               // Tự động mở modal thanh toán
+               if (userId) {
+                    setIsModalOpen(true);
+               } else {
+                    setDefaultTab(0);
+                    setAuthModalOpen(true);
+               }
+          }
+     }, [location.state, userId]);
 
      const items = [
           {
@@ -95,10 +116,18 @@ function TestSti() {
           form.resetFields();
           setWorkShifts([]);
           setSelectedDate(null);
+          // Nếu từ lịch sử, quay lại trang lịch sử
+          if (isFromHistory) {
+               navigate('/test-history');
+          }
      };
      
      const handleFinish = async (values) => {
-          setFormData(values);
+          setFormData({
+               ...values,
+               isFromHistory,
+               existingTestRecord
+          });
           setIsModalOpen(false);
           setIsConfirmModalOpen(true);
      };
@@ -113,34 +142,7 @@ function TestSti() {
                setSelectedDate(null);
           }
      };
-
-     // Tạo notification nếu thanh toán thành công
-     useEffect(() => {
-          const params = new URLSearchParams(location.search);
-          const handler = params.get('handler');
-          const testServiceRecordId = params.get('testServiceRecordId');
-          const userId = Cookies.get('userId');
-          if (handler === 'success' && testServiceRecordId && userId) {
-               const sentKey = `noti_sent_${testServiceRecordId}`;
-               if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
-                    notiSentRef.current[sentKey] = true; // Đánh dấu đã gửi trong phiên này
-                    const now = new Date().toISOString();
-                    notiApi.createNoti({
-                         userId: Number(userId),
-                         title: 'Đặt lịch xét nghiệm thành công',
-                         content: `Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: ${testServiceRecordId}`,
-                         sendTime: now,
-                         isRead: false
-                    }).finally(() => {
-                         sessionStorage.setItem(sentKey, '1');
-                         window.history.replaceState({}, document.title, '/test-sti');
-                    });
-               } else {
-                    window.history.replaceState({}, document.title, '/test-sti');
-               }
-          }
-     }, [location]);
-
+     
      return (
           <MainLayout>
                <div className="test-introduce">
@@ -200,7 +202,22 @@ function TestSti() {
                          destroyOnClose                       
                     >
                          <div className="modal-title">
-                              <div className="modal-title-text">Thông tin đăng ký</div>
+                              <div className="modal-title-text">
+                                   {isFromHistory ? 'Thanh toán xét nghiệm' : 'Thông tin đăng ký'}
+                              </div>
+                              {isFromHistory && existingTestRecord && (
+                                   <div style={{ 
+                                        marginTop: '8px', 
+                                        padding: '8px 12px', 
+                                        backgroundColor: '#f6ffed', 
+                                        border: '1px solid #b7eb8f',
+                                        borderRadius: '4px',
+                                        fontSize: '14px'
+                                   }}>
+                                        <strong>Dịch vụ:</strong> {existingTestRecord.serviceName} - 
+                                        <strong> Số tiền:</strong> {existingTestRecord.amount?.toLocaleString()}đ
+                                   </div>
+                              )}
                          </div>
                          <Form
                               form={form}
@@ -340,9 +357,11 @@ function TestSti() {
                               )}
                               
                               <div className="button-register">
-                                   <Button onClick={handleCancel}>Hủy</Button>
+                                   <Button onClick={handleCancel}>
+                                        {isFromHistory ? 'Quay lại' : 'Hủy'}
+                                   </Button>
                                    <Button type="primary" htmlType="submit" loading={loading} style={{ minWidth: 100 }}>
-                                        Tiếp tục
+                                        {isFromHistory ? 'Thanh toán' : 'Tiếp tục'}
                                    </Button>
                               </div>
                          </Form>

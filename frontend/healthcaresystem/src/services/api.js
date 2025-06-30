@@ -33,6 +33,8 @@ export const authApi = {
           ),
 
      getTestServiceRecordsByMember: (memberId) => api.get(`/TestServiceRecord/member/${memberId}`),
+     getServiceById: (serviceId) => api.get(`/service/${serviceId}`),
+     getAppointmentHistory: () => api.get('/Appointment/list'),
 
      bookTestServiceRecord: (data) => 
           api.post('/TestServiceRecord/book/', data),
@@ -65,7 +67,11 @@ export const notiApi = {
                'Authorization': `Bearer ${Cookies.get('token')}`
           }
      }),
-     createNoti: (data) => api.post('/Noti/createNoti', data),
+     createNoti: (data) => api.post('/Noti/createNoti', data, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
 };
      
 export const getInfo = async (userId) => {
@@ -96,6 +102,7 @@ export const questionApi = {
     getAllQuestions: () => api.get('/question/getAll'),
     addQuestion: (data) => api.post('/question/add', data),
     getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
+    getQuestionsByMember: (memberId) => api.get(`/question/getByMember/${memberId}`),
 };
 
 export const messageApi = {
