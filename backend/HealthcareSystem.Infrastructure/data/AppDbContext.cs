@@ -200,6 +200,7 @@ namespace Infrastructure.data {
                 entity.Property(e => e.ThreadItemId).HasColumnName("ThreadItemID");
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
                 entity.Property(e => e.SentAt).HasColumnType("datetime");
+                entity.Property(e => e.AnsweredAt).HasColumnType("datetime");
                 entity.Property(e => e.QuestionText).HasColumnType("nvarchar(max)");
                 entity.Property(e => e.AnswerText).HasColumnType("nvarchar(max)");
                 entity.Property(e => e.AttachmentPath).HasMaxLength(255);

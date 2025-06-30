@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class dataabase : Migration
+    public partial class database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -439,6 +439,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QuestionID = table.Column<int>(type: "int", nullable: true),
                     SentAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    AnsweredAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AttachmentPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),

@@ -11,6 +11,8 @@ namespace Domain.Entities
 
         public DateTime? SentAt { get; set; }
 
+        public DateTime? AnsweredAt { get; set; }
+
         public string? QuestionText { get; set; }
 
         public string? AnswerText { get; set; }

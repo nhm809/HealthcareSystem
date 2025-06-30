@@ -30,6 +30,7 @@ namespace Infrastructure.Services
                     QuestionText = q.QuestionText,
                     AnswerText = q.AnswerText,
                     SentAt = q.SentAt,
+                    AnsweredAt = q.AnsweredAt,
                     AttachmentPath = q.AttachmentPath,
                     IsAnswered = q.IsAnswered
                 })
@@ -86,7 +87,7 @@ namespace Infrastructure.Services
                 return false;
             subQuestion.AnswerText = dto.AnswerText;
             subQuestion.IsAnswered = true;
-            subQuestion.SentAt = DateTime.UtcNow;
+            subQuestion.AnsweredAt = DateTime.UtcNow;
             _context.QuestionThreadItems.Update(subQuestion);
             var question = await _context.Questions
                 .FirstOrDefaultAsync(q => q.QuestionId == subQuestion.QuestionId);
@@ -98,6 +99,20 @@ namespace Infrastructure.Services
                 SendTime = DateTime.UtcNow
             };
             await _context.Notifications.AddAsync(memNoti);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateSubQuestionAsync(int subQuestionId, QuestionThreadItemDTO dto)
+        {
+            if (dto == null || dto.QuestionText == null)
+                return false;
+            var subQuestion = await _context.QuestionThreadItems
+                .FirstOrDefaultAsync(q => q.ThreadItemId == subQuestionId);
+            if (subQuestion == null)
+                return false;
+            subQuestion.QuestionText = dto.QuestionText;
+            subQuestion.AttachmentPath = dto.AttachmentPath;
+            _context.QuestionThreadItems.Update(subQuestion);
             return await _context.SaveChangesAsync() > 0;
         }
 
