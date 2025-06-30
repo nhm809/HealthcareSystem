@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620121405_database")]
+    partial class database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,14 +336,14 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("Notification", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
+            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
                 {
-                    b.Property<int>("OtpId")
+                    b.Property<int>("Otpid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("OTPID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OtpId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Otpid"));
 
                     b.Property<string>("Code")
                         .HasMaxLength(15)
@@ -365,7 +368,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserID");
 
-                    b.HasKey("OtpId")
+                    b.HasKey("Otpid")
                         .HasName("PK__OTPReque__5C2EC562B070925E");
 
                     b.HasIndex("UserId");
@@ -904,10 +907,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
+            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("OtpRequests")
+                        .WithMany("Otprequests")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
 
@@ -1075,7 +1078,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("OtpRequests");
+                    b.Navigation("Otprequests");
 
                     b.Navigation("QuestionConsultants");
 
