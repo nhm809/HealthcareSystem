@@ -72,6 +72,14 @@ const routers = [
           path: '/reproductive-cycle',
           component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))
      },
+     {
+          path: '/booking-confirmation',
+          component: lazy(() => import('../pages/Appointment/BookingInformation'))
+     },
+     {
+          path: '/my-questions',
+          component: lazy(() => import('../pages/Question/MyQuestions'))
+     },
 ]
 
 export default routers;

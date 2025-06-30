@@ -142,7 +142,7 @@ function Header() {
   };
 
   const handleViewQuestions = () => {
-    navigate('/question');
+    navigate('/my-questions');
   };
 
   const handleViewTestHistory = () => {

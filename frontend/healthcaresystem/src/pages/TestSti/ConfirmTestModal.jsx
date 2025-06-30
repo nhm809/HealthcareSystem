@@ -147,7 +147,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                     <Descriptions.Item label="Ngày lấy mẫu">{formData?.testDate?.format('DD/MM/YYYY')}</Descriptions.Item>
                     <Descriptions.Item label="Ca làm việc">{formData?.shift ? getShiftName(formData.shift) : 'Chưa chọn'}</Descriptions.Item>
                     <Descriptions.Item label="Dịch vụ">Gói xét nghiệm STIs</Descriptions.Item>
-                    <Descriptions.Item label="Giá tiền">450,000đ</Descriptions.Item>
+                    <Descriptions.Item label="Giá tiền">1,000,000đ</Descriptions.Item>
                 </Descriptions>
             )}
         </Modal>

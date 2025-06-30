@@ -4,6 +4,7 @@ import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import api from '../../services/api';
+import { subQuestionApi } from '../../services/api';
 
 const { Panel } = Collapse;
 
@@ -38,13 +39,13 @@ const SubQuestionList = ({ question, isConsultant }) => {
     setCreating(true);
     try {
       await api.post('/subQuestion/add', {
-        threadItemId: 0,
-        questionId: question.id,
-        questionText: values.questionText,
-        answerText: '',
-        sentAt: new Date().toISOString(),
-        attachmentPath: '',
-        isAnswered: false,
+        ThreadItemId: 0,
+        QuestionId: question.id,
+        QuestionText: values.questionText,
+        AnswerText: '',
+        SentAt: new Date().toISOString(),
+        AttachmentPath: '',
+        IsAnswered: false,
       });
       message.success('Gửi câu hỏi thành công!');
       form.resetFields();
@@ -60,14 +61,14 @@ const SubQuestionList = ({ question, isConsultant }) => {
   const handleAnswer = async (values) => {
     setAnsweringId('');
     try {
-      await api.post('/subQuestion/add', {
-        threadItemId: values.threadItemId,
-        questionId: question.id,
-        questionText: values.questionText,
-        answerText: values.answerText,
-        sentAt: new Date().toISOString(),
-        attachmentPath: '',
-        isAnswered: true,
+      await subQuestionApi.answerSubQuestion({
+        ThreadItemId: values.threadItemId,
+        QuestionId: question.id,
+        QuestionText: values.questionText,
+        AnswerText: values.answerText,
+        SentAt: new Date().toISOString(),
+        AttachmentPath: '',
+        IsAnswered: true,
       });
       message.success('Trả lời thành công!');
       answerForm.resetFields();

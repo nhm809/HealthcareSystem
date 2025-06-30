@@ -115,7 +115,6 @@ const QuestionManagement = () => {
                     setMessages(res.data);
                } catch {
                     setMessages([]);
-                    message.error('Không thể tải lịch sử tin nhắn');
                } finally {
                     setLoadingMessages(false);
                }
