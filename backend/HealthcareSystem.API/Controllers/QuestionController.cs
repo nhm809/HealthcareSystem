@@ -44,13 +44,13 @@ public class QuestionController : ControllerBase
     }
 
     [HttpPut("updateStatus/{questionId}")]
-    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId, [FromBody] string status)
+    public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId)
     {
-        if (questionId <= 0 || string.IsNullOrEmpty(status))
+        if (questionId <= 0)
         {
-            return BadRequest("Invalid question ID or status.");
+            return BadRequest("Invalid question ID.");
         }
-        var result = await _questionService.UpdateQuestionStatusAsync(questionId, status);
+        var result = await _questionService.UpdateQuestionStatusAsync(questionId);
         if (!result)
         {
             return StatusCode(500, "An error occurred while updating the question status.");
@@ -103,7 +103,7 @@ public class QuestionController : ControllerBase
         return Ok(question);
     }
 
-    [HttpGet("member/{memberId}")]
+    [HttpGet("getByMember/{memberId}")]
     public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByMemberIdAsync(int memberId)
     {
         if (memberId <= 0)
@@ -118,7 +118,7 @@ public class QuestionController : ControllerBase
         return Ok(questions);
     }
 
-    [HttpGet("consultant/{consultantId}")]
+    [HttpGet("getByConsultant/{consultantId}")]
     public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByConsultantIdAsync(int consultantId)
     {
         if (consultantId <= 0)

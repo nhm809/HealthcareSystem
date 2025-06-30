@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
 
-namespace Domain.Entities
+
+using System;
+
+namespace Application.DTOs
 {
-
-    public partial class OtpRequest
+    public class OTPRequestDTO
     {
         public int OtpId { get; set; }
 
@@ -19,7 +19,5 @@ namespace Domain.Entities
         public DateTime? ExpiredAt { get; set; }
 
         public int? IsVerified { get; set; }
-
-        public virtual User? User { get; set; }
     }
 }

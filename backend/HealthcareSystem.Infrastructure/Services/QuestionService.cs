@@ -47,7 +47,8 @@ namespace Infrastructure.Services
 
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
-                .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId))
+                .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId)
+                && u.RoleId == "CS")
                 .ToListAsync();
 
             if (!consultants.Any()) return false;
@@ -167,5 +168,52 @@ namespace Infrastructure.Services
                 MessCount = question.MessCount
             };
         }
+
+        public async Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId)
+        {
+            return await _context.Questions
+                .Where(q => q.MemberId == memberId)
+                .Select(q => new QuestionDTO
+                {
+                    QuestionId = q.QuestionId,
+                    MemberId = q.MemberId,
+                    SpecialtyId = q.SpecialtyId,
+                    TitleQuestion = q.TitleQuestion,
+                    Content = q.Content,
+                    AttachmentPath = q.AttachmentPath,
+                    SubmitDate = q.SubmitDate,
+                    ConsultantId = q.ConsultantId,
+                    IsAnswered = q.IsAnswered,
+                    Age = q.Age,
+                    Gender = q.Gender,
+                    HeartCount = q.HeartCount,
+                    MessCount = q.MessCount
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId)
+        {
+            return await _context.Questions
+                .Where(q => q.ConsultantId == consultantId)
+                .Select(q => new QuestionDTO
+                {
+                    QuestionId = q.QuestionId,
+                    MemberId = q.MemberId,
+                    SpecialtyId = q.SpecialtyId,
+                    TitleQuestion = q.TitleQuestion,
+                    Content = q.Content,
+                    AttachmentPath = q.AttachmentPath,
+                    SubmitDate = q.SubmitDate,
+                    ConsultantId = q.ConsultantId,
+                    IsAnswered = q.IsAnswered,
+                    Age = q.Age,
+                    Gender = q.Gender,
+                    HeartCount = q.HeartCount,
+                    MessCount = q.MessCount
+                })
+                .ToListAsync();
+        }
+
     }
 }

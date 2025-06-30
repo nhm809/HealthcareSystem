@@ -20,6 +20,10 @@ const routers = [
         path: '/test-history',
         component: lazy(() => import('../pages/TestHistory/TestHistory'))
     },
+    {
+        path: '/appointment-history',
+        component: lazy(() => import('../pages/AppointmentHistory/AppointmentHistory'))
+    },
      {
           path: '/appointment',
           component: lazy(() => import('../pages/Appointment/ConsultantsList'))
@@ -61,6 +65,10 @@ const routers = [
      {
           path: '/booking-confirmation',
           component: lazy(() => import('../pages/Appointment/BookingInformation'))
+     },
+     {
+          path: '/my-questions',
+          component: lazy(() => import('../pages/Question/MyQuestions'))
      },
 ]
 

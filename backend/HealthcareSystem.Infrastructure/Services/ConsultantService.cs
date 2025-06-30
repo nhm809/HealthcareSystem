@@ -7,7 +7,7 @@ using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
-
+using HealthcareSystem.Application.DTOs;
 namespace Infrastructure.Services
 {
     public class ConsultantService : IConsultantService
@@ -113,30 +113,30 @@ namespace Infrastructure.Services
 
             var freeSlots = new List<FreeSlotDTO>();
 
-            foreach (var s in schedules)
-            {
-                var startTime = s.StartTime;
-                var endTime = s.EndTime;
+            // foreach (var s in schedules)
+            // {
+            //     var startTime = overrideDay?.NewStartTime ?? s.StartTime;
+            //     var endTime = overrideDay?.NewEndTime ?? s.EndTime;
 
-                for (var time = startTime; time + TimeSpan.FromMinutes(30) <= endTime; time += TimeSpan.FromMinutes(30))
-                {
-                    var startDateTime = date + time;
-                    var endDateTime = startDateTime.AddMinutes(30);
+            //     for (var time = startTime; time + TimeSpan.FromMinutes(30) <= endTime; time += TimeSpan.FromMinutes(30))
+            //     {
+            //         var startDateTime = date + time;
+            //         var endDateTime = startDateTime.AddMinutes(30);
 
-                    bool hasAppointment = appointments.Any(a =>
-                        a.StartTime < endDateTime && a.EndTime > startDateTime);
+            //         bool hasAppointment = appointments.Any(a =>
+            //             a.StartTime < endDateTime && a.EndTime > startDateTime);
 
-                    if (!hasAppointment)
-                    {
-                        freeSlots.Add(new FreeSlotDTO
-                        {
-                            Date = date,
-                            Start = startDateTime,
-                            End = endDateTime
-                        });
-                    }
-                }
-            }
+            //         if (!hasAppointment)
+            //         {
+            //             freeSlots.Add(new FreeSlotDTO
+            //             {
+            //                 Date = date,
+            //                 Start = startDateTime,
+            //                 End = endDateTime
+            //             });
+            //         }
+            //     }
+            // }
 
             return freeSlots;
         }

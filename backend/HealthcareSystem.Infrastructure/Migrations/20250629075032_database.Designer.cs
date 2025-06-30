@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250629075032_database")]
+    partial class database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -91,6 +94,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<DateOnly?>("PublishDate")
                         .HasColumnType("date");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200)
@@ -265,39 +271,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("Invoice", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("MessageID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("QuestionID");
-
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("int")
-                        .HasColumnName("SenderID");
-
-                    b.Property<DateTime?>("SentAt")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("MessageId")
-                        .HasName("PK__Message__C87C037C57A9A3C6");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Message", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -402,6 +375,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<int?>("HeartCount")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsAnswered")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsAnswered");
+
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
@@ -412,9 +389,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<int?>("SpecialtyId")
                         .HasColumnType("int")
                         .HasColumnName("SpecialtyId");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -433,6 +407,43 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasIndex("SpecialtyId");
 
                     b.ToTable("Question", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionThreadItem", b =>
+                {
+                    b.Property<int>("ThreadItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ThreadItemID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ThreadItemId"));
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool?>("IsAnswered")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int")
+                        .HasColumnName("QuestionID");
+
+                    b.Property<string>("QuestionText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("ThreadItemId")
+                        .HasName("PK__QuestionThreadItem");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionThreadItem", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ReportServiceDetail", b =>
@@ -630,10 +641,13 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasMaxLength(20)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateOnly?>("TestDate")
                         .HasColumnType("date");
+
+                    b.Property<TimeSpan?>("TimeSlot")
+                        .HasColumnType("TIME");
 
                     b.HasKey("TestServiceRecordId")
                         .HasName("PK__TestServ__F810175D4779B45B");
@@ -693,6 +707,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -726,42 +743,71 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.WorkSchedule", b =>
+            modelBuilder.Entity("Domain.Entities.WeeklyOverrideSchedule", b =>
                 {
-                    b.Property<int>("WorkScheduleId")
+                    b.Property<int>("WeeklyOverrideScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("WorkScheduleID");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkScheduleId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeeklyOverrideScheduleId"));
 
-                    b.Property<int?>("ConsultantId")
-                        .HasColumnType("int")
-                        .HasColumnName("ConsultantID");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<TimeOnly?>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<string>("OverrideType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ShiftType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WeeklyOverrideScheduleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WeeklyOverrideSchedules");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
+                {
+                    b.Property<int>("WeeklyScheduleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WeeklyScheduleId"));
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("TIME");
 
                     b.Property<string>("Note")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ShiftType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("ShiftType")
+                        .HasColumnType("int");
 
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("TIME");
 
-                    b.Property<DateOnly?>("WorkDate")
-                        .HasColumnType("date");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasKey("WorkScheduleId")
-                        .HasName("PK__WorkSche__C6AC635EDF22BB92");
+                    b.HasKey("WeeklyScheduleId");
 
-                    b.HasIndex("ConsultantId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("WorkSchedule", (string)null);
+                    b.ToTable("WeeklySchedules");
                 });
 
             modelBuilder.Entity("UserSpecialty", b =>
@@ -877,23 +923,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("TestServiceRecord");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Message", b =>
-                {
-                    b.HasOne("Domain.Entities.Question", "Question")
-                        .WithMany("Messages")
-                        .HasForeignKey("QuestionId")
-                        .HasConstraintName("FK__Message__Questio__5FB337D6");
-
-                    b.HasOne("Domain.Entities.User", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
-                        .HasConstraintName("FK__Message__SenderI__60A75C0F");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
@@ -935,6 +964,16 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("Specialty");
+                });
+
+            modelBuilder.Entity("Domain.Entities.QuestionThreadItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Question", "Question")
+                        .WithMany("QuestionThreadItems")
+                        .HasForeignKey("QuestionId")
+                        .HasConstraintName("FK__QuestionThreadItem__Question");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReportServiceDetail", b =>
@@ -991,14 +1030,26 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Domain.Entities.WorkSchedule", b =>
+            modelBuilder.Entity("Domain.Entities.WeeklyOverrideSchedule", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "Consultant")
-                        .WithMany("WorkSchedules")
-                        .HasForeignKey("ConsultantId")
-                        .HasConstraintName("FK__WorkSched__Consu__31EC6D26");
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("WeeklyOverrideSchedules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Consultant");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WeeklySchedule", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("WeeklySchedules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserSpecialty", b =>
@@ -1032,7 +1083,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Question", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("QuestionThreadItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -1071,8 +1122,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Navigation("Blogs");
 
-                    b.Navigation("Messages");
-
                     b.Navigation("Notifications");
 
                     b.Navigation("OtpRequests");
@@ -1087,7 +1136,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Navigation("TestServiceRecordStaffs");
 
-                    b.Navigation("WorkSchedules");
+                    b.Navigation("WeeklyOverrideSchedules");
+
+                    b.Navigation("WeeklySchedules");
                 });
 #pragma warning restore 612, 618
         }
