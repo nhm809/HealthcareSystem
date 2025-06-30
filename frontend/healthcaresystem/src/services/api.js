@@ -103,6 +103,7 @@ export const questionApi = {
     addQuestion: (data) => api.post('/question/add', data),
     getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
     getQuestionsByMember: (memberId) => api.get(`/question/getByMember/${memberId}`),
+    updateQuestionStatus: (questionId) => api.put(`/question/updateStatus/${questionId}`),
 };
 
 export const messageApi = {
