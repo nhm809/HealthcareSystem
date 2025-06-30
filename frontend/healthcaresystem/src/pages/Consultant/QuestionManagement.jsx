@@ -31,6 +31,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Cookies from 'js-cookie';
+import SubQuestionList from '../../components/Question/SubQuestionList';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -342,99 +343,18 @@ const QuestionManagement = () => {
                                         <Image width={200} src={selectedQuestion.attachmentPath} alt="Attachment" />
                                    </div>
                               )}
-                              <div
-                                   style={{
-                                        background: '#f6f6f6',
-                                        borderRadius: 8,
-                                        padding: 12,
-                                        marginBottom: 8,
-                                        minHeight: 120,
-                                        maxHeight: '40vh',
-                                        overflowY: 'auto',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                   }}
-                              >
-                                   {loadingMessages ? (
-                                        <Spin />
-                                   ) : messages.length === 0 ? (
-                                        <div style={{ color: '#888', textAlign: 'center', marginTop: 20 }}>
-                                             Chưa có trao đổi nào.
-                                        </div>
-                                   ) : (
-                                        messages.map((msg, idx) => {
-                                             const isConsultant = msg.senderId?.toString() === consultantId;
-                                             return (
-                                                  <div
-                                                       key={idx}
-                                                       style={{
-                                                            marginBottom: 12,
-                                                            display: 'flex',
-                                                            justifyContent: isConsultant ? 'flex-end' : 'flex-start',
-                                                       }}
-                                                  >
-                                                       <div style={{ maxWidth: '70%' }}>
-                                                            <div
-                                                                 style={{
-                                                                      fontWeight: 500,
-                                                                      color: '#888',
-                                                                      marginBottom: 4,
-                                                                      textAlign: isConsultant ? 'right' : 'left',
-                                                                 }}
-                                                            >
-                                                                 {isConsultant ? 'Bạn' : selectedQuestion.sender.name}
-                                                            </div>
-                                                            <div
-                                                                 style={{
-                                                                      background: isConsultant ? '#e6f7ff' : '#fff',
-                                                                      borderRadius: 6,
-                                                                      padding: '8px 12px',
-                                                                      display: 'inline-block',
-                                                                      textAlign: 'left',
-                                                                      border: '1px solid #f0f0f0',
-                                                                 }}
-                                                            >
-                                                                 {msg.content}
-                                                            </div>
-                                                            <div
-                                                                 style={{
-                                                                      fontSize: 11,
-                                                                      color: '#aaa',
-                                                                      marginTop: 4,
-                                                                      textAlign: isConsultant ? 'right' : 'left',
-                                                                 }}
-                                                            >
-                                                                 {msg.sentAt
-                                                                      ? dayjs
-                                                                           .utc(msg.sentAt)
-                                                                           .local()
-                                                                           .format('HH:mm:ss DD/MM/YYYY')
-                                                                      : ''}
-                                                            </div>
-                                                       </div>
-                                                  </div>
-                                             );
-                                        })
-                                   )}
-                              </div>
                               <div style={{ marginTop: 16 }}>
-                                   <Input.TextArea
-                                        rows={3}
-                                        value={replyContent}
-                                        onChange={(e) => setReplyContent(e.target.value)}
-                                        placeholder="Nhập nội dung trả lời..."
-                                        disabled={selectedQuestion.isClosed}
+                                   <SubQuestionList
+                                        question={{
+                                             id: selectedQuestion.key,
+                                             gender: selectedQuestion.gender,
+                                             age: selectedQuestion.age,
+                                             title: selectedQuestion.title,
+                                             content: selectedQuestion.content,
+                                             submitDate: selectedQuestion.sentTime,
+                                        }}
+                                        isConsultant={true}
                                    />
-                                   <div style={{ marginTop: 8, textAlign: 'right' }}>
-                                        <Button
-                                             type="primary"
-                                             onClick={handleSendMessage}
-                                             disabled={!replyContent.trim() || selectedQuestion.isClosed}
-                                             loading={loadingMessages}
-                                        >
-                                             Trả lời
-                                        </Button>
-                                   </div>
                               </div>
                          </div>
                     </Modal>

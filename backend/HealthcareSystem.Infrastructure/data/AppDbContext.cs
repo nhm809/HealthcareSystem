@@ -32,7 +32,7 @@ namespace Infrastructure.data {
 
         public virtual DbSet<Notification> Notifications { get; set; }
 
-        public virtual DbSet<Otprequest> Otprequests { get; set; }
+        public virtual DbSet<OtpRequest> OtpRequests { get; set; }
 
         public virtual DbSet<Question> Questions { get; set; }
 
@@ -230,13 +230,13 @@ namespace Infrastructure.data {
                     .HasConstraintName("FK__Notificat__UserI__4BAC3F29");
             });
 
-            modelBuilder.Entity<Otprequest>(entity =>
+            modelBuilder.Entity<OtpRequest>(entity =>
             {
-                entity.HasKey(e => e.Otpid).HasName("PK__OTPReque__5C2EC562B070925E");
+                entity.HasKey(e => e.OtpId).HasName("PK__OTPReque__5C2EC562B070925E");
 
                 entity.ToTable("OTPRequest");
 
-                entity.Property(e => e.Otpid).HasColumnName("OTPID");
+                entity.Property(e => e.OtpId).HasColumnName("OTPID");
                 entity.Property(e => e.Code)
                     .HasMaxLength(15)
                     .IsUnicode(false);
@@ -247,7 +247,7 @@ namespace Infrastructure.data {
                 entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
-                entity.HasOne(d => d.User).WithMany(p => p.Otprequests)
+                entity.HasOne(d => d.User).WithMany(p => p.OtpRequests)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
             });

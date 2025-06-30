@@ -13,6 +13,8 @@ namespace Application.Interfaces
         Task<bool> DeleteQuestionAsync(int questionId);
         Task<bool> GiveAHeart(QuestionDTO questionDto);
         Task<QuestionDTO> GetQuestionById(int questionId);
+        Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId);
+        Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId);
     }
 
 }

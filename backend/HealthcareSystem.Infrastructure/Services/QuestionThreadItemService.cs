@@ -75,5 +75,31 @@ namespace Infrastructure.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<bool> AnswerSubQuestionAsync(QuestionThreadItemDTO dto)
+        {
+            if (dto == null || dto.AnswerText == null)
+                return false;
+
+            var subQuestion = await _context.QuestionThreadItems
+                .FirstOrDefaultAsync(q => q.ThreadItemId == dto.ThreadItemId);
+            if (subQuestion == null)
+                return false;
+            subQuestion.AnswerText = dto.AnswerText;
+            subQuestion.IsAnswered = true;
+            subQuestion.SentAt = DateTime.UtcNow;
+            _context.QuestionThreadItems.Update(subQuestion);
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q => q.QuestionId == subQuestion.QuestionId);
+            var memNoti = new Notification
+            {
+                UserId = question.MemberId,
+                Content = $"Câu hỏi của bạn đã được trả lời: {dto.AnswerText}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+            await _context.Notifications.AddAsync(memNoti);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
     }
 }

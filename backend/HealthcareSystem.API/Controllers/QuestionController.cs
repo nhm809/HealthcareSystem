@@ -103,4 +103,34 @@ public class QuestionController : ControllerBase
         return Ok(question);
     }
 
+    [HttpGet("getByMember/{memberId}")]
+    public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByMemberIdAsync(int memberId)
+    {
+        if (memberId <= 0)
+        {
+            return BadRequest("Invalid member ID.");
+        }
+        var questions = await _questionService.GetQuestionsByMemberIdAsync(memberId);
+        if (questions == null || questions.Count == 0)
+        {
+            return NotFound("No questions found for this member.");
+        }
+        return Ok(questions);
+    }
+
+    [HttpGet("getByConsultant/{consultantId}")]
+    public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByConsultantIdAsync(int consultantId)
+    {
+        if (consultantId <= 0)
+        {
+            return BadRequest("Invalid consultant ID.");
+        }
+        var questions = await _questionService.GetQuestionsByConsultantIdAsync(consultantId);
+        if (questions == null || questions.Count == 0)
+        {
+            return NotFound("No questions found for this consultant.");
+        }
+        return Ok(questions);
+    }
+
 }

@@ -45,4 +45,20 @@ public class QuestionThreadItemController : ControllerBase
         return Ok(result);
     }
 
+
+    [HttpPost("answer")]
+    public async Task<ActionResult<bool>> AnswerSubQuestionAsync([FromBody] QuestionThreadItemDTO dto)
+    {
+        if (dto == null || string.IsNullOrEmpty(dto.AnswerText))
+        {
+            return BadRequest("Invalid answer data.");
+        }
+        var result = await _iQuestionThreadItemService.AnswerSubQuestionAsync(dto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while answering the sub-question.");
+        }
+        return Ok(result);
+    }
+
 }
