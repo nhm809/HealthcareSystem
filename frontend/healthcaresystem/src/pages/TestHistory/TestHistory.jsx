@@ -45,10 +45,13 @@ const TestHistory = () => {
   const renderStatus = (status) => {
     const statusConfig = {
       'pending': { color: 'warning', text: 'Chờ thanh toán' },
+      'processing': { color: 'processing', text: 'Đang thực hiện' },
       'Dang thuc hien': { color: 'processing', text: 'Đang thực hiện' },
+      'dang thuc hien': { color: 'processing', text: 'Đang thực hiện' },
       'completed': { color: 'success', text: 'Đã hoàn thành' },
       'cancelled': { color: 'default', text: 'Đã hủy' },
       'da hoan thanh': { color: 'success', text: 'Đã hoàn thành' },
+      'da hoan tat': { color: 'success', text: 'Đã hoàn thành' },
       'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
       'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
       'da huy': { color: 'default', text: 'Đã hủy' },
@@ -416,7 +419,6 @@ const TestHistory = () => {
                   <div>
                     <div><strong>Tên:</strong> {selectedRecord.staff.fullName}</div>
                     <div><strong>Email:</strong> {selectedRecord.staff.email}</div>
-                    <div><strong>Chuyên khoa:</strong> {selectedRecord.staff.specialtyNames?.join(', ')}</div>
                   </div>
                 </Descriptions.Item>
               )}

@@ -66,6 +66,10 @@ const routers = [
           path: '/booking-confirmation',
           component: lazy(() => import('../pages/Appointment/BookingInformation'))
      },
+     {
+          path: '/my-questions',
+          component: lazy(() => import('../pages/Question/MyQuestions'))
+     },
 ]
 
 export default routers;

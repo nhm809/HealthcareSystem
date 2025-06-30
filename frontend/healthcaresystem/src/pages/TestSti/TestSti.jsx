@@ -142,34 +142,7 @@ function TestSti() {
                setSelectedDate(null);
           }
      };
-
-     // Tạo notification nếu thanh toán thành công
-     useEffect(() => {
-          const params = new URLSearchParams(location.search);
-          const handler = params.get('handler');
-          const testServiceRecordId = params.get('testServiceRecordId');
-          const userId = Cookies.get('userId');
-          if (handler === 'success' && testServiceRecordId && userId) {
-               const sentKey = `noti_sent_${testServiceRecordId}`;
-               if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
-                    notiSentRef.current[sentKey] = true; // Đánh dấu đã gửi trong phiên này
-                    const now = new Date().toISOString();
-                    notiApi.createNoti({
-                         userId: Number(userId),
-                         title: 'Đặt lịch xét nghiệm thành công',
-                         content: `Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: ${testServiceRecordId}`,
-                         sendTime: now,
-                         isRead: false
-                    }).finally(() => {
-                         sessionStorage.setItem(sentKey, '1');
-                         window.history.replaceState({}, document.title, '/test-sti');
-                    });
-               } else {
-                    window.history.replaceState({}, document.title, '/test-sti');
-               }
-          }
-     }, [location]);
-
+     
      return (
           <MainLayout>
                <div className="test-introduce">

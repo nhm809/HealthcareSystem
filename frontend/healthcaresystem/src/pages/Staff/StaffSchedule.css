@@ -1,0 +1,178 @@
+/* StaffSchedule.css */
+.staff-schedule-table .ant-table-thead > tr > th {
+  background-color: #2563EB !important;
+  color: white !important;
+  font-weight: 600;
+  border-bottom: 2px solid #2563EB;
+  text-align: center;
+}
+
+.staff-schedule-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 16px;
+}
+
+.staff-schedule-table .table-row-even {
+  background-color: #fafafa;
+}
+
+.staff-schedule-table .table-row-odd {
+  background-color: #ffffff;
+}
+
+.staff-schedule-table .table-row-even:hover,
+.staff-schedule-table .table-row-odd:hover {
+  background-color: #e6f7ff !important;
+}
+
+.staff-schedule-table .ant-table-tbody > tr:hover > td {
+  background-color: #e6f7ff !important;
+}
+
+/* Tabs styling */
+.ant-tabs-tab {
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  margin-right: 4px;
+  transition: all 0.3s ease;
+}
+
+.ant-tabs-tab:hover {
+  color: #2563EB;
+}
+
+/* .ant-tabs-tab-active {
+  background-color: #2563EB !important;
+  color: white !important;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white !important;
+} */
+
+.ant-tabs-content-holder {
+  background-color: white;
+  border-radius: 0 8px 8px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Modal styling */
+.ant-modal-header {
+  background-color: #2563EB;
+  border-bottom: 2px solid #2563EB;
+}
+
+.ant-modal-title {
+  color: white !important;
+}
+
+.ant-modal-close {
+  color: white !important;
+}
+
+.ant-modal-close:hover {
+  color: #ffd700 !important;
+}
+
+/* Button styling */
+.ant-btn-primary {
+  background-color: #2563EB;
+  border-color: #2563EB;
+}
+
+.ant-btn-primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Form styling */
+.ant-form-item-label > label {
+  font-weight: 600;
+  color: #333;
+}
+
+.ant-input, .ant-select-selector {
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+}
+
+.ant-input:focus, .ant-select-focused .ant-select-selector {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Status tag styling */
+.ant-tag {
+  border-radius: 16px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border: none;
+}
+
+/* Pagination styling */
+.ant-pagination-item {
+  border-radius: 50%;
+  border: 1px solid #d9d9d9;
+}
+
+.ant-pagination-item-active {
+  background-color: #2563EB;
+  border-color: #2563EB;
+}
+
+.ant-pagination-item-active a {
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ant-table {
+    font-size: 12px;
+  }
+  
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+  }
+  
+  .ant-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+.custom-staff-tabs .ant-tabs-nav {
+  background: #f8f9fa !important;
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-staff-tabs .ant-tabs-tab {
+  background: transparent !important;
+  color: #222 !important;
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+  margin-right: 8px;
+  transition: background 0.2s;
+}
+
+.custom-staff-tabs .ant-tabs-tab-active {
+  color: #222 !important;
+  box-shadow: none !important;
+}
+
+.custom-staff-tabs .ant-tabs-tab:hover {
+  background: #f0f0f0 !important;
+  color: #2563EB !important;
+}
+
+.custom-staff-tabs .ant-tabs-ink-bar {
+  background: #2563EB !important;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.custom-staff-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #222 !important;
+} 
