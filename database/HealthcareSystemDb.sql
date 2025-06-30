@@ -83,6 +83,7 @@ VALUES
 
 
 --Question --=====================================================================================================================================================
+<<<<<<< blog-page
 --INSERT INTO Question (
 --    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status]
 --)
@@ -97,6 +98,26 @@ VALUES
 --    4,
 --    N'Đã trả lời'
 --);
+=======
+INSERT INTO Question (
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
+)
+VALUES
+(
+    5,
+    1,
+    N'Trễ kinh 7 ngày có phải mang thai không?',
+    N'Chào bác sĩ, em bị trễ kinh 7 ngày, kèm đau bụng dưới và tức ngực. Không biết có nên thử thai chưa ạ?',
+    NULL,
+    '2024-05-01 09:15:00',
+    4,
+   N'Chưa trả lời',
+    16,
+    N'Nữ',
+	10,
+	1
+);
+>>>>>>> main
 
 --=====================================================================================================================================================
 -- Message trao đổi giữa thành viên và tư vấn viên
