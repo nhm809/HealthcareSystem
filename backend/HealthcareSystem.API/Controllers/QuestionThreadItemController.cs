@@ -61,4 +61,19 @@ public class QuestionThreadItemController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("update/{subQuestionId}")]
+    public async Task<ActionResult<bool>> UpdateSubQuestionAsync(int subQuestionId, [FromBody] QuestionThreadItemDTO dto)
+    {
+        if (dto == null || string.IsNullOrEmpty(dto.QuestionText))
+        {
+            return BadRequest("Invalid sub-question data.");
+        }
+        var result = await _iQuestionThreadItemService.UpdateSubQuestionAsync(subQuestionId, dto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while updating the sub-question.");
+        }
+        return Ok(result);
+    }
+
 }

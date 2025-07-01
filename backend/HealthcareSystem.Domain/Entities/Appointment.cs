@@ -21,6 +21,8 @@ namespace Domain.Entities
 
         public string? Status { get; set; }
 
+        public string? Symptoms { get; set; } // triệu chứng
+
         public virtual User? Consultant { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();

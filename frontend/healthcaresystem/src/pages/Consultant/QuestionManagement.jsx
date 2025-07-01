@@ -17,6 +17,7 @@ import {
      Modal,
      Spin,
      Image,
+     Tabs,
 } from 'antd';
 import {
      ReloadOutlined,
@@ -32,6 +33,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Cookies from 'js-cookie';
 import SubQuestionList from '../../components/Question/SubQuestionList';
+import './QuestionManagement.css';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,6 +57,14 @@ const QuestionManagement = () => {
      const [replyContent, setReplyContent] = useState('');
      const [specialties, setSpecialties] = useState([]);
      const consultantId = Cookies.get('userId');
+
+     // State cho phân trang của từng tab
+     const [currentPage, setCurrentPage] = useState({
+          'all': 1,
+          'unanswered': 1,
+          'answered': 1,
+          'closed': 1
+     });
 
      useEffect(() => {
           const fetchQuestions = async () => {
@@ -127,8 +137,6 @@ const QuestionManagement = () => {
      const getStatus = (record) => {
           if (record.isClosed) return 'closed';
           if (record.isAnswered) return 'answered';
-          // Mock "Đã phản hồi" status as it's not in the data model
-          if (record.key % 2 === 0) return 'responded';
           return 'unanswered';
      };
 
@@ -136,39 +144,28 @@ const QuestionManagement = () => {
           return allQuestions.filter((item) => {
                const dateMatch = filters.date ? dayjs(item.sentTime).isSame(filters.date, 'day') : true;
                const searchMatch = item.sender.name.toLowerCase().includes(filters.searchText.toLowerCase());
-               const statusMatch = filters.status === 'all' || getStatus(item) === filters.status;
-               return dateMatch && searchMatch && statusMatch;
+               return dateMatch && searchMatch;
           });
      }, [allQuestions, filters]);
 
-     const paginatedData = useMemo(() => {
-          const start = (pagination.current - 1) * pagination.pageSize;
-          const end = start + pagination.pageSize;
-          return filteredQuestions.slice(start, end);
-     }, [filteredQuestions, pagination]);
-
-     useEffect(() => {
-          setPagination((p) => ({ ...p, current: 1 }));
-     }, [filters.searchText, filters.status, filters.date]);
+     // Helper để lọc theo trạng thái
+     const filterByStatus = (status) => {
+          if (status === 'all') return filteredQuestions;
+          return filteredQuestions.filter(item => getStatus(item) === status);
+     };
 
      const getStatusTag = (record) => {
           const status = getStatus(record);
           switch (status) {
                case 'unanswered':
                     return (
-                         <Tag icon={<ClockCircleOutlined />} color="success">
+                         <Tag icon={<ClockCircleOutlined />} color="warning">
                               Chưa trả lời
-                         </Tag>
-                    );
-               case 'responded':
-                    return (
-                         <Tag icon={<MessageOutlined />} color="processing">
-                              Đã phản hồi
                          </Tag>
                     );
                case 'answered':
                     return (
-                         <Tag icon={<CheckCircleOutlined />} color="default">
+                         <Tag icon={<CheckCircleOutlined />} color="success">
                               Đã trả lời
                          </Tag>
                     );
@@ -261,10 +258,168 @@ const QuestionManagement = () => {
      const handleRefresh = () => {
           setFilters({
                date: null,
-               status: 'all',
                searchText: '',
           });
      };
+
+     const handleQuestionAnswered = () => {
+          // Refresh danh sách câu hỏi sau khi trả lời
+          const fetchQuestions = async () => {
+               setLoading(true);
+               try {
+                    const res = await questionApi.getAllQuestions();
+                    const formattedQuestions = res.data
+                         .map((q) => ({
+                              key: q.questionId,
+                              sender: {
+                                   name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
+                                   avatar: q.member?.avatar,
+                              },
+                              sentTime: q.submitDate,
+                              summary: q.titleQuestion || q.content,
+                              isAnswered: q.isAnswered,
+                              isClosed: q.isClosed,
+                              title: q.titleQuestion,
+                              content: q.content,
+                              gender: q.gender,
+                              age: q.age,
+                              specialtyId: q.specialtyId,
+                              memberId: q.memberId,
+                              consultantId: q.consultantId,
+                              attachmentPath: q.attachmentPath,
+                         }))
+                         .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
+                    setAllQuestions(formattedQuestions);
+               } catch {
+                    message.error('Không thể tải danh sách câu hỏi');
+               } finally {
+                    setLoading(false);
+               }
+          };
+          fetchQuestions();
+     };
+
+     // Hàm xử lý thay đổi trang cho từng tab
+     const handlePageChange = (tabKey, page) => {
+          setCurrentPage(prev => ({
+               ...prev,
+               [tabKey]: page
+          }));
+     };
+
+     useEffect(() => {
+          // Reset tất cả trang về 1 khi thay đổi filter
+          setCurrentPage({
+               'all': 1,
+               'unanswered': 1,
+               'answered': 1,
+               'closed': 1
+          });
+     }, [filters.searchText, filters.date]);
+
+     // Tạo tab items cho từng trạng thái
+     const tabItems = [
+          {
+               key: 'all',
+               label: `Tất cả (${filterByStatus('all').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('all').slice((currentPage['all'] - 1) * pagination.pageSize, currentPage['all'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('all').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['all']}
+                                        total={filterByStatus('all').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('all', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'unanswered',
+               label: `Chưa trả lời (${filterByStatus('unanswered').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('unanswered').slice((currentPage['unanswered'] - 1) * pagination.pageSize, currentPage['unanswered'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('unanswered').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['unanswered']}
+                                        total={filterByStatus('unanswered').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('unanswered', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'answered',
+               label: `Đã trả lời (${filterByStatus('answered').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('answered').slice((currentPage['answered'] - 1) * pagination.pageSize, currentPage['answered'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('answered').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['answered']}
+                                        total={filterByStatus('answered').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('answered', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'closed',
+               label: `Đã đóng (${filterByStatus('closed').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('closed').slice((currentPage['closed'] - 1) * pagination.pageSize, currentPage['closed'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('closed').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['closed']}
+                                        total={filterByStatus('closed').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('closed', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+     ];
 
      return (
           <div style={{ background: '#fff', borderRadius: 8, padding: 24 }}>
@@ -278,17 +433,6 @@ const QuestionManagement = () => {
                </div>
                <Space style={{ marginBottom: 16 }} wrap>
                     <DatePicker placeholder="mm/dd/yyyy" onChange={(date) => handleFilterChange('date', date)} value={filters.date} />
-                    <Select
-                         value={filters.status}
-                         style={{ width: 150 }}
-                         onChange={(value) => handleFilterChange('status', value)}
-                    >
-                         <Option value="all">Tất cả</Option>
-                         <Option value="unanswered">Chưa trả lời</Option>
-                         <Option value="responded">Đã phản hồi</Option>
-                         <Option value="answered">Đã trả lời</Option>
-                         <Option value="closed">Đã đóng</Option>
-                    </Select>
                     <Input.Search
                          placeholder="Tìm kiếm khách hàng..."
                          style={{ width: 220 }}
@@ -300,16 +444,12 @@ const QuestionManagement = () => {
                          Làm mới
                     </Button>
                </Space>
-               <Table dataSource={paginatedData} columns={columns} pagination={false} loading={loading} />
-               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
-                    <Pagination
-                         current={pagination.current}
-                         total={filteredQuestions.length}
-                         pageSize={pagination.pageSize}
-                         onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
-                         showSizeChanger={false}
-                    />
-               </div>
+               <Tabs 
+                    defaultActiveKey="all" 
+                    items={tabItems} 
+                    tabBarStyle={{ background: '#f8f9fa', borderRadius: '16px 16px 0 0', padding: '0 16px', borderBottom: '1px solid #e0e0e0' }}
+                    className="custom-question-tabs"
+               />
                {selectedQuestion && (
                     <Modal
                          title="Chi tiết câu hỏi"
@@ -353,6 +493,7 @@ const QuestionManagement = () => {
                                              submitDate: selectedQuestion.sentTime,
                                         }}
                                         isConsultant={true}
+                                        onQuestionAnswered={handleQuestionAnswered}
                                    />
                               </div>
                          </div>

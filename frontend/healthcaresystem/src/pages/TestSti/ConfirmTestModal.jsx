@@ -35,7 +35,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                 console.log('Payment from history - Test Record ID:', testServiceRecordId);
                 
                 const payRes = await authApi.createPaypalUrl(testServiceRecordId, null);
-                console.log('PayPal response:', payRes.data);
+                console.log('PayPal response:', payRes.data);  
                 const paymentUrl = payRes.data.PaymentUrl || payRes.data.paymentUrl;
                 if (paymentUrl) {
                     window.location.href = paymentUrl;

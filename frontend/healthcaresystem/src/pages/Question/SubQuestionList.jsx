@@ -4,11 +4,11 @@ import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import api from '../../services/api';
-import { subQuestionApi } from '../../services/api';
+import { subQuestionApi, questionApi } from '../../services/api';
 
 const { Panel } = Collapse;
 
-const SubQuestionList = ({ question, isConsultant }) => {
+const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
   const [subQuestions, setSubQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -62,17 +62,24 @@ const SubQuestionList = ({ question, isConsultant }) => {
     setAnsweringId('');
     try {
       await subQuestionApi.answerSubQuestion({
-        ThreadItemId: values.threadItemId,
+        ThreadItemId: values.threadItemId || 0,
         QuestionId: question.id,
-        QuestionText: values.questionText,
+        QuestionText: values.questionText || question.content,
         AnswerText: values.answerText,
         SentAt: new Date().toISOString(),
         AttachmentPath: '',
         IsAnswered: true,
       });
+      
+      // Cập nhật trạng thái câu hỏi chính thành "đã trả lời"
+      await questionApi.updateQuestionStatus(question.id);
+      
       message.success('Trả lời thành công!');
       answerForm.resetFields();
       fetchSubQuestions();
+      if (onQuestionAnswered) {
+        onQuestionAnswered();
+      }
     } catch {
       message.error('Trả lời thất bại!');
     }
@@ -105,7 +112,7 @@ const SubQuestionList = ({ question, isConsultant }) => {
                 form={answerForm}
                 onFinish={(values) => handleAnswer({
                   ...values,
-                  threadItemId: firstSub?.threadItemId || 0,
+                  threadItemId: 0, // Use 0 for main question when no sub-questions exist
                   questionText: question.content,
                 })}
                 layout="vertical"
