@@ -1,0 +1,42 @@
+.custom-question-tabs .ant-tabs-tab {
+  margin: 0 8px 0 0;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.custom-question-tabs .ant-tabs-tab:hover {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.custom-question-tabs .ant-tabs-tab-active {
+  background-color: white;
+  color: #1890ff;
+  border-bottom: 2px solid #1890ff;
+}
+
+.custom-question-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.custom-question-tabs .ant-tabs-content-holder {
+  padding: 24px;
+  background: white;
+  border-radius: 0 0 16px 16px;
+}
+
+.custom-question-tabs .ant-tabs-nav {
+  margin-bottom: 0;
+}
+
+.custom-question-tabs .ant-tabs-tab-btn {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.custom-question-tabs .ant-tabs-ink-bar {
+  display: none;
+} 
