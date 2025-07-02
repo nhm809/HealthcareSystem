@@ -26,14 +26,18 @@ import {
      CheckCircleOutlined,
      CloseCircleOutlined,
      BellOutlined,
+     EditOutlined,
+     StopOutlined,
 } from '@ant-design/icons';
 import { questionApi, messageApi, specialtyApi } from '../../services/api';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Cookies from 'js-cookie';
-import SubQuestionList from '../../components/Question/SubQuestionList';
+import SubQuestionList from '../Question/SubQuestionList';
 import './QuestionManagement.css';
+import { Modal as AntdModal } from 'antd';
+import logo from '../../assets/imgs/logo.png';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,7 +48,7 @@ const { Text } = Typography;
 const QuestionManagement = () => {
      const [allQuestions, setAllQuestions] = useState([]);
      const [loading, setLoading] = useState(false);
-     const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+     const [pagination] = useState({ current: 1, pageSize: 10 });
      const [filters, setFilters] = useState({
           date: null,
           status: 'all',
@@ -52,9 +56,8 @@ const QuestionManagement = () => {
      });
      const [isModalVisible, setIsModalVisible] = useState(false);
      const [selectedQuestion, setSelectedQuestion] = useState(null);
-     const [messages, setMessages] = useState([]);
-     const [loadingMessages, setLoadingMessages] = useState(false);
-     const [replyContent, setReplyContent] = useState('');
+     const [setMessages] = useState([]);
+     const [setLoadingMessages] = useState(false);
      const [specialties, setSpecialties] = useState([]);
      const consultantId = Cookies.get('userId');
 
@@ -66,39 +69,45 @@ const QuestionManagement = () => {
           'closed': 1
      });
 
+     const [closeModalVisible, setCloseModalVisible] = useState(false);
+     const [closingQuestion, setClosingQuestion] = useState(null);
+     const [closeLoading, setCloseLoading] = useState(false);
+
+     // Tách fetchQuestions ra ngoài để có thể gọi lại
+     const fetchQuestions = async () => {
+          setLoading(true);
+          try {
+               const res = await questionApi.getQuestionsByConsultant(consultantId);
+               const formattedQuestions = res.data
+                    .map((q) => ({
+                         key: q.questionId,
+                         sender: {
+                              name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
+                              avatar: q.member?.avatar,
+                         },
+                         sentTime: q.submitDate,
+                         summary: q.titleQuestion || q.content,
+                         status: q.status,
+                         title: q.titleQuestion,
+                         content: q.content,
+                         gender: q.gender,
+                         age: q.age,
+                         specialtyId: q.specialtyId,
+                         memberId: q.memberId,
+                         consultantId: q.consultantId,
+                         attachmentPath: q.attachmentPath,
+                    }))
+                    .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
+               setAllQuestions(formattedQuestions);
+          } catch {
+               message.error('Không thể tải danh sách câu hỏi');
+          } finally {
+               setLoading(false);
+          }
+     };
+
      useEffect(() => {
-          const fetchQuestions = async () => {
-               setLoading(true);
-               try {
-                    const res = await questionApi.getAllQuestions();
-                    const formattedQuestions = res.data
-                         .map((q) => ({
-                              key: q.questionId,
-                              sender: {
-                                   name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
-                                   avatar: q.member?.avatar,
-                              },
-                              sentTime: q.submitDate,
-                              summary: q.titleQuestion || q.content,
-                              isAnswered: q.isAnswered,
-                              isClosed: q.isClosed,
-                              title: q.titleQuestion,
-                              content: q.content,
-                              gender: q.gender,
-                              age: q.age,
-                              specialtyId: q.specialtyId,
-                              memberId: q.memberId,
-                              consultantId: q.consultantId,
-                              attachmentPath: q.attachmentPath,
-                         }))
-                         .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
-                    setAllQuestions(formattedQuestions);
-               } catch {
-                    message.error('Không thể tải danh sách câu hỏi');
-               } finally {
-                    setLoading(false);
-               }
-          };
+          fetchQuestions();
           const fetchSpecialties = async () => {
                try {
                     const res = await specialtyApi.getAllSpecialties();
@@ -107,7 +116,6 @@ const QuestionManagement = () => {
                     setSpecialties([]);
                }
           };
-          fetchQuestions();
           fetchSpecialties();
      }, []);
 
@@ -151,32 +159,30 @@ const QuestionManagement = () => {
      // Helper để lọc theo trạng thái
      const filterByStatus = (status) => {
           if (status === 'all') return filteredQuestions;
-          return filteredQuestions.filter(item => getStatus(item) === status);
+          if (status === 'answered') return filteredQuestions.filter(item => item.status === 'Da tra loi');
+          if (status === 'unanswered') return filteredQuestions.filter(item => item.status === 'Chua tra loi');
+          if (status === 'closed') return filteredQuestions.filter(item => item.status === 'Da dong');
+          return filteredQuestions;
      };
 
      const getStatusTag = (record) => {
-          const status = getStatus(record);
-          switch (status) {
-               case 'unanswered':
+          switch (record.status) {
+               case "Da tra loi":
                     return (
-                         <Tag icon={<ClockCircleOutlined />} color="warning">
-                              Chưa trả lời
-                         </Tag>
+                         <Tag color="blue">Đã trả lời</Tag>
                     );
-               case 'answered':
+               case "Chua tra loi":
                     return (
-                         <Tag icon={<CheckCircleOutlined />} color="success">
-                              Đã trả lời
-                         </Tag>
+                         <Tag color="orange">Chưa trả lời</Tag>
                     );
-               case 'closed':
+               case "Da dong":
                     return (
-                         <Tag icon={<CloseCircleOutlined />} color="error">
-                              Đã đóng
-                         </Tag>
+                         <Tag color="red">Đã đóng</Tag>
                     );
                default:
-                    return null;
+                    return (
+                         <Tag color="default">{record.status}</Tag>
+                    );
           }
      };
 
@@ -185,33 +191,79 @@ const QuestionManagement = () => {
           setIsModalVisible(true);
      };
 
-     const handleSendMessage = async () => {
-          if (!replyContent.trim() || !selectedQuestion) return;
+     const handleCloseQuestion = async (question) => {
+          const submitDate = dayjs(question.sentTime);
+          const now = dayjs();
+          const diffDays = now.diff(submitDate, 'day');
+          if (diffDays < 7) {
+               setClosingQuestion(question);
+               setCloseModalVisible(true);
+          } else {
+               // Đủ 7 ngày, đóng luôn
+               await doCloseQuestion(question);
+          }
+     };
+
+     const doCloseQuestion = async (question) => {
+          setCloseLoading(true);
           try {
-               await messageApi.addMessage({
-                    questionId: selectedQuestion.key,
-                    content: replyContent,
-                    senderId: Number(consultantId),
-               });
-               setReplyContent('');
-               // Reload messages
-               setLoadingMessages(true);
-               const res = await messageApi.getHistory(selectedQuestion.key);
-               setMessages(res.data);
-               message.success('Gửi tin nhắn thành công');
+               await questionApi.updateQuestionStatus(question.key, JSON.stringify("Da dong"));
+               message.success('Đã đóng câu hỏi!');
+               setCloseModalVisible(false);
+               setClosingQuestion(null);
+               fetchQuestions();
           } catch {
-               message.error('Gửi tin nhắn thất bại!');
+               message.error('Đóng câu hỏi thất bại!');
           } finally {
-               setLoadingMessages(false);
+               setCloseLoading(false);
           }
      };
 
      const getAction = (record) => {
           const status = getStatus(record);
           if (status === 'closed' || status === 'answered') {
-               return <a onClick={() => handleReplyClick(record)}>Xem chi tiết</a>;
+               return (
+                    <Button
+                         type="default"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6, marginRight: 8 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Xem chi tiết
+                    </Button>
+               );
           }
-          return <a onClick={() => handleReplyClick(record)}>Trả lời</a>;
+          return (
+               <Space>
+                    <Button
+                         type="primary"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Trả lời
+                    </Button>
+                    {record.status !== 'Da dong' && (
+                         <Button
+                              type="default"
+                              danger
+                              icon={<StopOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleCloseQuestion(record)}
+                         >
+                              Đóng câu hỏi
+                         </Button>
+                    )}
+               </Space>
+          );
      };
 
      const columns = [
@@ -221,7 +273,7 @@ const QuestionManagement = () => {
                key: 'sender',
                render: (sender, record) => (
                     <Space>
-                         <Avatar src={sender.avatar} />
+                         <Avatar src={logo} />
                          <span>
                               {record.gender && record.age ? `${record.gender}, ${record.age} tuổi` : sender.name}
                          </span>
@@ -260,43 +312,6 @@ const QuestionManagement = () => {
                date: null,
                searchText: '',
           });
-     };
-
-     const handleQuestionAnswered = () => {
-          // Refresh danh sách câu hỏi sau khi trả lời
-          const fetchQuestions = async () => {
-               setLoading(true);
-               try {
-                    const res = await questionApi.getAllQuestions();
-                    const formattedQuestions = res.data
-                         .map((q) => ({
-                              key: q.questionId,
-                              sender: {
-                                   name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
-                                   avatar: q.member?.avatar,
-                              },
-                              sentTime: q.submitDate,
-                              summary: q.titleQuestion || q.content,
-                              isAnswered: q.isAnswered,
-                              isClosed: q.isClosed,
-                              title: q.titleQuestion,
-                              content: q.content,
-                              gender: q.gender,
-                              age: q.age,
-                              specialtyId: q.specialtyId,
-                              memberId: q.memberId,
-                              consultantId: q.consultantId,
-                              attachmentPath: q.attachmentPath,
-                         }))
-                         .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
-                    setAllQuestions(formattedQuestions);
-               } catch {
-                    message.error('Không thể tải danh sách câu hỏi');
-               } finally {
-                    setLoading(false);
-               }
-          };
-          fetchQuestions();
      };
 
      // Hàm xử lý thay đổi trang cho từng tab
@@ -424,7 +439,7 @@ const QuestionManagement = () => {
      return (
           <div style={{ background: '#fff', borderRadius: 8, padding: 24 }}>
                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#5fc9a7', margin: 0 }}>Consultant Dashboard</h1>
+                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1890ff', margin: 0 }}>Consultant Dashboard</h1>
                     {/* <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
                          <Badge count={unreadCount}>
                               <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
@@ -467,9 +482,7 @@ const QuestionManagement = () => {
                                         {selectedQuestion.gender}, {selectedQuestion.age} tuổi
                                    </b>
                                    <Tag color="cyan">{getSpecialtyName(selectedQuestion.specialtyId)}</Tag>
-                                   <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
-                                        {selectedQuestion.isAnswered ? 'Đã phản hồi' : 'Chưa trả lời'}
-                                   </Tag>
+                                   {getStatusTag(selectedQuestion)}
                               </div>
                               <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4, fontSize: '1.2rem' }}>
                                    {selectedQuestion.title}
@@ -493,12 +506,34 @@ const QuestionManagement = () => {
                                              submitDate: selectedQuestion.sentTime,
                                         }}
                                         isConsultant={true}
-                                        onQuestionAnswered={handleQuestionAnswered}
+                                        onQuestionAnswered={fetchQuestions}
                                    />
                               </div>
                          </div>
                     </Modal>
                )}
+               <AntdModal
+                    open={closeModalVisible}
+                    onCancel={() => { setCloseModalVisible(false); setClosingQuestion(null); }}
+                    footer={null}
+                    title={<span style={{ color: '#000' }}>Xác nhận đóng câu hỏi</span>}
+               >
+                    <p>Câu hỏi chưa đủ 7 ngày, bạn vẫn muốn đóng?</p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                         <Button onClick={() => { setCloseModalVisible(false); setClosingQuestion(null); }}>
+                              Hủy
+                         </Button>
+                         <Button
+                              type="primary"
+                              danger
+                              loading={closeLoading}
+                              onClick={() => doCloseQuestion(closingQuestion)}
+                              style={{ border: 'none' }}
+                         >
+                              Đồng ý đóng
+                         </Button>
+                    </div>
+               </AntdModal>
           </div>
      );
 };
