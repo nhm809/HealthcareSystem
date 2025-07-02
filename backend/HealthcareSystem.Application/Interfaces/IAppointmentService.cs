@@ -28,14 +28,8 @@ namespace Application.Interfaces
         /// <summary>
         /// Lấy danh sách lịch hẹn theo MemberId.
         /// </summary>
-        /// <param name="memberId">ID của thành viên</param>
-        Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByMemberIdAsync(int memberId);
-
-        /// <summary>
-        /// Lấy danh sách lịch hẹn theo ConsultantId.
-        /// </summary>
-        /// <param name="consultantId">ID của tư vấn viên</param>
-        Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByConsultantIdAsync(int consultantId);
+        /// <param name="userId">ID của thành viên</param>
+        Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByUserIdAsync(int userId);
 
         /// <summary>
         /// Cập nhật trạng thái của lịch hẹn.

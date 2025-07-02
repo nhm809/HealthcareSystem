@@ -68,7 +68,7 @@
   line-height: normal;
 }
 
-.user-info.incompleted-info .update-button {
+.user-info.incomplete-info .update-button {
   background-color: #FFDDDD;
   color: #E30D19;
   border: none;
@@ -238,4 +238,10 @@
 
 .confirm-button1:hover {
   background-color: #5ed4b9 !important;
+}
+
+.ant-modal-title {
+  text-align: center !important;
+  color: #54AA7F !important;
+  font-size: 24px !important;
 }

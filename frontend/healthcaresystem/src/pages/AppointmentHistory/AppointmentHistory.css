@@ -1,7 +1,6 @@
 .appointment-history {
   max-width: 100%;
   margin: 20px auto;
-  padding: 0 20px;
   width: 100%;
 }
 
@@ -39,4 +38,15 @@
 .appointment-history .ant-spin {
   margin: 40px auto;
   display: block;
+}
+
+.booking-button {
+  width: 160px;
+  height: 36px;
+  background-color: #00CBA7;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 24px;
+  font-weight: bold;
+  font-size: 16px;
 }
