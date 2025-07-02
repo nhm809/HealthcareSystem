@@ -46,7 +46,6 @@ function AppointmentDetailModal({ open, onClose, appointmentId, onUpdateSuccess 
                     title: 'Cập nhật link tư vấn',
                     content: `Lịch hẹn của bạn đã được cập nhật link Google Meet: ${meetLink}`,
                 };
-                await api.post(`/Notification/create`, notiData);
             }
             toast.success('Cập nhật thành công');
             onUpdateSuccess();
