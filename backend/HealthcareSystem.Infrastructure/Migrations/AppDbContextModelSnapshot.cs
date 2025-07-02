@@ -58,6 +58,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("Symptoms")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("AppointmentId")
                         .HasName("PK__Appointm__8ECDFCA2D172AD9E");
 

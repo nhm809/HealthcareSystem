@@ -3,6 +3,7 @@ import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, But
 import { PlusOutlined, ArrowLeftOutlined, MessageOutlined, HeartOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
 import { questionApi, specialtyApi } from '@services/api';
+import api from '@services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '@components/Header/AuthModal/AuthModal';
 import { ToastContext } from '../../contexts/ToastProvider';
@@ -10,7 +11,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { useParams, useNavigate } from 'react-router-dom';
-import SubQuestionList from '@components/Question/SubQuestionList';
+import SubQuestionList from './SubQuestionList';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -164,6 +165,46 @@ function Question() {
         };
         try {
             await questionApi.addQuestion(payload);
+            
+            // Sau khi tạo câu hỏi cha thành công, lấy câu hỏi mới nhất của user để tạo câu hỏi con
+            try {
+                console.log('Đang lấy danh sách câu hỏi của user:', userId);
+                const userQuestionsRes = await questionApi.getQuestionsByMember(Number(userId));
+                const userQuestions = userQuestionsRes.data || [];
+                console.log('Danh sách câu hỏi của user:', userQuestions);
+                
+                // Lấy câu hỏi mới nhất (sắp xếp theo thời gian)
+                const sortedQuestions = userQuestions.sort((a, b) => {
+                    const dateA = new Date(a.submitDate || 0);
+                    const dateB = new Date(b.submitDate || 0);
+                    return dateB - dateA;
+                });
+                console.log('Danh sách câu hỏi đã sắp xếp:', sortedQuestions);
+                
+                const latestQuestion = sortedQuestions[0];
+                console.log('Câu hỏi mới nhất:', latestQuestion);
+                
+                if (latestQuestion) {
+                    console.log('Đang tạo câu hỏi con cho câu hỏi ID:', latestQuestion.questionId);
+                    // Tạo câu hỏi con đầu tiên với nội dung từ câu hỏi cha
+                    const createSubResponse = await api.post('/subQuestion/add', {
+                        ThreadItemId: 0,
+                        QuestionId: latestQuestion.questionId,
+                        QuestionText: values.content, // Sử dụng nội dung câu hỏi cha
+                        AnswerText: '',
+                        SentAt: new Date().toISOString(),
+                        AttachmentPath: attachmentPath || '',
+                        IsAnswered: false,
+                    });
+                    console.log('Kết quả tạo câu hỏi con:', createSubResponse);
+                } else {
+                    console.log('Không tìm thấy câu hỏi mới nhất');
+                }
+            } catch (subQuestionError) {
+                console.error('Không thể tạo câu hỏi con:', subQuestionError);
+                // Vẫn hiển thị thành công vì câu hỏi cha đã được tạo
+            }
+            
             toast.success('Gửi câu hỏi thành công!');
             setTimeout(() => {
                 window.location.reload();
@@ -234,6 +275,19 @@ function Question() {
                                 <SubQuestionList
                                     question={selectedQuestion}
                                     isConsultant={userRole === 'CS'}
+                                    consultant={selectedQuestion.consultant}
+                                    canAddSubQuestion={userId == selectedQuestion?.memberId}
+                                    onQuestionAnswered={async () => {
+                                        if (selectedQuestion?.id) {
+                                            try {
+                                                const res = await questionApi.getQuestionById(selectedQuestion.id);
+                                                setSelectedQuestion({
+                                                    ...selectedQuestion,
+                                                    ...res.data
+                                                });
+                                            } catch {}
+                                        }
+                                    }}
                                 />
                             </div>
                         ) : (

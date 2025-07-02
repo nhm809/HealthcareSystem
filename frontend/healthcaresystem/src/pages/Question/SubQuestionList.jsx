@@ -4,17 +4,20 @@ import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import api from '../../services/api';
-import { subQuestionApi, questionApi } from '../../services/api';
+import { subQuestionApi, questionApi, getInfo } from '../../services/api';
+import logo from '../../assets/imgs/logo.png';
 
 const { Panel } = Collapse;
 
-const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
+const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSubQuestion }) => {
   const [subQuestions, setSubQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [answeringId, setAnsweringId] = useState(null);
   const [form] = Form.useForm();
-  const [answerForm] = Form.useForm();
+  const [consultantInfo, setConsultantInfo] = useState(null);
+
+  console.log('Consultant info:', consultantInfo);
 
   // Lấy danh sách sub-question
   const fetchSubQuestions = async () => {
@@ -31,8 +34,13 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
 
   useEffect(() => {
     if (question?.id) fetchSubQuestions();
+    if (question?.consultantId) {
+      getInfo(question.consultantId)
+        .then(res => setConsultantInfo(res.data))
+        .catch(() => setConsultantInfo(null));
+    }
     // eslint-disable-next-line
-  }, [question?.id]);
+  }, [question?.id, question?.consultantId]);
 
   // Tạo sub-question mới (member)
   const handleCreate = async (values) => {
@@ -47,6 +55,8 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
         AttachmentPath: '',
         IsAnswered: false,
       });
+      // Sau khi tạo sub-question, cập nhật status câu hỏi cha về 'Chua tra loi'
+      await questionApi.updateQuestionStatus(question.id, JSON.stringify("Chua tra loi"));
       message.success('Gửi câu hỏi thành công!');
       form.resetFields();
       fetchSubQuestions();
@@ -61,32 +71,61 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
   const handleAnswer = async (values) => {
     setAnsweringId('');
     try {
-      await subQuestionApi.answerSubQuestion({
-        ThreadItemId: values.threadItemId || 0,
-        QuestionId: question.id,
-        QuestionText: values.questionText || question.content,
-        AnswerText: values.answerText,
-        SentAt: new Date().toISOString(),
-        AttachmentPath: '',
-        IsAnswered: true,
-      });
-      
+      console.log('SubQuestions length:', subQuestions.length);
+      console.log('Question ID:', question.id);
+      console.log('Answer values:', values);
+      let answerPayload;
+      if (!values.threadItemId || values.threadItemId === 0) {
+        // Trả lời cho cha hoặc sub-question đầu tiên
+        answerPayload = {
+          ThreadItemId: 0,
+          QuestionId: question.id,
+          QuestionText: question.content,
+          AnswerText: values.answerText,
+          SentAt: new Date().toISOString(),
+          AnsweredAt: new Date().toISOString(),
+          AttachmentPath: '',
+          IsAnswered: true,
+        };
+      } else {
+        // Trả lời cho sub-question cụ thể
+        const sub = subQuestions.find(sq => sq.threadItemId === values.threadItemId);
+        answerPayload = {
+          ThreadItemId: sub.threadItemId,
+          QuestionId: question.id,
+          QuestionText: sub.questionText || question.content,
+          AnswerText: values.answerText,
+          SentAt: sub.sentAt || new Date().toISOString(),
+          AnsweredAt: new Date().toISOString(),
+          AttachmentPath: sub.attachmentPath || '',
+          IsAnswered: true,
+        };
+      }
+      console.log('Payload gửi lên answerSubQuestion:', answerPayload);
+      const answerResponse = await subQuestionApi.answerSubQuestion(answerPayload);
+      console.log('Answer sub-question response:', answerResponse);
       // Cập nhật trạng thái câu hỏi chính thành "đã trả lời"
-      await questionApi.updateQuestionStatus(question.id);
-      
+      try {
+        await questionApi.updateQuestionStatus(question.id, JSON.stringify("Da tra loi"));
+      } catch (err) {
+        console.error('Lỗi update status:', err);
+      }
       message.success('Trả lời thành công!');
-      answerForm.resetFields();
       fetchSubQuestions();
       if (onQuestionAnswered) {
         onQuestionAnswered();
       }
-    } catch {
+    } catch (error) {
+      console.error('Error in handleAnswer:', error);
       message.error('Trả lời thất bại!');
     }
   };
 
   // Hiển thị sub-question đầu tiên lấy từ câu hỏi cha
   const firstSub = subQuestions.length > 0 ? subQuestions[0] : null;
+
+  // Form riêng cho panel đầu tiên
+  const [firstPanelForm] = Form.useForm();
 
   return (
     <Card title="Trao đổi chi tiết" style={{ marginTop: 24 }}>
@@ -98,7 +137,7 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
           <Panel
             header={
               <div>
-                <Avatar icon={<UserOutlined />} style={{ marginRight: 8 }} />
+                <Avatar src={logo} style={{ marginRight: 8 }} />
                 <b>{question.gender}, {question.age} tuổi</b> - {question.title}
                 <span style={{ marginLeft: 16, color: '#888' }}>{dayjs(question.submitDate).format('DD/MM/YYYY')}</span>
               </div>
@@ -109,10 +148,10 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
             {/* Consultant trả lời */}
             {isConsultant && !firstSub?.answerText && (
               <Form
-                form={answerForm}
+                form={firstPanelForm}
                 onFinish={(values) => handleAnswer({
                   ...values,
-                  threadItemId: 0, // Use 0 for main question when no sub-questions exist
+                  threadItemId: firstSub ? firstSub.threadItemId : 0,
                   questionText: question.content,
                 })}
                 layout="vertical"
@@ -124,8 +163,10 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
               </Form>
             )}
             {firstSub?.answerText && (
-              <div style={{ marginTop: 12, background: '#f6ffed', padding: 12, borderRadius: 8 }}>
-                <b>Bác sĩ trả lời:</b> {firstSub.answerText}
+              <div style={{ marginTop: 12, background: '#f6ffed', padding: 12, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Avatar src={consultantInfo?.avatarPath && consultantInfo.avatarPath.trim() !== '' ? consultantInfo.avatarPath : logo} />
+                <b>{consultantInfo?.fullName || consultantInfo?.name || 'Bác sĩ'}</b>
+                <span style={{ marginLeft: 8 }}>{firstSub.answerText}</span>
               </div>
             )}
           </Panel>
@@ -135,7 +176,7 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
             <Panel
               header={
                 <div>
-                  <Avatar icon={<UserOutlined />} style={{ marginRight: 8 }} />
+                  <Avatar src={logo} style={{ marginRight: 8 }} />
                   <b>Hỏi:</b> {sub.questionText}
                   <span style={{ marginLeft: 16, color: '#888' }}>{dayjs(sub.sentAt).format('DD/MM/YYYY')}</span>
                 </div>
@@ -144,13 +185,14 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
             >
               {/* Nếu đã có trả lời */}
               {sub.answerText ? (
-                <div style={{ background: '#f6ffed', padding: 12, borderRadius: 8 }}>
-                  <b>Bác sĩ trả lời:</b> {sub.answerText}
+                <div style={{ background: '#f6ffed', padding: 12, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Avatar src={consultantInfo?.avatarPath && consultantInfo.avatarPath.trim() !== '' ? consultantInfo.avatarPath : logo} />
+                  <b>{consultantInfo?.fullName || consultantInfo?.name || 'Bác sĩ'}</b>
+                  <span style={{ marginLeft: 8 }}>{sub.answerText}</span>
                 </div>
               ) : (
                 isConsultant ? (
                   <Form
-                    form={answerForm}
                     onFinish={(values) => handleAnswer({
                       ...values,
                       threadItemId: sub.threadItemId,
@@ -172,11 +214,16 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered }) => {
         </Collapse>
       )}
 
-      {/* Form tạo sub-question mới cho member */}
-      {!isConsultant && (
-        <Form form={form} onFinish={handleCreate} layout="vertical" style={{ marginTop: 24 }}>
-          <Form.Item name="questionText" label="Đặt câu hỏi tiếp theo" rules={[{ required: true, message: 'Nhập câu hỏi' }]}> 
-            <Input.TextArea rows={2} placeholder="Nhập câu hỏi tiếp theo..." />
+      {/* Form tạo sub-question mới, chỉ hiển thị nếu canAddSubQuestion là true */}
+      {canAddSubQuestion && !isConsultant && (
+        <Form
+          form={form}
+          onFinish={handleCreate}
+          layout="vertical"
+          style={{ marginTop: 24 }}
+        >
+          <Form.Item name="questionText" label="Thêm câu hỏi trao đổi" rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}> 
+            <Input.TextArea rows={2} placeholder="Nhập nội dung câu hỏi..." />
           </Form.Item>
           <Button type="primary" htmlType="submit" loading={creating} icon={<PlusOutlined />}>Gửi câu hỏi</Button>
         </Form>
