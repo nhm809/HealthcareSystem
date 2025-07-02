@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250630143042_database")]
+    [Migration("20250702060108_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -60,6 +60,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Symptoms")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId")
                         .HasName("PK__Appointm__8ECDFCA2D172AD9E");

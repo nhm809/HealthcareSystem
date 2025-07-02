@@ -65,7 +65,7 @@ namespace Infrastructure.Services
                 SubmitDate = DateTime.UtcNow,
                 ConsultantId = luckyPerson.UserId,
                 Age = questionDto.Age,
-                Status = "Chưa trả lời",
+                Status = "Chua tra loi",
                 Gender = questionDto.Gender,
                 HeartCount = 0,
                 MessCount = 0
