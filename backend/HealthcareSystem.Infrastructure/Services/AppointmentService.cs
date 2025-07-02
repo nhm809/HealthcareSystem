@@ -53,7 +53,8 @@ namespace Infrastructure.Services
                     ConsultantName = a.Consultant!.FullName!,
                     StartTime = a.StartTime!.Value,
                     EndTime = a.EndTime!.Value,
-                    Status = a.Status!
+                    Status = a.Status!,
+                    Symptoms = a.Symptoms
                 })
                 .ToListAsync();
 
@@ -82,14 +83,15 @@ namespace Infrastructure.Services
                 StartTime = a.StartTime!.Value,
                 EndTime = a.EndTime!.Value,
                 Status = a.Status!,
-                MeetLink = a.MeetLink
+                MeetLink = a.MeetLink,
+                Symptoms = a.Symptoms
             };
         }
 
-        public async Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByMemberIdAsync(int memberId)
+        public async Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByUserIdAsync(int userId)
         {
             var list = await _context.Appointments
-                .Where(a => a.MemberId == memberId)
+                .Where(a => a.MemberId == userId || a.ConsultantId == userId)
                 .Include(a => a.Member)
                 .Include(a => a.Consultant)
                 .Select(a => new AppointmentListItemDto
@@ -101,28 +103,9 @@ namespace Infrastructure.Services
                     ConsultantName = a.Consultant!.FullName!,
                     StartTime = a.StartTime!.Value,
                     EndTime = a.EndTime!.Value,
-                    Status = a.Status!
-                })
-                .ToListAsync();
-            return list;
-        }
-
-        public async Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByConsultantIdAsync(int consultantId)
-        {
-            var list = await _context.Appointments
-                .Where(a => a.ConsultantId == consultantId)
-                .Include(a => a.Member)
-                .Include(a => a.Consultant)
-                .Select(a => new AppointmentListItemDto
-                {
-                    AppointmentId = a.AppointmentId,
-                    MemberId = a.MemberId!.Value,
-                    MemberName = a.Member!.FullName!,
-                    ConsultantId = a.ConsultantId!.Value,
-                    ConsultantName = a.Consultant!.FullName!,
-                    StartTime = a.StartTime!.Value,
-                    EndTime = a.EndTime!.Value,
-                    Status = a.Status!
+                    Status = a.Status!,
+                    MeetLink = a.MeetLink,
+                    Symptoms = a.Symptoms
                 })
                 .ToListAsync();
             return list;

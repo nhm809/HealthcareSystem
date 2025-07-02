@@ -139,7 +139,7 @@ namespace Api.Controllers
         {
             try
             {
-                var list = await _service.GetAppointmentsByMemberIdAsync(memberId);
+                var list = await _service.GetAppointmentsByUserIdAsync(memberId);
                 return Ok(new
                 {
                     success = true,
@@ -167,7 +167,7 @@ namespace Api.Controllers
         {
             try
             {
-                var list = await _service.GetAppointmentsByConsultantIdAsync(consultantId);
+                var list = await _service.GetAppointmentsByUserIdAsync(consultantId);
                 return Ok(new
                 {
                     success = true,

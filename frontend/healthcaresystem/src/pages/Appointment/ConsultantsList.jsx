@@ -6,7 +6,6 @@ import MainLayout from '@components/Layout/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
      faStethoscope,
-     faUserNurse
  } from '@fortawesome/free-solid-svg-icons'
 import defaultdoctoravatar from '../../assets/imgs/defaultdoctoravatar.png';
 import "./ConsultantsList.css";
@@ -30,7 +29,7 @@ function Appointment() {
                          id: item.consultantId,
                          name: item.fullName,
                          specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
-                         image: defaultdoctoravatar,
+                         // image: defaultdoctoravatar,
                     }));
                     setDoctors(mappedDoctors);
                } catch (error) {
@@ -82,10 +81,10 @@ function Appointment() {
                                         hoverable
                                         cover={
                                              doctor.image ? (
-                                                  <img alt="doctor" src={doctor.image} onClick={() => navigate(`/appointment/${doctor.id}`)} />
+                                                  <img alt="doctor" src={defaultdoctoravatar} onClick={() => navigate(`/appointment/${doctor.id}`)} />
                                              ) : (
                                                   <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`)}>
-                                                       <FontAwesomeIcon icon={faUserNurse} size="2xl" />
+                                                       <img alt="doctor" src={defaultdoctoravatar}/>
                                                   </div>
                                              )
                                         }

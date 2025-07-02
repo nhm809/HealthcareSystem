@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Spin, Typography, Card, Space, Tabs } from "antd";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { Table, Tag, Spin, Typography, Card, Space, Tabs, Empty, Button } from "antd";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../../components/Layout/Layout";
-import { authApi } from "../../services/api";
+import api from "../../services/api";
 import "./AppointmentHistory.css";
 
 const { Title } = Typography;
@@ -28,12 +30,9 @@ function AppointmentHistory() {
 
      const fetchAppointments = async () => {
           try {
-               const res = await authApi.getAppointmentHistory();
-               const appointments = res.data.data || [];
-
-               const filtered = appointments. filter(item => item.memberId === Number(userId));
-               const sorted = filtered.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
-               
+               const res = await api.get(`/Appointment/member/${userId}`);
+               const appointments = res.data?.data || [];
+               const sorted = appointments.sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
                setAppointments(sorted);
           } catch (err) {
                console.error(err);
@@ -53,7 +52,7 @@ function AppointmentHistory() {
 
           const key = (status || '').toLowerCase();
           const config = map[key] || { color: 'default', text: status };
-          return <Tag color={config.color}>{config.text}</Tag>;
+          return <Tag color={config.color} style={{ fontSize: '14px' }}>{config.text}</Tag>;
      };
 
      const columns = [
@@ -62,28 +61,38 @@ function AppointmentHistory() {
                dataIndex: 'serviceName',
                key: 'serviceName',
                render: () => <strong style={{ color: '#1a3e72' }}>Tư vấn sức khỏe</strong>,
-               width: 200,
+               width: 140,
           },
           {
                title: 'Bác sĩ',
                dataIndex: 'consultantName',
                key: 'consultantName',
-               render: name => <strong>{name}</strong>
+               render: name => <div style={{ fontWeight:'500' }} >{name}</div>
           },
           {
                title: 'Google Meet',
                dataIndex: 'meetLink',
                key: 'meetLink',
-               render: text => (
-                    text ? <a href={text} target="_blank" rel="noopener noreferrer">{text}</a> : 'Chưa có'
+               render: (meet) => meet ? (
+                    <a
+                         href={meet}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="meet-link"
+                    >
+                         <FontAwesomeIcon icon={faGoogle} />
+                         Google Meet
+                    </a>
+               ) : (
+                    <Tag color="red" style={{ fontSize: '14px' }}>Chưa cập nhật</Tag>
                )
           },
           {
-               title: 'Bắt đầu',
+               title: 'Thời gian',
                dataIndex: 'startTime',
                key: 'startTime',
                render: time => (
-               <div>
+               <div style={{ fontWeight:'500' }} >
                     <div>{dayjs(time).format('HH:mm')}</div>
                     <div style={{ fontSize: 12, color: '#888' }}>{dayjs(time).format('DD/MM/YYYY')}</div>
                </div>
@@ -100,67 +109,81 @@ function AppointmentHistory() {
      const filterByStatus = (statusList) =>
           appointments.filter(r => statusList.includes((r.status || '').toLowerCase()));
 
+     const getCountByStatus = (statusList) =>
+          filterByStatus(statusList).length;
+
      const tabItems = [
           {
-               key: 'dang-thanh-toan',
-               label: 'Đang thanh toán',
+               key: 'tat-ca',
+               label: `Tất cả (${appointments.length})`,
                children: (
                     <Table
                          columns={columns}
-                         dataSource={filterByStatus(['dang thanh toan', 'pending'])}
+                         dataSource={appointments}
                          rowKey="appointmentId"
                          pagination={{
-                         pageSize: 10,
+                              pageSize: 5,
+                              showQuickJumper: true,
+                         }}
+                    />
+               )
+          },
+          {
+               key: 'dang-thanh-toan',
+               label: `Đang thanh toán (${getCountByStatus(['dang thanh toan'])})`,
+               children: (
+                    <Table
+                         columns={columns}
+                         dataSource={filterByStatus(['dang thanh toan'])}
+                         rowKey="appointmentId"
+                         pagination={{
+                         pageSize: 5,
                          showQuickJumper: true,
-                         showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} cuộc hẹn`,
                          }}
                     />
                )
           },
           {
                key: 'dang-cho-kham',
-               label: 'Đang chờ khám',
+               label: `Đang chờ khám (${getCountByStatus(['dang cho kham'])})`,
                children: (
                <Table
                     columns={columns}
                     dataSource={filterByStatus(['dang cho kham'])}
                     rowKey="appointmentId"
                     pagination={{
-                    pageSize: 10,
+                    pageSize: 5,
                     showQuickJumper: true,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} cuộc hẹn`,
                     }}
                />
                )
           },
           {
                key: 'da-hoan-thanh',
-               label: 'Đã hoàn thành',
+               label: `Đã hoàn thành (${getCountByStatus(['da hoan thanh'])})`,
                children: (
                <Table
                     columns={columns}
-                    dataSource={filterByStatus(['da hoan thanh', 'completed'])}
+                    dataSource={filterByStatus(['da hoan thanh'])}
                     rowKey="appointmentId"
                     pagination={{
-                    pageSize: 10,
+                    pageSize: 5,
                     showQuickJumper: true,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} cuộc hẹn`,
                     }}
                />
                )
           },
           {
                key: 'da-huy',
-               label: 'Đã hủy',
+               label: `Đã hủy (${getCountByStatus(['da huy'])})`,
                children: (
                <Table
                     columns={columns}
-                    dataSource={filterByStatus(['da huy', 'cancelled'])}
+                    dataSource={filterByStatus(['da huy'])}
                     rowKey="appointmentId"
                     pagination={{
-                    pageSize: 10,
+                    pageSize: 5,
                     showQuickJumper: true,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} cuộc hẹn`,
                     }}
                />
                )
@@ -172,16 +195,24 @@ function AppointmentHistory() {
                <div className="appointment-history">
                     <Card>
                          <Space direction="vertical" style={{ width: '100%' }}>
-                         <Title level={2} style={{ color: '#1a3e72' }}>Lịch sử tư vấn</Title>
-                         {loading ? (
-                              <div style={{ textAlign: 'center', padding: '50px' }}>
-                                   <Spin size="large" />
+                              <div style={{ textAlign: 'center' }}>
+                                   <Title level={2} style={{ color: '#1a3e72' }}>Lịch sử tư vấn</Title>
                               </div>
-                         ) : appointments.length > 0 ? (
-                              <Tabs defaultActiveKey="dang-thanh-toan" items={tabItems} />
-                         ) : (
-                              <p>Bạn chưa có lịch hẹn nào.</p>
-                         )}
+                              {loading ? (
+                                   <div style={{ textAlign: 'center', padding: '50px' }}>
+                                        <Spin size="large" />
+                                   </div>
+                              ) : appointments.length > 0 ? (
+                                   <Tabs defaultActiveKey="tat-ca" items={tabItems} />
+                              ) : (
+                                   <Empty
+                                        description="Bạn chưa có lịch hẹn nào"
+                                   >
+                                        <Button className='booking-button' type="primary" onClick={() => navigate('/appointment')}>
+                                             Đặt lịch ngay
+                                        </Button>
+                                   </Empty>
+                              )}
                          </Space>
                     </Card>
                </div>

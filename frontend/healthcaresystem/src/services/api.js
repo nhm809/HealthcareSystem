@@ -34,7 +34,6 @@ export const authApi = {
 
      getTestServiceRecordsByMember: (memberId) => api.get(`/TestServiceRecord/member/${memberId}`),
      getServiceById: (serviceId) => api.get(`/service/${serviceId}`),
-     getAppointmentHistory: () => api.get('/Appointment/list'),
 
      bookTestServiceRecord: (data) =>
           api.post('/TestServiceRecord/book/', data),

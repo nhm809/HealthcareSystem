@@ -28,62 +28,6 @@ function BookingConfirmation() {
     const { doctor, selectedDate, selectedTime } = location.state || {};
     const userId = Cookies.get('userId');
 
-    // useEffect(() => {
-    //     console.log('useEffect PAYMENT chạy');
-
-    //     const params = new URLSearchParams(location.search);
-    //     const handler = params.get('handler');
-    //     const appointmentId = params.get('appointmentId');
-
-    //     console.log('Handler:', handler);
-    //     console.log('AppointmentId:', appointmentId);
-    //     console.log('UserId:', userId);
-
-    //     if (!appointmentId || !userId) return;
-
-    //     const now = new Date().toISOString();
-
-    //     if (handler === 'success') {
-    //         const sentKey = `noti_sent_appointment_${appointmentId}`;
-    //         if (!sessionStorage.getItem(sentKey) && !notiSentRef.current[sentKey]) {
-    //             notiSentRef.current[sentKey] = true;
-
-    //             notiApi.createNoti({
-    //                 userId: Number(userId),
-    //                 title: 'Đặt lịch tư vấn thành công',
-    //                 content: `Bạn đã đặt lịch tư vấn thành công. Mã lịch hẹn: ${appointmentId}`,
-    //                 sendTime: now,
-    //                 isRead: false
-    //             }).finally(() => {
-    //                 sessionStorage.setItem(sentKey, '1');
-    //                 window.history.replaceState({}, document.title, '/appointment');
-    //             });
-    //         } else {
-    //             window.history.replaceState({}, document.title, '/appointment');
-    //         }
-    //     }
-
-    //     if (handler === 'cancel') {
-    //         const cancelKey = `noti_cancel_appointment_${appointmentId}`;
-    //         if (!sessionStorage.getItem(cancelKey) && !notiSentRef.current[cancelKey]) {
-    //             notiSentRef.current[cancelKey] = true;
-
-    //             notiApi.createNoti({
-    //                 userId: Number(userId),
-    //                 title: 'Thanh toán chưa hoàn tất',
-    //                 content: `Bạn đã đặt lịch tư vấn (Mã: ${appointmentId}) nhưng chưa hoàn tất thanh toán. Vui lòng thanh toán để được tư vấn đúng giờ.`,
-    //                 sendTime: now,
-    //                 isRead: false
-    //             }).finally(() => {
-    //                 sessionStorage.setItem(cancelKey, '1');
-    //                 window.history.replaceState({}, document.title, '/appointment');
-    //             });
-    //         } else {
-    //             window.history.replaceState({}, document.title, '/appointment');
-    //         }
-    //     }
-    // }, [location]);
-
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
@@ -135,6 +79,11 @@ function BookingConfirmation() {
         setShowConfirmModal(true);
     };
 
+    const handleOpenAuthModal = () => {
+        setShowAuthModal(true);
+        setDefaultTab(0);
+    }
+
     const handleOpenModal = () => {
         form.setFieldsValue({
             fullName: user?.fullName || '',
@@ -184,7 +133,7 @@ function BookingConfirmation() {
                         <span className="user-label">Người tới khám</span>
                         <div className="user-name-row">
                             <p className="user-warning">Bạn cần đăng nhập để tiếp tục đặt lịch.</p>
-                            <Button className="login-button" type="primary" onClick={() => navigate('/')}>Đăng nhập</Button>
+                            <Button className="login-button" type="primary" onClick={handleOpenAuthModal}>Đăng nhập</Button>
                         </div>
                     </div>
                 </div>
@@ -198,7 +147,7 @@ function BookingConfirmation() {
                         <span className="user-label">Người tới khám</span>
                         <div className="user-name-row">
                             <p className="user-warning">Vui lòng bổ sung đầy đủ thông tin cá nhân.</p>
-                            <Button onClick={handleOpenModal}>Cập nhật thông tin</Button>
+                            <Button className="update-button" onClick={handleOpenModal}>Cập nhật thông tin</Button>
                         </div>
                     </div>
                 </div>
@@ -289,6 +238,7 @@ function BookingConfirmation() {
                     user={user}
                     selectedDate={selectedDate}
                     selectedTime={selectedTime}
+                    symptom={symptom}
                 />
 
                 {/* Modal cập nhật thông tin */}

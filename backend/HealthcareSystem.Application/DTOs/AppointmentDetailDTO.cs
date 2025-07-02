@@ -17,6 +17,7 @@ namespace Application.DTOs
             public DateTime EndTime { get; set; }
             public string? MeetLink { get; set; }
             public string Status { get; set; }
+            public string? Symptoms { get; set; } // triệu chứng
         }
     
 
