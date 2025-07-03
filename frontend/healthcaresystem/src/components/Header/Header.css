@@ -6,6 +6,7 @@
   align-items: center;
   color: #004d40;
   position: relative;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .top-bar span {
@@ -46,7 +47,7 @@
 
 .header {
   background-color: #54AA7F;
-  padding: 15px 20px;
+  padding: 8px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
