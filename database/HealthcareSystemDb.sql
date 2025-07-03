@@ -98,7 +98,7 @@ VALUES
 --    N'Đã trả lời'
 --);
 INSERT INTO Question (
-   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, AnsCount
 )
 VALUES
 (

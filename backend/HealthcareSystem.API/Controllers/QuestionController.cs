@@ -133,4 +133,15 @@ public class QuestionController : ControllerBase
         return Ok(questions);
     }
 
+    [HttpGet("countAnswers/{questionId}")]
+    public async Task<ActionResult<int>> CountAnswers(int questionId)
+    {
+        if (questionId <= 0)
+        {
+            return BadRequest("Invalid question ID.");
+        }
+        var count = await _questionService.CountAnswers(questionId);
+        return Ok(count);
+    }
+
 }
