@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using Application.Interfaces;
@@ -13,7 +13,33 @@ public class ManageUserController : ControllerBase
     {
         _manageUserService = manageUserService;
     }
-    
+
+
+    [HttpPost]
+    [Route("getAllUsers")]
+    public async Task<IActionResult> GetAllUsersAsync()
+    {
+        try
+        {
+            var users = await _manageUserService.GetAllUsersAsync();
+            return Ok(new
+            {
+                Success = true,
+                Data = users
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                Success = false,
+                Message = "Đã xảy ra lỗi khi lấy danh sách người dùng.",
+                Details = ex.Message
+            });
+        }
+    }
+
+
     [HttpGet]
     [Route("countPage")]
     public async Task<IActionResult> GetCountPageAsync()
@@ -85,6 +111,36 @@ public class ManageUserController : ControllerBase
             {
                 return NotFound(new { success = false, message = "User not found." });
             }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
+    [HttpGet]
+    [Route("countUsers")]
+    public async Task<IActionResult> CountUsersAsync()
+    {
+        try
+        {
+            var res = await _manageUserService.CountUsers();
+            return Content(res, "text/plain");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
+    [HttpGet]
+    [Route("getTenLatestMembers")]
+    public async Task<IActionResult> GetTenLatestMembersAsync()
+    {
+        try
+        {
+            var members = await _manageUserService.GetTenLatestMembers();
+            return Ok(new { success = true, members });
         }
         catch (Exception e)
         {

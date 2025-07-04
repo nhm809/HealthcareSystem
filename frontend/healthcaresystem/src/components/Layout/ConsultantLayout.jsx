@@ -10,7 +10,7 @@ import {
      LogoutOutlined,
      BellOutlined,
 } from '@ant-design/icons';
-import ConsultantDashboard from '../../pages/Consultant/ConsultantDashboard';
+import AppointmentManagement from '../../pages/Consultant/AppointmentManagement';
 // Placeholder components for other menu items
 import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
@@ -186,7 +186,7 @@ const ConsultantLayout = () => {
      const renderContent = () => {
           switch (selectedKey) {
                case 'dashboard':
-                    return <ConsultantDashboard />;
+                    return <AppointmentManagement />;
                case 'questions':
                     return <QuestionManagement />;
                case 'blogs':
@@ -194,7 +194,7 @@ const ConsultantLayout = () => {
                case 'my-profile':
                     return <Profile hideBackButton={true} />;
                default:
-                    return <ConsultantDashboard />;
+                    return <AppointmentManagement />;
           }
      };
 
@@ -278,16 +278,8 @@ const ConsultantLayout = () => {
                               </Badge>
                          </Dropdown>
                     </Header>
-                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-                         <div
-                              style={{
-                                   padding: 24,
-                                   minHeight: 360,
-                                   background: '#f5f5f5',
-                                   borderRadius: 8,
-                                   boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-                              }}
-                         >
+                    <Content style={{ margin: '24px' }}>
+                         <div>
                               {renderContent()}
                          </div>
                     </Content>

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Input, Spin, Modal, Form, DatePicker, Radio } from 'antd';
 import './BookingInformation.css';
 import ConfirmAppointmentModal from './ConfirmAppointmentModal';
 import MainLayout from '../../components/Layout/Layout';
 import Cookies from 'js-cookie';
-import { getInfo, authApi } from '../../services/api';
+import { getInfo, authApi, notiApi } from '../../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
@@ -22,6 +22,7 @@ function BookingConfirmation() {
     const [symptom, setSymptom] = useState('');
     const [form] = Form.useForm();
 
+    // const notiSentRef = useRef({});
     const navigate = useNavigate();
     const location = useLocation();
     const { doctor, selectedDate, selectedTime } = location.state || {};
@@ -78,6 +79,11 @@ function BookingConfirmation() {
         setShowConfirmModal(true);
     };
 
+    const handleOpenAuthModal = () => {
+        setShowAuthModal(true);
+        setDefaultTab(0);
+    }
+
     const handleOpenModal = () => {
         form.setFieldsValue({
             fullName: user?.fullName || '',
@@ -127,7 +133,7 @@ function BookingConfirmation() {
                         <span className="user-label">Người tới khám</span>
                         <div className="user-name-row">
                             <p className="user-warning">Bạn cần đăng nhập để tiếp tục đặt lịch.</p>
-                            <Button className="login-button" type="primary" onClick={() => navigate('/')}>Đăng nhập</Button>
+                            <Button className="login-button" type="primary" onClick={handleOpenAuthModal}>Đăng nhập</Button>
                         </div>
                     </div>
                 </div>
@@ -141,7 +147,7 @@ function BookingConfirmation() {
                         <span className="user-label">Người tới khám</span>
                         <div className="user-name-row">
                             <p className="user-warning">Vui lòng bổ sung đầy đủ thông tin cá nhân.</p>
-                            <Button onClick={handleOpenModal}>Cập nhật thông tin</Button>
+                            <Button className="update-button" onClick={handleOpenModal}>Cập nhật thông tin</Button>
                         </div>
                     </div>
                 </div>
@@ -182,13 +188,13 @@ function BookingConfirmation() {
 
                     <div className="separator" />
 
-                    <div className="doctor-info">
+                    <div className="doctor-info1">
                         <img
                             src={defaultdoctoravatar}
                             alt="doctor"
                             className="doctor-avatar"
                         />
-                        <div className="doctor-details">
+                        <div className="doctor-details1">
                             <p className="service-title">
                                 Tư vấn trực tuyến với <strong>{doctor?.fullName}</strong>
                             </p>
@@ -226,12 +232,13 @@ function BookingConfirmation() {
                 <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} defaultTab={defaultTab} />
 
                 <ConfirmAppointmentModal
-                open={showConfirmModal}
-                onClose={() => setShowConfirmModal(false)}
-                doctor={doctor}
-                user={user}
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
+                    open={showConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
+                    doctor={doctor}
+                    user={user}
+                    selectedDate={selectedDate}
+                    selectedTime={selectedTime}
+                    symptom={symptom}
                 />
 
                 {/* Modal cập nhật thông tin */}

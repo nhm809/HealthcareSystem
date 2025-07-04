@@ -29,7 +29,8 @@ namespace Infrastructure.Services
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
                 MeetLink = dto.MeetLink,
-                Status = "Dang thanh toan"   // giá trị mặc định
+                Status = "Dang thanh toan",   // giá trị mặc định
+                Symptoms = dto.Symptoms // Assign the new Symptoms field
             };
 
             await _context.Appointments.AddAsync(entity);
@@ -52,7 +53,8 @@ namespace Infrastructure.Services
                     ConsultantName = a.Consultant!.FullName!,
                     StartTime = a.StartTime!.Value,
                     EndTime = a.EndTime!.Value,
-                    Status = a.Status!
+                    Status = a.Status!,
+                    Symptoms = a.Symptoms
                 })
                 .ToListAsync();
 
@@ -81,8 +83,32 @@ namespace Infrastructure.Services
                 StartTime = a.StartTime!.Value,
                 EndTime = a.EndTime!.Value,
                 Status = a.Status!,
-                MeetLink = a.MeetLink
+                MeetLink = a.MeetLink,
+                Symptoms = a.Symptoms
             };
+        }
+
+        public async Task<IEnumerable<AppointmentListItemDto>> GetAppointmentsByUserIdAsync(int userId)
+        {
+            var list = await _context.Appointments
+                .Where(a => a.MemberId == userId || a.ConsultantId == userId)
+                .Include(a => a.Member)
+                .Include(a => a.Consultant)
+                .Select(a => new AppointmentListItemDto
+                {
+                    AppointmentId = a.AppointmentId,
+                    MemberId = a.MemberId!.Value,
+                    MemberName = a.Member!.FullName!,
+                    ConsultantId = a.ConsultantId!.Value,
+                    ConsultantName = a.Consultant!.FullName!,
+                    StartTime = a.StartTime!.Value,
+                    EndTime = a.EndTime!.Value,
+                    Status = a.Status!,
+                    MeetLink = a.MeetLink,
+                    Symptoms = a.Symptoms
+                })
+                .ToListAsync();
+            return list;
         }
 
         public async Task<bool> UpdateAppointmentStatusAsync(int appointmentId, string newStatus)
@@ -91,6 +117,16 @@ namespace Infrastructure.Services
             if (a == null) return false;
 
             a.Status = newStatus;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateAppointmentMeetLinkAsync(int appointmentId, string meetLink)
+        {
+            var a = await _context.Appointments.FindAsync(appointmentId);
+            if (a == null) return false;
+
+            a.MeetLink = meetLink;
             await _context.SaveChangesAsync();
             return true;
         }

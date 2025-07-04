@@ -41,7 +41,7 @@ namespace Infrastructure.Services
                     UserId = createNotiDTO.UserId,
                     Title = createNotiDTO.Title,
                     Content = createNotiDTO.Content,
-                    SendTime = DateTime.UtcNow,
+                    SendTime = DateTime.UtcNow.AddHours(7),
                     IsRead = false
                 };
                 _context.Notifications.Add(notification);

@@ -3,6 +3,7 @@ import { Row, Col, Card, Tag, Input, List, Pagination, Form, Select, Upload, But
 import { PlusOutlined, ArrowLeftOutlined, MessageOutlined, HeartOutlined } from '@ant-design/icons';
 import MainLayout from '@components/Layout/Layout';
 import { questionApi, specialtyApi } from '@services/api';
+import api from '@services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '@components/Header/AuthModal/AuthModal';
 import { ToastContext } from '../../contexts/ToastProvider';
@@ -10,7 +11,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { useParams, useNavigate } from 'react-router-dom';
-import SubQuestionList from '@components/Question/SubQuestionList';
+import SubQuestionList from './SubQuestionList';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -164,6 +165,46 @@ function Question() {
         };
         try {
             await questionApi.addQuestion(payload);
+            
+            // Sau khi tạo câu hỏi cha thành công, lấy câu hỏi mới nhất của user để tạo câu hỏi con
+            try {
+                console.log('Đang lấy danh sách câu hỏi của user:', userId);
+                const userQuestionsRes = await questionApi.getQuestionsByMember(Number(userId));
+                const userQuestions = userQuestionsRes.data || [];
+                console.log('Danh sách câu hỏi của user:', userQuestions);
+                
+                // Lấy câu hỏi mới nhất (sắp xếp theo thời gian)
+                const sortedQuestions = userQuestions.sort((a, b) => {
+                    const dateA = new Date(a.submitDate || 0);
+                    const dateB = new Date(b.submitDate || 0);
+                    return dateB - dateA;
+                });
+                console.log('Danh sách câu hỏi đã sắp xếp:', sortedQuestions);
+                
+                const latestQuestion = sortedQuestions[0];
+                console.log('Câu hỏi mới nhất:', latestQuestion);
+                
+                if (latestQuestion) {
+                    console.log('Đang tạo câu hỏi con cho câu hỏi ID:', latestQuestion.questionId);
+                    // Tạo câu hỏi con đầu tiên với nội dung từ câu hỏi cha
+                    const createSubResponse = await api.post('/subQuestion/add', {
+                        ThreadItemId: 0,
+                        QuestionId: latestQuestion.questionId,
+                        QuestionText: values.content, // Sử dụng nội dung câu hỏi cha
+                        AnswerText: '',
+                        SentAt: new Date().toISOString(),
+                        AttachmentPath: attachmentPath || '',
+                        IsAnswered: false,
+                    });
+                    console.log('Kết quả tạo câu hỏi con:', createSubResponse);
+                } else {
+                    console.log('Không tìm thấy câu hỏi mới nhất');
+                }
+            } catch (subQuestionError) {
+                console.error('Không thể tạo câu hỏi con:', subQuestionError);
+                // Vẫn hiển thị thành công vì câu hỏi cha đã được tạo
+            }
+            
             toast.success('Gửi câu hỏi thành công!');
             setTimeout(() => {
                 window.location.reload();
@@ -185,10 +226,10 @@ function Question() {
     return (
         <MainLayout>
             <Row gutter={24}>
-                <Col span={14}>
+                <Col span={selectedQuestion ? 24 : 14}>
                     <Card>
                         {selectedQuestion ? (
-                            <div>
+                            <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'left' }}>
                                 <Button
                                     icon={<ArrowLeftOutlined />}
                                     type="link"
@@ -200,31 +241,32 @@ function Question() {
                                 >
                                     Quay lại
                                 </Button>
-                                <div style={{ marginBottom: 8 }}>
+                                <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
                                     <b>{selectedQuestion.gender}, {selectedQuestion.age} tuổi</b>
                                     <Tag color="green">{getSpecialtyName(selectedQuestion.specialtyId)}</Tag>
                                     <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
                                         {selectedQuestion.isAnswered ? 'Đã trả lời' : 'Đang mở'}
                                     </Tag>
                                 </div>
-                                <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4 }}>{selectedQuestion.title}</div>
-                                <div style={{ marginBottom: 8 }}>{selectedQuestion.content}</div>
+                                <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4, fontSize: 20 }}>{selectedQuestion.title}</div>
+                                <div style={{ marginBottom: 8, fontSize: 16 }}>{selectedQuestion.content}</div>
                                 {selectedQuestion.attachmentPath && (
                                     <div style={{ marginBottom: 8 }}>
                                         <Image
-                                            width={200}
+                                            width={300}
                                             src={selectedQuestion.attachmentPath}
                                             alt="Ảnh câu hỏi"
+                                            style={{ borderRadius: 8 }}
                                         />
                                     </div>
                                 )}
-                                <div style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
+                                <div style={{ fontSize: 12, color: '#888', marginBottom: 16, display: 'flex', gap: 24 }}>
                                     <span>{selectedQuestion.date}</span>
-                                    <span style={{ marginLeft: 16 }}>
+                                    <span>
                                         <MessageOutlined style={{ marginRight: 4 }} />
                                         {selectedQuestion.answersCount || 0} câu trả lời
                                     </span>
-                                    <span style={{ marginLeft: 16 }}>
+                                    <span>
                                         <HeartOutlined style={{ marginRight: 4 }} />
                                         {selectedQuestion.likes || 0} Cảm ơn
                                     </span>
@@ -233,6 +275,19 @@ function Question() {
                                 <SubQuestionList
                                     question={selectedQuestion}
                                     isConsultant={userRole === 'CS'}
+                                    consultant={selectedQuestion.consultant}
+                                    canAddSubQuestion={userId == selectedQuestion?.memberId}
+                                    onQuestionAnswered={async () => {
+                                        if (selectedQuestion?.id) {
+                                            try {
+                                                const res = await questionApi.getQuestionById(selectedQuestion.id);
+                                                setSelectedQuestion({
+                                                    ...selectedQuestion,
+                                                    ...res.data
+                                                });
+                                            } catch {}
+                                        }
+                                    }}
                                 />
                             </div>
                         ) : (
@@ -337,46 +392,48 @@ function Question() {
                     </Card>
                 </Col>
                 <Col span={10}>
-                    <Card>
-                        <Form layout="vertical" form={form} onFinish={handleSubmit}>
-                            <Form.Item label="Tuổi" name="age" rules={[{ required: true, message: 'Nhập tuổi của bạn' }]}> 
-                                <Input placeholder="Nhập tuổi của bạn" />
-                            </Form.Item>
-                            <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Chọn giới tính' }]}> 
-                                <Radio.Group>
-                                    <Radio value="Nam">Nam</Radio>
-                                    <Radio value="Nữ">Nữ</Radio>
-                                </Radio.Group>
-                            </Form.Item>
-                            <Form.Item label="Chuyên khoa" name="specialty" rules={[{ required: true, message: 'Chọn chuyên khoa' }]}> 
-                                <Select placeholder="Chọn chuyên khoa">
-                                    {specialties.map(s => (
-                                        <Select.Option key={s.id} value={String(s.id)}>{s.name}</Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Tiêu đề" name="title" rules={[{ required: true, message: 'Nhập tiêu đề' }]}> 
-                                <Input placeholder="Tiêu đề (vd: Mọc mụn nước)" />
-                            </Form.Item>
-                            <Form.Item label="Nội dung câu hỏi" name="content" rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}> 
-                                <Input.TextArea rows={4} placeholder="Nội dung câu hỏi..." />
-                            </Form.Item>
-                            <Form.Item label="Thêm ảnh" name="image" valuePropName="fileList" getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}>
-                                <Upload listType="picture-card" maxCount={1} beforeUpload={() => false} accept="image/*">
-                                    <div>
-                                        <PlusOutlined />
-                                        <div>Thêm ảnh</div>
-                                    </div>
-                                </Upload>
-                            </Form.Item>
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" block loading={loading}>Gửi</Button>
-                            </Form.Item>
-                            <div style={{ fontSize: 12, color: '#888' }}>
-                                * Câu hỏi của bạn sẽ được hiển thị ẩn danh sau khi được kiểm duyệt
-                            </div>
-                        </Form>
-                    </Card>
+                    {!selectedQuestion && (
+                        <Card>
+                            <Form layout="vertical" form={form} onFinish={handleSubmit}>
+                                <Form.Item label="Tuổi" name="age" rules={[{ required: true, message: 'Nhập tuổi của bạn' }]}> 
+                                    <Input placeholder="Nhập tuổi của bạn" />
+                                </Form.Item>
+                                <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Chọn giới tính' }]}> 
+                                    <Radio.Group>
+                                        <Radio value="Nam">Nam</Radio>
+                                        <Radio value="Nữ">Nữ</Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                                <Form.Item label="Chuyên khoa" name="specialty" rules={[{ required: true, message: 'Chọn chuyên khoa' }]}> 
+                                    <Select placeholder="Chọn chuyên khoa">
+                                        {specialties.map(s => (
+                                            <Select.Option key={s.id} value={String(s.id)}>{s.name}</Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item label="Tiêu đề" name="title" rules={[{ required: true, message: 'Nhập tiêu đề' }]}> 
+                                    <Input placeholder="Tiêu đề (vd: Mọc mụn nước)" />
+                                </Form.Item>
+                                <Form.Item label="Nội dung câu hỏi" name="content" rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}> 
+                                    <Input.TextArea rows={4} placeholder="Nội dung câu hỏi..." />
+                                </Form.Item>
+                                <Form.Item label="Thêm ảnh" name="image" valuePropName="fileList" getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}>
+                                    <Upload listType="picture-card" maxCount={1} beforeUpload={() => false} accept="image/*">
+                                        <div>
+                                            <PlusOutlined />
+                                            <div>Thêm ảnh</div>
+                                        </div>
+                                    </Upload>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" block loading={loading}>Gửi</Button>
+                                </Form.Item>
+                                <div style={{ fontSize: 12, color: '#888' }}>
+                                    * Câu hỏi của bạn sẽ được hiển thị ẩn danh sau khi được kiểm duyệt
+                                </div>
+                            </Form>
+                        </Card>
+                    )}
                 </Col>
             </Row>
             <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} />

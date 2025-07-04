@@ -12,8 +12,8 @@ const api = axios.create(
 );
 
 export const authApi = {
-     sendOtpReset: (email) => api.post('/sendotp-reset', {email}),
-     sendOtpRegister: (email) => api.post('/sendotp-register', {email}),
+     sendOtpReset: (email) => api.post('/sendotp-reset', { email }),
+     sendOtpRegister: (email) => api.post('/sendotp-register', { email }),
      login: (data) => api.post('/login', data),
      register: (data) => api.post('/register', data),
      googleLogin: (credential) => api.post('/google-login', { IdToken: credential }),
@@ -33,22 +33,26 @@ export const authApi = {
           ),
 
      getTestServiceRecordsByMember: (memberId) => api.get(`/TestServiceRecord/member/${memberId}`),
+     getServiceById: (serviceId) => api.get(`/service/${serviceId}`),
 
-     bookTestServiceRecord: (data) => 
+     bookTestServiceRecord: (data) =>
           api.post('/TestServiceRecord/book/', data),
 
-     createPaypalUrl: (testServiceRecordId, appointmentId) => 
+     createPaypalUrl: (testServiceRecordId, appointmentId) =>
           api.post(`/Payment/create-paypal-url`, null, {
-          params: {
-               testServiceRecordId,
-               appointmentId,
-          }
-     }),
+               params: {
+                    testServiceRecordId,
+                    appointmentId,
+               }
+          }),
 
-     getWorkShifts: (date) => 
+     getWorkShifts: (date) =>
           api.get(`/TestServiceRecord/work-shifts`, {
                params: { date }
           }),
+
+     getTestServiceRecordDetail: (testServiceRecordId, memberId) =>
+          api.get(`/TestServiceRecord/${testServiceRecordId}/${memberId}`),
 };
 
 export const notiApi = {
@@ -62,9 +66,13 @@ export const notiApi = {
                'Authorization': `Bearer ${Cookies.get('token')}`
           }
      }),
-     createNoti: (data) => api.post('/Noti/createNoti', data),
+     createNoti: (data) => api.post('/Noti/createNoti', data, {
+          headers: {
+               'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+     }),
 };
-     
+
 export const getInfo = async (userId) => {
      return await api.get(`/user/get/${userId}`)
 }
@@ -90,32 +98,42 @@ export const updateTestResult = async (staffId, data) => {
 };
 
 export const questionApi = {
-    getAllQuestions: () => api.get('/question/getAll'),
-    addQuestion: (data) => api.post('/question/add', data),
-    getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
+     getAllQuestions: () => api.get('/question/getAll'),
+     addQuestion: (data) => api.post('/question/add', data),
+     getQuestionById: (questionId) => api.get(`/question/getQuestion/${questionId}`),
+     getQuestionsByMember: (memberId) => api.get(`/question/getByMember/${memberId}`),
+     getQuestionsByConsultant: (consultantId) => api.get(`/question/getByConsultant/${consultantId}`),
+     updateQuestionStatus: (questionId, status) => api.put(`/question/updateStatus/${questionId}`, status, {
+          headers: { 'Content-Type': 'application/json' }
+     }),
 };
 
 export const messageApi = {
-    getHistory: (questionId) => api.get(`/message/getHistory/${questionId}`),
-    addMessage: (data) => api.post('/message/add', data),
+     getHistory: (questionId) => api.get(`/message/getHistory/${questionId}`),
+     addMessage: (data) => api.post('/message/add', data),
 };
 
 export const specialtyApi = {
-    getAllSpecialties: () => api.get('/specialty/getAll'),
+     getAllSpecialties: () => api.get('/specialty/getAll'),
 };
 
 export const consultantBlogApi = {
-    createBlog: (data) => api.post('/ConsultantBlog', data),
-    getBlogsByConsultant: (consultantId) => api.get(`/ConsultantBlog/consultant/${consultantId}`),
-    updateBlog: (data) => api.put('/ConsultantBlog', data),
-    getBlogById: (blogID) => api.get(`/blogs/${blogID}`),
-    deleteBlog: (blogId, consultantId) => api.delete(`/ConsultantBlog`, { data: { BlogID: blogId, ConsultantId: consultantId } }),
-    getDeletedBlogs: (consultantId) => api.get(`/ConsultantBlog/deleted/${consultantId}`),
-    restoreBlog: (blogId, consultantId) => api.patch(`/ConsultantBlog/restore`, null, { params: { blogId, consultantId } }),
+     createBlog: (data) => api.post('/ConsultantBlog', data),
+     getBlogsByConsultant: (consultantId) => api.get(`/ConsultantBlog/consultant/${consultantId}`),
+     updateBlog: (data) => api.put('/ConsultantBlog', data),
+     getBlogById: (blogID) => api.get(`/blogs/${blogID}`),
+     deleteBlog: (blogId, consultantId) => api.delete(`/ConsultantBlog`, { data: { BlogID: blogId, ConsultantId: consultantId } }),
+     getDeletedBlogs: (consultantId) => api.get(`/ConsultantBlog/deleted/${consultantId}`),
+     restoreBlog: (blogId, consultantId) => api.patch(`/ConsultantBlog/restore`, null, { params: { blogId, consultantId } }),
 };
 
 export const cancelTestRecord = (testServiceRecordId, userId) =>
-  api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
+     api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
+
+export const subQuestionApi = {
+     answerSubQuestion: (data) => api.post('/subQuestion/answer', data),
+     updateSubQuestion: (threadItemId, data) => api.put(`/subQuestion/update/${threadItemId}`, data),
+};
 
 // Request interceptor
 api.interceptors.request.use(
@@ -132,7 +150,7 @@ api.interceptors.request.use(
                token: token ? 'Present' : 'Missing'
           });
           return config;
-     }, 
+     },
      (err) => {
           console.error('Request error:', err);
           return Promise.reject(err);

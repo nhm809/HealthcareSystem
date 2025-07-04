@@ -14,16 +14,40 @@ namespace Infrastructure.Services
     public class ManageUserService : IManageUserService
     {
         private readonly AppDbContext _context;
-        
+
         public ManageUserService(AppDbContext context)
         {
             _context = context;
         }
 
+
+        public async Task<IEnumerable<UserInfoDTO>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Select(u => new UserInfoDTO
+                {
+                    UserId = u.UserId,
+                    Provider = u.Provider,
+                    GoogleId = u.GoogleId,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    DoB = u.DoB,
+                    Gender = u.Gender,
+                    Address = u.Address,
+                    CreateDate = u.CreateDate,
+                    Avatar = u.Avatar,
+                    RoleId = u.RoleId,
+                    IsAvailable = u.IsAvailable
+                })
+                .ToListAsync();
+        }
+
+
         public async Task<int> CountPage()
         {
             int totalUsers = await _context.Users.CountAsync();
-            int pageSize = 10; 
+            int pageSize = 10;
             int totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
             return totalPages;
         }
@@ -42,9 +66,9 @@ namespace Infrastructure.Services
                     Email = u.Email,
                     FullName = u.FullName,
                     RoleId = u.RoleId,
-                    IsActive = u.IsActive
+                    IsAvailable = u.IsAvailable
                 })
-                .ToListAsync(); 
+                .ToListAsync();
 
             return userList;
 
@@ -54,20 +78,20 @@ namespace Infrastructure.Services
         public async Task<bool> UpdateUserAsync(ManageUserDTO userDto)
         {
             var user = await _context.Users.FindAsync(userDto.UserId);
-            
+
             if (user == null)
             {
-                return false; 
+                return false;
             }
 
-            if(userDto.RoleId != null)
+            if (userDto.RoleId != null)
             {
                 user.RoleId = userDto.RoleId;
             }
 
-            if(userDto.IsActive != null)
+            if (userDto.IsAvailable != null)
             {
-                user.IsActive = userDto.IsActive.Value;
+                user.IsAvailable = userDto.IsAvailable.Value;
             }
 
             _context.Users.Update(user);
@@ -85,6 +109,48 @@ namespace Infrastructure.Services
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<string> CountUsers()
+        {
+            int totalUsers = await _context.Users.CountAsync();
+            int admins = await _context.Users.CountAsync(u => u.RoleId.Equals("AD"));
+            int members = await _context.Users.CountAsync(u => u.RoleId.Equals("MB"));
+            int staffs = await _context.Users.CountAsync(u => u.RoleId.Equals("ST"));
+            int consultants = await _context.Users.CountAsync(u => u.RoleId.Equals("CS"));
+            int managers = await _context.Users.CountAsync(u => u.RoleId.Equals("MG"));
+
+            return $"Total Users: {totalUsers}\n" +
+                   $"Admins: {admins}\n" +
+                   $"Managers: {managers}\n" +
+                   $"Staffs: {staffs}\n" +
+                   $"Consultants: {consultants}\n" +
+                   $"Members: {members}\n";
+        }
+
+        public async Task<IEnumerable<UserInfoDTO>> GetTenLatestMembers()
+        {
+            return await _context.Users
+                .Select(u => new UserInfoDTO
+                {
+                    UserId = u.UserId,
+                    Provider = u.Provider,
+                    GoogleId = u.GoogleId,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    DoB = u.DoB,
+                    Gender = u.Gender,
+                    Address = u.Address,
+                    CreateDate = u.CreateDate,
+                    Avatar = u.Avatar,
+                    RoleId = u.RoleId,
+                    IsAvailable = u.IsAvailable
+                })
+                .Where(u => u.RoleId == "MB" && u.IsAvailable)
+                .OrderByDescending(u => u.CreateDate)
+                .Take(10)
+                .ToListAsync();
         }
     }
 }

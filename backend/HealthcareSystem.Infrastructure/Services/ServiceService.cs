@@ -25,7 +25,7 @@ namespace Infrastructure.Services
                     ServiceId = s.ServiceId,
                     Name = s.Name,
                     Price = s.Price,
-                    Description = s.Description 
+                    Description = s.Description
                 })
                 .ToListAsync();
         }

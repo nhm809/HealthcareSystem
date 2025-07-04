@@ -15,5 +15,6 @@ namespace Application.DTOs
         /// KHÔNG bắt buộc: có thể để null hoặc rỗng nếu chưa có link.
         /// </summary>
         public string? MeetLink { get; set; }
+        public string? Symptoms { get; set; } // Add this line
     }
 }

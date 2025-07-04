@@ -43,12 +43,49 @@ namespace Api.Controllers
         {
             if (handler == "success" && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(PayerID))
             {
-                var result = await _payPalService.ExecutePaymentAsync(token, PayerID, testServiceRecordId, appointmentId);
-                var feUrl = $"http://localhost:5173/test-sti?handler=success&testServiceRecordId={testServiceRecordId}";
-                return Redirect(feUrl);
+                try
+                {
+                    var result = await _payPalService.ExecutePaymentAsync(token, PayerID, testServiceRecordId, appointmentId);
+                    string feUrl;
+                    if (appointmentId.HasValue)
+                    {
+                        // Redirect về trang xác nhận lịch tư vấn
+                        feUrl = $"http://localhost:5173/appointment-payment-result?handler=success&appointmentId={appointmentId}";
+                    }
+                    else if (testServiceRecordId.HasValue)
+                    {
+                        // Redirect về trang xét nghiệm
+                        feUrl = $"http://localhost:5173/test-sti?handler=success&testServiceRecordId={testServiceRecordId}";
+                    }
+                    else
+                    {
+                        // Không có thông tin phù hợp
+                        feUrl = "http://localhost:5173/error?message=Missing%20payment%20context";
+                    }
+                    return Redirect(feUrl);
+                }
+                catch (Exception ex)
+                {
+                    // Có lỗi xảy ra trong quá trình xác nhận thanh toán
+                    var errorUrl = "http://localhost:5173/error?message=Payment%20failed";
+                    return Redirect(errorUrl);
+                }
             }
-            var cancelUrl = "http://localhost:5173/test-sti?handler=cancel";
-            return Redirect(cancelUrl);
+            // Trường hợp cancel hoặc không hợp lệ
+            string cancelRedirect;
+            if (appointmentId.HasValue)
+            {
+                cancelRedirect = $"http://localhost:5173/appointment-payment-result?handler=cancel&appointmentId={appointmentId}";
+            }
+            else if (testServiceRecordId.HasValue)
+            {
+                cancelRedirect = $"http://localhost:5173/test-sti?handler=cancel&testServiceRecordId={testServiceRecordId}";
+            }
+            else
+            {
+                cancelRedirect = "http://localhost:5173/error?message=Invalid%20payment%20cancel";
+            }
+            return Redirect(cancelRedirect);
         }
     }
 }

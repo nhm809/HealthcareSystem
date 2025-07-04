@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace  HealthcareSystem.Application.DTOs
+namespace  Application.DTOs
 {
     public class TestServiceRecordDetailDTO
     {

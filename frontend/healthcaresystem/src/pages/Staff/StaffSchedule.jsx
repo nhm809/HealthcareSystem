@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Pagination, Button, Tag, Card, Row, Col, Modal, Form, Select, Input, message, Upload } from 'antd';
-import { getTestServiceRecordsByStaff, updateTestResult } from '../../services/api';
+import { Table, Pagination, Button, Tag, Card, Row, Col, Modal, Form, Select, Input, message, Upload, Tabs } from 'antd';
+import { getTestServiceRecordsByStaff, updateTestResult, authApi } from '../../services/api';
 import Cookies from 'js-cookie';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, ClockCircleOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined, MinusCircleOutlined, IdcardOutlined, InfoCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import './StaffSchedule.css';
 
 const statusMap = {
-  'Dang cho kham': { color: 'gold', icon: '⏳', text: 'Đang chờ khám' },
-  'Dang thuc hien': { color: 'blue', icon: '•', text: 'Đang thực hiện' },
-  'Da hoan thanh': { color: 'green', icon: '✔', text: 'Đã hoàn thành' },
-  'Khach hang khong den': { color: 'red', icon: 'no', text: 'Khách hàng không đến'},
-  'Da huy': { color: 'red', icon: '✖', text: 'Đã huỷ' }
+  'Dang cho kham': { color: 'gold', icon: <ClockCircleOutlined />, text: 'Đang chờ khám' },
+  'Dang thuc hien': { color: 'blue', icon: <SyncOutlined spin />, text: 'Đang thực hiện' },
+  'Da hoan thanh': { color: 'green', icon: <CheckCircleOutlined />, text: 'Đã hoàn thành' },
+  'Khach hang khong den': { color: 'red', icon: <MinusCircleOutlined />, text: 'Khách hàng không đến'},
+  'Da huy': { color: 'red', icon: <CloseCircleOutlined />, text: 'Đã huỷ' }
 };
 
 const statusOptions = [
@@ -38,6 +39,12 @@ const columnsBase = [
     render: (date) => new Date(date).toLocaleString('vi-VN'),
   },
   {
+    title: 'Ca giờ xét nghiệm',
+    dataIndex: 'testShift',
+    key: 'testShift',
+    render: (shift) => shift || '-',
+  },
+  {
     title: 'Trạng thái',
     dataIndex: 'status',
     key: 'status',
@@ -60,6 +67,17 @@ const StaffSchedule = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [form] = Form.useForm();
   const pageSize = 8;
+  
+  // State cho phân trang của từng tab
+  const [currentPage, setCurrentPage] = useState({
+    'dang-cho-kham': 1,
+    'dang-thuc-hien': 1,
+    'da-hoan-thanh': 1,
+    'da-huy': 1
+  });
+
+  // State để track status được chọn trong form
+  const [selectedStatus, setSelectedStatus] = useState('');
 
   const staffId = Cookies.get('userId');
 
@@ -120,21 +138,175 @@ const StaffSchedule = () => {
   // Phân trang
   const paginatedData = data.slice((current - 1) * pageSize, current * pageSize);
 
+  // Helper để lọc theo trạng thái
+  const filterByStatus = (statusList) =>
+    data.filter(r => statusList.includes(r.status));
+
+  // Hàm xử lý thay đổi trang cho từng tab
+  const handlePageChange = (tabKey, page) => {
+    setCurrentPage(prev => ({
+      ...prev,
+      [tabKey]: page
+    }));
+  };
+
   // Thêm cột Detail vào cuối bảng
   const columns = [
     ...columnsBase,
     {
-      title: 'Chi tiết',
+      title: 'Thao tác',
       key: 'detail',
+      width: 120,
       render: (_, record) => (
-        <Button type="primary" onClick={() => {
-          setSelectedTest(record);
-          setModalOpen(true);
-          form.setFieldsValue({ status: record.status, notes: record.notes });
-        }}>
-          Detail
+        <Button 
+          type="primary" 
+          onClick={() => {
+            handleModalOpen(record);
+          }}
+          style={{
+            backgroundColor: '#2563EB',
+            borderColor: '#2563EB',
+            borderRadius: '6px',
+            fontWeight: 500,
+            height: '32px',
+            padding: '0 16px'
+          }}
+        >
+          Chi tiết
         </Button>
       ),
+    },
+  ];
+
+  // Tạo tab items cho từng trạng thái
+  const tabItems = [
+    {
+      key: 'dang-cho-kham',
+      label: `Đang chờ khám (${filterByStatus(['Dang cho kham']).length})`,
+      children: (
+        <div>
+          <Table
+            columns={columns}
+            dataSource={filterByStatus(['Dang cho kham'])}
+            loading={loading}
+            pagination={false}
+            rowKey="key"
+          />
+          {filterByStatus(['Dang cho kham']).length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Pagination
+                current={currentPage['dang-cho-kham']}
+                total={filterByStatus(['Dang cho kham']).length}
+                pageSize={pageSize}
+                onChange={(page) => handlePageChange('dang-cho-kham', page)}
+                showSizeChanger={false}
+                itemRender={(page, type, originalElement) => {
+                  if (type === 'page') {
+                    return <Button shape="circle" type={page === currentPage['dang-cho-kham'] ? 'primary' : 'default'}>{page}</Button>;
+                  }
+                  return originalElement;
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'dang-thuc-hien',
+      label: `Đang thực hiện (${filterByStatus(['Dang thuc hien']).length})`,
+      children: (
+        <div>
+          <Table
+            columns={columns}
+            dataSource={filterByStatus(['Dang thuc hien'])}
+            loading={loading}
+            pagination={false}
+            rowKey="key"
+          />
+          {filterByStatus(['Dang thuc hien']).length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Pagination
+                current={currentPage['dang-thuc-hien']}
+                total={filterByStatus(['Dang thuc hien']).length}
+                pageSize={pageSize}
+                onChange={(page) => handlePageChange('dang-thuc-hien', page)}
+                showSizeChanger={false}
+                itemRender={(page, type, originalElement) => {
+                  if (type === 'page') {
+                    return <Button shape="circle" type={page === currentPage['dang-thuc-hien'] ? 'primary' : 'default'}>{page}</Button>;
+                  }
+                  return originalElement;
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'da-hoan-thanh',
+      label: `Đã hoàn thành (${filterByStatus(['Da hoan thanh']).length})`,
+      children: (
+        <div>
+          <Table
+            columns={columns}
+            dataSource={filterByStatus(['Da hoan thanh'])}
+            loading={loading}
+            pagination={false}
+            rowKey="key"
+          />
+          {filterByStatus(['Da hoan thanh']).length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Pagination
+                current={currentPage['da-hoan-thanh']}
+                total={filterByStatus(['Da hoan thanh']).length}
+                pageSize={pageSize}
+                onChange={(page) => handlePageChange('da-hoan-thanh', page)}
+                showSizeChanger={false}
+                itemRender={(page, type, originalElement) => {
+                  if (type === 'page') {
+                    return <Button shape="circle" type={page === currentPage['da-hoan-thanh'] ? 'primary' : 'default'}>{page}</Button>;
+                  }
+                  return originalElement;
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'da-huy',
+      label: `Đã hủy (${filterByStatus(['Da huy', 'Khach hang khong den']).length})`,
+      children: (
+        <div>
+          <Table
+            columns={columns}
+            dataSource={filterByStatus(['Da huy', 'Khach hang khong den'])}
+            loading={loading}
+            pagination={false}
+            rowKey="key"
+          />
+          {filterByStatus(['Da huy', 'Khach hang khong den']).length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Pagination
+                current={currentPage['da-huy']}
+                total={filterByStatus(['Da huy', 'Khach hang khong den']).length}
+                pageSize={pageSize}
+                onChange={(page) => handlePageChange('da-huy', page)}
+                showSizeChanger={false}
+                itemRender={(page, type, originalElement) => {
+                  if (type === 'page') {
+                    return <Button shape="circle" type={page === currentPage['da-huy'] ? 'primary' : 'default'}>{page}</Button>;
+                  }
+                  return originalElement;
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )
     },
   ];
 
@@ -149,109 +321,355 @@ const StaffSchedule = () => {
       });
       message.success('Cập nhật trạng thái thành công!');
       setModalOpen(false);
-      // Sau khi cập nhật, nên reload lại dữ liệu
-      setTimeout(() => window.location.reload(), 500);
+      // Cập nhật selectedStatus
+      setSelectedStatus(values.status);
+      // Refresh dữ liệu sau khi cập nhật
+      const response = await getTestServiceRecordsByStaff(staffId);
+      const formattedData = response.data.map(record => ({
+        key: record.testServiceRecordId,
+        fullNameOfMember: record.fullNameOfMember,
+        phoneNumber: record.phoneNumber,
+        recordDate: record.recordDate,
+        status: record.status,
+        staffId: record.staffId,
+        testServiceRecordId: record.testServiceRecordId,
+        dob: record.dob,
+        gender: record.gender,
+        email: record.email,
+        address: record.address,
+        result: record.result,
+        notes: record.notes,
+        testDate: record.testDate,
+        serviceId: record.serviceId,
+        memberId: record.memberId
+      }));
+      formattedData.sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate));
+      setData(formattedData);
     } catch {
       message.error('Cập nhật trạng thái thất bại!');
+    }
+  };
+
+  const handleModalOpen = async (record) => {
+    try {
+      // Gọi API lấy chi tiết xét nghiệm
+      const detailRes = await authApi.getTestServiceRecordDetail(record.testServiceRecordId, record.memberId);
+      const detail = detailRes.data;
+      // Gộp thông tin cũ và mới (nếu cần)
+      setSelectedTest({ ...record, ...detail });
+      setSelectedStatus(detail.status || record.status);
+      setModalOpen(true);
+      form.setFieldsValue({ status: detail.status || record.status, notes: detail.notes || record.notes });
+    } catch (err) {
+      setSelectedTest(record);
+      setSelectedStatus(record.status);
+      setModalOpen(true);
+      form.setFieldsValue({ status: record.status, notes: record.notes });
     }
   };
 
   return (
     <Row gutter={32}>
       <Col span={24}>
-        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 0' }}>Các xét nghiệm đang thực hiện</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 0' }}>Quản lý xét nghiệm</h2>
         <Card style={{ borderRadius: 16, boxShadow: '0 2px 12px #0001' }} bodyStyle={{ padding: 0 }}>
-          <Table
-            columns={columns}
-            dataSource={paginatedData}
-            loading={loading}
-            pagination={false}
-            rowKey="key"
-            style={{ borderRadius: 16 }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-            <Pagination
-              current={current}
-              total={data.length}
-              pageSize={pageSize}
-              onChange={setCurrent}
-              showSizeChanger={false}
-              itemRender={(page, type, originalElement) => {
-                if (type === 'page') {
-                  return <Button shape="circle" type={page === current ? 'primary' : 'default'}>{page}</Button>;
-                }
-                return originalElement;
-              }}
+          {data.length > 0 ? (
+            <Tabs 
+              defaultActiveKey="dang-cho-kham" 
+              items={tabItems} 
+              tabBarStyle={{ background: '#f8f9fa', borderRadius: '16px 16px 0 0', padding: '0 16px', borderBottom: '1px solid #e0e0e0' }}
+              className="custom-staff-tabs"
             />
-          </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '50px' }}>
+              <p>Bạn chưa có xét nghiệm nào được phân công.</p>
+            </div>
+          )}
         </Card>
         {/* Modal chi tiết test */}
         <Modal
           open={modalOpen}
-          onCancel={() => setModalOpen(false)}
-          title="Chi tiết xét nghiệm"
+          onCancel={() => {
+            setModalOpen(false);
+            setSelectedStatus(''); // Reset selectedStatus khi đóng modal
+          }}
+          title={
+            <div style={{ color: '#2563EB', fontSize: '18px', fontWeight: 600 }}>
+              Chi tiết xét nghiệm
+            </div>
+          }
           footer={null}
-          width={500}
+          width={700}
+          style={{ top: 20 }}
         >
           {selectedTest && (
-            <div>
-              <div style={{ marginBottom: 16 }}>
-                <div><b>Tên khách hàng:</b> {selectedTest.fullNameOfMember}</div>
-                <div><b>Giới tính:</b> {selectedTest.gender}</div>
-                <div><b>Số điện thoại:</b> {selectedTest.phoneNumber}</div>
-                <div><b>Ngày sinh:</b> {selectedTest.dob}</div>
-                <div><b>Ngày đăng ký:</b> {new Date(selectedTest.recordDate).toLocaleString('vi-VN')}</div>
-                <div><b>Ngày xét nghiệm:</b> {selectedTest.testDate || '-'}</div>
-                <div><b>Mã xét nghiệm:</b> {selectedTest.testServiceRecordId}</div>
-                <div><b>Nhân viên phụ trách:</b> Bạn</div>
+            <div style={{ padding: '0 8px' }}>
+              {/* Thông tin bệnh nhân */}
+              <div style={{ 
+                backgroundColor: '#f8f9fa', 
+                padding: '20px', 
+                borderRadius: '12px', 
+                marginBottom: '24px',
+                border: '1px solid #e9ecef'
+              }}>
+                <h3 style={{ 
+                  color: '#2563EB', 
+                  marginBottom: '16px', 
+                  fontSize: '16px', 
+                  fontWeight: 600,
+                  borderBottom: '2px solid #2563EB',
+                  paddingBottom: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8
+                }}>
+                  <IdcardOutlined style={{ fontSize: 18 }} /> Thông tin bệnh nhân
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div><strong>Tên khách hàng:</strong> {selectedTest.fullNameOfMember}</div>
+                  <div><strong>Giới tính:</strong> {selectedTest.gender}</div>
+                  <div><strong>Số điện thoại:</strong> {selectedTest.phoneNumber}</div>
+                  <div><strong>Ngày sinh:</strong> {selectedTest.dob}</div>
+                  <div><strong>Ngày đăng ký:</strong> {new Date(selectedTest.recordDate).toLocaleString('vi-VN')}</div>
+                  <div><strong>Ngày xét nghiệm:</strong> {selectedTest.testDate || '-'}</div>
+                  <div><strong>Ca giờ xét nghiệm:</strong> {
+                    selectedTest.timeSlot === '08:00:00' ? '08h - 12h'
+                    : selectedTest.timeSlot === '13:00:00' ? '13h - 17h'
+                    : selectedTest.timeSlot ? `${selectedTest.timeSlot}`
+                    : '-'
+                  }</div>
+                  <div><strong>Mã xét nghiệm:</strong> {selectedTest.testServiceRecordId}</div>
+                  <div><strong>Nhân viên phụ trách:</strong> Bạn</div>
+                </div>
               </div>
-              <div style={{ marginBottom: 24 }}>
-                <b>Tiến trình xét nghiệm:</b>
-                <Form form={form} layout="vertical" onFinish={handleUpdateStatus} style={{ marginTop: 12 }}>
-                  <Form.Item name="status" label="Trạng thái">
-                    <Select options={statusOptions} />
+
+              {/* Tiến trình xét nghiệm */}
+              <div style={{ 
+                backgroundColor: '#fff', 
+                padding: '20px', 
+                borderRadius: '12px', 
+                marginBottom: '24px',
+                border: '1px solid #e9ecef',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}>
+                <h3 style={{ 
+                  color: '#2563EB', 
+                  marginBottom: '16px', 
+                  fontSize: '16px', 
+                  fontWeight: 600,
+                  borderBottom: '2px solid #2563EB',
+                  paddingBottom: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8
+                }}>
+                  <SyncOutlined /> Tiến trình xét nghiệm
+                </h3>
+                <Form form={form} layout="vertical" onFinish={handleUpdateStatus}>
+                  <Form.Item 
+                    name="status" 
+                    label={
+                      <span style={{ fontWeight: 600, color: '#333' }}>
+                        Trạng thái hiện tại
+                      </span>
+                    }
+                  >
+                    <Select 
+                      options={statusOptions} 
+                      style={{ borderRadius: '8px' }}
+                      size="large"
+                      onChange={(value) => setSelectedStatus(value)}
+                    />
                   </Form.Item>
-                  <Form.Item name="notes" label="Ghi chú nội bộ">
-                    <Input.TextArea placeholder="Thêm ghi chú hoặc comment cho nội bộ..." />
+                  <Form.Item 
+                    name="notes" 
+                    label={
+                      <span style={{ fontWeight: 600, color: '#333' }}>
+                        Ghi chú
+                      </span>
+                    }
+                  >
+                    <Input.TextArea 
+                      placeholder="Thêm ghi chú hoặc comment cho nội bộ..." 
+                      rows={4}
+                      style={{ borderRadius: '8px' }}
+                    />
                   </Form.Item>
                   <Form.Item>
-                    <Button type="primary" htmlType="submit">Cập nhật trạng thái</Button>
+                    <Button 
+                      type="primary" 
+                      htmlType="submit"
+                      size="large"
+                      style={{ 
+                        backgroundColor: '#2563EB', 
+                        borderColor: '#2563EB',
+                        borderRadius: '8px',
+                        fontWeight: 600,
+                        height: '40px',
+                        padding: '0 24px'
+                      }}
+                    >
+                      Cập nhật trạng thái
+                    </Button>
                   </Form.Item>
                 </Form>
               </div>
-              <div>
-                <b>Kết quả xét nghiệm:</b>
-                <div style={{ margin: '8px 0 16px 0', minHeight: 32 }}>
-                  {selectedTest.result && selectedTest.result.startsWith('http') ? (
-                    <img src={selectedTest.result} alt="Kết quả xét nghiệm" style={{ maxWidth: '100%', maxHeight: 200, marginBottom: 8 }} />
-                  ) : (
-                    selectedTest.result || 'Chưa có kết quả'
-                  )}
-                  <Upload
-                    name="result"
-                    showUploadList={false}
-                    accept=".jpg,.jpeg,.png"
-                    customRequest={async ({ file, onSuccess, onError }) => {
-                      setUploadingResult(true);
-                      try {
-                        const url = await uploadToCloudinary(file);
-                        setSelectedTest(prev => ({ ...prev, result: url }));
-                        message.success('Tải ảnh kết quả lên thành công!');
-                        onSuccess();
-                      } catch (err) {
-                        message.error('Tải ảnh lên thất bại!');
-                        onError(err);
-                      } finally {
-                        setUploadingResult(false);
-                      }
-                    }}
-                  >
-                    <Button icon={<UploadOutlined />} loading={uploadingResult} style={{ marginTop: 8 }}>
-                      Tải ảnh kết quả lên
-                    </Button>
-                  </Upload>
+
+              {/* Kết quả xét nghiệm - hiển thị khi chọn "Đã hoàn thành" */}
+              {selectedStatus === 'Da hoan thanh' && (
+                <div style={{ 
+                  backgroundColor: '#fff', 
+                  padding: '20px', 
+                  borderRadius: '12px',
+                  border: '1px solid #e9ecef',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}>
+                  <h3 style={{ 
+                    color: '#2563EB', 
+                    marginBottom: '16px', 
+                    fontSize: '16px', 
+                    fontWeight: 600,
+                    borderBottom: '2px solid #2563EB',
+                    paddingBottom: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8
+                  }}>
+                    <CheckCircleOutlined /> Kết quả xét nghiệm
+                  </h3>
+                  
+                  {/* Hiển thị kết quả hiện tại */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <div style={{ fontWeight: 600, marginBottom: '12px', color: '#333' }}>
+                      Kết quả hiện tại:
+                    </div>
+                    <div style={{ 
+                      minHeight: '60px', 
+                      padding: '16px', 
+                      backgroundColor: '#f8f9fa', 
+                      borderRadius: '8px',
+                      border: '1px solid #dee2e6'
+                    }}>
+                      {selectedTest.result ? (
+                        selectedTest.result.startsWith('http') ? (
+                          <div>
+                            <div style={{ marginBottom: '12px' }}>
+                              <Tag color="green" style={{ fontSize: '14px', padding: '4px 12px' }}>
+                                Đã có kết quả
+                              </Tag>
+                            </div>
+                            <img 
+                              src={selectedTest.result} 
+                              alt="Kết quả xét nghiệm" 
+                              style={{ 
+                                maxWidth: '100%', 
+                                maxHeight: '200px', 
+                                borderRadius: '8px',
+                                border: '2px solid #e9ecef'
+                              }} 
+                            />
+                          </div>
+                        ) : (
+                          <div>
+                            <Tag color="green" style={{ fontSize: '14px', padding: '4px 12px', marginBottom: '8px' }}>
+                              Đã có kết quả
+                            </Tag>
+                            <div style={{ 
+                              padding: '12px', 
+                              backgroundColor: '#fff', 
+                              borderRadius: '6px',
+                              border: '1px solid #dee2e6'
+                            }}>
+                              {selectedTest.result}
+                            </div>
+                          </div>
+                        )
+                      ) : (
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          color: '#6c757d',
+                          fontStyle: 'italic'
+                        }}>
+                          <ExclamationCircleOutlined style={{ marginRight: 8 }} />
+                          Chưa có kết quả
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Upload kết quả mới */}
+                  <div>
+                    <div style={{ fontWeight: 600, marginBottom: '12px', color: '#333' }}>
+                      Tải kết quả mới:
+                    </div>
+                    <Upload
+                      name="result"
+                      showUploadList={false}
+                      accept=".jpg,.jpeg,.png,.pdf"
+                      customRequest={async ({ file, onSuccess, onError }) => {
+                        setUploadingResult(true);
+                        try {
+                          const url = await uploadToCloudinary(file);
+                          setSelectedTest(prev => ({ ...prev, result: url }));
+                          message.success('✅ Tải ảnh kết quả lên thành công!');
+                          onSuccess();
+                        } catch (err) {
+                          message.error('❌ Tải ảnh lên thất bại!');
+                          onError(err);
+                        } finally {
+                          setUploadingResult(false);
+                        }
+                      }}
+                    >
+                      <Button 
+                        icon={<UploadOutlined />} 
+                        loading={uploadingResult} 
+                        size="large"
+                        style={{ 
+                          backgroundColor: '#2563EB', 
+                          borderColor: '#2563EB',
+                          borderRadius: '8px',
+                          fontWeight: 600,
+                          height: '40px',
+                          padding: '0 24px'
+                        }}
+                      >
+                        Tải kết quả lên
+                      </Button>
+                    </Upload>
+                    <div style={{ 
+                      fontSize: '12px', 
+                      color: '#6c757d', 
+                      marginTop: '8px',
+                      fontStyle: 'italic'
+                    }}>
+                      Hỗ trợ: JPG, JPEG, PNG, PDF (Tối đa 10MB)
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Thông báo khi chưa chọn "Đã hoàn thành" */}
+              {selectedStatus !== 'Da hoan thanh' && (
+                <div style={{ 
+                  backgroundColor: '#fff3cd', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #ffeaa7',
+                  marginTop: '16px'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    color: '#856404',
+                    fontWeight: 500
+                  }}>
+                    <InfoCircleOutlined style={{ marginRight: 8, fontSize: 16 }} />
+                    Chỉ có thể tải kết quả xét nghiệm khi trạng thái là "Đã hoàn thành"
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </Modal>

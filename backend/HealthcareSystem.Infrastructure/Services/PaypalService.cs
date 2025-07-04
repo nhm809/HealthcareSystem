@@ -257,22 +257,24 @@ namespace HealthcareSystem.Infrastructure.Services
                     appointment.Status = "Dang cho tu van";
                     amount = appointment.Service?.Price ?? 0;
                     description = $"Thanh toán khám - {appointment.Member?.FullName}";
-                }
 
-                if (appointment.MemberId.HasValue)
-                {
-                    var Notification = new Notification
-                    {
-                        UserId = appointment.MemberId.Value,
-                        Title = "Thanh toán thành công",
-                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
-                        SendTime = DateTime.UtcNow.AddHours(7),///////////
-                        IsRead = false
-                    };
-
-                    _context.Notifications.Add(Notification);
                     await _context.SaveChangesAsync();
                 }
+
+                // if (appointment.MemberId.HasValue)
+                // {
+                //     var Notification = new Notification
+                //     {
+                //         UserId = appointment.MemberId.Value,
+                //         Title = "Thanh toán thành công",
+                //         Content = "Bạn đã thanh toán thành công đặt lịch tư vấn.",
+                //         SendTime = DateTime.UtcNow.AddHours(7),///////////
+                //         IsRead = false
+                //     };
+
+                //     _context.Notifications.Add(Notification);
+                //     await _context.SaveChangesAsync();
+                // }
             }
 
             // Tạo mới Invoice
