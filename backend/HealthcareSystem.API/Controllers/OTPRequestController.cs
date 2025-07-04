@@ -14,15 +14,15 @@ public class OTPRequestController : ControllerBase
         _otpService = otpService;
     }
 
-    [HttpPost("sendOtp")]
-    public async Task<IActionResult> GetOtpAsync([FromBody] OTPRequestDTO dto)
+    [HttpPost("sendOtp/{userId}")]
+    public async Task<IActionResult> GetOtpAsync(int userId)
     {
-        if (string.IsNullOrEmpty(dto.Email) && dto.UserId == null)
+        if (userId == null)
         {
             return BadRequest("Phải cung cấp ít nhất Email hoặc UserId.");
         }
 
-        var result = await _otpService.SendOtpAsync(dto);
+        var result = await _otpService.SendOtpAsync(userId);
 
         if (!result)
         {
