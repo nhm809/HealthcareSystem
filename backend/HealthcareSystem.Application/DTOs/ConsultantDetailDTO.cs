@@ -1,3 +1,5 @@
+using HealthcareSystem.Application.DTOs;
+
 namespace Application.DTOs
 {
     public class ConsultantDetailDTO : ConsultantWithSpecialtyDTO

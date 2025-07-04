@@ -46,9 +46,9 @@ public class QuestionController : ControllerBase
     [HttpPut("updateStatus/{questionId}")]
     public async Task<ActionResult<bool>> UpdateQuestionStatusAsync(int questionId, [FromBody] string status)
     {
-        if (questionId <= 0 || string.IsNullOrEmpty(status))
+        if (questionId <= 0)
         {
-            return BadRequest("Invalid question ID or status.");
+            return BadRequest("Invalid question ID.");
         }
         var result = await _questionService.UpdateQuestionStatusAsync(questionId, status);
         if (!result)
@@ -103,7 +103,7 @@ public class QuestionController : ControllerBase
         return Ok(question);
     }
 
-    [HttpGet("member/{memberId}")]
+    [HttpGet("getByMember/{memberId}")]
     public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByMemberIdAsync(int memberId)
     {
         if (memberId <= 0)
@@ -118,7 +118,7 @@ public class QuestionController : ControllerBase
         return Ok(questions);
     }
 
-    [HttpGet("consultant/{consultantId}")]
+    [HttpGet("getByConsultant/{consultantId}")]
     public async Task<ActionResult<List<QuestionDTO>>> GetQuestionsByConsultantIdAsync(int consultantId)
     {
         if (consultantId <= 0)
@@ -131,6 +131,17 @@ public class QuestionController : ControllerBase
             return NotFound("No questions found for this consultant.");
         }
         return Ok(questions);
+    }
+
+    [HttpGet("countAnswers/{questionId}")]
+    public async Task<ActionResult<int>> CountAnswers(int questionId)
+    {
+        if (questionId <= 0)
+        {
+            return BadRequest("Invalid question ID.");
+        }
+        var count = await _questionService.CountAnswers(questionId);
+        return Ok(count);
     }
 
 }

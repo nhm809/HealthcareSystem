@@ -54,7 +54,7 @@ function BlogPage() {
           selectedTopic === 'Tất cả'
             ? '/blogs'
             : `/blogs/topic/${encodeURIComponent(selectedTopic)}`;
-        const res = api.get(url);
+        const res = await api.get(url);
         setBlogs(res.data);
       } catch (error) {
         console.error('Lỗi khi lấy blog:', error);
@@ -70,14 +70,14 @@ function BlogPage() {
   useEffect(() => {
     const fetchAllCounts = async () => {
       try {
-        const res = api.get('/blogs');
+        const res = await api.get('/blogs');
         const counts = res.data.reduce((acc, blog) => {
           acc[blog.topic] = (acc[blog.topic] || 0) + 1;
           return acc;
         }, {});
         setTopicCounts(counts);
       } catch (error) {
-        console.error('Lỗi khi đếm topic:'. error);
+        console.error('Lỗi khi đếm topic:', error);
       }
     };
     fetchAllCounts();

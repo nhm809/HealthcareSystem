@@ -2,6 +2,8 @@ import { lazy } from "react";
 import Home from "../pages/Home/Home";
 import StaffLayout from "../components/Layout/StaffLayout";
 import ConsultantLayout from "../components/Layout/ConsultantLayout";
+import { useLocation } from "react-router-dom";
+import BookingInformation from '../pages/Appointment/BookingInformation';
 
 const routers = [
      {
@@ -20,6 +22,10 @@ const routers = [
         path: '/test-history',
         component: lazy(() => import('../pages/TestHistory/TestHistory'))
     },
+    {
+        path: '/appointment-history',
+        component: lazy(() => import('../pages/AppointmentHistory/AppointmentHistory'))
+    },
      {
           path: '/appointment',
           component: lazy(() => import('../pages/Appointment/ConsultantsList'))
@@ -27,6 +33,14 @@ const routers = [
      {
           path: '/appointment/:id',
           component: lazy(() => import('../pages/Appointment/ConsultantDetail'))
+     },
+     {
+          path: '/booking-confirmation',
+          component: lazy(() => import('../pages/Appointment/BookingInformation'))
+     },
+     {
+          path: '/appointment-payment-result',
+          component: lazy(() => import('../pages/Appointment/AppointmentResultHandler'))
      },
      {
           path: '/test-sti',
@@ -61,6 +75,10 @@ const routers = [
      {
           path: '/booking-confirmation',
           component: lazy(() => import('../pages/Appointment/BookingInformation'))
+     },
+     {
+          path: '/my-questions',
+          component: lazy(() => import('../pages/Question/MyQuestions'))
      },
 ]
 

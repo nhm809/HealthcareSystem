@@ -1,0 +1,52 @@
+.appointment-history {
+  max-width: 100%;
+  margin: 20px auto;
+  width: 100%;
+}
+
+.appointment-history .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+
+.appointment-history .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.appointment-history .ant-tabs-tab-active {
+  color: #1a3e72 !important;
+}
+
+.appointment-history .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.appointment-history .ant-table-thead > tr > th {
+  background-color: #e6f0ff;
+  color: #1a3e72;
+  font-weight: 600;
+  text-align: center;
+}
+
+.appointment-history .ant-table-tbody > tr > td {
+  text-align: center;
+}
+
+.appointment-history .ant-spin {
+  margin: 40px auto;
+  display: block;
+}
+
+.booking-button {
+  width: 160px;
+  height: 36px;
+  background-color: #00CBA7;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 24px;
+  font-weight: bold;
+  font-size: 16px;
+}

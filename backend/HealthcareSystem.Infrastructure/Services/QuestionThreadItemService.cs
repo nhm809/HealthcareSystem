@@ -30,6 +30,7 @@ namespace Infrastructure.Services
                     QuestionText = q.QuestionText,
                     AnswerText = q.AnswerText,
                     SentAt = q.SentAt,
+                    AnsweredAt = q.AnsweredAt,
                     AttachmentPath = q.AttachmentPath,
                     IsAnswered = q.IsAnswered
                 })
@@ -72,6 +73,52 @@ namespace Infrastructure.Services
 
             await _context.Notifications.AddRangeAsync(memNoti, consNoti);
 
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> AnswerSubQuestionAsync(QuestionThreadItemDTO dto)
+        {
+            if (dto == null || dto.AnswerText == null)
+                return false;
+
+            var subQuestion = await _context.QuestionThreadItems
+                .FirstOrDefaultAsync(q => q.ThreadItemId == dto.ThreadItemId);
+            if (subQuestion == null)
+                return false;
+            subQuestion.AnswerText = dto.AnswerText;
+            subQuestion.IsAnswered = true;
+            subQuestion.AnsweredAt = DateTime.UtcNow;
+            _context.QuestionThreadItems.Update(subQuestion);
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q => q.QuestionId == subQuestion.QuestionId);
+
+            question.AnsCount += 1;
+
+            var memNoti = new Notification
+            {
+                UserId = question.MemberId,
+                Content = $"Câu hỏi của bạn đã được trả lời: {dto.AnswerText}",
+                IsRead = false,
+                SendTime = DateTime.UtcNow
+            };
+            await _context.Notifications.AddAsync(memNoti);
+            await _context.Questions.AddAsync(question);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateSubQuestionAsync(int subQuestionId, QuestionThreadItemDTO dto)
+        {
+            if (dto == null || dto.QuestionText == null)
+                return false;
+            var subQuestion = await _context.QuestionThreadItems
+                .FirstOrDefaultAsync(q => q.ThreadItemId == subQuestionId);
+            if (subQuestion == null)
+                return false;
+            subQuestion.QuestionText = dto.QuestionText;
+            subQuestion.AttachmentPath = dto.AttachmentPath;
+            subQuestion.AnsweredAt = DateTime.UtcNow;
+            subQuestion.IsAnswered = true;
+            _context.QuestionThreadItems.Update(subQuestion);
             return await _context.SaveChangesAsync() > 0;
         }
 

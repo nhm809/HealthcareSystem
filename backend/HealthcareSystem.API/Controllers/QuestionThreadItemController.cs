@@ -19,7 +19,7 @@ public class QuestionThreadItemController : ControllerBase
         _iQuestionThreadItemService = questionThreadItemService;
     }
 
-    [HttpGet("get/{questionId}")]
+    [HttpGet("getByQuestionId/{questionId}")]
     public async Task<ActionResult<List<QuestionThreadItemDTO>>> GetSubQuestionAsync(int questionId)
     {
         var subQuestions = await _iQuestionThreadItemService.GetSubQuestionAsync(questionId);
@@ -41,6 +41,37 @@ public class QuestionThreadItemController : ControllerBase
         if (!result)
         {
             return StatusCode(500, "An error occurred while adding the sub-question.");
+        }
+        return Ok(result);
+    }
+
+
+    [HttpPost("answer")]
+    public async Task<ActionResult<bool>> AnswerSubQuestionAsync([FromBody] QuestionThreadItemDTO dto)
+    {
+        if (dto == null || string.IsNullOrEmpty(dto.AnswerText))
+        {
+            return BadRequest("Invalid answer data.");
+        }
+        var result = await _iQuestionThreadItemService.AnswerSubQuestionAsync(dto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while answering the sub-question.");
+        }
+        return Ok(result);
+    }
+
+    [HttpPut("update/{subQuestionId}")]
+    public async Task<ActionResult<bool>> UpdateSubQuestionAsync(int subQuestionId, [FromBody] QuestionThreadItemDTO dto)
+    {
+        if (dto == null || string.IsNullOrEmpty(dto.QuestionText))
+        {
+            return BadRequest("Invalid sub-question data.");
+        }
+        var result = await _iQuestionThreadItemService.UpdateSubQuestionAsync(subQuestionId, dto);
+        if (!result)
+        {
+            return StatusCode(500, "An error occurred while updating the sub-question.");
         }
         return Ok(result);
     }

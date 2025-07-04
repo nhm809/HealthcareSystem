@@ -9,12 +9,13 @@ namespace Application.Interfaces
     {
         Task<List<QuestionDTO>> GetAllQuestionsAsync();
         Task<bool> AddQuestionAsync(QuestionDTO questionDto);
-        Task<bool> UpdateQuestionStatusAsync(int  questionId, string status);
+        Task<bool> UpdateQuestionStatusAsync(int questionId, string status);
         Task<bool> DeleteQuestionAsync(int questionId);
         Task<bool> GiveAHeart(QuestionDTO questionDto);
         Task<QuestionDTO> GetQuestionById(int questionId);
         Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId);
         Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId);
+        Task<int> CountAnswers(int questionId);
     }
 
 }

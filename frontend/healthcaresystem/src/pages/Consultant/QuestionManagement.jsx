@@ -17,6 +17,7 @@ import {
      Modal,
      Spin,
      Image,
+     Tabs,
 } from 'antd';
 import {
      ReloadOutlined,
@@ -25,12 +26,18 @@ import {
      CheckCircleOutlined,
      CloseCircleOutlined,
      BellOutlined,
+     EditOutlined,
+     StopOutlined,
 } from '@ant-design/icons';
 import { questionApi, messageApi, specialtyApi } from '../../services/api';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Cookies from 'js-cookie';
+import SubQuestionList from '../Question/SubQuestionList';
+import './QuestionManagement.css';
+import { Modal as AntdModal } from 'antd';
+import logo from '../../assets/imgs/logo.png';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -41,7 +48,7 @@ const { Text } = Typography;
 const QuestionManagement = () => {
      const [allQuestions, setAllQuestions] = useState([]);
      const [loading, setLoading] = useState(false);
-     const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+     const [pagination] = useState({ current: 1, pageSize: 10 });
      const [filters, setFilters] = useState({
           date: null,
           status: 'all',
@@ -49,45 +56,58 @@ const QuestionManagement = () => {
      });
      const [isModalVisible, setIsModalVisible] = useState(false);
      const [selectedQuestion, setSelectedQuestion] = useState(null);
-     const [messages, setMessages] = useState([]);
-     const [loadingMessages, setLoadingMessages] = useState(false);
-     const [replyContent, setReplyContent] = useState('');
+     const [setMessages] = useState([]);
+     const [setLoadingMessages] = useState(false);
      const [specialties, setSpecialties] = useState([]);
      const consultantId = Cookies.get('userId');
 
+     // State cho phân trang của từng tab
+     const [currentPage, setCurrentPage] = useState({
+          'all': 1,
+          'unanswered': 1,
+          'answered': 1,
+          'closed': 1
+     });
+
+     const [closeModalVisible, setCloseModalVisible] = useState(false);
+     const [closingQuestion, setClosingQuestion] = useState(null);
+     const [closeLoading, setCloseLoading] = useState(false);
+
+     // Tách fetchQuestions ra ngoài để có thể gọi lại
+     const fetchQuestions = async () => {
+          setLoading(true);
+          try {
+               const res = await questionApi.getQuestionsByConsultant(consultantId);
+               const formattedQuestions = res.data
+                    .map((q) => ({
+                         key: q.questionId,
+                         sender: {
+                              name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
+                              avatar: q.member?.avatar,
+                         },
+                         sentTime: q.submitDate,
+                         summary: q.titleQuestion || q.content,
+                         status: q.status,
+                         title: q.titleQuestion,
+                         content: q.content,
+                         gender: q.gender,
+                         age: q.age,
+                         specialtyId: q.specialtyId,
+                         memberId: q.memberId,
+                         consultantId: q.consultantId,
+                         attachmentPath: q.attachmentPath,
+                    }))
+                    .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
+               setAllQuestions(formattedQuestions);
+          } catch {
+               message.error('Không thể tải danh sách câu hỏi');
+          } finally {
+               setLoading(false);
+          }
+     };
+
      useEffect(() => {
-          const fetchQuestions = async () => {
-               setLoading(true);
-               try {
-                    const res = await questionApi.getAllQuestions();
-                    const formattedQuestions = res.data
-                         .map((q) => ({
-                              key: q.questionId,
-                              sender: {
-                                   name: q.member?.fullName || q.member?.name || 'Thành viên ẩn danh',
-                                   avatar: q.member?.avatar,
-                              },
-                              sentTime: q.submitDate,
-                              summary: q.titleQuestion || q.content,
-                              isAnswered: q.isAnswered,
-                              isClosed: q.isClosed,
-                              title: q.titleQuestion,
-                              content: q.content,
-                              gender: q.gender,
-                              age: q.age,
-                              specialtyId: q.specialtyId,
-                              memberId: q.memberId,
-                              consultantId: q.consultantId,
-                              attachmentPath: q.attachmentPath,
-                         }))
-                         .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
-                    setAllQuestions(formattedQuestions);
-               } catch {
-                    message.error('Không thể tải danh sách câu hỏi');
-               } finally {
-                    setLoading(false);
-               }
-          };
+          fetchQuestions();
           const fetchSpecialties = async () => {
                try {
                     const res = await specialtyApi.getAllSpecialties();
@@ -96,7 +116,6 @@ const QuestionManagement = () => {
                     setSpecialties([]);
                }
           };
-          fetchQuestions();
           fetchSpecialties();
      }, []);
 
@@ -114,7 +133,6 @@ const QuestionManagement = () => {
                     setMessages(res.data);
                } catch {
                     setMessages([]);
-                    message.error('Không thể tải lịch sử tin nhắn');
                } finally {
                     setLoadingMessages(false);
                }
@@ -127,8 +145,6 @@ const QuestionManagement = () => {
      const getStatus = (record) => {
           if (record.isClosed) return 'closed';
           if (record.isAnswered) return 'answered';
-          // Mock "Đã phản hồi" status as it's not in the data model
-          if (record.key % 2 === 0) return 'responded';
           return 'unanswered';
      };
 
@@ -136,50 +152,37 @@ const QuestionManagement = () => {
           return allQuestions.filter((item) => {
                const dateMatch = filters.date ? dayjs(item.sentTime).isSame(filters.date, 'day') : true;
                const searchMatch = item.sender.name.toLowerCase().includes(filters.searchText.toLowerCase());
-               const statusMatch = filters.status === 'all' || getStatus(item) === filters.status;
-               return dateMatch && searchMatch && statusMatch;
+               return dateMatch && searchMatch;
           });
      }, [allQuestions, filters]);
 
-     const paginatedData = useMemo(() => {
-          const start = (pagination.current - 1) * pagination.pageSize;
-          const end = start + pagination.pageSize;
-          return filteredQuestions.slice(start, end);
-     }, [filteredQuestions, pagination]);
-
-     useEffect(() => {
-          setPagination((p) => ({ ...p, current: 1 }));
-     }, [filters.searchText, filters.status, filters.date]);
+     // Helper để lọc theo trạng thái
+     const filterByStatus = (status) => {
+          if (status === 'all') return filteredQuestions;
+          if (status === 'answered') return filteredQuestions.filter(item => item.status === 'Da tra loi');
+          if (status === 'unanswered') return filteredQuestions.filter(item => item.status === 'Chua tra loi');
+          if (status === 'closed') return filteredQuestions.filter(item => item.status === 'Da dong');
+          return filteredQuestions;
+     };
 
      const getStatusTag = (record) => {
-          const status = getStatus(record);
-          switch (status) {
-               case 'unanswered':
+          switch (record.status) {
+               case "Da tra loi":
                     return (
-                         <Tag icon={<ClockCircleOutlined />} color="success">
-                              Chưa trả lời
-                         </Tag>
+                         <Tag color="blue">Đã trả lời</Tag>
                     );
-               case 'responded':
+               case "Chua tra loi":
                     return (
-                         <Tag icon={<MessageOutlined />} color="processing">
-                              Đã phản hồi
-                         </Tag>
+                         <Tag color="orange">Chưa trả lời</Tag>
                     );
-               case 'answered':
+               case "Da dong":
                     return (
-                         <Tag icon={<CheckCircleOutlined />} color="default">
-                              Đã trả lời
-                         </Tag>
-                    );
-               case 'closed':
-                    return (
-                         <Tag icon={<CloseCircleOutlined />} color="error">
-                              Đã đóng
-                         </Tag>
+                         <Tag color="red">Đã đóng</Tag>
                     );
                default:
-                    return null;
+                    return (
+                         <Tag color="default">{record.status}</Tag>
+                    );
           }
      };
 
@@ -188,33 +191,79 @@ const QuestionManagement = () => {
           setIsModalVisible(true);
      };
 
-     const handleSendMessage = async () => {
-          if (!replyContent.trim() || !selectedQuestion) return;
+     const handleCloseQuestion = async (question) => {
+          const submitDate = dayjs(question.sentTime);
+          const now = dayjs();
+          const diffDays = now.diff(submitDate, 'day');
+          if (diffDays < 7) {
+               setClosingQuestion(question);
+               setCloseModalVisible(true);
+          } else {
+               // Đủ 7 ngày, đóng luôn
+               await doCloseQuestion(question);
+          }
+     };
+
+     const doCloseQuestion = async (question) => {
+          setCloseLoading(true);
           try {
-               await messageApi.addMessage({
-                    questionId: selectedQuestion.key,
-                    content: replyContent,
-                    senderId: Number(consultantId),
-               });
-               setReplyContent('');
-               // Reload messages
-               setLoadingMessages(true);
-               const res = await messageApi.getHistory(selectedQuestion.key);
-               setMessages(res.data);
-               message.success('Gửi tin nhắn thành công');
+               await questionApi.updateQuestionStatus(question.key, JSON.stringify("Da dong"));
+               message.success('Đã đóng câu hỏi!');
+               setCloseModalVisible(false);
+               setClosingQuestion(null);
+               fetchQuestions();
           } catch {
-               message.error('Gửi tin nhắn thất bại!');
+               message.error('Đóng câu hỏi thất bại!');
           } finally {
-               setLoadingMessages(false);
+               setCloseLoading(false);
           }
      };
 
      const getAction = (record) => {
           const status = getStatus(record);
           if (status === 'closed' || status === 'answered') {
-               return <a onClick={() => handleReplyClick(record)}>Xem chi tiết</a>;
+               return (
+                    <Button
+                         type="default"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6, marginRight: 8 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Xem chi tiết
+                    </Button>
+               );
           }
-          return <a onClick={() => handleReplyClick(record)}>Trả lời</a>;
+          return (
+               <Space>
+                    <Button
+                         type="primary"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Trả lời
+                    </Button>
+                    {record.status !== 'Da dong' && (
+                         <Button
+                              type="default"
+                              danger
+                              icon={<StopOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleCloseQuestion(record)}
+                         >
+                              Đóng câu hỏi
+                         </Button>
+                    )}
+               </Space>
+          );
      };
 
      const columns = [
@@ -224,7 +273,7 @@ const QuestionManagement = () => {
                key: 'sender',
                render: (sender, record) => (
                     <Space>
-                         <Avatar src={sender.avatar} />
+                         <Avatar src={logo} />
                          <span>
                               {record.gender && record.age ? `${record.gender}, ${record.age} tuổi` : sender.name}
                          </span>
@@ -261,15 +310,136 @@ const QuestionManagement = () => {
      const handleRefresh = () => {
           setFilters({
                date: null,
-               status: 'all',
                searchText: '',
           });
      };
 
+     // Hàm xử lý thay đổi trang cho từng tab
+     const handlePageChange = (tabKey, page) => {
+          setCurrentPage(prev => ({
+               ...prev,
+               [tabKey]: page
+          }));
+     };
+
+     useEffect(() => {
+          // Reset tất cả trang về 1 khi thay đổi filter
+          setCurrentPage({
+               'all': 1,
+               'unanswered': 1,
+               'answered': 1,
+               'closed': 1
+          });
+     }, [filters.searchText, filters.date]);
+
+     // Tạo tab items cho từng trạng thái
+     const tabItems = [
+          {
+               key: 'all',
+               label: `Tất cả (${filterByStatus('all').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('all').slice((currentPage['all'] - 1) * pagination.pageSize, currentPage['all'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('all').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['all']}
+                                        total={filterByStatus('all').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('all', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'unanswered',
+               label: `Chưa trả lời (${filterByStatus('unanswered').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('unanswered').slice((currentPage['unanswered'] - 1) * pagination.pageSize, currentPage['unanswered'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('unanswered').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['unanswered']}
+                                        total={filterByStatus('unanswered').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('unanswered', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'answered',
+               label: `Đã trả lời (${filterByStatus('answered').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('answered').slice((currentPage['answered'] - 1) * pagination.pageSize, currentPage['answered'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('answered').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['answered']}
+                                        total={filterByStatus('answered').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('answered', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'closed',
+               label: `Đã đóng (${filterByStatus('closed').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('closed').slice((currentPage['closed'] - 1) * pagination.pageSize, currentPage['closed'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('closed').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['closed']}
+                                        total={filterByStatus('closed').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('closed', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+     ];
+
      return (
           <div style={{ background: '#fff', borderRadius: 8, padding: 24 }}>
                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#5fc9a7', margin: 0 }}>Consultant Dashboard</h1>
+                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1890ff', margin: 0 }}>Consultant Dashboard</h1>
                     {/* <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
                          <Badge count={unreadCount}>
                               <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
@@ -278,17 +448,6 @@ const QuestionManagement = () => {
                </div>
                <Space style={{ marginBottom: 16 }} wrap>
                     <DatePicker placeholder="mm/dd/yyyy" onChange={(date) => handleFilterChange('date', date)} value={filters.date} />
-                    <Select
-                         value={filters.status}
-                         style={{ width: 150 }}
-                         onChange={(value) => handleFilterChange('status', value)}
-                    >
-                         <Option value="all">Tất cả</Option>
-                         <Option value="unanswered">Chưa trả lời</Option>
-                         <Option value="responded">Đã phản hồi</Option>
-                         <Option value="answered">Đã trả lời</Option>
-                         <Option value="closed">Đã đóng</Option>
-                    </Select>
                     <Input.Search
                          placeholder="Tìm kiếm khách hàng..."
                          style={{ width: 220 }}
@@ -300,16 +459,12 @@ const QuestionManagement = () => {
                          Làm mới
                     </Button>
                </Space>
-               <Table dataSource={paginatedData} columns={columns} pagination={false} loading={loading} />
-               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
-                    <Pagination
-                         current={pagination.current}
-                         total={filteredQuestions.length}
-                         pageSize={pagination.pageSize}
-                         onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
-                         showSizeChanger={false}
-                    />
-               </div>
+               <Tabs 
+                    defaultActiveKey="all" 
+                    items={tabItems} 
+                    tabBarStyle={{ background: '#f8f9fa', borderRadius: '16px 16px 0 0', padding: '0 16px', borderBottom: '1px solid #e0e0e0' }}
+                    className="custom-question-tabs"
+               />
                {selectedQuestion && (
                     <Modal
                          title="Chi tiết câu hỏi"
@@ -327,9 +482,7 @@ const QuestionManagement = () => {
                                         {selectedQuestion.gender}, {selectedQuestion.age} tuổi
                                    </b>
                                    <Tag color="cyan">{getSpecialtyName(selectedQuestion.specialtyId)}</Tag>
-                                   <Tag color={selectedQuestion.isAnswered ? 'blue' : 'orange'}>
-                                        {selectedQuestion.isAnswered ? 'Đã phản hồi' : 'Chưa trả lời'}
-                                   </Tag>
+                                   {getStatusTag(selectedQuestion)}
                               </div>
                               <div style={{ fontWeight: 600, color: '#2B7A4B', marginBottom: 4, fontSize: '1.2rem' }}>
                                    {selectedQuestion.title}
@@ -342,103 +495,45 @@ const QuestionManagement = () => {
                                         <Image width={200} src={selectedQuestion.attachmentPath} alt="Attachment" />
                                    </div>
                               )}
-                              <div
-                                   style={{
-                                        background: '#f6f6f6',
-                                        borderRadius: 8,
-                                        padding: 12,
-                                        marginBottom: 8,
-                                        minHeight: 120,
-                                        maxHeight: '40vh',
-                                        overflowY: 'auto',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                   }}
-                              >
-                                   {loadingMessages ? (
-                                        <Spin />
-                                   ) : messages.length === 0 ? (
-                                        <div style={{ color: '#888', textAlign: 'center', marginTop: 20 }}>
-                                             Chưa có trao đổi nào.
-                                        </div>
-                                   ) : (
-                                        messages.map((msg, idx) => {
-                                             const isConsultant = msg.senderId?.toString() === consultantId;
-                                             return (
-                                                  <div
-                                                       key={idx}
-                                                       style={{
-                                                            marginBottom: 12,
-                                                            display: 'flex',
-                                                            justifyContent: isConsultant ? 'flex-end' : 'flex-start',
-                                                       }}
-                                                  >
-                                                       <div style={{ maxWidth: '70%' }}>
-                                                            <div
-                                                                 style={{
-                                                                      fontWeight: 500,
-                                                                      color: '#888',
-                                                                      marginBottom: 4,
-                                                                      textAlign: isConsultant ? 'right' : 'left',
-                                                                 }}
-                                                            >
-                                                                 {isConsultant ? 'Bạn' : selectedQuestion.sender.name}
-                                                            </div>
-                                                            <div
-                                                                 style={{
-                                                                      background: isConsultant ? '#e6f7ff' : '#fff',
-                                                                      borderRadius: 6,
-                                                                      padding: '8px 12px',
-                                                                      display: 'inline-block',
-                                                                      textAlign: 'left',
-                                                                      border: '1px solid #f0f0f0',
-                                                                 }}
-                                                            >
-                                                                 {msg.content}
-                                                            </div>
-                                                            <div
-                                                                 style={{
-                                                                      fontSize: 11,
-                                                                      color: '#aaa',
-                                                                      marginTop: 4,
-                                                                      textAlign: isConsultant ? 'right' : 'left',
-                                                                 }}
-                                                            >
-                                                                 {msg.sentAt
-                                                                      ? dayjs
-                                                                           .utc(msg.sentAt)
-                                                                           .local()
-                                                                           .format('HH:mm:ss DD/MM/YYYY')
-                                                                      : ''}
-                                                            </div>
-                                                       </div>
-                                                  </div>
-                                             );
-                                        })
-                                   )}
-                              </div>
                               <div style={{ marginTop: 16 }}>
-                                   <Input.TextArea
-                                        rows={3}
-                                        value={replyContent}
-                                        onChange={(e) => setReplyContent(e.target.value)}
-                                        placeholder="Nhập nội dung trả lời..."
-                                        disabled={selectedQuestion.isClosed}
+                                   <SubQuestionList
+                                        question={{
+                                             id: selectedQuestion.key,
+                                             gender: selectedQuestion.gender,
+                                             age: selectedQuestion.age,
+                                             title: selectedQuestion.title,
+                                             content: selectedQuestion.content,
+                                             submitDate: selectedQuestion.sentTime,
+                                        }}
+                                        isConsultant={true}
+                                        onQuestionAnswered={fetchQuestions}
                                    />
-                                   <div style={{ marginTop: 8, textAlign: 'right' }}>
-                                        <Button
-                                             type="primary"
-                                             onClick={handleSendMessage}
-                                             disabled={!replyContent.trim() || selectedQuestion.isClosed}
-                                             loading={loadingMessages}
-                                        >
-                                             Trả lời
-                                        </Button>
-                                   </div>
                               </div>
                          </div>
                     </Modal>
                )}
+               <AntdModal
+                    open={closeModalVisible}
+                    onCancel={() => { setCloseModalVisible(false); setClosingQuestion(null); }}
+                    footer={null}
+                    title={<span style={{ color: '#000' }}>Xác nhận đóng câu hỏi</span>}
+               >
+                    <p>Câu hỏi chưa đủ 7 ngày, bạn vẫn muốn đóng?</p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                         <Button onClick={() => { setCloseModalVisible(false); setClosingQuestion(null); }}>
+                              Hủy
+                         </Button>
+                         <Button
+                              type="primary"
+                              danger
+                              loading={closeLoading}
+                              onClick={() => doCloseQuestion(closingQuestion)}
+                              style={{ border: 'none' }}
+                         >
+                              Đồng ý đóng
+                         </Button>
+                    </div>
+               </AntdModal>
           </div>
      );
 };

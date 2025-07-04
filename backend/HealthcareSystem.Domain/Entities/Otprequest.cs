@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Domain.Entities
 {
 
-    public partial class Otprequest
+    public partial class OtpRequest
     {
-        public int Otpid { get; set; }
+        public int OtpId { get; set; }
 
         public int? UserId { get; set; }
 

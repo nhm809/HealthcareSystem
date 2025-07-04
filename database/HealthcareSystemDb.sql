@@ -83,7 +83,6 @@ VALUES
 
 
 --Question --=====================================================================================================================================================
-<<<<<<< blog-page
 --INSERT INTO Question (
 --    MemberID, Specialty, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status]
 --)
@@ -98,9 +97,8 @@ VALUES
 --    4,
 --    N'Đã trả lời'
 --);
-=======
 INSERT INTO Question (
-   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, AnsCount
 )
 VALUES
 (
@@ -117,7 +115,6 @@ VALUES
 	10,
 	1
 );
->>>>>>> main
 
 --=====================================================================================================================================================
 -- Message trao đổi giữa thành viên và tư vấn viên
@@ -273,7 +270,11 @@ VALUES
 ( 9, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
 ( 9, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
 ( 9, 5, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
-( 9, 6, '13:00:00.0000000', '17:00:00.0000000', 2, NULL);
+( 9, 6, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+(4, 1, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),--Staff
+(4, 2, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(4, 3, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(4, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL);
 
 
 

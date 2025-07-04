@@ -6,7 +6,7 @@ import api from '../../services/api';
 import { authApi } from '../../services/api';
 import dayjs from 'dayjs';
 
-function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, selectedTime }) {
+function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, selectedTime, symptom }) {
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -29,7 +29,8 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
         consultantId: doctor.consultantId,
         startTime: start.format('YYYY-MM-DDTHH:mm:ss'),
         endTime: end.format('YYYY-MM-DDTHH:mm:ss'),
-        meetLink: ""
+        meetLink: "",
+        symptoms: symptom
       };
 
       const res = await api.post('/Appointment/create', payload);
@@ -77,11 +78,10 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
     >
       <Descriptions bordered column={1}>
         <Descriptions.Item label="Họ và tên">{user?.fullName}</Descriptions.Item>
-        <Descriptions.Item label="Ngày sinh">{dayjs(user?.doB).format('DD/MM/YYYY')}</Descriptions.Item>
-        <Descriptions.Item label="Giới tính">{user?.gender}</Descriptions.Item>
         <Descriptions.Item label="Số điện thoại">{user?.phoneNumber}</Descriptions.Item>
         <Descriptions.Item label="Ngày tư vấn">{dayjs(selectedDate).format('DD/MM/YYYY')}</Descriptions.Item>
         <Descriptions.Item label="Giờ tư vấn">{selectedTime}</Descriptions.Item>
+        <Descriptions.Item label="Triệu chứng">{symptom}</Descriptions.Item>
         <Descriptions.Item label="Bác sĩ">{doctor?.fullName}</Descriptions.Item>
         <Descriptions.Item label="Chuyên khoa">{doctor?.specialties?.map(s => s.name).join(', ')}</Descriptions.Item>
         <Descriptions.Item label="Hình thức">Tư vấn trực tuyến</Descriptions.Item>
