@@ -118,4 +118,34 @@ public class ManageUserController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("countUsers")]
+    public async Task<IActionResult> CountUsersAsync()
+    {
+        try
+        {
+            var res = await _manageUserService.CountUsers();
+            return Content(res, "text/plain");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
+    [HttpGet]
+    [Route("getTenLatestMembers")]
+    public async Task<IActionResult> GetTenLatestMembersAsync()
+    {
+        try
+        {
+            var members = await _manageUserService.GetTenLatestMembers();
+            return Ok(new { success = true, members });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
 }
