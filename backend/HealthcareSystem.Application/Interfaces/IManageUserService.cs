@@ -13,5 +13,8 @@ namespace Application.Interfaces
         Task<IEnumerable<ManageUserDTO>> GetUsersPerPageAsync(int page, int pageSize);
         Task<bool> UpdateUserAsync(ManageUserDTO userDto);
         Task<bool> DeleteUserAsync(int userId);
+        Task<string> CountUsers();
+        Task<IEnumerable<UserInfoDTO>> GetTenLatestMembers();
+
     }
 }

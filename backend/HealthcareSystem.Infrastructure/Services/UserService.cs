@@ -38,7 +38,6 @@ namespace Infrastructure.Services
                 CreateDate = user.CreateDate,
                 Avatar = user.Avatar,
                 RoleId = user.RoleId,
-                IsActive = user.IsActive,
                 IsAvailable = user.IsAvailable
             };
 
