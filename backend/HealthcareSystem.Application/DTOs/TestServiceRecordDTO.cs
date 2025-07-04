@@ -12,6 +12,8 @@ namespace HealthcareSystem.Application.DTOs
 
         public int? MemberId { get; set; }
 
+        public int? StaffId { get; set; }
+
         public DateTime? RecordDate { get; set; }
 
         public string? Status { get; set; }

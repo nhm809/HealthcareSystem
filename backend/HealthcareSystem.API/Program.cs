@@ -48,6 +48,7 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
+
 // Thêm CORS
 builder.Services.AddCors(options =>
 {
