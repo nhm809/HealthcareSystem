@@ -28,6 +28,7 @@ namespace Infrastructure.Services
             return new UserInfoDTO
             {
                 UserId = user.UserId,
+                Provider = user.Provider,
                 FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
@@ -35,8 +36,10 @@ namespace Infrastructure.Services
                 Gender = user.Gender,
                 Address = user.Address,
                 CreateDate = user.CreateDate,
-                AvatarPath = user.Avatar,
-                Role = user.RoleId
+                Avatar = user.Avatar,
+                RoleId = user.RoleId,
+                IsActive = user.IsActive,
+                IsAvailable = user.IsAvailable
             };
 
         }

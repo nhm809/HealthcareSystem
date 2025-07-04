@@ -20,6 +20,31 @@ namespace Infrastructure.Services
             _context = context;
         }
 
+
+        public async Task<IEnumerable<UserInfoDTO>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Select(u => new UserInfoDTO
+                {
+                    UserId = u.UserId,
+                    Provider = u.Provider,
+                    GoogleId = u.GoogleId,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    DoB = u.DoB,
+                    Gender = u.Gender,
+                    Address = u.Address,
+                    CreateDate = u.CreateDate,
+                    Avatar = u.Avatar,
+                    RoleId = u.RoleId,
+                    IsActive = u.IsActive,
+                    IsAvailable = u.IsAvailable
+                })
+                .ToListAsync();
+        }
+
+
         public async Task<int> CountPage()
         {
             int totalUsers = await _context.Users.CountAsync();
