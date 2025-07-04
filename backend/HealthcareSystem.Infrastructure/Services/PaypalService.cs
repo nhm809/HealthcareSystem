@@ -254,7 +254,7 @@ namespace HealthcareSystem.Infrastructure.Services
                     .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 if (appointment != null)
                 {
-                    appointment.Status = "Dang cho kham";
+                    appointment.Status = "Dang cho tu van";
                     amount = appointment.Service?.Price ?? 0;
                     description = $"Thanh toán khám - {appointment.Member?.FullName}";
                 }

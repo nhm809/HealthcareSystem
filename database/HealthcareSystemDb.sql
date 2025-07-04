@@ -264,10 +264,10 @@ VALUES
 INSERT INTO [dbo].[WeeklyOverrideSchedules] 
 (UserId, [Date], OverrideType, Reason, ShiftType, [Status]) 
 VALUES
-(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved'),
+(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
 (8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
 (9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
-(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
-(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
-(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved'),
-(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Approved');--nghỉ cả ngày
+(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Đã xác nhận');--nghỉ cả ngày

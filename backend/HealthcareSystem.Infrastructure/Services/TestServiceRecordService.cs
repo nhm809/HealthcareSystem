@@ -36,6 +36,7 @@ namespace Infrastructure.Services
                     ServiceId = r.ServiceId,
                     ServiceName = r.Service.Name,
                     MemberId = r.MemberId,
+                    StaffId = r.StaffId,
                     RecordDate = r.RecordDate,
                     Status = r.Status
                 })
@@ -106,25 +107,8 @@ namespace Infrastructure.Services
             var testDate = request.TestDate;
             var shift = request.Shift;
 
-            if (shift != 1 && shift != 2)
-            {
-                return false; 
-            }
-            //tránh spam,đặt ca đó rồi mà đặt nữa là hổng cho 
             var shiftStartTime = GetDefaultTimeSlotForShift(shift);
             var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
-            
-            var existingUserBookingInShift = await _context.TestServiceRecords
-                .AnyAsync(r => r.TestDate == testDate &&
-                           r.MemberId == request.UserId &&
-                           r.Status != "Da huy" &&
-                           r.Status != "Khach hang khong den" &&
-                           r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime);
-
-            if (existingUserBookingInShift)
-            {
-                return false;
-            }
 
             var availableStaffIds = await GetAvailableStaffIdsForShiftAsync(testDate, shift);
             var shiftDurationHours = (shiftEndTime - shiftStartTime).TotalHours;
@@ -158,7 +142,7 @@ namespace Infrastructure.Services
             var existingUserBookingInShift = await _context.TestServiceRecords
                 .AnyAsync(r => r.TestDate == testDate && 
                            r.MemberId == request.UserId &&
-                           r.Status != "Da huy" && 
+                           r.Status != "Da huy" && /////////////////////////////////////
                            r.Status != "Khach hang khong den" &&
                            r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime);
 
@@ -168,7 +152,7 @@ namespace Infrastructure.Services
                     "Mỗi khách hàng chỉ có thể đặt 1 lịch xét nghiệm mỗi ca.");
             }
 
-            // Check overall capacity without assigning staff
+
             var canBook = await CanBookTestService(request);
             if (!canBook)
             {
@@ -228,7 +212,7 @@ namespace Infrastructure.Services
                 return;
             }
 
-            // Round-robin assignment based on staff workload for that specific shift
+            // round robin
             var shiftStartTime = GetDefaultTimeSlotForShift(shift);
             var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
             
@@ -308,7 +292,6 @@ namespace Infrastructure.Services
         {
             var dayOfWeek = (int)date.DayOfWeek;
 
-            // lấy từ lịch làm việc bth
             var regularStaffIds = await _context.WeeklySchedules
                 .Include(ws => ws.User)
                 .Where(ws => ws.DayOfWeek == dayOfWeek && ws.ShiftType == shift && ws.User.IsAvailable && ws.User.RoleId == "ST")
@@ -317,7 +300,7 @@ namespace Infrastructure.Services
 
             var overrides = await _context.WeeklyOverrideSchedules
                 .Include(os => os.User)
-                .Where(os => DateOnly.FromDateTime(os.Date) == date && os.Status == "Approved" && os.User.RoleId == "ST")
+                .Where(os => DateOnly.FromDateTime(os.Date) == date && os.Status == "Đã xác nhận" && os.User.RoleId == "ST")
                 .ToListAsync();
 
             var staffOnLeaveIds = overrides
@@ -331,7 +314,6 @@ namespace Infrastructure.Services
                 .Select(o => o.UserId)
                 .ToList();
 
-            // 5. Combine lists: start with regular staff, add extra work staff, then remove those on leave
             var availableStaffIds = new HashSet<int>(regularStaffIds);
             availableStaffIds.UnionWith(extraWorkStaffIds);
             availableStaffIds.ExceptWith(staffOnLeaveIds);
@@ -431,12 +413,12 @@ namespace Infrastructure.Services
             if (testServiceRecord.Status == "Da huy")
             {
                 throw new ArgumentException("Bản ghi xét nghiệm đã bị hủy trước đó.");
-            }else if (testServiceRecord.Status == "Da hoan thanh")
+            }else if (testServiceRecord.Status == "Da hoan thanh" || testServiceRecord.Status == "Da danh gia")
             {
                 throw new ArgumentException("Xét nghiệm đã hoàn thành.");
             }else if (testServiceRecord.Status == "Dang cho kham")
             {
-                throw new ArgumentException("Xét nghiệm đang trong quá trình chờ khám quý khách cân nhắc trước khi hủy .");
+                throw new ArgumentException("Xét nghiệm đang trong quá trình chờ khám");
             }else if (testServiceRecord.Status == "Khach hang khong den")
             {
                 throw new ArgumentException("Bản ghi xét nghiệm đã quá hạn.");
