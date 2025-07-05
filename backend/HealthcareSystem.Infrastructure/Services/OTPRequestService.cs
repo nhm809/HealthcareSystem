@@ -52,7 +52,7 @@ namespace Infrastructure.Services
             await _context.SaveChangesAsync();
 
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_config["EmailSettings:From"]));
+            email.From.Add(new MailboxAddress("Gender Healthcare System", _config["EmailSettings:From"]));
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Xác thực OTP - Đổi mật khẩu / email";
             email.Body = new TextPart("html")
