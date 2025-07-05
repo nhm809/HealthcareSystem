@@ -24,6 +24,7 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<UserInfoDTO>> GetAllUsersAsync()
         {
             return await _context.Users
+                .Where(u => u.RoleId != "AD" && u.RoleId != "MG")
                 .Select(u => new UserInfoDTO
                 {
                     UserId = u.UserId,

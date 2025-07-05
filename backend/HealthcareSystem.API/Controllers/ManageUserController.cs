@@ -15,7 +15,7 @@ public class ManageUserController : ControllerBase
     }
 
 
-    [HttpPost]
+    [HttpGet]
     [Route("getAllUsers")]
     public async Task<IActionResult> GetAllUsersAsync()
     {
