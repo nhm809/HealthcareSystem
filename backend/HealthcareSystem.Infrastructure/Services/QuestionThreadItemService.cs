@@ -91,6 +91,9 @@ namespace Infrastructure.Services
             _context.QuestionThreadItems.Update(subQuestion);
             var question = await _context.Questions
                 .FirstOrDefaultAsync(q => q.QuestionId == subQuestion.QuestionId);
+
+            question.AnsCount += 1;
+
             var memNoti = new Notification
             {
                 UserId = question.MemberId,
@@ -99,6 +102,7 @@ namespace Infrastructure.Services
                 SendTime = DateTime.UtcNow
             };
             await _context.Notifications.AddAsync(memNoti);
+            await _context.Questions.AddAsync(question);
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -112,6 +116,8 @@ namespace Infrastructure.Services
                 return false;
             subQuestion.QuestionText = dto.QuestionText;
             subQuestion.AttachmentPath = dto.AttachmentPath;
+            subQuestion.AnsweredAt = DateTime.UtcNow;
+            subQuestion.IsAnswered = true;
             _context.QuestionThreadItems.Update(subQuestion);
             return await _context.SaveChangesAsync() > 0;
         }

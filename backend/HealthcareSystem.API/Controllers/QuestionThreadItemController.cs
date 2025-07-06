@@ -19,7 +19,7 @@ public class QuestionThreadItemController : ControllerBase
         _iQuestionThreadItemService = questionThreadItemService;
     }
 
-    [HttpGet("get/{questionId}")]
+    [HttpGet("getByQuestionId/{questionId}")]
     public async Task<ActionResult<List<QuestionThreadItemDTO>>> GetSubQuestionAsync(int questionId)
     {
         var subQuestions = await _iQuestionThreadItemService.GetSubQuestionAsync(questionId);

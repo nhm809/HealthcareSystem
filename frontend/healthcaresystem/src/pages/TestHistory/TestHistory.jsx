@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Tag, Spin, message, Typography, Space, Modal, Descriptions, Button, Image, Tabs } from 'antd';
+import { Card, Table, Tag, Spin, message, Typography, Space, Modal, Descriptions, Button, Image, Tabs, Rate, Input, Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { authApi, cancelTestRecord } from '../../services/api';
+import { authApi, cancelTestRecord, updateTestResult } from '../../services/api';
 import MainLayout from '../../components/Layout/Layout';
 import dayjs from 'dayjs';
 import './TestHistory.css';
@@ -15,6 +15,10 @@ const TestHistory = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [feedbackRecord, setFeedbackRecord] = useState(null);
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const userId = Cookies.get('userId');
 
@@ -55,7 +59,8 @@ const TestHistory = () => {
       'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
       'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
       'da huy': { color: 'default', text: 'Đã hủy' },
-      'khach hang khong den': { color: 'default', text: 'Đã hủy' }
+      'khach hang khong den': { color: 'default', text: 'Đã hủy' },
+      'da danh gia': { color: 'success', text: 'Đã đánh giá' }
     };
 
     const lowerCaseStatus = status?.toLowerCase() || '';
@@ -87,6 +92,44 @@ const TestHistory = () => {
         isFromHistory: true
       } 
     });
+  };
+
+  const handleFeedback = (record) => {
+    setFeedbackRecord(record);
+    setFeedbackModalVisible(true);
+    form.resetFields();
+  };
+
+  const submitFeedback = async () => {
+    try {
+      const values = await form.validateFields();
+      setFeedbackLoading(true);
+      await fetch('/api/feedback/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recordId: feedbackRecord.testServiceRecordId,
+          rating: values.rating,
+          comment: values.comment,
+          feedbackDate: new Date().toISOString()
+        })
+      });
+      // Gọi API cập nhật status thành 'Da danh gia'
+      try {
+        await updateTestResult(null, {
+          testServiceRecordId: feedbackRecord.testServiceRecordId,
+          status: 'Da danh gia'
+        });
+      } catch {}
+      message.success('Đánh giá thành công!');
+      setFeedbackModalVisible(false);
+      setFeedbackRecord(null);
+      fetchTestHistory();
+    } catch {
+      message.error('Gửi đánh giá thất bại!');
+    } finally {
+      setFeedbackLoading(false);
+    }
   };
 
   // Helper để hiển thị ca làm việc
@@ -144,6 +187,21 @@ const TestHistory = () => {
             </Button>
           );
         }
+        if ((status === 'completed' || status === 'da hoan tat' || status === 'da hoan thanh') && !record.hasFeedback) {
+          return (
+            <Button
+              type="primary"
+              size="small"
+              onClick={e => {
+                e.stopPropagation();
+                handleFeedback(record);
+              }}
+              style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+            >
+              Đánh giá
+            </Button>
+          );
+        }
         return null;
       },
     },
@@ -152,6 +210,9 @@ const TestHistory = () => {
   // Helper để lọc theo trạng thái
   const filterByStatus = (statusList) =>
     testRecords.filter(r => statusList.includes((r.status || '').toLowerCase()));
+
+  const filterFeedback = () =>
+    testRecords.filter(r => (r.status || '').toLowerCase() === 'da danh gia');
 
   const tabItems = [
     {
@@ -245,6 +306,27 @@ const TestHistory = () => {
         <Table
           columns={columns}
           dataSource={filterByStatus(['cancelled', 'da huy', 'khach hang khong den'])}
+          rowKey="testServiceRecordId"
+          pagination={{
+            pageSize: 10,
+            showQuickJumper: true,
+            showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bản ghi`,
+          }}
+          onRow={(record) => ({
+            onClick: () => handleRowClick(record),
+            style: { cursor: 'pointer' }
+          })}
+          className="test-history-table"
+        />
+      )
+    },
+    {
+      key: 'da-danh-gia',
+      label: 'Đã đánh giá',
+      children: (
+        <Table
+          columns={columns}
+          dataSource={filterFeedback()}
           rowKey="testServiceRecordId"
           pagination={{
             pageSize: 10,
@@ -424,6 +506,27 @@ const TestHistory = () => {
               )}
             </Descriptions>
           )}
+        </Modal>
+
+        {/* Modal đánh giá */}
+        <Modal
+          title={<span style={{ color: '#1a3e72', fontWeight: 600 }}>Đánh giá dịch vụ</span>}
+          open={feedbackModalVisible}
+          onCancel={() => setFeedbackModalVisible(false)}
+          footer={null}
+          destroyOnClose
+        >
+          <Form form={form} layout="vertical" onFinish={submitFeedback}>
+            <Form.Item name="rating" label="Chất lượng dịch vụ" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}> 
+              <Rate allowClear={false} />
+            </Form.Item>
+            <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}> 
+              <Input.TextArea rows={4} placeholder="Nhận xét của bạn về dịch vụ..." />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={feedbackLoading} block>Gửi đánh giá</Button>
+            </Form.Item>
+          </Form>
         </Modal>
       </div>
     </MainLayout>

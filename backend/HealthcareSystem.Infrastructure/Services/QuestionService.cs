@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using MimeKit.Tnef;
 
 namespace Infrastructure.Services
 {
@@ -35,7 +36,7 @@ namespace Infrastructure.Services
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,
-                    MessCount = q.MessCount
+                    AnsCount = q.AnsCount
                 })
                 .ToListAsync();
         }
@@ -68,7 +69,7 @@ namespace Infrastructure.Services
                 Status = "Chua tra loi",
                 Gender = questionDto.Gender,
                 HeartCount = 0,
-                MessCount = 0
+                AnsCount = 0
             };
 
             await _context.Questions.AddAsync(question);
@@ -165,7 +166,7 @@ namespace Infrastructure.Services
                 Age = question.Age,
                 Gender = question.Gender,
                 HeartCount = question.HeartCount,
-                MessCount = question.MessCount
+                AnsCount = question.AnsCount
             };
         }
 
@@ -187,7 +188,7 @@ namespace Infrastructure.Services
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,
-                    MessCount = q.MessCount
+                    AnsCount = q.AnsCount
                 })
                 .ToListAsync();
         }
@@ -210,9 +211,16 @@ namespace Infrastructure.Services
                     Age = q.Age,
                     Gender = q.Gender,
                     HeartCount = q.HeartCount,
-                    MessCount = q.MessCount
+                    AnsCount = q.AnsCount
                 })
                 .ToListAsync();
+        }
+
+        public async Task<int> CountAnswers(int questionId)
+        {
+            int ansCount = await _context.QuestionThreadItems
+                .CountAsync(q => q.QuestionId == questionId && q.IsAnswered == true);
+            return ansCount;
         }
 
     }
