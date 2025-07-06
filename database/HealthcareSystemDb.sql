@@ -270,4 +270,6 @@ VALUES
 (9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
 (9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
 (8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(7, '2025-07-05', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(8, '2025-07-08', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
 (6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Đã xác nhận');--nghỉ cả ngày
