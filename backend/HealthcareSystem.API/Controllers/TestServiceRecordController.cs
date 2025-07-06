@@ -17,14 +17,12 @@ namespace Api.Controllers
     {
 
         private readonly ITestServiceRecord _testServiceRecord;
-        // private readonly ITestServiceRecordService _testServiceRecordService; , ITestServiceRecordService testServiceRecordService
 
         public TestServiceRecordController(ITestServiceRecord testServiceRecord)
         {
             _testServiceRecord = testServiceRecord;
-            // _testServiceRecordService = testServiceRecordService;
         }
-        // GET /api/testservicerecord/member/5
+
         [HttpGet("member/{memberId}")]
         public async Task<IActionResult> GetRecordsByMemberId(int memberId)
         {

@@ -12,7 +12,7 @@ namespace HealthcareSystem.Application.Interfaces
         Task<IEnumerable<TestServiceRecordDTO>> GetTestServiceRecordsByMemberIdAsync(int MemberId);
         Task<TestServiceRecordDetailDTO?> GetTestServiceRecordByIdAsync(int testServiceRecordId, int MemberId);
         
-        //Book a test service record for a member
+
         Task<int> BookTestServiceAsync(BookTestServiceRecordDTO request);
         // Task<IEnumerable<TimeSpan>> GetAvailableTimeSlotsAsync(DateOnly date);
         Task<IEnumerable<WorkShiftDTO>> GetWorkShiftsAsync(DateOnly date);
