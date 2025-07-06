@@ -46,6 +46,8 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IQuestionThreadItemService, QuestionThreadItemService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IWeeklyScheduleService, WeeklyScheduleService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
 
