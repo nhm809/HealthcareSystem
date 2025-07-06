@@ -9,6 +9,10 @@
   background: #fff;
 }
 
+.appointment-list .ant-card-body {
+  padding: 24px;
+}
+
 .appointment-list .ant-tabs-tab {
   font-weight: 500;
   font-size: 16px;

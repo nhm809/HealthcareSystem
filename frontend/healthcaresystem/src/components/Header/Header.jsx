@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthModal from './AuthModal/AuthModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -292,7 +292,12 @@ function Header() {
                             color: item.isRead ? '#999' : '#666'
                           }}
                         >
-                          {item.content}
+                          {item.content.split('\n').map((line, index) => (
+                            <React.Fragment key={index}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          ))}
                         </Text>
                         <div style={{ marginTop: '6px' }}>
                           <Text 

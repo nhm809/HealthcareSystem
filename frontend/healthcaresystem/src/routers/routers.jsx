@@ -4,6 +4,7 @@ import StaffLayout from "../components/Layout/StaffLayout";
 import ConsultantLayout from "../components/Layout/ConsultantLayout";
 import { useLocation } from "react-router-dom";
 import BookingInformation from '../pages/Appointment/BookingInformation';
+import AdminLayout from "../components/Layout/AdminLayout";
 
 const routers = [
      {
@@ -59,15 +60,19 @@ const routers = [
           component: lazy(() => import('../pages/TestSti/PaypalCallback'))
      },
     // Staff route: NO children, just component
-    {
-        path: '/staff',
-        component: StaffLayout
-    },
+     {
+          path: '/staff',
+          component: StaffLayout
+     },
 
-    {
-        path: '/consultant',
-        component: ConsultantLayout
-    },
+     {
+          path: '/consultant',
+          component: ConsultantLayout
+     },
+     {
+          path: '/admin',
+          component: AdminLayout
+     },
      {
           path: '/reproductive-cycle',
           component: lazy(() => import('../pages/ReproductiveCycle/ReproductiveCycle'))

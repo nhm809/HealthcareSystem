@@ -251,6 +251,7 @@ namespace HealthcareSystem.Infrastructure.Services
                 var appointment = await _context.Appointments
                     .Include(a => a.Service)
                     .Include(a => a.Member)
+                    .Include(a => a.Consultant)
                     .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 if (appointment != null)
                 {
@@ -261,20 +262,33 @@ namespace HealthcareSystem.Infrastructure.Services
                     await _context.SaveChangesAsync();
                 }
 
-                // if (appointment.MemberId.HasValue)
-                // {
-                //     var Notification = new Notification
-                //     {
-                //         UserId = appointment.MemberId.Value,
-                //         Title = "Thanh toán thành công",
-                //         Content = "Bạn đã thanh toán thành công đặt lịch tư vấn.",
-                //         SendTime = DateTime.UtcNow.AddHours(7),///////////
-                //         IsRead = false
-                //     };
+                // Create Notification for Member
+                if (appointment.MemberId.HasValue)
+                {
+                    var paidAt = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm");
+                    var consultantName = appointment.Consultant?.FullName ?? "Không xác định";
+                    var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
 
-                //     _context.Notifications.Add(Notification);
-                //     await _context.SaveChangesAsync();
-                // }
+                    var content = 
+                        $@"Dịch vụ: {appointment.Service?.Name}
+                        Bác sĩ tư vấn: {consultantName}
+                        Ngày hẹn: {appointmentTime}
+                        Thời gian thanh toán: {paidAt}
+                        Số tiền: {amount:N0} VND
+                        Mã giao dịch: {transactionId}";
+
+                    var notification = new Notification
+                    {
+                        UserId = appointment.MemberId.Value,
+                        Title = "Thanh toán thành công lịch tư vấn",
+                        Content = content,
+                        SendTime = DateTime.UtcNow.AddHours(7),
+                        IsRead = false
+                    };
+
+                    _context.Notifications.Add(notification);
+                    await _context.SaveChangesAsync();
+                }
             }
 
             // Tạo mới Invoice

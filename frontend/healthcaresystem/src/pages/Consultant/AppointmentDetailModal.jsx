@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Select, Input, Descriptions, Tag } from 'antd';
-import api from '../../services/api';
+import api, { notiApi } from '../../services/api';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 
@@ -40,13 +40,6 @@ function AppointmentDetailModal({ open, onClose, appointmentId, onUpdateSuccess 
             }
             if (meetLink !== detail.meetLink) {
                 await api.patch(`/Appointment/update-meetlink/${appointmentId}`, `"${meetLink}"`);
-                const notiData = {
-                    userId: detail.memberId,  // gửi cho người đặt lịch
-                    isRead: false,
-                    title: 'Cập nhật link tư vấn',
-                    content: `Lịch hẹn của bạn đã được cập nhật link Google Meet: ${meetLink}`,
-                };
-                await api.post(`/Notification/create`, notiData);
             }
             toast.success('Cập nhật thành công');
             onUpdateSuccess();

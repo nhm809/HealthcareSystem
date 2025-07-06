@@ -1,0 +1,42 @@
+.admin-sider {
+    background: #001529;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.admin-logo {
+    color: #fff;
+    padding: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.admin-avatar-container {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.admin-avatar-name {
+    color: #fff;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.admin-logout-button {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 0;
+    cursor: pointer;
+}
+
+.admin-header {
+    background: #fff;
+    padding: 0 24px;
+    text-align: right;
+}
