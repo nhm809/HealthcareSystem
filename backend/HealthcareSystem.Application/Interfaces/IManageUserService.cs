@@ -15,6 +15,6 @@ namespace Application.Interfaces
         Task<bool> DeleteUserAsync(int userId);
         Task<string> CountUsers();
         Task<IEnumerable<UserInfoDTO>> GetTenLatestMembers();
-
+        Task<bool> SetStatusUser(int userId, bool isAvailable);
     }
 }
