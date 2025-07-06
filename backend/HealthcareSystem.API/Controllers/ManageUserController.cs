@@ -148,4 +148,26 @@ public class ManageUserController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Route("setStatusUser/{userId}/{isAvailable}")]
+    public async Task<IActionResult> SetStatusUserAsync(int userId, bool isAvailable)
+    {
+        try
+        {
+            var result = await _manageUserService.SetStatusUser(userId, isAvailable);
+            if (result)
+            {
+                return Ok(new { success = true, message = "User status updated successfully." });
+            }
+            else
+            {
+                return NotFound(new { success = false, message = "User not found." });
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
 }
