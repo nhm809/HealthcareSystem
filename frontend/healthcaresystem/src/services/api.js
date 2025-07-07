@@ -140,6 +140,8 @@ export const manageUserApi = {
      getUserById: (userId) => api.get(`/manageUser/getUser/${userId}`),
      updateUserStatus: (userId, isActive) => api.put(`/manageUser/updateStatus/${userId}`, { isActive }),
      updateUserAvailability: (userId, isAvailable) => api.put(`/manageUser/updateAvailability/${userId}`, { isAvailable }),
+     updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
+     updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
 };
 
 // Request interceptor
