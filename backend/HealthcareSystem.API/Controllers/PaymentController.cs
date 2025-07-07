@@ -34,7 +34,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi tạo URL thanh toán PayPal." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi tạo URL thanh toán PayPal: {ex.Message}" });
             }
         }
 
