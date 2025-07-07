@@ -73,7 +73,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     RoleID = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

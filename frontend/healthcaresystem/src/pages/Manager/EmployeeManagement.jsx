@@ -17,7 +17,9 @@ import {
      message,
      Spin,
      Tooltip,
-     Badge
+     Badge,
+     Switch,
+     Modal as AntdModal
 } from 'antd';
 import {
      SearchOutlined,
@@ -42,6 +44,7 @@ const EmployeeManagement = () => {
      const [loading, setLoading] = useState(false);
      const [searchText, setSearchText] = useState('');
      const [roleFilter, setRoleFilter] = useState('all');
+     const [statusFilter, setStatusFilter] = useState('all');
      const [selectedUser, setSelectedUser] = useState(null);
      const [detailModalVisible, setDetailModalVisible] = useState(false);
 
@@ -93,18 +96,28 @@ const EmployeeManagement = () => {
 
           // Filter by role
           if (roleFilter !== 'all') {
-               filtered = filtered.filter(user => user.roleId === roleFilter);
+               if (roleFilter === 'CN') {
+                    filtered = filtered.filter(user => user.roleId === 'CS');
+               } else {
+                    filtered = filtered.filter(user => user.roleId === roleFilter);
+               }
+          }
+
+          // Filter by account status
+          if (statusFilter !== 'all') {
+               filtered = filtered.filter(user => statusFilter === 'available' ? user.isAvailable : !user.isAvailable);
           }
 
           setFilteredUsers(filtered);
-     }, [users, searchText, roleFilter]);
+     }, [users, searchText, roleFilter, statusFilter]);
 
      // Get role display name
      const getRoleDisplayName = (roleId) => {
           const roleMap = {
                'MB': 'Thành viên',
-               'ST': 'Nhân viên',
+               'ST': 'Nhân viên xét nghiệm',
                'CN': 'Tư vấn viên',
+               'CS': 'Tư vấn viên', // Add this line
                'MG': 'Quản lý'
           };
           return roleMap[roleId] || roleId;
@@ -116,6 +129,7 @@ const EmployeeManagement = () => {
                'MB': 'blue',
                'ST': 'green',
                'CN': 'purple',
+               'CS': 'purple', // Add this line
                'MG': 'red'
           };
           return colorMap[roleId] || 'default';
@@ -157,6 +171,18 @@ const EmployeeManagement = () => {
                ),
           },
           {
+               title: 'Trạng thái',
+               dataIndex: 'isAvailable',
+               key: 'isAvailable',
+               width: 120,
+               render: (isAvailable) => (
+                    <Badge
+                         status={isAvailable ? 'success' : 'error'}
+                         text={isAvailable ? 'Khả dụng' : 'Không khả dụng'}
+                    />
+               ),
+          },
+          {
                title: 'Số điện thoại',
                dataIndex: 'phoneNumber',
                key: 'phoneNumber',
@@ -193,12 +219,11 @@ const EmployeeManagement = () => {
 
      // Calculate statistics
      const stats = {
-          total: Array.isArray(users) ? users.length : 0,
-          members: Array.isArray(users) ? users.filter(u => u.roleId === 'MB').length : 0,
           staff: Array.isArray(users) ? users.filter(u => u.roleId === 'ST').length : 0,
-          consultants: Array.isArray(users) ? users.filter(u => u.roleId === 'CN').length : 0,
+          consultants: Array.isArray(users) ? users.filter(u => u.roleId === 'CN' || u.roleId === 'CS').length : 0,
+          total: Array.isArray(users) ? users.filter(u => u.roleId === 'ST' || u.roleId === 'CN' || u.roleId === 'CS').length : 0,
+          members: Array.isArray(users) ? users.filter(u => u.roleId === 'CN' || u.roleId === 'CS').length : 0, // now members = consultants
           managers: Array.isArray(users) ? users.filter(u => u.roleId === 'MG').length : 0,
-          active: Array.isArray(users) ? users.filter(u => u.isActive).length : 0,
           available: Array.isArray(users) ? users.filter(u => u.isAvailable).length : 0,
      };
 
@@ -224,17 +249,17 @@ const EmployeeManagement = () => {
                     <Col xs={24} sm={12} md={6}>
                          <Card>
                               <Statistic
-                                   title="Thành viên"
+                                   title="Tư vấn viên"
                                    value={stats.members}
                                    prefix={<UserOutlined />}
-                                   valueStyle={{ color: '#52c41a' }}
+                                   valueStyle={{ color: '#722ed1' }}
                               />
                          </Card>
                     </Col>
                     <Col xs={24} sm={12} md={6}>
                          <Card>
                               <Statistic
-                                   title="Nhân viên"
+                                   title="Nhân viên xét nghiệm"
                                    value={stats.staff}
                                    prefix={<MedicineBoxOutlined />}
                                    valueStyle={{ color: '#fa8c16' }}
@@ -244,8 +269,8 @@ const EmployeeManagement = () => {
                     <Col xs={24} sm={12} md={6}>
                          <Card>
                               <Statistic
-                                   title="Đang hoạt động"
-                                   value={stats.active}
+                                   title="Khả dụng"
+                                   value={stats.available}
                                    prefix={<SettingOutlined />}
                                    valueStyle={{ color: '#722ed1' }}
                               />
@@ -275,9 +300,21 @@ const EmployeeManagement = () => {
                               >
                                    <Option value="all">Tất cả vai trò</Option>
                                    <Option value="MB">Thành viên</Option>
-                                   <Option value="ST">Nhân viên</Option>
+                                   <Option value="ST">Nhân viên xét nghiệm</Option>
                                    <Option value="CN">Tư vấn viên</Option>
                                    <Option value="MG">Quản lý</Option>
+                              </Select>
+                         </Col>
+                         <Col xs={24} md={6}>
+                              <Select
+                                   placeholder="Lọc theo trạng thái tài khoản"
+                                   value={statusFilter}
+                                   onChange={setStatusFilter}
+                                   style={{ width: '100%' }}
+                              >
+                                   <Option value="all">Tất cả trạng thái</Option>
+                                   <Option value="available">Khả dụng</Option>
+                                   <Option value="unavailable">Không khả dụng</Option>
                               </Select>
                          </Col>
                          <Col xs={24} md={4}>
@@ -374,22 +411,81 @@ const EmployeeManagement = () => {
                               <Descriptions.Item label="Ngày tạo">
                                    {dayjs(selectedUser.createDate).format('DD/MM/YYYY')}
                               </Descriptions.Item>
-                              <Descriptions.Item label="Nhà cung cấp">
+                              <Descriptions.Item label="Loại tài khoản">
                                    {selectedUser.provider}
                               </Descriptions.Item>
-                              <Descriptions.Item label="Trạng thái hoạt động">
-                                   <Badge
-                                        status={selectedUser.isActive ? 'success' : 'error'}
-                                        text={selectedUser.isActive ? 'Đang hoạt động' : 'Không hoạt động'}
-                                   />
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Trạng thái khả dụng">
-                                   <Badge
-                                        status={selectedUser.isAvailable ? 'success' : 'error'}
-                                        text={selectedUser.isAvailable ? 'Khả dụng' : 'Không khả dụng'}
-                                   />
+                              <Descriptions.Item label="Trạng thái">
+                                   <Card style={{ background: '#f6faff', border: '1px solid #e6f7ff', borderRadius: 10, marginTop: 8, marginBottom: 16, boxShadow: '0 2px 8px #f0f1f2' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                                             <div style={{ fontWeight: 500, fontSize: 16, minWidth: 120 }}>Trạng thái tài khoản:</div>
+                                             <Badge
+                                                  status={selectedUser.isAvailable ? 'success' : 'error'}
+                                                  text={selectedUser.isAvailable ? 'Khả dụng' : 'Không khả dụng'}
+                                                  style={{ fontSize: 15 }}
+                                             />
+                                             <Switch
+                                                  checked={selectedUser.isAvailable}
+                                                  onChange={() => {
+                                                       AntdModal.confirm({
+                                                            title: `Xác nhận thay đổi trạng thái tài khoản`,
+                                                            content: selectedUser.isAvailable ? 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHÔNG khả dụng?' : 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHẢ DỤNG?',
+                                                            okText: 'Xác nhận',
+                                                            cancelText: 'Hủy',
+                                                            onOk: async () => {
+                                                                 const checked = !selectedUser.isAvailable;
+                                                                 try {
+                                                                      setLoading(true);
+                                                                      await manageUserApi.updateUserAvailabilityToggle(selectedUser.userId, checked);
+                                                                      setSelectedUser({ ...selectedUser, isAvailable: checked });
+                                                                      setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
+                                                                      setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
+                                                                      message.success('Đã cập nhật trạng thái tài khoản!');
+                                                                 } catch (err) {
+                                                                      message.error('Cập nhật trạng thái thất bại!');
+                                                                 } finally {
+                                                                      setLoading(false);
+                                                                 }
+                                                            }
+                                                       });
+                                                  }}
+                                             />
+                                        </div>
+                                   </Card>
                               </Descriptions.Item>
                          </Descriptions>
+                    )}
+                    {/* Role Update Section */}
+                    {selectedUser && (
+                         <Card style={{ marginTop: 0, padding: 20, background: '#f6faff', borderRadius: 10, border: '1px solid #e6f7ff', boxShadow: '0 2px 8px #f0f1f2' }}>
+                              <div style={{ marginBottom: 10, fontWeight: 500, fontSize: 16, color: '#1890ff' }}>Thay đổi vai trò tài khoản</div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                                   <Select
+                                        value={selectedUser.roleId}
+                                        style={{ width: 200 }}
+                                        onChange={async (newRole) => {
+                                             try {
+                                                  setLoading(true);
+                                                  await manageUserApi.updateUserRole(selectedUser.userId, newRole);
+                                                  setSelectedUser({ ...selectedUser, roleId: newRole });
+                                                  setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
+                                                  setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
+                                                  message.success('Cập nhật vai trò thành công!');
+                                             } catch (err) {
+                                                  message.error('Cập nhật vai trò thất bại!');
+                                             } finally {
+                                                  setLoading(false);
+                                             }
+                                        }}
+                                   >
+                                        <Option value="MB">Thành viên</Option>
+                                        <Option value="ST">Nhân viên xét nghiệm</Option>
+                                        <Option value="CS">Tư vấn viên</Option>
+                                   </Select>
+                                   <Tag color={getRoleColor(selectedUser.roleId)} style={{ fontWeight: 600, fontSize: 15 }}>
+                                        {getRoleDisplayName(selectedUser.roleId)}
+                                   </Tag>
+                              </div>
+                         </Card>
                     )}
                </Modal>
           </div>
