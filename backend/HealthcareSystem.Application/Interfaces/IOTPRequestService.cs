@@ -4,6 +4,7 @@ using Application.DTOs;
 
 public interface IOTPRequestService
 {
-    Task<bool> SendOtpAsync(int userId);
-    Task<bool> VerifyOtpAsync(VerifyOtpDTO dto);
+    Task<bool> SendOtpByUserId(int userId);
+    Task<bool> SendOtpByEmail(string userEmail);
+    Task<bool> VerifyOtp(VerifyOtpDTO dto);
 }

@@ -16,5 +16,7 @@ namespace Application.Interfaces
         Task<Object> CountUsers();
         Task<IEnumerable<UserInfoDTO>> GetTenLatestUsers();
         Task<bool> SetStatusUser(int userId, bool isAvailable);
+        Task<bool> AddSpecialty(ManageSpecialtyDTO dto);
+        Task<bool> DeleteSpecialty(ManageSpecialtyDTO dto);
     }
 }
