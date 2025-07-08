@@ -53,6 +53,10 @@ export const authApi = {
 
      getTestServiceRecordDetail: (testServiceRecordId, memberId) =>
           api.get(`/TestServiceRecord/${testServiceRecordId}/${memberId}`),
+
+     // OTP for registration
+     sendOtpRegisterVerify: (userId) => api.post(`/otp/sendOtpByUserId/${userId}`),
+     verifyOtpRegister: (userId, code) => api.post('/otp/verify', { UserId: userId, Code: code }),
 };
 
 export const notiApi = {
@@ -133,6 +137,10 @@ export const messageApi = {
 
 export const specialtyApi = {
      getAllSpecialties: () => api.get('/specialty/getAll'),
+     getSpecialtyById: (id) => api.get(`/specialty/getById/${id}`),
+     updateSpecialty: (data) => api.put('/specialty/update', data),
+     createSpecialty: (data) => api.post('/specialty/create', data),
+     deleteSpecialty: (id) => api.delete(`/specialty/delete/${id}`),
 };
 
 export const consultantBlogApi = {
@@ -160,6 +168,7 @@ export const manageUserApi = {
      updateUserAvailability: (userId, isAvailable) => api.put(`/manageUser/updateAvailability/${userId}`, { isAvailable }),
      updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
      updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
+     addSpecialty: (userId, specialtyId) => api.post('/manageUser/addSpecialty', { userId, specialtyId }),
 };
 
 // Request interceptor
@@ -236,5 +245,7 @@ api.interceptors.response.use(
           return Promise.reject(error);
      }
 );
+
+export const deleteService = (serviceId) => api.delete(`/Service/${serviceId}`);
 
 export default api;
