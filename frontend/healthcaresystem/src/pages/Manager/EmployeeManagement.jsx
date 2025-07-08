@@ -21,6 +21,8 @@ import {
      Switch,
      Modal as AntdModal
 } from 'antd';
+
+
 import {
      SearchOutlined,
      EyeOutlined,
@@ -44,9 +46,11 @@ const EmployeeManagement = () => {
      const [loading, setLoading] = useState(false);
      const [searchText, setSearchText] = useState('');
      const [roleFilter, setRoleFilter] = useState('all');
-     const [statusFilter, setStatusFilter] = useState('all');
+     const [statusFilter, setStatusFilter] = useState('available');
      const [selectedUser, setSelectedUser] = useState(null);
      const [detailModalVisible, setDetailModalVisible] = useState(false);
+
+
 
      // Fetch all users
      const fetchUsers = async () => {
@@ -183,37 +187,11 @@ const EmployeeManagement = () => {
                ),
           },
           {
-               title: 'Số điện thoại',
-               dataIndex: 'phoneNumber',
-               key: 'phoneNumber',
-               width: 130,
-               render: (phone) => phone || 'Chưa cập nhật',
-          },
-          {
                title: 'Ngày tạo',
                dataIndex: 'createDate',
                key: 'createDate',
                width: 120,
                render: (date) => dayjs(date).format('DD/MM/YYYY'),
-          },
-
-          {
-               title: 'Thao tác',
-               key: 'actions',
-               width: 100,
-               render: (_, record) => (
-                    <Tooltip title="Xem chi tiết">
-                         <Button
-                              type="primary"
-                              icon={<EyeOutlined />}
-                              size="small"
-                              onClick={() => {
-                                   setSelectedUser(record);
-                                   setDetailModalVisible(true);
-                              }}
-                         />
-                    </Tooltip>
-               ),
           },
      ];
 
@@ -353,139 +331,306 @@ const EmployeeManagement = () => {
                          }}
                          scroll={{ x: 1200 }}
                          size="middle"
+                         onRow={(record) => ({
+                              onClick: () => {
+                                   setSelectedUser(record);
+                                   setDetailModalVisible(true);
+                              },
+                              style: { cursor: 'pointer' }
+                         })}
                     />
                </Card>
 
                {/* Detail Modal */}
                <Modal
                     title={
-                         <Space>
-                              <UserOutlined />
-                              <span>Chi tiết nhân viên</span>
-                         </Space>
+                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                              <div style={{ 
+                                   width: 40, 
+                                   height: 40, 
+                                   borderRadius: '50%', 
+                                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                   display: 'flex', 
+                                   alignItems: 'center', 
+                                   justifyContent: 'center',
+                                   color: 'white',
+                                   fontSize: 18
+                              }}>
+                                   <UserOutlined />
+                              </div>
+                              <div>
+                                   <div style={{ fontSize: 20, fontWeight: 600, color: '#000', marginBottom: 4 }}>
+                                        Chi tiết nhân viên
+                                   </div>
+                              </div>
+                         </div>
                     }
                     open={detailModalVisible}
                     onCancel={() => setDetailModalVisible(false)}
                     footer={[
-                         <Button key="close" onClick={() => setDetailModalVisible(false)}>
+                         <Button key="close" onClick={() => setDetailModalVisible(false)} style={{ 
+                              background: '#f0f0f0', 
+                              border: '1px solid #d9d9d9',
+                              color: '#666',
+                              fontWeight: 500
+                         }}>
                               Đóng
                          </Button>
                     ]}
-                    width={700}
+                    width="80%"
+                    styles={{
+                         header: {
+                              borderBottom: '1px solid #f0f0f0',
+                              padding: '20px 24px'
+                         },
+                         body: {
+                              padding: '32px 24px'
+                         },
+                         footer: {
+                              borderTop: '1px solid #f0f0f0',
+                              padding: '16px 24px'
+                         }
+                    }}
                >
                     {selectedUser && (
-                         <Descriptions bordered column={2}>
-                              <Descriptions.Item label="Avatar" span={2}>
+                         <div style={{ maxWidth: '100%' }}>
+                              {/* Header Section */}
+                              <div style={{ 
+                                   display: 'flex', 
+                                   alignItems: 'center', 
+                                   gap: 24, 
+                                   marginBottom: 32,
+                                   padding: '24px',
+                                   background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                                   borderRadius: 16,
+                                   border: '1px solid #e8e8e8'
+                              }}>
                                    <Avatar
-                                        size={80}
+                                        size={100}
                                         src={selectedUser.avatar}
                                         icon={<UserOutlined />}
+                                        style={{ 
+                                             border: '4px solid white',
+                                             boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                        }}
                                    />
-                              </Descriptions.Item>
-                              <Descriptions.Item label="ID">
-                                   {selectedUser.userId}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Vai trò">
-                                   <Tag color={getRoleColor(selectedUser.roleId)}>
-                                        {getRoleDisplayName(selectedUser.roleId)}
-                                   </Tag>
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Họ tên">
-                                   {selectedUser.fullName || 'Chưa cập nhật'}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Email">
-                                   {selectedUser.email}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Số điện thoại">
-                                   {selectedUser.phoneNumber || 'Chưa cập nhật'}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Ngày sinh">
-                                   {selectedUser.doB ? dayjs(selectedUser.doB).format('DD/MM/YYYY') : 'Chưa cập nhật'}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Giới tính">
-                                   {selectedUser.gender || 'Chưa cập nhật'}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Địa chỉ" span={2}>
-                                   {selectedUser.address || 'Chưa cập nhật'}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Ngày tạo">
-                                   {dayjs(selectedUser.createDate).format('DD/MM/YYYY')}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Loại tài khoản">
-                                   {selectedUser.provider}
-                              </Descriptions.Item>
-                              <Descriptions.Item label="Trạng thái">
-                                   <Card style={{ background: '#f6faff', border: '1px solid #e6f7ff', borderRadius: 10, marginTop: 8, marginBottom: 16, boxShadow: '0 2px 8px #f0f1f2' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                                             <div style={{ fontWeight: 500, fontSize: 16, minWidth: 120 }}>Trạng thái tài khoản:</div>
+                                   <div style={{ flex: 1 }}>
+                                        <div style={{ 
+                                             fontSize: 28, 
+                                             fontWeight: 700, 
+                                             color: '#1a1a1a',
+                                             marginBottom: 8
+                                        }}>
+                                             {selectedUser.fullName || 'Chưa cập nhật'}
+                                        </div>
+                                        <div style={{ 
+                                             fontSize: 16, 
+                                             color: '#666',
+                                             marginBottom: 12
+                                        }}>
+                                             {selectedUser.email}
+                                        </div>
+                                        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                                             <Tag color={getRoleColor(selectedUser.roleId)} style={{ 
+                                                  fontSize: 14, 
+                                                  fontWeight: 600,
+                                                  padding: '6px 12px',
+                                                  borderRadius: 20
+                                             }}>
+                                                  {getRoleDisplayName(selectedUser.roleId)}
+                                             </Tag>
                                              <Badge
                                                   status={selectedUser.isAvailable ? 'success' : 'error'}
                                                   text={selectedUser.isAvailable ? 'Khả dụng' : 'Không khả dụng'}
-                                                  style={{ fontSize: 15 }}
-                                             />
-                                             <Switch
-                                                  checked={selectedUser.isAvailable}
-                                                  onChange={() => {
-                                                       AntdModal.confirm({
-                                                            title: `Xác nhận thay đổi trạng thái tài khoản`,
-                                                            content: selectedUser.isAvailable ? 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHÔNG khả dụng?' : 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHẢ DỤNG?',
-                                                            okText: 'Xác nhận',
-                                                            cancelText: 'Hủy',
-                                                            onOk: async () => {
-                                                                 const checked = !selectedUser.isAvailable;
-                                                                 try {
-                                                                      setLoading(true);
-                                                                      await manageUserApi.updateUserAvailabilityToggle(selectedUser.userId, checked);
-                                                                      setSelectedUser({ ...selectedUser, isAvailable: checked });
-                                                                      setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
-                                                                      setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
-                                                                      message.success('Đã cập nhật trạng thái tài khoản!');
-                                                                 } catch (err) {
-                                                                      message.error('Cập nhật trạng thái thất bại!');
-                                                                 } finally {
-                                                                      setLoading(false);
-                                                                 }
-                                                            }
-                                                       });
-                                                  }}
+                                                  style={{ fontSize: 14, fontWeight: 500 }}
                                              />
                                         </div>
-                                   </Card>
-                              </Descriptions.Item>
-                         </Descriptions>
-                    )}
-                    {/* Role Update Section */}
-                    {selectedUser && (
-                         <Card style={{ marginTop: 0, padding: 20, background: '#f6faff', borderRadius: 10, border: '1px solid #e6f7ff', boxShadow: '0 2px 8px #f0f1f2' }}>
-                              <div style={{ marginBottom: 10, fontWeight: 500, fontSize: 16, color: '#1890ff' }}>Thay đổi vai trò tài khoản</div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                                   <Select
-                                        value={selectedUser.roleId}
-                                        style={{ width: 200 }}
-                                        onChange={async (newRole) => {
-                                             try {
-                                                  setLoading(true);
-                                                  await manageUserApi.updateUserRole(selectedUser.userId, newRole);
-                                                  setSelectedUser({ ...selectedUser, roleId: newRole });
-                                                  setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
-                                                  setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
-                                                  message.success('Cập nhật vai trò thành công!');
-                                             } catch (err) {
-                                                  message.error('Cập nhật vai trò thất bại!');
-                                             } finally {
-                                                  setLoading(false);
-                                             }
-                                        }}
-                                   >
-                                        <Option value="MB">Thành viên</Option>
-                                        <Option value="ST">Nhân viên xét nghiệm</Option>
-                                        <Option value="CS">Tư vấn viên</Option>
-                                   </Select>
-                                   <Tag color={getRoleColor(selectedUser.roleId)} style={{ fontWeight: 600, fontSize: 15 }}>
-                                        {getRoleDisplayName(selectedUser.roleId)}
-                                   </Tag>
+                                   </div>
+                                   <div style={{ 
+                                        textAlign: 'right',
+                                        color: '#666',
+                                        fontSize: 14
+                                   }}>
+                                        <div>ID: {selectedUser.userId}</div>
+                                        <div>Ngày tạo: {dayjs(selectedUser.createDate).format('DD/MM/YYYY')}</div>
+                                   </div>
                               </div>
-                         </Card>
+
+                              {/* Information Grid */}
+                              <Row gutter={[24, 24]} style={{ marginBottom: 32 }}>
+                                   <Col xs={24} md={12}>
+                                        <Card 
+                                             title={
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                       <UserOutlined style={{ color: '#1890ff' }} />
+                                                       <span style={{ fontWeight: 600 }}>Thông tin cá nhân</span>
+                                                  </div>
+                                             }
+                                             style={{ 
+                                                  borderRadius: 12,
+                                                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                                  border: '1px solid #f0f0f0'
+                                             }}
+                                             headStyle={{ 
+                                                  borderBottom: '2px solid #f0f0f0',
+                                                  background: '#fafafa'
+                                             }}
+                                        >
+                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                       <span style={{ color: '#666', fontWeight: 500 }}>Số điện thoại:</span>
+                                                       <span style={{ fontWeight: 600 }}>{selectedUser.phoneNumber || 'Chưa cập nhật'}</span>
+                                                  </div>
+                                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                       <span style={{ color: '#666', fontWeight: 500 }}>Ngày sinh:</span>
+                                                       <span style={{ fontWeight: 600 }}>{selectedUser.doB ? dayjs(selectedUser.doB).format('DD/MM/YYYY') : 'Chưa cập nhật'}</span>
+                                                  </div>
+                                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                       <span style={{ color: '#666', fontWeight: 500 }}>Giới tính:</span>
+                                                       <span style={{ fontWeight: 600 }}>{selectedUser.gender || 'Chưa cập nhật'}</span>
+                                                  </div>
+                                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                                       <span style={{ color: '#666', fontWeight: 500 }}>Địa chỉ:</span>
+                                                       <span style={{ fontWeight: 600, textAlign: 'right', maxWidth: '60%' }}>{selectedUser.address || 'Chưa cập nhật'}</span>
+                                                  </div>
+                                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                       <span style={{ color: '#666', fontWeight: 500 }}>Loại tài khoản:</span>
+                                                       <span style={{ fontWeight: 600 }}>{selectedUser.provider}</span>
+                                                  </div>
+                                             </div>
+                                        </Card>
+                                   </Col>
+                                   
+                                   <Col xs={24} md={12}>
+                                        <Card 
+                                             title={
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                       <SettingOutlined style={{ color: '#52c41a' }} />
+                                                       <span style={{ fontWeight: 600 }}>Cài đặt tài khoản</span>
+                                                  </div>
+                                             }
+                                             style={{ 
+                                                  borderRadius: 12,
+                                                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                                  border: '1px solid #f0f0f0'
+                                             }}
+                                             headStyle={{ 
+                                                  borderBottom: '2px solid #f0f0f0',
+                                                  background: '#fafafa'
+                                             }}
+                                        >
+                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                                  {/* Status Toggle */}
+                                                  <div style={{ 
+                                                       padding: '16px',
+                                                       background: selectedUser.isAvailable ? '#f6ffed' : '#fff2f0',
+                                                       border: `1px solid ${selectedUser.isAvailable ? '#b7eb8f' : '#ffccc7'}`,
+                                                       borderRadius: 8
+                                                  }}>
+                                                       <div style={{ 
+                                                            display: 'flex', 
+                                                            justifyContent: 'space-between', 
+                                                            alignItems: 'center',
+                                                            marginBottom: 12
+                                                       }}>
+                                                            <span style={{ fontWeight: 600, color: '#1a1a1a' }}>Trạng thái tài khoản</span>
+                                                            <Switch
+                                                                 checked={selectedUser.isAvailable}
+                                                                 onChange={() => {
+                                                                      AntdModal.confirm({
+                                                                           title: `Xác nhận thay đổi trạng thái tài khoản`,
+                                                                           content: selectedUser.isAvailable ? 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHÔNG khả dụng?' : 'Bạn có chắc muốn chuyển tài khoản sang trạng thái KHẢ DỤNG?',
+                                                                           okText: 'Xác nhận',
+                                                                           cancelText: 'Hủy',
+                                                                           onOk: async () => {
+                                                                                const checked = !selectedUser.isAvailable;
+                                                                                try {
+                                                                                     setLoading(true);
+                                                                                     await manageUserApi.updateUserAvailabilityToggle(selectedUser.userId, checked);
+                                                                                     setSelectedUser({ ...selectedUser, isAvailable: checked });
+                                                                                     setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
+                                                                                     setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, isAvailable: checked } : u));
+                                                                                     message.success('Đã cập nhật trạng thái tài khoản!');
+                                                                                } catch (err) {
+                                                                                     message.error('Cập nhật trạng thái thất bại!');
+                                                                                } finally {
+                                                                                     setLoading(false);
+                                                                                }
+                                                                           }
+                                                                      });
+                                                                 }}
+                                                            />
+                                                       </div>
+                                                       <Badge
+                                                            status={selectedUser.isAvailable ? 'success' : 'error'}
+                                                            text={selectedUser.isAvailable ? 'Tài khoản đang hoạt động bình thường' : 'Tài khoản đã bị vô hiệu hóa'}
+                                                            style={{ fontSize: 14 }}
+                                                       />
+                                                  </div>
+
+                                                  {/* Role Update */}
+                                                  <div style={{ 
+                                                       padding: '16px',
+                                                       background: '#f0f8ff',
+                                                       border: '1px solid #bae7ff',
+                                                       borderRadius: 8
+                                                  }}>
+                                                       <div style={{ 
+                                                            marginBottom: 12,
+                                                            fontWeight: 600,
+                                                            color: '#1a1a1a'
+                                                       }}>
+                                                            Thay đổi vai trò
+                                                       </div>
+                                                       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                                                            <Select
+                                                                 value={selectedUser.roleId}
+                                                                 style={{ width: 180 }}
+                                                                 onChange={async (newRole) => {
+                                                                      const currentRoleName = getRoleDisplayName(selectedUser.roleId);
+                                                                      const newRoleName = getRoleDisplayName(newRole);
+                                                                      
+                                                                      AntdModal.confirm({
+                                                                           title: 'Xác nhận thay đổi vai trò',
+                                                                           content: `Bạn có chắc muốn thay đổi vai trò của ${selectedUser.fullName || 'nhân viên này'} từ "${currentRoleName}" sang "${newRoleName}"?`,
+                                                                           okText: 'Xác nhận',
+                                                                           cancelText: 'Hủy',
+                                                                           onOk: async () => {
+                                                                                try {
+                                                                                     setLoading(true);
+                                                                                     await manageUserApi.updateUserRole(selectedUser.userId, newRole);
+                                                                                     setSelectedUser({ ...selectedUser, roleId: newRole });
+                                                                                     setUsers(users.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
+                                                                                     setFilteredUsers(filteredUsers.map(u => u.userId === selectedUser.userId ? { ...u, roleId: newRole } : u));
+                                                                                     message.success('Cập nhật vai trò thành công!');
+                                                                                } catch (err) {
+                                                                                     message.error('Cập nhật vai trò thất bại!');
+                                                                                } finally {
+                                                                                     setLoading(false);
+                                                                                }
+                                                                           }
+                                                                      });
+                                                                 }}
+                                                            >
+                                                                 <Option value="MB">Thành viên</Option>
+                                                                 <Option value="ST">Nhân viên xét nghiệm</Option>
+                                                                 <Option value="CS">Tư vấn viên</Option>
+                                                            </Select>
+                                                            <Tag color={getRoleColor(selectedUser.roleId)} style={{ 
+                                                                 fontWeight: 600, 
+                                                                 fontSize: 14,
+                                                                 padding: '4px 12px',
+                                                                 borderRadius: 16
+                                                            }}>
+                                                                 {getRoleDisplayName(selectedUser.roleId)}
+                                                            </Tag>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </Card>
+                                   </Col>
+                              </Row>
+                         </div>
                     )}
                </Modal>
           </div>
