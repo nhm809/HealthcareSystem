@@ -3,3 +3,59 @@
 body {
      font-family: "Roboto", sans-serif;
 }
+
+/* Global Modal Close Button Styles */
+.ant-modal-close {
+     color: #000 !important;
+}
+
+.ant-modal-close:hover {
+     color: #000 !important;
+     background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-modal-close .anticon {
+     color: #000 !important;
+}
+
+.ant-modal-close .ant-modal-close-icon {
+     color: #000 !important;
+}
+
+/* Global Modal Title Styles */
+.ant-modal-title {
+     color: #000 !important;
+}
+
+.ant-modal .ant-modal-header .ant-modal-title {
+     color: #000 !important;
+}
+
+.ant-modal-header .ant-modal-title {
+     color: #000 !important;
+}
+
+/* Override any other modal title styles */
+.ant-modal-header .ant-typography,
+.ant-modal-header h1,
+.ant-modal-header h2,
+.ant-modal-header h3,
+.ant-modal-header h4,
+.ant-modal-header h5,
+.ant-modal-header h6 {
+     color: #000 !important;
+}
+
+/* Force black color for all modal titles with higher specificity */
+.ant-modal.ant-modal-root .ant-modal-header .ant-modal-title,
+.ant-modal-root .ant-modal-header .ant-modal-title,
+div.ant-modal .ant-modal-header .ant-modal-title,
+div.ant-modal-header .ant-modal-title {
+     color: #000 !important;
+     font-weight: 600 !important;
+}
+
+/* Override any inline styles */
+.ant-modal-header .ant-modal-title[style*="color"] {
+     color: #000 !important;
+}

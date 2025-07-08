@@ -153,6 +153,15 @@ export const subQuestionApi = {
      updateSubQuestion: (threadItemId, data) => api.put(`/subQuestion/update/${threadItemId}`, data),
 };
 
+export const manageUserApi = {
+     getAllUsers: () => api.get('/manageUser/getAllUsers'),
+     getUserById: (userId) => api.get(`/manageUser/getUser/${userId}`),
+     updateUserStatus: (userId, isActive) => api.put(`/manageUser/updateStatus/${userId}`, { isActive }),
+     updateUserAvailability: (userId, isAvailable) => api.put(`/manageUser/updateAvailability/${userId}`, { isAvailable }),
+     updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
+     updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
+};
+
 // Request interceptor
 api.interceptors.request.use(
      async (config) => {
