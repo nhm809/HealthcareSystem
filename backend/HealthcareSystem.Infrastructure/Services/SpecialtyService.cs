@@ -1,4 +1,4 @@
-
+﻿
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
@@ -32,7 +32,7 @@ namespace Infrastructure.Services
 
         public async Task<SpecialtyDTO> GetByIdAsync(int id)
         {
-            var specialty = await _context.Set<Specialty>().FindAsync(id);
+            var specialty = await _context.Specialties.FindAsync(id);
             if (specialty == null) return null;
             return new SpecialtyDTO
             {
@@ -40,6 +40,20 @@ namespace Infrastructure.Services
                 Name = specialty.Name,
                 Description = specialty.Description
             };
+        }
+
+        public async Task<List<SpecialtyDTO>> GetByUserIdAsync(int userId)
+        {
+            var specialties = await _context.Specialties
+                .Where(s => s.Users.Any(u => u.UserId == userId))
+                .ToListAsync();
+
+            return specialties.Select(s => new SpecialtyDTO
+            {
+                Id = s.SpecialtyId,
+                Name = s.Name,
+                Description = s.Description
+            }).ToList();
         }
 
 
@@ -50,21 +64,30 @@ namespace Infrastructure.Services
                 Name = specialtyDto.Name,
                 Description = specialtyDto.Description
             };
-            _context.Set<Specialty>().Add(specialty);
+            _context.Specialties.Add(specialty);
             await _context.SaveChangesAsync();
             specialtyDto.Id = specialty.SpecialtyId;
             return specialtyDto;
         }
-        public async Task<SpecialtyDTO> UpdateAsync(SpecialtyDTO specialtyDto)
+
+
+        public async Task<bool> UpdateAsync(SpecialtyDTO specialtyDto)
         {
-            var specialty = await _context.Set<Specialty>().FindAsync(specialtyDto.Id);
-            if (specialty == null) return null;
-            specialty.Name = specialtyDto.Name;
-            specialty.Description = specialtyDto.Description;
-            _context.Set<Specialty>().Update(specialty);
-            await _context.SaveChangesAsync();
-            return specialtyDto;
+            var specialty = await _context.Specialties.FindAsync(specialtyDto.Id);
+            if (specialty == null) return false; 
+
+            if (!string.IsNullOrEmpty(specialtyDto.Name))
+                specialty.Name = specialtyDto.Name;
+
+            if (!string.IsNullOrEmpty(specialtyDto.Description))
+                specialty.Description = specialtyDto.Description;
+
+            _context.Specialties.Update(specialty);
+
+            return await _context.SaveChangesAsync() > 0;
         }
+
+
         public async Task<bool> DeleteAsync(int id)
         {
             var specialty = await _context.Set<Specialty>().FindAsync(id);

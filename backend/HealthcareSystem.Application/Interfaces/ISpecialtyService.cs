@@ -9,8 +9,9 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<SpecialtyDTO>> GetAllAsync();
         Task<SpecialtyDTO> GetByIdAsync(int id);
+        Task<List<SpecialtyDTO>> GetByUserIdAsync(int userId);
         Task<SpecialtyDTO> CreateAsync(SpecialtyDTO specialtyDto);
-        Task<SpecialtyDTO> UpdateAsync(SpecialtyDTO specialtyDto);
+        Task<bool> UpdateAsync(SpecialtyDTO specialtyDto);
         Task<bool> DeleteAsync(int id);
     }
 }
