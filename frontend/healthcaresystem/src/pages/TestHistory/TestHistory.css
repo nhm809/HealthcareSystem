@@ -42,10 +42,12 @@
 }
 
 .test-history-table .ant-table-tbody > tr:hover > td {
-  background-color: #f0f9ff !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(26, 62, 114, 0.1);
-  transition: all 0.2s ease;
+  background-color: #e6f7ff !important;
+  font-weight: 600;
+  color: #1a3e72;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.10);
+  transform: translateY(-2px) scale(1.01);
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
 }
 
 .test-history-table .ant-table-tbody > tr {

@@ -1,0 +1,111 @@
+/* Nền header */
+.user-management .ant-table-thead > tr > th {
+  background-color: #277DA1 !important;
+  color: white !important;
+  font-weight: bold !important;
+  padding: 12px 24px !important;
+  border-right: none !important; /* Bỏ viền cột */
+}
+
+.user-management .ant-table-tbody > tr > td {
+  padding: 12px 24px !important;
+}
+
+/* Bỏ viền cột trong body */
+.user-management .ant-table-tbody > tr > td:not(:last-child) {
+  border-right: none !important;
+}
+
+/* Ô tìm kiếm */
+.user-management .ant-input-affix-wrapper {
+  border-radius: 6px;
+  border: 1px solid #28a48f !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+/* Khi focus vào input */
+.user-management .ant-input-affix-wrapper-focused {
+  border-color: #28a48f !important;
+  box-shadow: 0 0 0 2px rgba(40, 164, 143, 0.2) !important;
+}
+
+.user-management .ant-input-search-button {
+  background-color: #277DA1 !important;
+  border-color: #277DA1 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+/* Ô select */
+.user-management .ant-select-selector {
+  border-radius: 6px !important;
+  border: 1px solid #28a48f !important;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Khi focus */
+.user-management .ant-select-focused .ant-select-selector {
+  border-color: #28a48f !important;
+  box-shadow: 0 0 0 2px rgba(40, 164, 143, 0.2) !important;
+}
+
+.management-pagination {
+  display: flex;
+  justify-content: center !important;
+  margin-top: 20px;
+}
+
+.management-pagination .ant-pagination-item {
+  border: none;
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.management-pagination .ant-pagination-item-active {
+  background-color: #277DA1;
+}
+
+.management-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.management-pagination .ant-pagination-item-active a:hover {
+  color: white;
+}
+
+.management-pagination .ant-pagination-prev .ant-pagination-item-link,
+.management-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.management-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.management-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.management-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.management-pagination .ant-pagination-disabled {
+  opacity: 0.5;
+}

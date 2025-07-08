@@ -80,8 +80,10 @@ function AuthModal({ open, onClose }) {
                     navigate('/staff');
                 } else if (roleId === 'CS') {
                     navigate('/consultant');
+                } else if (roleId === 'AD') {
+                    navigate('/admin');
                 } else if (roleId === 'MG') {
-                    navigate('/manager/dashboard');
+                    navigate('/manager');
                 } else {
                     navigate('/');
                 }

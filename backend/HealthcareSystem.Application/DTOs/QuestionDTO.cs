@@ -20,7 +20,7 @@ namespace Application.DTOs
 
         public int? ConsultantId { get; set; }
 
-        public bool? IsAnswered { get; set; }
+        public string? Status { get; set; }
 
         public int? Age { get; set; }
 
@@ -28,7 +28,7 @@ namespace Application.DTOs
 
         public int? HeartCount { get; set; }
 
-        public int? MessCount { get; set; }
+        public int? AnsCount { get; set; }
 
     }
 }

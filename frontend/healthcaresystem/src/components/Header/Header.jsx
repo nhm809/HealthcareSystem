@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthModal from './AuthModal/AuthModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -8,10 +8,12 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faFlask } from '@fortawesome/free-solid-svg-icons';
+import { faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Avatar, Space, Dropdown, Badge, List, Typography } from 'antd';
+import { Avatar, Space, Dropdown, Badge, List, Typography, Button, Divider } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { getInfo } from '../../services/api';
 import { notiApi } from '../../services/api';
@@ -140,11 +142,15 @@ function Header() {
   };
 
   const handleViewQuestions = () => {
-    navigate('/question');
+    navigate('/my-questions');
   };
 
   const handleViewTestHistory = () => {
-    navigate('/test-history'); // navigate đến trang lịch xét nghiệm
+    navigate('/test-history'); 
+  };
+
+  const handleViewAppointmentHistory = () => {
+    navigate('/appointment-history');
   };
 
   const handleNotificationClick = async (notiId) => {
@@ -159,60 +165,159 @@ function Header() {
     }
   };
 
+  const handleMarkAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter(n => !n.isRead);
+      await Promise.all(unreadNotifications.map(noti => notiApi.markAsRead(noti.notificationId)));
+      
+      setNotifications(prev =>
+        prev.map(n => ({ ...n, isRead: true }))
+      );
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
+  };
+
   const notificationItems = [
     {
       key: 'notifications',
       label: (
-        <List
-          style={{
-            width: 300,
-            maxHeight: 400,
-            overflow: 'auto',
-            overflowX: 'hidden'
-          }}
-          dataSource={notifications}
-          renderItem={item => (
-            <List.Item
-              onClick={() => handleNotificationClick(item.notificationId)}
-              style={{
-                cursor: 'pointer',
-                backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                padding: '8px',
-                transition: 'all 0.3s ease',
-                borderBottom: '1px solid #DBF1E8',
-                ':hover': {
-                  backgroundColor: '#DBF1E8',
-                  transform: 'translateX(1px)'
-                }
-              }}
-              className="notification-item"
-            >
-              <List.Item.Meta
-                title={
-                  <div style={{
-                    color: item.isRead ? '#666' : '#54AA7F',
-                    fontWeight: item.isRead ? 'normal' : 'bold',
-                    whiteSpace: 'normal',
-                    wordBreak: 'break-word'
-                  }}>
-                    {item.title}
-                  </div>
-                }
-                description={
-                  <>
-                    <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                      {item.content}
-                    </Text>
-                    <br />
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
-                      {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                    </Text>
-                  </>
-                }
+        <div style={{ padding: '0' }}>
+          <div style={{
+            padding: '12px 16px',
+            borderBottom: '1px solid #f0f0f0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#fafafa'
+          }}>
+            <Text strong style={{ fontSize: '14px', color: '#333' }}>
+              Thông báo {unreadCount > 0 && `(${unreadCount} mới)`}
+            </Text>
+            {unreadCount > 0 && (
+              <Button
+                type="text"
+                size="small"
+                onClick={handleMarkAllAsRead}
+                style={{
+                  fontSize: '12px',
+                  color: '#54AA7F',
+                  padding: '0',
+                  height: 'auto'
+                }}
+              >
+                <FontAwesomeIcon icon={faCheckDouble} style={{ marginRight: '4px' }} />
+                Đánh dấu đã đọc hết
+              </Button>
+            )}
+          </div>
+          
+          {notifications.length === 0 ? (
+            <div style={{
+              padding: '40px 16px',
+              textAlign: 'center',
+              color: '#999'
+            }}>
+              <FontAwesomeIcon 
+                icon={faBell} 
+                style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.5 }} 
               />
-            </List.Item>
+              <br />
+              <Text type="secondary">Không có thông báo nào</Text>
+            </div>
+          ) : (
+            <List
+              style={{
+                width: 350,
+                maxHeight: 400,
+                overflow: 'auto',
+                overflowX: 'hidden'
+              }}
+              dataSource={notifications}
+              renderItem={item => (
+                <List.Item
+                  onClick={() => handleNotificationClick(item.notificationId)}
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: item.isRead ? 'transparent' : '#f8fffe',
+                    padding: '12px 16px',
+                    transition: 'all 0.3s ease',
+                    borderBottom: '1px solid #f0f0f0',
+                    position: 'relative',
+                    ':hover': {
+                      backgroundColor: item.isRead ? '#f5f5f5' : '#e6f7ff',
+                      transform: 'translateX(2px)'
+                    }
+                  }}
+                  className="notification-item"
+                >
+                  {!item.isRead && (
+                    <div style={{
+                      position: 'absolute',
+                      left: '8px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '6px',
+                      height: '6px',
+                      backgroundColor: '#54AA7F',
+                      borderRadius: '50%'
+                    }} />
+                  )}
+                  
+                  <List.Item.Meta
+                    style={{ marginLeft: item.isRead ? '0' : '16px' }}
+                    title={
+                      <div style={{
+                        color: item.isRead ? '#666' : '#54AA7F',
+                        fontWeight: item.isRead ? 'normal' : '600',
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
+                        fontSize: '13px',
+                        lineHeight: '1.4',
+                        marginBottom: '4px'
+                      }}>
+                        {item.title}
+                      </div>
+                    }
+                    description={
+                      <div>
+                        <Text 
+                          type="secondary" 
+                          style={{ 
+                            whiteSpace: 'normal', 
+                            wordBreak: 'break-word',
+                            fontSize: '12px',
+                            lineHeight: '1.4',
+                            color: item.isRead ? '#999' : '#666'
+                          }}
+                        >
+                          {item.content.split('\n').map((line, index) => (
+                            <React.Fragment key={index}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          ))}
+                        </Text>
+                        <div style={{ marginTop: '6px' }}>
+                          <Text 
+                            type="secondary" 
+                            style={{ 
+                              fontSize: '11px',
+                              color: '#bbb'
+                            }}
+                          >
+                            {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
+                          </Text>
+                        </div>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
           )}
-        />
+        </div>
       )
     }
   ];
@@ -232,12 +337,18 @@ function Header() {
     },
     {
       key: '3',
+      label: 'Lịch sử cuộc hẹn',
+      icon: <FontAwesomeIcon icon={faCalendarAlt} style={{ marginRight: '8px' }} />,
+      onClick: handleViewAppointmentHistory
+    },
+    {
+      key: '4',
       label: 'Lịch xét nghiệm',
       icon: <FontAwesomeIcon icon={faFlask} style={{ marginRight: '8px' }} />,
       onClick: handleViewTestHistory
     },
     {
-      key: '4',
+      key: '5',
       label: 'Đăng xuất',
       icon: <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '8px' }} />,
       onClick: handleLogout

@@ -1,0 +1,44 @@
+.appointment-list {
+  max-width: 100%;
+  width: 100%;
+}
+
+.appointment-list .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+
+.appointment-list .ant-card-body {
+  padding: 24px;
+}
+
+.appointment-list .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.appointment-list .ant-tabs-tab-active {
+  color: #1a3e72 !important;
+}
+
+.appointment-list .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.appointment-list .ant-table-thead > tr > th {
+  background-color: #e6f0ff;
+  color: #1a3e72;
+  font-weight: 600;
+  text-align: center;
+}
+
+.appointment-list .ant-table-tbody > tr > td {
+  text-align: center;
+}
+
+.appointment-list .ant-spin {
+  margin: 40px auto;
+  display: block;
+}

@@ -251,26 +251,42 @@ namespace HealthcareSystem.Infrastructure.Services
                 var appointment = await _context.Appointments
                     .Include(a => a.Service)
                     .Include(a => a.Member)
+                    .Include(a => a.Consultant)
                     .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 if (appointment != null)
                 {
                     appointment.Status = "Dang cho tu van";
                     amount = appointment.Service?.Price ?? 0;
                     description = $"Thanh toán khám - {appointment.Member?.FullName}";
+
+                    await _context.SaveChangesAsync();
                 }
 
+                // Create Notification for Member
                 if (appointment.MemberId.HasValue)
                 {
-                    var Notification = new Notification
+                    var paidAt = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm");
+                    var consultantName = appointment.Consultant?.FullName ?? "Không xác định";
+                    var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
+
+                    var content = 
+                        $@"Dịch vụ: {appointment.Service?.Name}
+                        Bác sĩ tư vấn: {consultantName}
+                        Ngày hẹn: {appointmentTime}
+                        Thời gian thanh toán: {paidAt}
+                        Số tiền: {amount:N0} VND
+                        Mã giao dịch: {transactionId}";
+
+                    var notification = new Notification
                     {
                         UserId = appointment.MemberId.Value,
-                        Title = "Thanh toán thành công",
-                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
-                        SendTime = DateTime.UtcNow.AddHours(7),///////////
+                        Title = "Thanh toán thành công lịch tư vấn",
+                        Content = content,
+                        SendTime = DateTime.UtcNow.AddHours(7),
                         IsRead = false
                     };
 
-                    _context.Notifications.Add(Notification);
+                    _context.Notifications.Add(notification);
                     await _context.SaveChangesAsync();
                 }
             }

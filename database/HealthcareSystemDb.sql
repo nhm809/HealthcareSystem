@@ -8,7 +8,7 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('CS', 'Consultant', N'Nhân viên tư vấn'),  --
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
---User
+
 INSERT INTO dbo.[User] (UserID, Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
 VALUES
 (10, 'Local', NULL, N'Nguyen Trong Tot', '$2a$11$M4ziiPKXhbxo4aUTwlsQguAFYJ7LfWJcINbNKWuOwb9WxgQg8gBRK', 'a@gmail.com', '0123456789', NULL, 'MALE', N'District 9 Ho Chi Minh city', '2025-06-30', 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751642677/lucbnpwpd1up1m3n7buy.jpg', 'MB', 'angKA0NKv5D22E+gLNxTA5TeSX0chNxaJgkxL391NH4ztCAcoxf7P0Ru698zmYcPPcLFTW0o2aoehf0DBepAEg==', '2025-07-15 23:30:56.5746982', 1),
@@ -28,6 +28,7 @@ VALUES
 (24, 'Local', NULL, N'Hoàng Hữu Ân', '$2a$11$zCBIaYuLnlhvJFCvyqDVUebp.Ag6aQMlZLdW5Be8yVhe7luIy5kMG', 'ct82@gmail.com', '0965672345', '2002-08-13', 'MALE', N'District 3 Ho Chi Minh city', '2025-07-08', NULL, 'MB', '1cvZ0TFGpYjJp8ZVKFSPHMBMTGncu95QXlI9v7rz9NDVki68DOt3G+tLDR+NIfy9H7Qco+YecUKQJxRFKcqrGQ==', '2025-07-23 11:49:56.4440669', 1),
 (25, 'Local', NULL, N'Võ Hữu Ninh', '$2a$11$y72Iy0x39mZ9YCTa8ft0wOEnCenYIy1KzLFpmA/3wm/Q8MP2zM61K', 'ha7113@gmail.com', '0765234723', '1995-08-14', 'MALE', N'District 9 Thu Duc city', '2025-07-08', NULL, 'MB', 'Nrg10mtNkSjPIm8cC8FuOXZvtaNuTgACXGwBwc3I8mW6g3xIb7n84YXbnOWX3CkQN3PqPpwx9y91YquRB/XcGg==', '2025-07-23 11:50:45.1988466', 1),
 (26, 'Local', NULL, N'Hoàng Thủy Tiên', '$2a$11$GTHAiVZAx9FhQ.Seg1SsFuH5biWE0ZFKGu7enN0tMXwel.5qZz//K', 'tt1331@gmail.com', '0985672312', '2003-05-12', 'FEMALE', N'District 7 Ho Chi Minh city', '2025-07-08', NULL, 'MB', 'MP+3yWfKnmo18u7YtG6B3eXhz6a87sxAXKxVix3O2d/Wsj1La6Wzwfktp7+LxzTL6b2xuycqN8ffYi4DtUuFhQ==', '2025-07-23 11:51:36.6939967', 1);
+
 
 
 
@@ -106,6 +107,24 @@ VALUES
 --    4,
 --    N'Đã trả lời'
 --);
+INSERT INTO Question (
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, AnsCount
+)
+VALUES
+(
+    5,
+    1,
+    N'Trễ kinh 7 ngày có phải mang thai không?',
+    N'Chào bác sĩ, em bị trễ kinh 7 ngày, kèm đau bụng dưới và tức ngực. Không biết có nên thử thai chưa ạ?',
+    NULL,
+    '2024-05-01 09:15:00',
+    4,
+   N'Chưa trả lời',
+    16,
+    N'Nữ',
+	10,
+	1
+);
 
 --=====================================================================================================================================================
 -- Message trao đổi giữa thành viên và tư vấn viên

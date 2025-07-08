@@ -68,7 +68,7 @@
   line-height: normal;
 }
 
-.update-button {
+.user-info.incomplete-info .update-button {
   background-color: #FFDDDD;
   color: #E30D19;
   border: none;
@@ -81,8 +81,26 @@
   line-height: normal;
 }
 
-.update-button:hover {
+.user-info.incompleted-info .update-button:hover {
   background-color: #E30D19 !important;
+  color: white !important;
+}
+
+.user-info.completed-info .update-button {
+  background-color: #e6ffe4;
+  color: #12c155;
+  border: none;
+  padding: 2px 8px;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 600;
+  border-radius: 4px;
+  height: auto;
+  line-height: normal;
+}
+
+.user-info.completed-info .update-button:hover {
+  background-color: #12c155 !important;
   color: white !important;
 }
 
@@ -126,12 +144,14 @@
   border-top: 1px solid #ccc;
 }
 
-.doctor-info {
+.doctor-info1 {
+  padding-top: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: none ;
   box-shadow: none;
+  gap: 16px;
 }
 
 .doctor-avatar {
@@ -141,7 +161,7 @@
   object-fit: cover;
 }
 
-.doctor-details {
+.doctor-details1 {
   font-size: 16px;
   flex: 1;
 }
@@ -218,4 +238,10 @@
 
 .confirm-button1:hover {
   background-color: #5ed4b9 !important;
+}
+
+.ant-modal-title {
+  text-align: center !important;
+  color: #54AA7F !important;
+  font-size: 24px !important;
 }

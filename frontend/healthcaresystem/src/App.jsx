@@ -9,6 +9,8 @@ import { StoreProvider } from './contexts/StoreProvider';
 import routers from './routers/routers';
 import StaffLayout from './components/Layout/StaffLayout';
 import ConsultantLayout from './components/Layout/ConsultantLayout';
+import AdminLayout from './components/Layout/AdminLayout';
+import ManagerLayout from './components/Layout/ManagerLayout';
 
 function App() {
   return (
@@ -21,6 +23,10 @@ function App() {
 
             <Route path="/consultant" element= {<ConsultantLayout />}/>
 
+            <Route path="/admin" element={<AdminLayout />} />
+
+            <Route path="/manager" element={<ManagerLayout />} />
+
             {/* Member routes with default layout */}
             <Route element={
               <div className="App">
@@ -31,12 +37,14 @@ function App() {
                 <Footer />
               </div>
             }>
-              {routers.filter(route => route.path !== '/staff').map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<route.component />}
-                />
+              {routers
+                .filter(route =>
+                  !route.path.startsWith('/staff') &&
+                  !route.path.startsWith('/consultant') &&
+                  !route.path.startsWith('/admin')
+                )
+                .map((route, index) => (
+                  <Route key={index} path={route.path} element={<route.component />} />
               ))}
             </Route>
           </Routes>
