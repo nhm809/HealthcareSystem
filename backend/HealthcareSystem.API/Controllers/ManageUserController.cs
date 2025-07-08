@@ -170,4 +170,49 @@ public class ManageUserController : ControllerBase
         }
     }
 
+
+    [HttpPost]
+    [Route("addSpecialty")]
+    public async Task<IActionResult> AddSpecialtyAsync([FromBody] ManageSpecialtyDTO dto)
+    {
+        try
+        {
+            var result = await _manageUserService.AddSpecialty(dto);
+            if (result)
+            {
+                return Ok(new { success = true, message = "Specialty added successfully." });
+            }
+            else
+            {
+                return BadRequest(new { success = false, message = "Failed to add specialty." });
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
+    [HttpDelete]
+    [Route("deleteSpecialty")]
+    public async Task<IActionResult> DeleteSpecialtyAsync([FromBody] ManageSpecialtyDTO dto)
+    {
+        try
+        {
+            var result = await _manageUserService.DeleteSpecialty(dto);
+            if (result)
+            {
+                return Ok(new { success = true, message = "Specialty deleted successfully." });
+            }
+            else
+            {
+                return BadRequest(new { success = false, message = "Failed to delete specialty." });
+            }
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { success = false, message = e.Message });
+        }
+    }
+
 }
