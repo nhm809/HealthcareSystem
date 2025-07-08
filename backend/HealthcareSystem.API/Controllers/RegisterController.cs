@@ -20,20 +20,23 @@ public class RegisterController : ControllerBase
     {
         try
         {
-            var isRegistered = await _authService.RegisterAsync(dto);
+            var userId = await _authService.RegisterAsync(dto);
 
-            if (isRegistered)
+            return Ok(new
             {
-                return Ok(new { success = true, message = "Register successful" });
-            }
-            else
-            {
-                return BadRequest(new { success = false, message = "Register failed" });
-            }
+                success = true,
+                message = "Register successful",
+                data = new { userId }
+            });
         }
-        catch (Exception e)
+        catch (ArgumentException ex)
         {
-            return BadRequest(new { success = false, message = e.Message });
+            return Conflict(new { success = false, message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { success = false, message = ex.Message });
         }
     }
+
 }

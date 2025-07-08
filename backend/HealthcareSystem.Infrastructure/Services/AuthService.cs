@@ -25,7 +25,7 @@ namespace Infrastructure.Services
             _config = config;
         }
 
-        public async Task<bool> RegisterAsync(RegisterDTO dto)
+        public async Task<int> RegisterAsync(RegisterDTO dto)
         {
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
             {
@@ -43,14 +43,19 @@ namespace Infrastructure.Services
                 PhoneNumber = dto.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Provider = "Local",
-                RoleId = "MB"
+                RoleId = "MB",
+                IsAvailable = false,
+                CreateDate = DateOnly.FromDateTime(DateTime.Now)
             };
 
             try
             {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return true;
+
+                int userId = user.UserId;
+
+                return userId;
             }
             catch (Exception ex)
             {
@@ -66,6 +71,11 @@ namespace Infrastructure.Services
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
                 throw new Exception("Invalid email or password.");
+            }
+
+            if (!user.IsAvailable)
+            {
+                throw new Exception("User is not available.");
             }
 
             var RefreshToken = user.RefreshToken;
