@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 export default function AppointmentResultHandler() {
     const location = useLocation();
     const navigate = useNavigate();
-    const notiSentRef = useRef({});
     const userId = Cookies.get('userId');
 
     useEffect(() => {
@@ -32,41 +31,28 @@ export default function AppointmentResultHandler() {
 
             try {
                 if (!sentMember) {
-                    const notiForMember = {
-                        userId: Number(userId),
-                        isRead: false,
-                        title: handler === 'success'
-                            ? 'Đặt lịch tư vấn thành công'
-                            : 'Thanh toán chưa hoàn tất',
-                        content: handler === 'success'
-                            ? `Bạn đã đặt lịch tư vấn thành công. Mã lịch hẹn: ${appointmentId}`
-                            : `Bạn chưa hoàn tất thanh toán lịch tư vấn (Mã: ${appointmentId}). Vui lòng thử lại.`,
-                    };
-                    await notiApi.createNoti(notiForMember);
-                    sessionStorage.setItem(keyMember, '1');
-                }
-
-                if (!sentConsultant) {
                     const res = await api.get(`/Appointment/detail/${appointmentId}`);
                     if (res.data.success) {
                         const detail = res.data.data;
-                        const notiForConsultant = {
-                            userId: detail.consultantId,
-                            isRead: false,
-                            title: 'Lịch hẹn mới',
-                            content: `Bạn có một lịch hẹn mới với ${detail.memberName} vào lúc ${dayjs(detail.startTime).format('HH:mm DD/MM/YYYY')}.`,
-                        };
-                        await notiApi.createNoti(notiForConsultant);
-                        sessionStorage.setItem(keyConsultant, '1');
+                        if (handler !== 'success') {
+                            const notiForMember = {
+                                userId: Number(userId),
+                                isRead: false,
+                                title: 'Thanh toán chưa hoàn tất',
+                                content: `Bạn chưa hoàn tất thanh toán lịch tư vấn với ${detail.consultantName}. Vui lòng thử lại.`,
+                            };
+                            await notiApi.createNoti(notiForMember);
+                            sessionStorage.setItem(keyMember, '1');
+                            }
                     }
                 }
+
             } catch (err) {
                 console.error('Lỗi khi tạo notification:', err);
             } finally {
                 navigate('/appointment');
             }
         };
-
         run();
     }, [location, navigate, userId]);
 

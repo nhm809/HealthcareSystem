@@ -42,11 +42,11 @@ public class ManageUserController : ControllerBase
 
     [HttpGet]
     [Route("countPage")]
-    public async Task<IActionResult> GetCountPageAsync()
+    public async Task<IActionResult> GetCountPageAsync([FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? role = null)
     {
         try
         {
-            var count = await _manageUserService.CountPage();
+            var count = await _manageUserService.CountPage(pageSize, search, role);
             return Ok(new { success = true, count });
         }
         catch (Exception e)
@@ -57,11 +57,11 @@ public class ManageUserController : ControllerBase
 
     [HttpGet]
     [Route("loadUserPerPage/{page}/{pageSize}")]
-    public async Task<IActionResult> GetUsersPerPageAsync(int page, int pageSize)
+    public async Task<IActionResult> GetUsersPerPageAsync(int page, int pageSize, [FromQuery] string search = "", [FromQuery] string role = "")
     {
         try
         {
-            var users = await _manageUserService.GetUsersPerPageAsync(page, pageSize);
+            var users = await _manageUserService.GetUsersPerPageAsync(page, pageSize, search, role);
             return Ok(new { success = true, users });
         }
         catch (Exception e)
@@ -125,7 +125,7 @@ public class ManageUserController : ControllerBase
         try
         {
             var res = await _manageUserService.CountUsers();
-            return Content(res, "text/plain");
+            return Ok(res);
         }
         catch (Exception e)
         {
@@ -134,12 +134,12 @@ public class ManageUserController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getTenLatestMembers")]
-    public async Task<IActionResult> GetTenLatestMembersAsync()
+    [Route("getTenLatestUsers")]
+    public async Task<IActionResult> GetTenLatestUsersAsync()
     {
         try
         {
-            var members = await _manageUserService.GetTenLatestMembers();
+            var members = await _manageUserService.GetTenLatestUsers();
             return Ok(new { success = true, members });
         }
         catch (Exception e)
