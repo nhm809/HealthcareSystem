@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { List, Card, Typography, Spin, Row, Col, Modal, Form, Input, InputNumber, Button, message } from 'antd';
 import axios from 'axios';
 import api from '../../services/api';
+import { deleteService } from '../../services/api';
 
 const { Title, Text } = Typography;
 
@@ -12,6 +13,7 @@ function ServiceManagement() {
      const [modalOpen, setModalOpen] = useState(false);
      const [form] = Form.useForm();
      const [saving, setSaving] = useState(false);
+     const [isAddMode, setIsAddMode] = useState(false);
 
      useEffect(() => {
           fetchServices();
@@ -39,15 +41,42 @@ function ServiceManagement() {
           setModalOpen(true);
      };
 
+     const handleAddServiceClick = () => {
+          setIsAddMode(true);
+          setSelectedService(null);
+          form.resetFields();
+          setModalOpen(true);
+     };
+
      const handleModalCancel = () => {
           setModalOpen(false);
           setSelectedService(null);
+          setIsAddMode(false);
           form.resetFields();
      };
 
      const handleSave = async () => {
           try {
                const values = await form.validateFields();
+               if (isAddMode) {
+                    // Thêm mới dịch vụ
+                    setSaving(true);
+                    try {
+                         await api.post('/Service', values, {
+                              headers: { 'Content-Type': 'application/json' }
+                         });
+                         message.success('Thêm dịch vụ thành công!');
+                         setModalOpen(false);
+                         setIsAddMode(false);
+                         fetchServices();
+                         form.resetFields();
+                    } catch (err) {
+                         message.error('Thêm dịch vụ thất bại!');
+                    } finally {
+                         setSaving(false);
+                    }
+                    return;
+               }
                // So sánh với selectedService, chỉ lấy các trường đã thay đổi
                const changedFields = {};
                if (values.name !== selectedService.name) changedFields.name = values.name;
@@ -90,9 +119,34 @@ function ServiceManagement() {
           }
      };
 
+     const handleDelete = () => {
+         if (!selectedService) return;
+         Modal.confirm({
+             title: 'Xác nhận xóa dịch vụ',
+             content: 'Bạn có chắc chắn muốn xóa dịch vụ này không? Hành động này không thể hoàn tác.',
+             okText: 'Xóa',
+             okType: 'danger',
+             cancelText: 'Hủy',
+             onOk: async () => {
+                 try {
+                     await deleteService(selectedService.serviceId);
+                     message.success('Xóa dịch vụ thành công!');
+                     setModalOpen(false);
+                     setSelectedService(null);
+                     fetchServices();
+                 } catch (err) {
+                     message.error('Xóa dịch vụ thất bại!');
+                 }
+             }
+         });
+     };
+
      return (
           <div style={{ padding: 24 }}>
                <Title level={2} style={{ marginBottom: 24 }}>Quản lý dịch vụ</Title>
+               <Button type="primary" style={{ marginBottom: 24 }} onClick={handleAddServiceClick}>
+                    Thêm dịch vụ
+               </Button>
                {loading ? (
                     <Spin size="large" style={{ display: 'block', margin: '40px auto' }} />
                ) : (
@@ -115,7 +169,7 @@ function ServiceManagement() {
                )}
                <Modal
                     open={modalOpen}
-                    title={<span style={{ color: '#000', fontWeight: 600 }}>Chi tiết dịch vụ</span>}
+                    title={<span style={{ color: '#000', fontWeight: 600 }}>{isAddMode ? 'Thêm dịch vụ mới' : 'Chi tiết dịch vụ'}</span>}
                     onCancel={handleModalCancel}
                     footer={null}
                     destroyOnClose
@@ -124,24 +178,31 @@ function ServiceManagement() {
                     <Form
                          form={form}
                          layout="vertical"
-                         initialValues={selectedService ? {
+                         initialValues={selectedService && !isAddMode ? {
                               name: selectedService.name,
                               description: selectedService.description,
                               price: selectedService.price,
-                         } : {}}
+                         } : { price: 0.01 }}
                          onFinish={handleSave}
                     >
-                         <Form.Item label="Tên dịch vụ" name="name">
+                         <Form.Item label="Tên dịch vụ" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên dịch vụ' }]}>
                               <Input />
                          </Form.Item>
                          <Form.Item label="Mô tả" name="description">
                               <Input.TextArea rows={3} />
                          </Form.Item>
-                         <Form.Item label="Giá" name="price" rules={[{ validator: (_, value) => (value !== undefined && value !== null && value !== '') ? Promise.resolve() : Promise.reject('Vui lòng nhập giá') }]}>
+                         <Form.Item label="Giá" name="price" rules={[{ required: true, message: 'Vui lòng nhập giá' }, { type: 'number', min: 0.01, message: 'Giá phải lớn hơn 0' }]}>
                               <InputNumber min={0.01} style={{ width: '100%' }} step={1000} formatter={v => `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} />
                          </Form.Item>
                          <Form.Item>
-                              <Button type="primary" htmlType="submit" loading={saving} block>Cập nhật</Button>
+                              <Button type="primary" htmlType="submit" loading={saving} block>
+                                   {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+                              </Button>
+                             {!isAddMode && (
+                                 <Button danger style={{ marginTop: 8 }} onClick={handleDelete} block>
+                                     Xóa dịch vụ
+                                 </Button>
+                             )}
                          </Form.Item>
                     </Form>
                </Modal>

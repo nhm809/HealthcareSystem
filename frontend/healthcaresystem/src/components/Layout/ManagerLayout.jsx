@@ -19,6 +19,7 @@ import dayjs from 'dayjs';
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import ServiceManagement from '../../pages/Manager/ServiceManagement';
 import EmployeeManagement from '../../pages/Manager/EmployeeManagement';
+import SpecialtyManagement from '../../pages/Manager/SpecialtyManagement';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -171,6 +172,11 @@ const ManagerLayout = () => {
                label: 'Dịch vụ',
           },
           {
+               key: 'specialty-management',
+               icon: <ProfileOutlined />, // hoặc AppstoreOutlined nếu muốn
+               label: 'Chuyên khoa',
+          },
+          {
                key: 'employee-management',
                icon: <TeamOutlined />,
                label: 'Nhân viên'
@@ -188,6 +194,8 @@ const ManagerLayout = () => {
                     return <ManagerDashboard />;
                case 'service-management':
                     return <ServiceManagement/>;
+               case 'specialty-management':
+                    return <SpecialtyManagement/>;
                case 'employee-management':
                     return <EmployeeManagement/>;     
                case 'my-profile':

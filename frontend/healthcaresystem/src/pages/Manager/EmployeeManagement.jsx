@@ -19,7 +19,10 @@ import {
      Tooltip,
      Badge,
      Switch,
-     Modal as AntdModal
+     Modal as AntdModal,
+     Upload,
+     Form,
+     DatePicker
 } from 'antd';
 
 
@@ -31,9 +34,11 @@ import {
      MedicineBoxOutlined,
      SettingOutlined,
      ReloadOutlined,
-     FilterOutlined
+     FilterOutlined,
+     UploadOutlined
 } from '@ant-design/icons';
-import { manageUserApi } from '../../services/api';
+import { specialtyApi, manageUserApi, authApi } from '../../services/api';
+import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 
 const { Search } = Input;
@@ -49,7 +54,13 @@ const EmployeeManagement = () => {
      const [statusFilter, setStatusFilter] = useState('available');
      const [selectedUser, setSelectedUser] = useState(null);
      const [detailModalVisible, setDetailModalVisible] = useState(false);
-
+     const [editModalVisible, setEditModalVisible] = useState(false);
+     const [editForm] = Form.useForm();
+     const [uploading, setUploading] = useState(false);
+     const [uploadingAvatar, setUploadingAvatar] = useState(false);
+     const [specialties, setSpecialties] = useState([]);
+     const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+     const [addingSpecialty, setAddingSpecialty] = useState(false);
 
 
      // Fetch all users
@@ -74,6 +85,16 @@ const EmployeeManagement = () => {
                setFilteredUsers([]);
           } finally {
                setLoading(false);
+          }
+     };
+
+     // Fetch specialties
+     const fetchSpecialties = async () => {
+          try {
+               const res = await specialtyApi.getAllSpecialties();
+               setSpecialties(res.data.data || []);
+          } catch (err) {
+               setSpecialties([]);
           }
      };
 
@@ -205,6 +226,122 @@ const EmployeeManagement = () => {
           available: Array.isArray(users) ? users.filter(u => u.isAvailable).length : 0,
      };
 
+     // Hàm upload ảnh lên Cloudinary
+     const uploadToCloudinary = async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', 'healthcare');
+          const response = await fetch('https://api.cloudinary.com/v1_1/dktu0nbjx/image/upload', {
+               method: 'POST',
+               body: formData,
+          });
+          const data = await response.json();
+          return data.secure_url;
+     };
+
+     const handleAvatarChange = async (info) => {
+          if (info.file.status === 'removed') {
+               editForm.setFieldValue('avatarPath', '');
+               return;
+          }
+          if (info.file.status !== 'done' && info.file.status !== 'uploading') {
+               return;
+          }
+          const file = info.file.originFileObj;
+          if (!file) return;
+          setUploadingAvatar(true);
+          try {
+               const url = await uploadToCloudinary(file);
+               editForm.setFieldValue('avatarPath', url);
+               message.success('Tải ảnh lên thành công!');
+          } catch {
+               message.error('Tải ảnh lên thất bại!');
+          } finally {
+               setUploadingAvatar(false);
+          }
+     };
+
+     // Show edit modal and load specialties if consultant
+     const showEditModal = () => {
+          if (!selectedUser) return;
+          editForm.setFieldsValue({
+               fullName: selectedUser.fullName,
+               email: selectedUser.email,
+               phoneNumber: selectedUser.phoneNumber,
+               address: selectedUser.address,
+               dateOfBirth: selectedUser.doB ? dayjs(selectedUser.doB) : null,
+               gender: selectedUser.gender,
+               avatarPath: selectedUser.avatar,
+          });
+          if (selectedUser.roleId === 'CS') {
+               fetchSpecialties();
+               setSelectedSpecialties(selectedUser.specialties || []);
+          } else {
+               setSelectedSpecialties([]);
+          }
+          setEditModalVisible(true);
+     };
+
+     const handleEditCancel = () => {
+          setEditModalVisible(false);
+          editForm.resetFields();
+     };
+
+     const handleUpdateProfile = async (values) => {
+          try {
+               setUploading(true);
+               const dataToSend = {
+                    ...values,
+                    doB: values.dateOfBirth ? values.dateOfBirth.format('YYYY-MM-DD') : undefined,
+                    avatar: values.avatarPath,
+               };
+               delete dataToSend.dateOfBirth;
+               delete dataToSend.avatarPath;
+               const filteredData = {};
+               Object.keys(dataToSend).forEach(key => {
+                    if (dataToSend[key] !== undefined && dataToSend[key] !== null) {
+                         filteredData[key] = dataToSend[key];
+                    }
+               });
+               const userId = selectedUser.userId;
+               const response = await authApi.updateUserInfo(userId, filteredData);
+               // Cập nhật lại selectedUser, users, filteredUsers
+               setSelectedUser({ ...selectedUser, ...response.data });
+               setUsers(users.map(u => u.userId === userId ? { ...u, ...response.data } : u));
+               setFilteredUsers(filteredUsers.map(u => u.userId === userId ? { ...u, ...response.data } : u));
+               message.success('Cập nhật thông tin thành công!');
+               setEditModalVisible(false);
+               editForm.resetFields();
+          } catch (err) {
+               console.error('Error updating profile:', err);
+               message.error('Cập nhật thông tin thất bại!');
+          } finally {
+               setUploading(false);
+          }
+     };
+
+     // Add specialty handler
+     const handleAddSpecialty = async (specialtyId) => {
+          if (!selectedUser) return;
+          setAddingSpecialty(true);
+          try {
+               await manageUserApi.addSpecialty(selectedUser.userId, specialtyId);
+               // Update local state
+               const added = specialties.find(s => s.id === specialtyId);
+               if (added && !((selectedUser.specialties || []).some(s => (s.id || s.specialtyId) === specialtyId))) {
+                   setSelectedUser({
+                       ...selectedUser,
+                       specialties: [...(selectedUser.specialties || []), added]
+                   });
+               }
+               message.success('Thêm chuyên khoa thành công!');
+          } catch (err) {
+               message.error('Thêm chuyên khoa thất bại!');
+          } finally {
+               setAddingSpecialty(false);
+          }
+     };
+
      return (
           <div style={{ padding: '20px' }}>
                <Title level={2} style={{ marginBottom: '24px', color: '#1890ff' }}>
@@ -291,7 +428,7 @@ const EmployeeManagement = () => {
                                    style={{ width: '100%' }}
                               >
                                    <Option value="all">Tất cả trạng thái</Option>
-                                   <Option value="available">Khả dụng</Option>
+                                   <Option value="available">Tài khoản khả dụng</Option>
                                    <Option value="unavailable">Không khả dụng</Option>
                               </Select>
                          </Col>
@@ -464,6 +601,9 @@ const EmployeeManagement = () => {
                                                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                                        <UserOutlined style={{ color: '#1890ff' }} />
                                                        <span style={{ fontWeight: 600 }}>Thông tin cá nhân</span>
+                                                   <Button type="link" onClick={showEditModal} style={{ marginLeft: 'auto' }}>
+                                                        Chỉnh sửa
+                                                   </Button>
                                                   </div>
                                              }
                                              style={{ 
@@ -630,8 +770,174 @@ const EmployeeManagement = () => {
                                         </Card>
                                    </Col>
                               </Row>
+                              {selectedUser && selectedUser.roleId === 'CS' && (
+                                <Card
+                                  title={
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                      <MedicineBoxOutlined style={{ color: '#fa8c16' }} />
+                                      <span style={{ fontWeight: 600 }}>Chuyên khoa tư vấn</span>
+                                    </div>
+                                  }
+                                  style={{
+                                    marginTop: 24,
+                                    borderRadius: 12,
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    border: '1px solid #f0f0f0',
+                                    padding: 0
+                                  }}
+                                  headStyle={{
+                                    borderBottom: '2px solid #f0f0f0',
+                                    background: '#fafafa',
+                                    fontSize: 16
+                                  }}
+                                  bodyStyle={{ padding: 24 }}
+                                >
+                                  <div style={{ marginBottom: 20 }}>
+                                    <div style={{ fontWeight: 600, color: '#1a1a1a', marginBottom: 8 }}>Danh sách chuyên khoa hiện tại:</div>
+                                    <div style={{ minHeight: 32 }}>
+                                      {(selectedUser.specialties && selectedUser.specialties.length > 0) ? (
+                                        selectedUser.specialties.map(s => (
+                                          <Tag key={s.id || s.specialtyId} color="blue" style={{ marginBottom: 6, fontSize: 15, padding: '4px 12px', borderRadius: 16 }}>{s.name}</Tag>
+                                        ))
+                                      ) : (
+                                        <span style={{ color: '#888' }}>Chưa có chuyên khoa nào</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <span style={{ fontWeight: 600, color: '#1a1a1a' }}>Thêm chuyên khoa:</span>
+                                    <Select
+                                      placeholder="Chọn chuyên khoa để thêm"
+                                      style={{ width: 260 }}
+                                      onFocus={fetchSpecialties}
+                                      onChange={async (specialtyId) => {
+                                        await handleAddSpecialty(specialtyId);
+                                        // Cập nhật lại selectedUser.specialties trong state
+                                        const added = specialties.find(s => s.id === specialtyId);
+                                        if (added && !((selectedUser.specialties || []).some(s => (s.id || s.specialtyId) === specialtyId))) {
+                                          setSelectedUser({
+                                            ...selectedUser,
+                                            specialties: [...(selectedUser.specialties || []), added]
+                                          });
+                                        }
+                                      }}
+                                      loading={addingSpecialty}
+                                      value={null}
+                                    >
+                                      {specialties.filter(s => !((selectedUser.specialties || []).some(sel => (sel.id || sel.specialtyId) === s.id))).map(s => (
+                                        <Select.Option key={s.id} value={s.id}>{s.name}</Select.Option>
+                                      ))}
+                                    </Select>
+                                  </div>
+                                </Card>
+                              )}
                          </div>
                     )}
+               </Modal>
+
+               {/* Modal chỉnh sửa thông tin */}
+               <Modal
+                    title="Chỉnh sửa thông tin nhân viên"
+                    open={editModalVisible}
+                    onCancel={handleEditCancel}
+                    footer={null}
+               >
+                    <Form
+                         form={editForm}
+                         layout="vertical"
+                         onFinish={handleUpdateProfile}
+                    >
+                         <Form.Item
+                              label="Ảnh đại diện"
+                              name="avatarPath"
+                         >
+                              <Upload
+                                   name="avatar"
+                                   listType="picture"
+                                   maxCount={1}
+                                   onChange={handleAvatarChange}
+                                   accept=".jpg,.jpeg,.png"
+                              >
+                                   <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+                              </Upload>
+                         </Form.Item>
+                         <Form.Item
+                              label="Họ và tên"
+                              name="fullName"
+                         >
+                              <Input />
+                         </Form.Item>
+                         <Form.Item
+                              label="Email"
+                              name="email"
+                              rules={[
+                                   { type: 'email', message: 'Email không hợp lệ!' }
+                              ]}
+                         >
+                              <Input disabled />
+                         </Form.Item>
+                         <Form.Item
+                              label="Số điện thoại"
+                              name="phoneNumber"
+                              rules={[{
+                                   pattern: /^0\d{9}$/,
+                                   message: 'Số điện thoại phải có 10 số và bắt đầu bằng số 0!'
+                              }]}
+                         >
+                              <Input />
+                         </Form.Item>
+                         <Form.Item
+                              label="Địa chỉ"
+                              name="address"
+                         >
+                              <Input />
+                         </Form.Item>
+                         <Form.Item
+                              label="Ngày sinh"
+                              name="dateOfBirth"
+                         >
+                              <DatePicker
+                                   style={{ width: '100%' }}
+                                   disabledDate={current => current && current >= dayjs().endOf('day')}
+                              />
+                         </Form.Item>
+                         <Form.Item
+                              label="Giới tính"
+                              name="gender"
+                         >
+                              <Select>
+                                   <Select.Option value="MALE">Nam</Select.Option>
+                                   <Select.Option value="FEMALE">Nữ</Select.Option>
+                                   <Select.Option value="OTHER">Khác</Select.Option>
+                              </Select>
+                         </Form.Item>
+                         {selectedUser && selectedUser.roleId === 'CS' && (
+                              <Form.Item label="Chuyên khoa">
+                                  <Select
+                                      placeholder="Chọn chuyên khoa để thêm"
+                                      onChange={handleAddSpecialty}
+                                      loading={addingSpecialty}
+                                      style={{ width: '100%' }}
+                                      value={null}
+                                  >
+                                      {specialties.filter(s => !((selectedSpecialties || []).some(sel => sel.id === s.id))).map(s => (
+                                          <Select.Option key={s.id} value={s.id}>{s.name}</Select.Option>
+                                      ))}
+                                  </Select>
+                                  <div style={{ marginTop: 8 }}>
+                                      {selectedSpecialties.length === 0 && <span>Chưa có chuyên khoa nào</span>}
+                                      {selectedSpecialties.map(s => (
+                                          <Tag key={s.id} color="blue" style={{ marginBottom: 4 }}>{s.name}</Tag>
+                                      ))}
+                                  </div>
+                              </Form.Item>
+                          )}
+                         <Form.Item>
+                              <Button type="primary" htmlType="submit" loading={uploading || uploadingAvatar} disabled={uploadingAvatar}>
+                                   Lưu thay đổi
+                              </Button>
+                         </Form.Item>
+                    </Form>
                </Modal>
           </div>
      );
