@@ -4,6 +4,7 @@ import StaffLayout from "../components/Layout/StaffLayout";
 import ConsultantLayout from "../components/Layout/ConsultantLayout";
 import ManagerLayout from '../components/Layout/ManagerLayout';
 import BookingInformation from '../pages/Appointment/BookingInformation';
+import AdminLayout from "../components/Layout/AdminLayout";
 
 const routers = [
      {
@@ -58,12 +59,11 @@ const routers = [
           path: 'test-sti',
           component: lazy(() => import('../pages/TestSti/PaypalCallback'))
      },
-     // Staff route: NO children, just component
+    // Staff route: NO children, just component
      {
           path: '/staff',
           component: StaffLayout
      },
-
      {
           path: '/consultant',
           component: ConsultantLayout
@@ -71,6 +71,10 @@ const routers = [
      {
           path: '/manager',
           component: ManagerLayout
+     },
+     {
+          path: '/admin',
+          component: AdminLayout
      },
      {
           path: '/reproductive-cycle',

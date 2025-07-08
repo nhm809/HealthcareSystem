@@ -8,5 +8,7 @@ namespace Application.DTOs
         public string? RoleId { get; set; }
         public string? FullName { get; set; }
         public bool? IsAvailable { get; set; }
+        public string? PhoneNumber { get; set; }
+        public DateOnly? CreateDate { get; set; }
     }
 }
