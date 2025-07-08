@@ -27,9 +27,35 @@ namespace Infrastructure.Services
 
         public async Task<int> RegisterAsync(RegisterDTO dto)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (existingUser != null)
             {
-                throw new Exception("Email already exists.");
+                if (existingUser.IsAvailable)
+                {
+                    throw new Exception("Email already exists.");
+                }
+                else
+                {
+                    existingUser.PhoneNumber = dto.PhoneNumber;
+                    existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+                    existingUser.CreateDate = DateOnly.FromDateTime(DateTime.Now);
+                    existingUser.Provider = "Local";
+                    existingUser.RoleId = "MB";
+                    existingUser.IsAvailable = false;
+
+                    try
+                    {
+                        _context.Users.Update(existingUser);
+                        await _context.SaveChangesAsync();
+
+                        return existingUser.UserId;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Database error: " + (ex.InnerException?.Message ?? ex.Message));
+                    }
+                }
             }
 
             if (await _context.Users.AnyAsync(u => u.PhoneNumber == dto.PhoneNumber))
@@ -53,15 +79,14 @@ namespace Infrastructure.Services
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                int userId = user.UserId;
-
-                return userId;
+                return user.UserId;
             }
             catch (Exception ex)
             {
                 throw new Exception("Database error: " + (ex.InnerException?.Message ?? ex.Message));
             }
         }
+
 
 
         public async Task<LoginResponseDTO> LoginAsync(LoginDTO dto)

@@ -189,31 +189,40 @@ namespace Infrastructure.Services
 
         public async Task<bool> VerifyOtp(VerifyOtpDTO dto)
         {
+            if (dto == null || (dto.UserId == null && string.IsNullOrWhiteSpace(dto.Email)))
+                return false;
+
             OtpRequest otpRequest = null;
+            User user = null;
 
             if (dto.UserId != null)
             {
                 otpRequest = await _context.OtpRequests
                                            .FirstOrDefaultAsync(o => o.UserId == dto.UserId && o.Code == dto.Code && o.IsVerified == 0);
+
+                user = await _context.Users.FindAsync(dto.UserId);
             }
-            else if (dto.Email != null)
+            else if (!string.IsNullOrWhiteSpace(dto.Email))
             {
                 otpRequest = await _context.OtpRequests
                                            .FirstOrDefaultAsync(o => o.Email == dto.Email && o.Code == dto.Code && o.IsVerified == 0);
-            }
-            else
-            {
-                return false; 
+
+                user = await _context.Users
+                                     .FirstOrDefaultAsync(u => u.Email == dto.Email);
             }
 
-            if (otpRequest == null || otpRequest.ExpiredAt < DateTime.UtcNow)
+            if (otpRequest == null || otpRequest.ExpiredAt < DateTime.UtcNow || user == null)
             {
-                return false; 
+                return false;
             }
 
             otpRequest.IsVerified = 1;
+            user.IsAvailable = true;
+
             await _context.SaveChangesAsync();
+
             return true;
         }
+
     }
 }
