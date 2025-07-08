@@ -33,7 +33,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách kết quả xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi lấy danh sách kết quả xét nghiệm: {ex.Message}" });
             }
         }
 
@@ -50,7 +50,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy chi tiết kết quả xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi lấy chi tiết kết quả xét nghiệm: {ex.Message}" });
             }
 
         }
@@ -74,7 +74,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi đặt lịch xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi đặt lịch xét nghiệm: {ex.Message}" });
             }
         }
 
@@ -138,7 +138,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm: {ex.Message}" });
             }
         }
 
@@ -160,7 +160,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi cập nhật kết quả xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi hủy bỏ bản ghi: {ex.Message}" });
             }
         }
 
@@ -178,7 +178,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi lấy danh sách xét nghiệm: {ex.Message}" });
             }
         }
 
@@ -196,7 +196,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Đã xảy ra lỗi khi lấy danh sách xét nghiệm." });
+                return StatusCode(500, new { Message = $"Đã xảy ra lỗi khi lấy danh sách xét nghiệm: {ex.Message}" });
             }
         }
 

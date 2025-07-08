@@ -6,10 +6,19 @@ namespace HealthcareSystem.Application.DTOs
     {
         public int WeeklyScheduleId { get; set; }
         public int UserId { get; set; }
-        public int DayOfWeek { get; set; } // Sunday = 0, ..., Saturday = 6
+        public int DayOfWeek { get; set; }  
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public int ShiftType { get; set; }
         public string? Note { get; set; }
     }
+
+    public class CreateWeeklyScheduleDTO
+    {
+        public int UserId { get; set; }
+        public int DayOfWeek { get; set; }  
+        public int ShiftType { get; set; }  
+        public string? Note { get; set; }
+    }
+
 } 
