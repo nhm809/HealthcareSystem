@@ -2,7 +2,7 @@ import { lazy } from "react";
 import Home from "../pages/Home/Home";
 import StaffLayout from "../components/Layout/StaffLayout";
 import ConsultantLayout from "../components/Layout/ConsultantLayout";
-import { useLocation } from "react-router-dom";
+import ManagerLayout from '../components/Layout/ManagerLayout';
 import BookingInformation from '../pages/Appointment/BookingInformation';
 import AdminLayout from "../components/Layout/AdminLayout";
 
@@ -19,14 +19,14 @@ const routers = [
           path: '/profile',
           component: lazy(() => import('../pages/Profile/Profile'))
      },
-    {
-        path: '/test-history',
-        component: lazy(() => import('../pages/TestHistory/TestHistory'))
-    },
-    {
-        path: '/appointment-history',
-        component: lazy(() => import('../pages/AppointmentHistory/AppointmentHistory'))
-    },
+     {
+          path: '/test-history',
+          component: lazy(() => import('../pages/TestHistory/TestHistory'))
+     },
+     {
+          path: '/appointment-history',
+          component: lazy(() => import('../pages/AppointmentHistory/AppointmentHistory'))
+     },
      {
           path: '/appointment',
           component: lazy(() => import('../pages/Appointment/ConsultantsList'))
@@ -64,10 +64,13 @@ const routers = [
           path: '/staff',
           component: StaffLayout
      },
-
      {
           path: '/consultant',
           component: ConsultantLayout
+     },
+     {
+          path: '/manager',
+          component: ManagerLayout
      },
      {
           path: '/admin',

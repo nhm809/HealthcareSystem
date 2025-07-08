@@ -15,6 +15,7 @@ namespace Application.Interfaces
         Task<QuestionDTO> GetQuestionById(int questionId);
         Task<List<QuestionDTO>> GetQuestionsByMemberIdAsync(int memberId);
         Task<List<QuestionDTO>> GetQuestionsByConsultantIdAsync(int consultantId);
+        Task<int> CountAnswers(int questionId);
     }
 
 }

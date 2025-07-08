@@ -28,7 +28,7 @@ namespace Application.DTOs
 
         public int? HeartCount { get; set; }
 
-        public int? MessCount { get; set; }
+        public int? AnsCount { get; set; }
 
     }
 }

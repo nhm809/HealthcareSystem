@@ -9,17 +9,17 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
 --User
-INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID,[RefreshToken],[RefreshTokenExpiryTime],[IsActive],[IsAvailable])
+INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID,[RefreshToken],[RefreshTokenExpiryTime],[IsAvailable])
 VALUES
-(N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD',NULL,NULL,0,1),
-(N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG',NULL,NULL,0,1),
-(N'Phạm Nguyễn Đăng Hải', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
-(N'Nguyễn Văn Hiếu', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'CS',NULL,NULL,0,1),
-(N'Nguyễn Trọng Tốt', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'MB',NULL,NULL,0,1),
-(N'Staff2', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
-(N'Staff3', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
-(N'Staff4', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'ST',NULL,NULL,0,1),
-(N'Staff5', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'ST',NULL,NULL,0,1);
+(N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD',NULL,NULL,1),
+(N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG',NULL,NULL,1),
+(N'Phạm Nguyễn Đăng Hải', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,1),
+(N'Nguyễn Văn Hiếu', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'CS',NULL,NULL,1),
+(N'Nguyễn Trọng Tốt', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'MB',NULL,NULL,1),
+(N'Staff2', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'ST',NULL,NULL,1),
+(N'Staff3', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,1),
+(N'Staff4', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'ST',NULL,NULL,1),
+(N'Staff5', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'ST',NULL,NULL,1);
 
 
 
@@ -98,7 +98,7 @@ VALUES
 --    N'Đã trả lời'
 --);
 INSERT INTO Question (
-   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, MessCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, AnsCount
 )
 VALUES
 (
@@ -282,10 +282,10 @@ VALUES
 INSERT INTO [dbo].[WeeklyOverrideSchedules] 
 (UserId, [Date], OverrideType, Reason, ShiftType, [Status]) 
 VALUES
-(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved'),
+(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
 (8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
 (9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
-(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
-(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Approved'),
-(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Approved'),
-(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Approved');--nghỉ cả ngày
+(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Đã xác nhận');--nghỉ cả ngày

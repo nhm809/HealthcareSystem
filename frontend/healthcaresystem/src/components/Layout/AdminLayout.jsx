@@ -3,8 +3,6 @@ import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography } from 'antd';
 import {
     DashboardOutlined,
     UserOutlined,
-    TeamOutlined,
-    FileDoneOutlined,
     SettingOutlined,
     LogoutOutlined,
     BellOutlined,
@@ -15,11 +13,12 @@ import Cookies from 'js-cookie';
 import { notiApi, authApi, getInfo } from '../../services/api';
 import dayjs from 'dayjs';
 
-// import AdminDashboard from '../../pages/Admin/AdminDashboard';
-// import UserManagement from '../../pages/Admin/UserManagement';
+import AdminDashboard from '../../pages/Admin/AdminDashboard';
+import UserManagement from '../../pages/Admin/UserManagement';
 import Profile from '../../pages/Profile/Profile';
+import Logos from '../../assets/imgs/Logos.png';
 
-import './AdminLayout.css'
+import './AdminLayout.css';
 
 const { Sider, Header, Content } = Layout;
 const { Text } = Typography;
@@ -28,23 +27,24 @@ function AdminLayout() {
     const [selectedKey, setSelectedKey] = useState('dashboard');
     const [userInfo, setUserInfo] = useState(null);
     const [notifications, setNotifications] = useState([]);
-    const [unreadConnt, setUnreadCount] = useState(0);
-    const navigate = useNavigate;
+    const [unreadCount, setUnreadCount] = useState(0);
+    const navigate = useNavigate();
 
-    useEffect(()=> {
+    useEffect(() => {
         const info = JSON.parse(localStorage.getItem('userInfo'));
         if (!info || info.roleId !== 'AD') {
             navigate('/login');
             return;
         }
+
         const userId = Cookies.get('userId');
         if (userId) {
             getInfo(userId)
                 .then(res => setUserInfo(res.data))
-                .catch((err) => {
+                .catch(err => {
                     console.error('Error fetching user info:', err);
                     toast.error('Lỗi lấy thông tin người dùng');
-                })
+                });
         }
     }, [navigate]);
 
@@ -82,8 +82,8 @@ function AdminLayout() {
     const handleNotificationClick = async (notiId) => {
         try {
             await notiApi.markAsRead(notiId);
-            setNotifications((prev) => 
-                prev.map((n) => (n.notificationId === notiId ? { ...n, isRead: true} : n))
+            setNotifications((prev) =>
+                prev.map((n) => (n.notificationId === notiId ? { ...n, isRead: true } : n))
             );
             setUnreadCount((prevUnreadCount) => Math.max(0, prevUnreadCount - 1));
         } catch (err) {
@@ -108,10 +108,10 @@ function AdminLayout() {
             key: 'notifications',
             label: (
                 <List
-                    style={{ width: 300, maxHeight: 400, overflowY: 'auto'}}
+                    style={{ width: 300, maxHeight: 400, overflowY: 'auto' }}
                     dataSource={notifications}
                     renderItem={(item) => (
-                        <ListItem
+                        <List.Item
                             onClick={() => handleNotificationClick(item.notificationId)}
                             style={{
                                 background: item.isRead ? 'transparent' : '#f0f0f0',
@@ -135,73 +135,87 @@ function AdminLayout() {
                                     </>
                                 }
                             />
-                        </ListItem>
+                        </List.Item>
                     )}
                 />
-            ), 
+            ),
         },
     ];
 
     const menuItems = [
-        { key: 'dashboard', icon: <DashboardOutlined />, lable: 'Trang chính' },
-        { key: 'users-management', icon: <UserOutlined />, lable: 'Quản lý người dùng' },
+        { key: 'dashboard', icon: <DashboardOutlined />, label: 'Trang chính' },
+        { key: 'users-management', icon: <UserOutlined />, label: 'Quản lý người dùng' },
         { key: 'my-profile', icon: <SettingOutlined />, label: 'Cài đặt cá nhân' },
     ];
 
     const renderContent = () => {
-        // switch (selectedKey) {
-        //     case 'dashboard':
-        //         return <AdminDashboard />;
-        //     case 'users-management':
-        //         return <UserManagement />;
-        //     case 'my-profile':
-        //         return <Profile hideBackButton={true} />;
-        //     default:
-        //         return <AdminDashboard />;
-        // }
+        switch (selectedKey) {
+            case 'dashboard':
+                return <AdminDashboard />;
+            case 'users-management':
+                return <UserManagement />;
+            case 'my-profile':
+                return <Profile hideBackButton={true} />;
+            default:
+                return <AdminDashboard />;
+        }
     };
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider width={300} className='admin-sider'>
-                <div className='admin-logo'>ADMIN</div>
+            <Sider width={280} className="admin-sider">
+                <div className="admin-sider-top">
+                    <div className="admin-logo">
+                        <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+                        <span className="logo-text">MedSex</span>
+                    </div>
 
-                <div className='admin-avatar-container'>
-                    <Avatar size={80} src={userInfo?.avatar} />
-                    <div className='admin-avatar-name'>{userInfo?.fullName}</div>
+                    <div className="admin-avatar-container">
+                        <Avatar
+                            size={160}
+                            src={userInfo?.avatar || null}
+                            icon={!userInfo?.avatar && <UserOutlined />}
+                        />
+                        <div className="admin-avatar-name">{userInfo?.fullName || "(ADMIN)"}</div>
+                    </div>
+                    
+
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        selectedKeys={[selectedKey]}
+                        items={menuItems}
+                        onClick={({ key }) => setSelectedKey(key)}
+                        style={{ fontSize: 16 }}
+                    />
                 </div>
 
-                <Menu
-                    theme='dark'
-                    mode='inline'
-                    selectedKeys={[selectedKey]}
-                    items={menuItems}
-                    onClick={({ key }) => setSelectedKey(key)}
-                    style={{ fontSize: 16 }}
-                />
-
-                <div style={{ padding: 16 }}>
-                    <button onClick={handleLogout} className='admin-logout-button'>
-                        <LogoutOutlined /> Đăng xuất
-                    </button>
+                <div className="admin-logout-wrapper">
+                <button onClick={handleLogout} className="admin-logout-button">
+                    <span className="admin-logout-icon">
+                    <LogoutOutlined />
+                    </span>
+                    <span className="admin-logout-text">Đăng xuất</span>
+                </button>
                 </div>
             </Sider>
 
             <Layout>
-                <Header className='admin-header'>
-                    <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement='bottomRight'>
-                        <Badge count={unreadConnt}>
-                            <BellOutlined style={{ fontSize: 24, cursor: 'pointer' }} />
+                <Header className="admin-header">
+                    <span className="admin-header-text">Admin Dashboard</span>
+                    <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
+                        <Badge count={unreadCount}>
+                            <BellOutlined style={{ fontSize: 28, cursor: 'pointer' }} />
                         </Badge>
                     </Dropdown>
                 </Header>
 
-                <Content style={{ margin: 24 }}>
+                <Content className="admin-content">
                     {renderContent()}
                 </Content>
             </Layout>
         </Layout>
     );
-};
+}
 
 export default AdminLayout;

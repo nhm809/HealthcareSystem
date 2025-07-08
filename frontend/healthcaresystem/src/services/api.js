@@ -97,6 +97,24 @@ export const updateTestResult = async (staffId, data) => {
      });
 };
 
+export const adminApi = {
+     getUserStats: () => api.get('/manageUser/countUsers'),
+     getRecentUsers: () => api.get('/manageUser/getTenLatestUsers'),
+     setUserStatus: (userId, isAvailable) =>
+          api.put(`/manageUser/setStatusUser/${userId}/${isAvailable}`),
+     getUsersPerPage: (page, pageSize, search, role) =>
+          api.get(`/manageUser/loadUserPerPage/${page}/${pageSize}`, {
+               params: { search, role },
+          }),
+     getPageCount: (pageSize, search, role) =>
+          api.get(`/manageUser/countPage`, {
+          params: { pageSize, search, role },
+          }),
+     getUserDetail: (userId) =>
+          api.get(`/user/get/${userId}`),
+     updateUser: (data) => api.put('/manageUser/updateUser', data),
+};
+
 export const questionApi = {
      getAllQuestions: () => api.get('/question/getAll'),
      addQuestion: (data) => api.post('/question/add', data),

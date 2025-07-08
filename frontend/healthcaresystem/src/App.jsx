@@ -10,6 +10,7 @@ import routers from './routers/routers';
 import StaffLayout from './components/Layout/StaffLayout';
 import ConsultantLayout from './components/Layout/ConsultantLayout';
 import AdminLayout from './components/Layout/AdminLayout';
+import ManagerLayout from './components/Layout/ManagerLayout';
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
             <Route path="/consultant" element= {<ConsultantLayout />}/>
 
             <Route path="/admin" element={<AdminLayout />} />
+
+            <Route path="/manager" element={<ManagerLayout />} />
 
             {/* Member routes with default layout */}
             <Route element={

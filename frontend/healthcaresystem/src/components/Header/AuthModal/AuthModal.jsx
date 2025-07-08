@@ -83,7 +83,7 @@ function AuthModal({ open, onClose }) {
                 } else if (roleId === 'AD') {
                     navigate('/admin');
                 } else if (roleId === 'MG') {
-                    navigate('/manager/dashboard');
+                    navigate('/manager');
                 } else {
                     navigate('/');
                 }

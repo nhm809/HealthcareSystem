@@ -1,0 +1,163 @@
+.admin-dashboard {
+  padding: 0 32px 32px 32px;
+  background: #ffffff;
+  min-height: 100%;
+}
+
+.dashboard-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+
+/* Hover effect */
+.dashboard-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Icon */
+.dashboard-card .ant-statistic-content-prefix > .anticon {
+  font-size: 24px;
+  color: #28a48f;
+  margin-right: 8px;
+}
+
+/* Tiêu đề */
+.dashboard-card .ant-statistic-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
+}
+
+/* Giá trị */
+.dashboard-card .ant-statistic-content-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+}
+
+.dashboard-card .ant-statistic-content-suffix {
+  font-size: 14px;
+  color: #888;
+  margin-left: 10px !important;
+}
+
+/* === MÀU THEO ROLE === */
+.admin-card {
+  background-color: #ffe7d6;
+}
+
+.manager-card {
+  background-color: #f0e6fb;
+}
+
+.consultant-card {
+  background-color: #e6f0ff;
+}
+
+.member-card {
+  background-color: #d6f9f6;
+}
+
+.staff-card {
+  background-color: #e9f9e0;
+}
+
+.dashboard-table {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+
+.admin-dashboard .dashboard-card .ant-card-body {
+    padding: 24px 42px;
+    border-radius: 0 0 8px 8px;
+}
+
+.admin-dashboard .dashboard-table .ant-card-body {
+    padding: 0 24px ;
+    border-radius: 0 0 8px 8px;
+}
+
+.admin-dashboard .ant-card .ant-card-head {
+    border-bottom: none !important;
+}
+
+.admin-dashboard .ant-card .ant-card-head-title {
+  font-size: 20px;
+}
+
+.admin-dashboard .ant-table-thead > tr > th {
+  background-color: #277DA1 !important;
+  color: white !important;
+  font-weight: bold !important;
+  padding: 12px 24px !important;
+  border-right: none !important; /* Bỏ viền cột */
+}
+
+.admin-dashboard .ant-table-tbody > tr > td {
+  padding: 12px 24px !important;
+}
+
+/* Bỏ viền cột trong body */
+.admin-dashboard .ant-table-tbody > tr > td:not(:last-child) {
+  border-right: none !important;
+}
+
+.dashboard-pagination {
+  display: flex;
+  justify-content: center !important;
+  margin-top: 20px;
+}
+
+.dashboard-pagination .ant-pagination-item {
+  border: none;
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dashboard-pagination .ant-pagination-item-active {
+  background-color: #277DA1;
+}
+
+.dashboard-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.dashboard-pagination .ant-pagination-item-active a:hover {
+  color: white;
+}
+
+.dashboard-pagination .ant-pagination-prev .ant-pagination-item-link,
+.dashboard-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.dashboard-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.dashboard-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.dashboard-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.dashboard-pagination .ant-pagination-disabled {
+  opacity: 0.5;
+}
