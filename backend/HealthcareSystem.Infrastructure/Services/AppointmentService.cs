@@ -21,6 +21,14 @@ namespace Infrastructure.Services
 
         public async Task<int> CreateAppointmentAsync(AppointmentCreateDto dto)
         {
+            var consultant = await _context.Users.FindAsync(dto.ConsultantId);
+            var member = await _context.Users.FindAsync(dto.MemberId);
+
+            var consultantName = consultant?.FullName ?? "chuyên gia";
+            var memberName = member?.FullName ?? "người dùng";
+
+            var formattedTime = dto.StartTime.ToString("HH:mm dd/MM/yyyy");
+
             var entity = new Appointment
             {
                 MemberId = dto.MemberId,
@@ -32,8 +40,27 @@ namespace Infrastructure.Services
                 Status = "Dang thanh toan",   // giá trị mặc định
                 Symptoms = dto.Symptoms // Assign the new Symptoms field
             };
-
             await _context.Appointments.AddAsync(entity);
+
+            var notiForConsultant = new Notification
+            {
+                UserId = dto.ConsultantId,
+                Title = "Lịch hẹn mới",
+                Content = $"Bạn có một lịch hẹn mới với {memberName} vào lúc {formattedTime}.",
+                SendTime = DateTime.UtcNow.AddHours(7), // Giờ Việt Nam
+                IsRead = false
+            };
+
+            var notiForMember = new Notification
+            {
+                UserId = dto.MemberId,
+                Title = "Đặt lịch thành công",
+                Content = $"Bạn đã đặt lịch hẹn thành công với {consultantName} vào lúc {formattedTime}.",
+                SendTime = DateTime.UtcNow.AddHours(7),
+                IsRead = false
+            };
+            await _context.Notifications.AddRangeAsync(notiForConsultant, notiForMember);
+
             await _context.SaveChangesAsync();
             return entity.AppointmentId;
         }
@@ -123,12 +150,48 @@ namespace Infrastructure.Services
 
         public async Task<bool> UpdateAppointmentMeetLinkAsync(int appointmentId, string meetLink)
         {
-            var a = await _context.Appointments.FindAsync(appointmentId);
-            if (a == null) return false;
+            var appointment = await _context.Appointments
+                .Include(a => a.Member)
+                .Include(a => a.Service)
+                .Include(a => a.Consultant)
+                .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
 
-            a.MeetLink = meetLink;
+            if (appointment == null) return false;
+
+            appointment.MeetLink = meetLink;
             await _context.SaveChangesAsync();
+
+            // Nếu có member, gửi notification
+            if (appointment.MemberId.HasValue)
+            {
+                var sendTime = DateTime.UtcNow.AddHours(7);
+                var formattedSendTime = sendTime.ToString("HH:mm dd/MM/yyyy");
+                var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
+                var consultantName = appointment.Consultant?.FullName ?? "Chuyên gia";
+                var serviceName = appointment.Service?.Name ?? "Dịch vụ";
+
+                var content = 
+                    $@"Dịch vụ: {serviceName}
+                    Bác sĩ: {consultantName}
+                    Ngày hẹn: {appointmentTime}
+                    Link: {meetLink}
+                    Thời gian gửi: {formattedSendTime}";
+
+                var notification = new Notification
+                {
+                    UserId = appointment.MemberId.Value,
+                    Title = "Link tư vấn đã sẵn sàng",
+                    Content = content,
+                    SendTime = sendTime,
+                    IsRead = false
+                };
+
+                _context.Notifications.Add(notification);
+                await _context.SaveChangesAsync();
+            }
+
             return true;
         }
+
     }
 }

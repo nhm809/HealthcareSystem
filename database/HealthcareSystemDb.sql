@@ -8,18 +8,27 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('CS', 'Consultant', N'Nhân viên tư vấn'),  --
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
---User
-INSERT INTO [User] (FullName, [Provider], GoogleId, [PasswordHash], Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID,[RefreshToken],[RefreshTokenExpiryTime],[IsAvailable])
+
+INSERT INTO dbo.[User] (UserID, Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
 VALUES
-(N'Nguyễn Hữu Mỹ', 'Local', '','$2b$12$s2EQOrLdHUPEcD9BiXsgq.G6aZLcwFOyW61e8dN6/wt.ZIdWSrXqS', 'mexnguyen894@gmail.com', '0987654321', '2004-08-08', 'Male', N'123 Lê Lợi, Quận 1, TP.HCM', GETDATE(), NULL, 'AD',NULL,NULL,1),
-(N'Tống Anh Tài', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'MG',NULL,NULL,1),
-(N'Phạm Nguyễn Đăng Hải', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,1),
-(N'Nguyễn Văn Hiếu', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'CS',NULL,NULL,1),
-(N'Nguyễn Trọng Tốt', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'MB',NULL,NULL,1),
-(N'Staff2', 'Local', '', '$2b$12$OXdZxnmSDIqmCC0sFpZ5T.8i6RF648Ipf6csdtQdqqxdi7QKHNBL2', 'taitongngocanh@gmail.com', '0912345678', '2004-05-10', 'Male', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', GETDATE(), NULL, 'ST',NULL,NULL,1),
-(N'Staff3', 'Local', '', '$2b$12$TSpG3SIAuXJ6pBoaBJpCK.cdH6c2GSUq3YKT9c6e4MHuZT7Y2tUvC', 'danghai@gmail.com', '0938123456', '2004-01-01', 'Male', N'78 Trần Phú, TP Huế, Thừa Thiên Huế', GETDATE(), NULL, 'ST',NULL,NULL,1),
-(N'Staff4', 'Local', '', '$2b$12$2deAPorkgcO3QueTGeeegu97aro/MFXcBxWUWOFjk/AyWl6wfc/.i', 'hieubmk2210@gmail.com', '0966778899', '2003-01-18', 'Male', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', GETDATE(), NULL, 'ST',NULL,NULL,1),
-(N'Staff5', 'Local', '', '$2b$12$UMAdJnd3hmURUOSale0zK.Yysc/4WcsHQai4lRxwiMWgqs.xFMtb.', 'totn786@gmail.com', '0977665544', '2004-11-05', 'Male', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', GETDATE(), NULL, 'ST',NULL,NULL,1);
+(10, 'Local', NULL, N'Nguyen Trong Tot', '$2a$11$M4ziiPKXhbxo4aUTwlsQguAFYJ7LfWJcINbNKWuOwb9WxgQg8gBRK', 'a@gmail.com', '0123456789', NULL, 'MALE', N'District 9 Ho Chi Minh city', '2025-06-30', 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751642677/lucbnpwpd1up1m3n7buy.jpg', 'MB', 'angKA0NKv5D22E+gLNxTA5TeSX0chNxaJgkxL391NH4ztCAcoxf7P0Ru698zmYcPPcLFTW0o2aoehf0DBepAEg==', '2025-07-15 23:30:56.5746982', 1),
+(11, 'Local', NULL, N'Trần Nguyễn Đăng Khoa', '$2a$11$6gX3fjk5oyyHWrPlZmz2NumNXSnGOeU4BZMSBjLA50ThCownOXgXW', 'admin@gmail.com', '0334455668', '1999-02-10', 'MALE', N'District 9 Ho Chi Minh city', '2025-07-08', NULL, 'AD', 'jA6enLjqdRkSOoPi+Z/t92RhDf+Z5s84RrOxm5Acbkrk/oeNGczHbbyfVRpwlD6J2pD7OETX1JuzM/BcU4JoPg==', '2025-07-23 10:38:42.7933303',1),
+(12, 'Local', NULL, N'Nguyễn Nhật Nam', '$2a$11$cgVuNYBpbjDj2eK0CYDd.uscR5e9LDIRBXRBDDjkf/PDya.bbccI6', 'manager@gmail.com', '0975662443', '1993-07-08', 'MALE', N'123 Lê Lợi, Quận 1, TP.HCM', '2025-07-08', NULL, 'MG', '6ebcpBY43MPz7k4cOcTGRcw/jZVSX2fo67hlmHiMLohcg3Nte0GgG+vLCMYL5FFDz6IDsKXZQtUi9vXXpnxmtg==', '2025-07-23 10:42:15.7446083', 1),
+(13, 'Local', NULL, N'Trần Ngọc Tâm', '$2a$11$ZsbFmeJlhFX7lpMuPN.zhOnispEUsGpebKqP34KUIIfsNGWETsB3S', 'consultant1@gmail.com', '0376378351', '1998-04-08', 'FEMALE', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', '2025-07-08', NULL, 'CS', 'rkZbOmlbrEyUOwdb/X32WmHElHdOdd4HF8MgNLyhmPk13dyGNTF3peT0lFFaYOJxTQ4k9CK9ARR0ytZvbExcJw==', '2025-07-23 10:45:50.4379076', 1),
+(14, 'Local', NULL, N'Võ Hạ Trâm', '$2a$11$lVWamY6dIvlNRlJnUGSnROxoKFqtQQlgarnoCJFt15Ek5e2L6Ov0a', 'consultant2@gmail.com', '0975672444', '2000-04-20', 'FEMALE', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', '2025-07-08', NULL, 'CS', 'CH1Y2ZCzQhvrZKgpbgXrV4Rq0YtRjihd86F/LwM6CaprB5oCg85qUXYbF4YfPIYquddxDaiTGT3+29oXC5+nZQ==', '2025-07-23 10:47:15.3388636', 1),
+(15, 'Local', NULL, N'Trần Minh Hiếu', '$2a$11$ukIZLq0FgkBFrr/tbLOHiuBrSTHhRBuJSyh5/20CoroG1Sf/JDEmu', 'consultant3@gmail.com', '0129875672', '1997-04-21', 'MALE', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', '2025-07-08', NULL, 'CS', 'BkSOjH3/sYZqcwLMCtYyac3C8YX1YoHnL+iWlLjuBIBQTG/47r2t83spSok5xfk2qVdqaL53ixTC4MHFNkQQ2g==', '2025-07-23 10:49:03.5121659', 1),
+(16, 'Local', NULL, N'Nguyễn Ngọc Thanh Tâm', '$2a$11$85C1ZHEMSg2CXrXn1p/.YO40twDS8CzFzF/Pp/l4D6rk8CsJjqcNe', 'consultant4@gmail.com', '0337658971', '1999-08-25', 'FEMALE', N'90 Lý Thường Kiệt, TP Vinh, Nghệ An', '2025-07-08', NULL, 'CS', 'xNeQQMBztTGAI1ad670WR37IJ8nW46hE+tlD3huIt2SGZVzmN7Ay4KZlBOUTzmVJXlTAiWUPrLNlG9TGAM3sIA==', '2025-07-23 10:50:26.7591554', 1),
+(17, 'Local', NULL, N'Nguyễn Ngọc Lan', '$2a$11$XgC8VblbPtjjNpntJdliIe9lPugRDGaLsXdPAUcyfsCevswfZW.RW', 'consultant5@gmail.com', '0975662442', NULL, 'FEMALE', N'District 9 Ho Chi Minh city', '2025-07-08', NULL, 'CS', 'exLqo96dfEPTfZdh30oK3KqTSUNHp68eBWSfkaqX58/2kbDdphF89CZx4OIn8Zc1z20bSKkmbrdPwjAwhoWfHA==', '2025-07-23 10:51:45.0368707', 1),
+(18, 'Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2a$11$srzRZGAZoygUNNRR001zq.2fxT7IHceHxncyWHWdYKXIODeO1Ko3G', 'staff1@gmail.com', '0338123456', NULL, 'MALE', N'78 Trần Phú, TP Huế', '2025-07-08', NULL, 'ST', 'XJKtNW4BNS9GekHWnUF2nVklOzINob3IWX1HZnLYGzbcf+be5+UdkdhhAtkBGBZ/yQwLA6zwOxi/6j+owAszyA==', '2025-07-23 10:56:00.4994595',1),
+(19, 'Local', NULL, N'Nguyễn Văn Hiếu', '$2a$11$kx5Ys/YC/94FHoR9BRzO3uYQ44Jp36MzLZ5gV5wTvuWVj1GMRHOh.', 'staff2@gmail.com', '0976782443', '1977-05-16', 'MALE', N'56 Hai Bà Trưng, TP Nam Định, Nam Định', '2025-07-08', NULL, 'ST', '0CgzYn+Bf0PN48JZWKuDRoQClm/IhksCgdPl18vG4XKP9zay6Xaj6SXieOqislmLI1OJjwAs45jt6XLci/o95A==', '2025-07-23 10:57:36.8174730',1),
+(20, 'Local', NULL, N'Tống Ngọc Anh Tài', '$2a$11$NOrZtGHa9G1sVR6ouIVi/O2aC48iODisgYASkQrpTQ6xFEAoypWKW', 'staff3@gmail.com', '0235662443', '1993-05-10', 'MALE', N'45 Nguyễn Huệ, TP Biên Hòa, Đồng Nai', '2025-07-08', NULL, 'ST', 'qeX4nrBu+Gme2kcK5imd4bBPLPtjJivAEXwqNTnDENoLpRQMjD7MBWooXn4F92FFXFKSOpY+h3LFpk5Dum3h/w==', '2025-07-23 10:58:42.1500555', 1),
+(21, 'Local', NULL, N'Nguyễn Hữu Hải', '$2a$11$ILCIiawAjI17SHBVH.V3D.1JAxIwCR2.sehkJw1be1qDyZFRSfHoK', 'staff4@gmail.com', '0975672451', '1993-08-06', 'MALE', N'District 3 Ho Chi Minh city', '2025-07-08', NULL, 'ST', '4ps012o9NDI+8tVGLUDyLCMbxhqDrQ/DNer2KMRDk50A7PmPSOB3W8/VwKFfIRAOn7G+JsTk9l12VBxI+e4t4w==', '2025-07-23 10:59:49.7568591', 1),
+(22, 'Local', NULL, N'Nguyen Trong Tot', '$2a$11$298qV21Gq0BG46IR8Pkn7Od1V07wboVZGkr/Ocrfo1M.5lsmJ9AIa', 'staff5@gmail.com', '0897652344', '1989-05-11', 'MALE', N'District 6 Ho Chi Minh city', '2025-07-08', NULL, 'ST', '98rBcVAbEflCUOl/7bQPPvC+xKn1dl3+fBZx7TzGn3o0zcgdGKodn/iL7ZegJWMzoK3LODvjqo+5cPo2oqbGlw==', '2025-07-23 11:01:16.2013933', 1),
+(23, 'Local', NULL, N'Hoàng Khánh Huyền', '$2a$11$oLE4QP9epj4jo8kzYEuxrudlH1KpUTITOX6tuLnhddg5hSl8UgQnC', 'ct81@gmail.com', '0789654123', '2002-11-05', 'FEMALE', N'District 1 Ho Chi Minh city', '2025-07-08', NULL, 'MB', 'FZilWK9M9ujykMZxixZm3k+CrdnqzE0L+YFqa4DEe/XubULYoV7odQVoL9xXtKV0Q4ANFhV6k2IbeA4SgmrUfQ==', '2025-07-23 11:48:13.5237925', 1),
+(24, 'Local', NULL, N'Hoàng Hữu Ân', '$2a$11$zCBIaYuLnlhvJFCvyqDVUebp.Ag6aQMlZLdW5Be8yVhe7luIy5kMG', 'ct82@gmail.com', '0965672345', '2002-08-13', 'MALE', N'District 3 Ho Chi Minh city', '2025-07-08', NULL, 'MB', '1cvZ0TFGpYjJp8ZVKFSPHMBMTGncu95QXlI9v7rz9NDVki68DOt3G+tLDR+NIfy9H7Qco+YecUKQJxRFKcqrGQ==', '2025-07-23 11:49:56.4440669', 1),
+(25, 'Local', NULL, N'Võ Hữu Ninh', '$2a$11$y72Iy0x39mZ9YCTa8ft0wOEnCenYIy1KzLFpmA/3wm/Q8MP2zM61K', 'ha7113@gmail.com', '0765234723', '1995-08-14', 'MALE', N'District 9 Thu Duc city', '2025-07-08', NULL, 'MB', 'Nrg10mtNkSjPIm8cC8FuOXZvtaNuTgACXGwBwc3I8mW6g3xIb7n84YXbnOWX3CkQN3PqPpwx9y91YquRB/XcGg==', '2025-07-23 11:50:45.1988466', 1),
+(26, 'Local', NULL, N'Hoàng Thủy Tiên', '$2a$11$GTHAiVZAx9FhQ.Seg1SsFuH5biWE0ZFKGu7enN0tMXwel.5qZz//K', 'tt1331@gmail.com', '0985672312', '2003-05-12', 'FEMALE', N'District 7 Ho Chi Minh city', '2025-07-08', NULL, 'MB', 'MP+3yWfKnmo18u7YtG6B3eXhz6a87sxAXKxVix3O2d/Wsj1La6Wzwfktp7+LxzTL6b2xuycqN8ffYi4DtUuFhQ==', '2025-07-23 11:51:36.6939967', 1);
+
 
 
 
@@ -43,44 +52,45 @@ VALUES
 
 
 --[UserSpecialty]--=====================================================================================================================================================
-INSERT INTO [dbo].[UserSpecialty] (UserID, SpecialtyID)
+INSERT INTO dbo.UserSpecialty (UserID, SpecialtyID)
 VALUES
-(3, 1), -- Sản Phụ Khoa
-(3, 2), -- Nam Khoa
-(3, 4), -- Tâm lý học
--- Assigning specialties to other staff members
-(6, 8), -- Staff2: Xét nghiệm y khoa
-(6, 3), -- Staff2: Da liễu - STIs
-(7, 8), -- Staff3: Xét nghiệm y khoa
-(7, 5), -- Staff3: Y học tổng quát
-(8, 8), -- Staff4: Xét nghiệm y khoa
-(9, 8); -- Staff5: Xét nghiệm y khoa
-
+(18, 1),
+(19, 2),
+(18, 3),
+(19, 4),
+(20, 5),
+(20, 8),
+(21, 8),
+(22, 8);
 
 --Appointment--=====================================================================================================================================================
+--chưa hoàn thiện
 --UserID 5 là Member (người đặt lịch) và UserID 4 là Consultant
 --INSERT INTO Appointment (MemberID, MeetLink, ServiceID, ConsultantID, StartTime, EndTime, Status)
 --VALUES
 --(5, 'https://meet.link/1', 2, 4, '2025-06-03 08:00:00', '2025-06-03 08:30:00', N'Đã đặt'),
---(5, 'https://meet.link/2', 1, 4, '2025-06-03 14:00:00', '2025-06-03 14:45:00', N'Đã đặt');
+--(5, 'https://meet.link/2', 1, 4, '2025-06-03 14:00:00', '2025-06-03 14:45:00', N'Đã đặt');   
 
 
 
 --TestServiceRecord --=====================================================================================================================================================
--- Dữ liệu TestServiceRecord cho các dịch vụ tương ứng với AppointmentID 2 và 3
---INSERT INTO TestServiceRecord (
---    ServiceID, Dob, Gender, PhoneNumber, FullNameOfMember,
---    MemberID, Result, StaffID, RecordDate, Notes, Status
---)
---VALUES
----- Cho AppointmentID 2 (ServiceID = 2)
---(2, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
--- 5, N'Không phát hiện vấn đề gì', 4, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
-
----- Cho AppointmentID 3 (ServiceID = 1)
---(1, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 
--- 5, N'Dương tính nhẹ, cần theo dõi', 4, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành');
-
+INSERT INTO dbo.TestServiceRecord (
+    TestServiceRecordID, ServiceID, Dob, Gender, PhoneNumber, FullNameOfMember, MemberID, Result,
+    StaffID, RecordDate, TestDate, TimeSlot, Notes, Status
+)
+VALUES
+(1, 1, '2025-06-27', 'Male', '0123456789', N'Tốt', 11, NULL, 18, '2025-06-27 13:18:16.997', '2025-06-30', '08:00:00', NULL, N'Da danh gia'),
+(2, 1, '2025-06-27', 'Male', '0123456789', N'Tốt', 12, NULL, 19, '2025-06-27 13:19:03.783', '2025-06-30', '08:00:00', NULL, N'Dang cho kham'),
+(3, 1, '2025-06-27', 'Male', '0123456789', N'Tốt', 18, NULL, 18, '2025-06-27 13:19:32.320', '2025-06-30', '08:00:00', NULL, N'Dang cho kham'),
+(4, 1, '2004-06-30', 'Male', '0123456789', N'string', 11, NULL, 18, '2025-06-30 22:51:34.037', '2025-07-30', '08:00:00', NULL, N'Dang cho kham'),
+(5, 1, '2000-09-28', 'Nam', '0975672459', N'Tót', 10, NULL, 18, '2025-06-30 23:31:39.420', '2025-07-02', '08:00:00', NULL, N'Dang cho kham'),
+(6, 1, '2025-07-03', 'Male', '0123456789', N'string', 11, NULL, 18, '2025-07-03 13:49:14.260', '2025-07-04', '08:00:00', NULL, N'Dang cho kham'),
+(7, 1, '2025-07-03', 'Male', '0123456789', N'string', 12, NULL, 18, '2025-07-03 13:50:32.387', '2025-07-04', '08:00:00', NULL, N'Dang cho kham'),
+(8, 1, '2025-07-03', 'Male', '0123456789', N'string', 11, NULL, 20, '2025-07-03 13:51:36.653', '2025-07-04', '13:00:00', NULL, NULL),
+(9, 1, '2025-07-03', 'Male', '0123456789', N'string', 12, NULL, 21, '2025-07-03 13:52:02.603', '2025-07-04', '13:00:00', NULL, N'Dang thuc hien'),
+(10, 1, '2025-07-03', 'Male', '0123456789', N'string', 11, NULL, NULL, '2025-07-03 16:23:11.957', '2025-07-03', '08:00:00', NULL, N'Da huy'),
+(11, 1, '2025-07-03', 'Male', '0123456789', N'string', 11, NULL, NULL, '2025-07-03 16:23:58.023', '2025-07-03', '08:00:00', NULL, N'Dang thanh toan'),
+(12, 1, '2000-07-02', 'Nam', '0975672459', N'Nguyen Trong Tot', 10, NULL, 18, '2025-07-04 22:21:53.317', '2025-07-16', '08:00:00', NULL, N'Dang cho kham');
 
 --Question --=====================================================================================================================================================
 --INSERT INTO Question (
@@ -129,90 +139,70 @@ VALUES
 
 
 ---Blog-=====================================================================================================================================================
-INSERT INTO Blog (Title, Content, [Description], ConsultantID, PublishDate, Topic, Status)
-VALUES 
--- Bài 1
-(N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
+INSERT INTO dbo.Blog (
+    BlogID, Title, Content, Description, ConsultantID, PublishDate, Topic, Status )
+VALUES
+(1, N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
  N'Nắm rõ chu kỳ kinh nguyệt giúp bạn dự đoán thời gian rụng trứng và khả năng mang thai. Trong bài viết này, chúng tôi hướng dẫn bạn cách theo dõi và sử dụng công cụ tính chu kỳ hiệu quả.',
  N'Hướng dẫn theo dõi chu kỳ kinh nguyệt để nhận biết thời điểm rụng trứng và tránh thai tự nhiên.',
- 4, '2025-05-20', N'Sức khỏe',0),
+ 14, '2025-05-20', N'Sức khỏe', 1),
 
--- Bài 2
-(N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
+(2, N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
  N'STIs là các bệnh nguy hiểm có thể ảnh hưởng đến sức khỏe sinh sản và cuộc sống tình dục. Bài viết giúp bạn hiểu rõ về dấu hiệu, cách phòng ngừa và thời điểm cần xét nghiệm.',
  N'Hiểu đúng về STIs – dấu hiệu, cách lây và phòng ngừa hiệu quả.',
- 4, '2025-05-18', N'STIs',0),
+ 14, '2025-05-18', N'STIs', 1),
 
--- Bài 3
-(N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
+(3, N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
  N'Không chỉ uống đúng giờ, người dùng thuốc tránh thai còn cần lưu ý nhiều điều khác để đảm bảo hiệu quả tránh thai. Bài viết giải đáp chi tiết những thắc mắc thường gặp.',
  N'Giải đáp mọi thắc mắc về việc sử dụng thuốc tránh thai an toàn và hiệu quả.',
- 4, '2025-05-15', N'Sức khỏe',1),
+ 13, '2025-05-15', N'Sức khỏe', 1),
 
--- Bài 4
-(N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
+(4, N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
  N'Nhiều người lo lắng hoặc ngại ngùng khi đi xét nghiệm STIs. Bài viết chia sẻ quy trình, những điều cần chuẩn bị và cách lấy kết quả an toàn, bảo mật.',
  N'Chuẩn bị tâm lý và hiểu quy trình khi đi xét nghiệm STIs lần đầu.',
- 4, '2025-05-12', N'Hướng dẫn',0),
+ 15, '2025-05-12', N'Hướng dẫn', 1),
 
--- Bài 5
-(N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
+(5, N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
  N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
  N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 4, '2025-05-10', N'Tâm lý',1);
+ 13, '2025-05-10', N'Tâm lý', 1);
 
 
 
  --Blogimage-=====================================================================================================================================================
- INSERT INTO BlogImage (BlogID, ImagePath, ImageCaption, UploadDate, OrderIndex)
-VALUES 
-(1, '/images/blogs/cycle-tracking.jpg', N'Minh họa chu kỳ kinh nguyệt', GETDATE(), 1),
-(2, '/images/blogs/stis-awareness.jpg', N'Thông tin về các bệnh STIs', GETDATE(), 1),
-(3, '/images/blogs/birth-control-pills.jpg', N'Thuốc tránh thai hàng ngày', GETDATE(), 1),
-(4, '/images/blogs/stis-test.jpg', N'Tư thế lấy mẫu xét nghiệm STIs', GETDATE(), 1),
-(5, '/images/blogs/online-consultation.jpg', N'Tư vấn giới tính trực tuyến', GETDATE(), 1);
-
+INSERT INTO dbo.BlogImage (
+    ImageID, BlogID, ImagePath, ImageCaption, UploadDate, OrderIndex )
+VALUES
+(1, 1, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951433/ivgihugmou0zjp1emclv.jpg', N'Minh họa chu kỳ kinh nguyệt', '2025-07-08 05:11:20.150', 1),
+(2, 2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951443/dyggaxusc4fme4oet3tev.jpg', N'Thông tin về các bệnh STIs', '2025-07-08 05:09:01.747', 1),
+(3, 3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951112/b3g6xkwcbvrlw4kicotw.jpg', N'Thuốc tránh thai hằng ngày', '2025-07-08 05:08:34.373', 1),
+(4, 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951325/bmjfiuhejrhcj5j5quq.jpg', N'Tư thế lấy mẫu xét nghiệm STIs', '2025-07-08 05:07:42.563', 1),
+(5, 5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951126/imf8crhktlis12j03o8g.jpg', N'Tư vấn giới tính trực tuyến', '2025-07-08 05:03:45.803', 1);
 
 --Blogview -=====================================================================================================================================================
-INSERT INTO BlogView (MemberID, BlogID, ViewDate)
-VALUES 
-(5, 1, GETDATE()),
-(5, 2, GETDATE()),
-(5, 3, GETDATE());
-
-
---TestServiceRecord -=====================================================================================================================================================
---dữ liệu mới cho MemberID = 5 (Nguyễn Trọng Tốt)
---INSERT INTO TestServiceRecord (
---    ServiceID, Dob, Gender, PhoneNumber, FullNameOfMember, MemberID, Result, StaffID, RecordDate, Notes, Status
---)
---VALUES
----- Tư vấn sức khỏe sinh sản
---(2, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Không phát hiện vấn đề gì', 3, '2025-06-03 09:00:00', N'Xét nghiệm OK', N'Đã hoàn thành'),
-
----- Xét nghiệm HIV
---(1, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Dương tính nhẹ, cần theo dõi', 3, '2025-06-03 15:00:00', N'Cần tư vấn thêm', N'Đã hoàn thành'),
-
----- Xét nghiệm HIV lần 2
---(1, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Âm tính với HIV', 3, '2025-05-05 08:00:00', N'Tầm soát định kỳ', N'Đã hoàn thành'),
-
----- Tư vấn sinh sản lần 2
---(2, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Tư vấn hoàn tất. Không có dấu hiệu bất thường.', 3, '2025-05-08 09:00:00', N'Quan tâm kế hoạch sinh con', N'Đã hoàn thành'),
-
----- Xét nghiệm bệnh lậu
---(3, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Âm tính với lậu cầu khuẩn', 3, '2025-05-10 07:45:00', N'Không triệu chứng rõ ràng, xét nghiệm theo khuyến nghị', N'Đã hoàn thành'),
-
----- Xét nghiệm giang mai
---(4, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Âm tính', 3, '2025-05-12 10:00:00', N'Không có dấu hiệu nghi ngờ, xét nghiệm theo chương trình STIs', N'Đã hoàn thành'),
-
----- Xét nghiệm HPV
---(5, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Không phát hiện chủng HPV nguy cơ cao', 3, '2025-05-14 10:30:00', N'Khuyến nghị tái xét nghiệm sau 3 năm', N'Đã hoàn thành'),
-
----- Xét nghiệm tổng quát STIs
---(6, '2004-11-05', 'Male', '0977665544', N'Nguyễn Trọng Tốt', 5, N'Không phát hiện bất thường', 3, '2025-05-18 08:30:00', N'Tổng kiểm tra STIs trước lập gia đình', N'Đã hoàn thành');
-
-
-
+INSERT INTO dbo.BlogView (BlogViewID, MemberID, BlogID, ViewDate)
+VALUES
+(1, 10, 1, '2025-06-26 13:21:41.863'),
+(2, 10, 2, '2025-06-26 13:21:41.863'),
+(3, NULL, 3, '2025-07-01 13:29:37.860'),
+(4, NULL, 1, '2025-07-01 13:29:37.967'),
+(5, NULL, 2, '2025-07-01 15:03:52.057'),
+(6, NULL, 3, '2025-07-01 15:05:08.526'),
+(7, NULL, 5, '2025-07-01 15:05:08.563'),
+(8, NULL, 1, '2025-07-01 15:05:08.573'),
+(9, NULL, 2, '2025-07-01 15:05:08.597'),
+(10, NULL, 3, '2025-07-01 15:34:53.640'),
+(11, NULL, 5, '2025-07-01 15:34:53.640'),
+(12, NULL, 4, '2025-07-01 15:34:53.640'),
+(13, NULL, 1, '2025-07-08 12:06:37.037'),
+(14, NULL, 1, '2025-07-08 12:07:16.987'),
+(15, NULL, 1, '2025-07-08 12:07:38.087'),
+(16, NULL, 1, '2025-07-08 12:08:04.087'),
+(17, NULL, 1, '2025-07-08 12:08:36.060'),
+(18, NULL, 1, '2025-07-08 12:10:43.747'),
+(19, NULL, 1, '2025-07-08 12:11:03.747'),
+(20, NULL, 1, '2025-07-08 12:11:13.747'),
+(21, NULL, 1, '2025-07-08 12:11:23.090');
 
 
 --=====================================================================================================================================================
@@ -229,13 +219,39 @@ VALUES
 --(NULL, 8, 5, N'Xét nghiệm tổng quát rất cần thiết. Cảm thấy an toàn hơn.', GETDATE());
 
 --Table [dbo].[Notification]
-INSERT INTO Notification (UserID, Title, [Content], SendTime, IsRead)
+INSERT INTO dbo.Notification (NotificationID, UserID, Title, Content, SendTime, IsRead)
 VALUES
-(3, N'Thông báo hệ thống', N'Hệ thống sẽ bảo trì lúc 23:00 đêm nay.', GETDATE(), 0),
-(3, N'Xác nhận email', N'Vui lòng xác nhận email để tiếp tục sử dụng dịch vụ.', GETDATE(), 0),
-(4, N'Cập nhật hồ sơ', N'Hồ sơ của bạn đã được cập nhật thành công.', GETDATE(), 1),
-(5, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', GETDATE(), 0),
-(4, N'Mật khẩu đã thay đổi', N'Bạn vừa thay đổi mật khẩu thành công.', GETDATE(), 1);
+(1, 18, N'Thông báo hệ thống', N'Hệ thống sẽ bảo trì lúc 23:00 đêm nay.', '2025-06-26 13:21:41.863', 0),
+(2, 18, N'Xác nhận email', N'Vui lòng xác nhận email để tiếp tục sử dụng dịch vụ.', '2025-06-26 13:21:41.863', 0),
+(3, 13, N'Cập nhật hồ sơ', N'Hồ sơ của bạn đã được cập nhật thành công.', '2025-06-26 13:21:41.863', 1),
+(4, 10, N'Thông báo thanh toán', N'Giao dịch #TX2931 đã được xác nhận.', '2025-06-26 13:21:41.863', 0),
+(5, 13, N'Mật khẩu đã thay đổi', N'Bạn vừa thay đổi mật khẩu thành công.', '2025-06-26 13:21:41.863', 1),
+(6, 11, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-06-27 13:18:42.367', 0),
+(7, 12, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-06-27 13:19:21.720', 0),
+(8, 18, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-06-27 13:19:50.697', 0),
+(9, 11, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-06-30 22:52:07.173', 0),
+(10, 10, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-06-30 23:31:56.720', 1),
+(11, 10, N'Đặt lịch xét nghiệm thành công', N'Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: 5', '2025-06-30 16:31:58.967', 1),
+(12, 18, NULL, N'Bạn có một câu hỏi mới từ 10', '2025-07-01 08:06:46.830', 0),
+(13, 10, NULL, N'Câu hỏi của bạn đã được gửi thành công và sẽ sớm được trả lời.', '2025-07-01 08:06:46.830', 1),
+(14, 10, NULL, N'Bạn đã đặt câu hỏi thành công yêu em', '2025-07-01 08:07:16.803', 1),
+(15, 18, NULL, N'Bạn có một câu hỏi mới từ yêu em', '2025-07-01 08:07:16.803', 0),
+(16, 11, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-07-03 13:50:15.200', 0),
+(17, 12, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-07-03 13:50:53.430', 0),
+(18, 11, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-07-03 13:51:57.657', 0),
+(19, 12, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-07-03 13:52:24.243', 0),
+(20, 11, N'Hủy xét nghiệm', N'Xét nghiệm của bạn đã được hủy.', '2025-07-03 16:23:55.060', 0),
+(21, 12, N'Cập nhật thông tin xét nghiệm', N'Bác sĩ đã cập nhật trạng thái cho xét nghiệm của bạn.', '2025-07-03 17:03:50.460', 1),
+(22, 11, N'Cập nhật thông tin xét nghiệm', N'Bác sĩ đã cập nhật trạng thái cho xét nghiệm của bạn.', '2025-07-03 17:04:16.613', 0),
+(23, 11, N'Cập nhật thông tin xét nghiệm', N'Bác sĩ đã cập nhật trạng thái cho xét nghiệm của bạn.', '2025-07-03 17:04:58.397', 1),
+(24, 11, N'Cập nhật thông tin xét nghiệm', N'Bác sĩ đã cập nhật trạng thái cho xét nghiệm của bạn.', '2025-07-04 22:20:48.333', 1),
+(25, 10, N'Thanh toán thành công', N'Bạn đã thanh toán thành công đặt lịch xét nghiệm.', '2025-07-04 22:22:06.243', 1),
+(26, 10, N'Đặt lịch xét nghiệm thành công', N'Bạn đã đặt lịch xét nghiệm thành công. Mã phiếu: 12', '2025-07-04 15:22:07.140', 0),
+(27, 18, N'Lịch làm việc', N'Bạn có lịch làm việc mới ,kiểm tra lịch làm việc ngay nhé', '2025-07-06 01:48:34.343', 0),
+(28, 13, N'Cập nhật lịch làm việc', N'Lịch làm việc Thứ 3 ca ca sáng đã được xóa khỏi lịch làm việc thường xuyên của bạn.', '2025-07-06 16:12:36.383', 1),
+(29, 18, N'Lịch làm việc mới', N'Bạn đã được thêm vào lịch làm việc thường xuyên: Thứ 7 ca Chiều (13:00 - 17:00). Vui lòng kiểm tra và xác nhận lịch làm việc của bạn.', '2025-07-06 16:13:36.467', 0),
+(30, 18, N'Cập nhật lịch làm việc', N'Lịch làm việc của bạn đã được cập nhật: Thứ 7 ca sáng (08:00 - 12:00). Vui lòng kiểm tra ở mục lịch làm việc của bạn.', '2025-07-06 16:48:57.497', 0),
+(31, 18, N'Cập nhật lịch làm việc', N'Lịch làm việc của bạn đã được cập nhật: Thứ 7 ca chiều (13:00 - 17:00). Vui lòng kiểm tra ở mục lịch làm việc của bạn.', '2025-07-06 16:49:24.997', 0);
 
 
 
@@ -279,15 +295,15 @@ VALUES
 
 
 --WeeklyOverrideSchedule--=====================================================================================================================================================
-INSERT INTO [dbo].[WeeklyOverrideSchedules] 
-(UserId, [Date], OverrideType, Reason, ShiftType, [Status]) 
+INSERT INTO dbo.WeeklyOverrideSchedules
+(WeeklyOverrideScheduleId, UserId, Date, OverrideType, Reason, ShiftType, Status)
 VALUES
-(7, '2025-06-29', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
-(9, '2025-07-01', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
-(9, '2025-06-29', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(9, '2025-07-27', N'Làm thêm', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(8, '2025-06-30', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(7, '2025-07-05', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(8, '2025-07-08', N'Nghỉ', N'Lý do cá nhân', 1, N'Đang chờ duyệt'),
-(6, '2025-07-04', N'Nghỉ', N'Lý do cá nhân',3 ,N'Đã xác nhận');--nghỉ cả ngày
+(1, 20, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(2, 21, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(3, 22, '2025-07-01 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(4, 22, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 3, N'Đã xác nhận'),
+(5, 22, '2025-07-27 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(6, 21, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(7, 19, '2025-07-04 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 3, N'Đã xác nhận'),
+(8, 20, '2025-07-05 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(9, 21, '2025-07-08 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt');

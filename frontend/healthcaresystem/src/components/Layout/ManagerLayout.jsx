@@ -24,7 +24,10 @@ const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
 
 const ManagerLayout = () => {
-     const [selectedKey, setSelectedKey] = useState('dashboard');
+     const [selectedKey, setSelectedKey] = useState(() => {
+          const savedKey = localStorage.getItem('managerSelectedKey');
+          return savedKey || 'dashboard';
+     });
      const navigate = useNavigate();
      const [userInfo, setUserInfo] = useState(null);
      const [notifications, setNotifications] = useState([]);
@@ -221,7 +224,10 @@ const ManagerLayout = () => {
                               mode="inline"
                               selectedKeys={[selectedKey]}
                               items={menuItems}
-                              onClick={({ key }) => setSelectedKey(key)}
+                              onClick={({ key }) => {
+                                   setSelectedKey(key);
+                                   localStorage.setItem('managerSelectedKey', key);
+                              }}
                               style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
                          />
                     </div>
@@ -234,6 +240,7 @@ const ManagerLayout = () => {
                                    Cookies.remove('token');
                                    Cookies.remove('refreshToken');
                                    localStorage.removeItem('userInfo');
+                                   localStorage.removeItem('managerSelectedKey');
                                    navigate('/');
                                    window.location.reload();
                               }}
