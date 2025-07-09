@@ -26,7 +26,7 @@ builder.Services.AddHttpClient("PayPalClient", client =>
     client.DefaultRequestHeaders.Accept.Clear();
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
-
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOTPRequestService, OTPRequestService>();
 builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 builder.Services.AddScoped<IReproductiveCycleService, ReproductiveCycleService>();
