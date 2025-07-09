@@ -294,7 +294,11 @@ function Header() {
 
           <div className="service-dropdown-content">
               <button className="stis-button" onClick={(() => navigate('/test-sti'))}>Xét Nghiệm STIs</button>
-              <button onClick={() => navigate('/appointment')}>Tư vấn Trực Tuyến</button>
+              <button onClick={() => navigate('/appointment', {
+                state: { serviceId: 2 }
+              })}>
+                Tư vấn Trực Tuyến
+              </button>
             </div>
           </div>
 

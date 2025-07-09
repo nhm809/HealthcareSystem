@@ -6,7 +6,7 @@ import api from '../../services/api';
 import { authApi } from '../../services/api';
 import dayjs from 'dayjs';
 
-function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, selectedTime, symptom }) {
+function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, selectedTime, service, symptom }) {
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -85,7 +85,7 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
         <Descriptions.Item label="Bác sĩ">{doctor?.fullName}</Descriptions.Item>
         <Descriptions.Item label="Chuyên khoa">{doctor?.specialties?.map(s => s.name).join(', ')}</Descriptions.Item>
         <Descriptions.Item label="Hình thức">Tư vấn trực tuyến</Descriptions.Item>
-        <Descriptions.Item label="Giá">150,000đ</Descriptions.Item>
+        <Descriptions.Item label="Giá">{service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );

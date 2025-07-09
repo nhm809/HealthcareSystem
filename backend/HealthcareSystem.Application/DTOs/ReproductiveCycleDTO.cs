@@ -5,7 +5,7 @@ namespace Application.DTOs
     public class ReproductiveCycleDTO
     {
         public int? CycleId { get; set; }
-        public int? MemberId { get; set; }
+        public int MemberId { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public DateOnly? OvulationDate { get; set; }

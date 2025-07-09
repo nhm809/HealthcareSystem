@@ -11,7 +11,7 @@
 }
 
 .appointment-history .ant-card-body {
-  padding: 24px;
+  padding: 24px !important;
 }
 
 .appointment-history .ant-tabs-tab {
@@ -53,4 +53,61 @@
   padding: 8px 24px;
   font-weight: bold;
   font-size: 16px;
+}
+
+.appointment-pagination {
+  display: flex;
+  justify-content: center !important;
+  margin-top: 20px;
+}
+
+.appointment-pagination .ant-pagination-item {
+  border: none;
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.appointment-pagination .ant-pagination-item-active {
+  background-color: #277DA1;
+}
+
+.appointment-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.appointment-pagination .ant-pagination-item-active a:hover {
+  color: white;
+}
+
+.appointment-pagination .ant-pagination-prev .ant-pagination-item-link,
+.appointment-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #dbe5f1;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.appointment-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.appointment-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.appointment-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #c6daf3;
+  border-radius: 50%;
+}
+
+.appointment-pagination .ant-pagination-disabled {
+  opacity: 0.5;
 }

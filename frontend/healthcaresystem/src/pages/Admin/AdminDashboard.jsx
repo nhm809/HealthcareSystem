@@ -86,7 +86,7 @@ function AdminDashboard() {
                     AD: 'volcano',
                     MG: 'geekblue',
                 };
-                return <Tag color={colorMap[roleId]}>{roleMap[roleId] || 'Không xác định'}</Tag>;
+                return <Tag color={colorMap[roleId]} style={{ fontSize: 13 }}>{roleMap[roleId] || 'Không xác định'}</Tag>;
             },
         },
         {
@@ -95,7 +95,7 @@ function AdminDashboard() {
             key: 'isAvailable',
             width: '16%',
             render: (isAvailable) => (
-                <Tag color={isAvailable ? 'green' : 'red'}>
+                <Tag color={isAvailable ? 'green' : 'red'} style={{ fontSize: 13 }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontSize: 10 }}>●</span>
                         {isAvailable ? 'Khả dụng' : 'Đã khóa'}
