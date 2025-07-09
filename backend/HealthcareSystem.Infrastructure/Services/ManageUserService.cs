@@ -195,5 +195,49 @@ namespace Infrastructure.Services
             return true;
 
         }
+
+        public async Task<bool> AddSpecialty(ManageSpecialtyDTO dto)
+        {
+            var user = await _context.Users
+                                     .Include(u => u.Specialties)
+                                     .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+
+            var specialty = await _context.Specialties.FindAsync(dto.SpecialtyId);
+
+            if (user == null || specialty == null)
+            {
+                return false;
+            }
+
+            if (!user.Specialties.Any(s => s.SpecialtyId == dto.SpecialtyId))
+            {
+                user.Specialties.Add(specialty);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteSpecialty(ManageSpecialtyDTO dto)
+        {
+            var user = await _context.Users
+                                     .Include(u => u.Specialties)
+                                     .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
+
+            var specialty = await _context.Specialties.FindAsync(dto.SpecialtyId);
+
+            if (user == null || specialty == null)
+            {
+                return false;
+            }
+
+            if (user.Specialties.Any(s => s.SpecialtyId == dto.SpecialtyId))
+            {
+                user.Specialties.Remove(specialty);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
     }
 }

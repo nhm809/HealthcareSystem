@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography } from 'antd';
+import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography, Button } from 'antd';
 import {
   DashboardOutlined,
   CalendarOutlined,
@@ -13,10 +13,12 @@ import TestDone from '../../pages/Staff/TestDone';
 import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faBell, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import { notiApi, authApi, getInfo } from '../../services/api';
 import dayjs from 'dayjs';
+import Schedule from '../Schedule/schedule';
+import NotificationDropdown from '../NotificationDropdown';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -106,58 +108,29 @@ const StaffLayout = () => {
     }
   };
 
+  // Notification logic giống Header.jsx
+  const handleMarkAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter(n => !n.isRead);
+      await Promise.all(unreadNotifications.map(noti => notiApi.markAsRead(noti.notificationId)));
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
+  };
   const notificationItems = [
     {
       key: 'notifications',
       label: (
-        <List
-          style={{
-            width: 300,
-            maxHeight: 400,
-            overflow: 'auto',
-            overflowX: 'hidden',
-          }}
-          dataSource={notifications}
-          renderItem={(item) => (
-            <List.Item
-              onClick={() => handleNotificationClick(item.notificationId)}
-              style={{
-                cursor: 'pointer',
-                backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                padding: '8px 12px',
-                borderBottom: '1px solid #f0f0f0',
-              }}
-            >
-              <List.Item.Meta
-                title={
-                  <div
-                    style={{
-                      color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
-                      fontWeight: item.isRead ? 'normal' : 'bold',
-                      whiteSpace: 'normal',
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                }
-                description={
-                  <>
-                    <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                      {item.content}
-                    </Text>
-                    <br />
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
-                      {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                    </Text>
-                  </>
-                }
-              />
-            </List.Item>
-          )}
+        <NotificationDropdown
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={handleNotificationClick}
+          onMarkAllAsRead={handleMarkAllAsRead}
         />
-      ),
-    },
+      )
+    }
   ];
 
   const menuItems = [
@@ -165,6 +138,11 @@ const StaffLayout = () => {
       key: 'my-schedule',
       icon: <CalendarOutlined />,
       label: 'Các xét nghiệm đang thực hiện',
+    },
+    {
+      key: 'work-schedule',
+      icon: <CalendarOutlined />,
+      label: 'Lịch làm việc',
     },
     {
       key: 'my-profile',
@@ -177,8 +155,10 @@ const StaffLayout = () => {
     switch (selectedKey) {
       case 'my-schedule':
         return <StaffSchedule />;
+      case 'work-schedule':
+        return <Schedule />;
       case 'my-profile':
-        return <Profile hideBackButton={true} />; 
+        return <Profile hideBackButton={true} />;
       default:
         return <StaffSchedule />;
     }
@@ -260,7 +240,7 @@ const StaffLayout = () => {
         <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
             <Badge count={unreadCount}>
-              <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+              <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
             </Badge>
           </Dropdown>
         </Header>
