@@ -96,7 +96,7 @@ export const assignTestToStaff = async (testServiceRecordId, staffId) => {
 };
 
 export const updateTestResult = async (staffId, data) => {
-     return await axios.put('/api/TestServiceRecord/update-result', data, {
+     return await api.put('/TestServiceRecord/update-result', data, {
           params: { staffId }
      });
 };
@@ -138,6 +138,7 @@ export const messageApi = {
 export const specialtyApi = {
      getAllSpecialties: () => api.get('/specialty/getAll'),
      getSpecialtyById: (id) => api.get(`/specialty/getById/${id}`),
+     getSpecialtiesByUserId: (userId) => api.get(`/specialty/getByUserID/${userId}`),
      updateSpecialty: (data) => api.put('/specialty/update', data),
      createSpecialty: (data) => api.post('/specialty/create', data),
      deleteSpecialty: (id) => api.delete(`/specialty/delete/${id}`),
@@ -169,7 +170,14 @@ export const manageUserApi = {
      updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
      updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
      addSpecialty: (userId, specialtyId) => api.post('/manageUser/addSpecialty', { userId, specialtyId }),
+     deleteSpecialty: (userId, specialtyId) => api.delete('/manageUser/deleteSpecialty', { data: { userId, specialtyId } }),
+     getUserSchedule: (userId) => api.get(`/WeeklySchedule/user/${userId}`),
+     addWorkSchedule: (data) => api.post('/WeeklySchedule', data),
+     deleteWorkSchedule: (weeklyScheduleId) => api.delete(`/WeeklySchedule/${weeklyScheduleId}`),
 };
+
+export const getWeeklySchedule = (userId, offset = 0) =>
+     api.get(`/schedule/week/${userId}`, { params: { offset } });
 
 // Request interceptor
 api.interceptors.request.use(

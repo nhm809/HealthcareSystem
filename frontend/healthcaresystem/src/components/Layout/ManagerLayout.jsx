@@ -20,6 +20,9 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 import ServiceManagement from '../../pages/Manager/ServiceManagement';
 import EmployeeManagement from '../../pages/Manager/EmployeeManagement';
 import SpecialtyManagement from '../../pages/Manager/SpecialtyManagement';
+import NotificationDropdown from '../NotificationDropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -106,58 +109,26 @@ const ManagerLayout = () => {
           } catch (err) {}
      };
 
+     const handleMarkAllAsRead = async () => {
+          try {
+               await notiApi.markAllAsRead(Cookies.get('userId'));
+               setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+               setUnreadCount(0);
+          } catch (err) {}
+     };
+
      const notificationItems = [
           {
                key: 'notifications',
                label: (
-                    <List
-                         style={{
-                              width: 300,
-                              maxHeight: 400,
-                              overflow: 'auto',
-                              overflowX: 'hidden',
-                         }}
-                         dataSource={notifications}
-                         renderItem={(item) => (
-                              <List.Item
-                                   onClick={() => handleNotificationClick(item.notificationId)}
-                                   style={{
-                                        cursor: 'pointer',
-                                        backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                                        padding: '8px 12px',
-                                        borderBottom: '1px solid #f0f0f0',
-                                   }}
-                              >
-                                   <List.Item.Meta
-                                        title={
-                                             <div
-                                                  style={{
-                                                       color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
-                                                       fontWeight: item.isRead ? 'normal' : 'bold',
-                                                       whiteSpace: 'normal',
-                                                       wordBreak: 'break-word',
-                                                  }}
-                                             >
-                                                  {item.title}
-                                             </div>
-                                        }
-                                        description={
-                                             <>
-                                                  <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                                       {item.content}
-                                                  </Text>
-                                                  <br />
-                                                  <Text type="secondary" style={{ fontSize: '12px' }}>
-                                                       {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                                                  </Text>
-                                             </>
-                                        }
-                                   />
-                              </List.Item>
-                         )}
+                    <NotificationDropdown
+                         notifications={notifications}
+                         unreadCount={unreadCount}
+                         onMarkAsRead={handleNotificationClick}
+                         onMarkAllAsRead={handleMarkAllAsRead}
                     />
-               ),
-          },
+               )
+          }
      ];
 
      const menuItems = [
@@ -279,7 +250,7 @@ const ManagerLayout = () => {
                     <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                          <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
                               <Badge count={unreadCount}>
-                                   <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+                                   <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
                               </Badge>
                          </Dropdown>
                     </Header>
