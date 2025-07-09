@@ -55,6 +55,25 @@ public class SpecialtyController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("getByUserID/{userId}")]
+    public async Task<IActionResult> GetByUserIdAsync(int userId)
+    {
+        try
+        {
+            var specialties = await _specialtyService.GetByUserIdAsync(userId);
+            if (specialties == null || !specialties.Any())
+            {
+                return NotFound(new { success = false, message = "No specialties found for this user." });
+            }
+            return Ok(new { success = true, data = specialties });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new { success = false, message = ex.Message });
+        }
+    }
+
 
     [HttpPost]
     [Route("create")]

@@ -53,6 +53,10 @@ export const authApi = {
 
      getTestServiceRecordDetail: (testServiceRecordId, memberId) =>
           api.get(`/TestServiceRecord/${testServiceRecordId}/${memberId}`),
+
+     // OTP for registration
+     sendOtpRegisterVerify: (userId) => api.post(`/otp/sendOtpByUserId/${userId}`),
+     verifyOtpRegister: (userId, code) => api.post('/otp/verify', { UserId: userId, Code: code }),
 };
 
 export const notiApi = {
@@ -92,7 +96,7 @@ export const assignTestToStaff = async (testServiceRecordId, staffId) => {
 };
 
 export const updateTestResult = async (staffId, data) => {
-     return await axios.put('/api/TestServiceRecord/update-result', data, {
+     return await api.put('/TestServiceRecord/update-result', data, {
           params: { staffId }
      });
 };
@@ -133,6 +137,11 @@ export const messageApi = {
 
 export const specialtyApi = {
      getAllSpecialties: () => api.get('/specialty/getAll'),
+     getSpecialtyById: (id) => api.get(`/specialty/getById/${id}`),
+     getSpecialtiesByUserId: (userId) => api.get(`/specialty/getByUserID/${userId}`),
+     updateSpecialty: (data) => api.put('/specialty/update', data),
+     createSpecialty: (data) => api.post('/specialty/create', data),
+     deleteSpecialty: (id) => api.delete(`/specialty/delete/${id}`),
 };
 
 export const consultantBlogApi = {
@@ -152,6 +161,23 @@ export const subQuestionApi = {
      answerSubQuestion: (data) => api.post('/subQuestion/answer', data),
      updateSubQuestion: (threadItemId, data) => api.put(`/subQuestion/update/${threadItemId}`, data),
 };
+
+export const manageUserApi = {
+     getAllUsers: () => api.get('/manageUser/getAllUsers'),
+     getUserById: (userId) => api.get(`/manageUser/getUser/${userId}`),
+     updateUserStatus: (userId, isActive) => api.put(`/manageUser/updateStatus/${userId}`, { isActive }),
+     updateUserAvailability: (userId, isAvailable) => api.put(`/manageUser/updateAvailability/${userId}`, { isAvailable }),
+     updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
+     updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
+     addSpecialty: (userId, specialtyId) => api.post('/manageUser/addSpecialty', { userId, specialtyId }),
+     deleteSpecialty: (userId, specialtyId) => api.delete('/manageUser/deleteSpecialty', { data: { userId, specialtyId } }),
+     getUserSchedule: (userId) => api.get(`/WeeklySchedule/user/${userId}`),
+     addWorkSchedule: (data) => api.post('/WeeklySchedule', data),
+     deleteWorkSchedule: (weeklyScheduleId) => api.delete(`/WeeklySchedule/${weeklyScheduleId}`),
+};
+
+export const getWeeklySchedule = (userId, offset = 0) =>
+     api.get(`/schedule/week/${userId}`, { params: { offset } });
 
 // Request interceptor
 api.interceptors.request.use(
@@ -227,5 +253,7 @@ api.interceptors.response.use(
           return Promise.reject(error);
      }
 );
+
+export const deleteService = (serviceId) => api.delete(`/Service/${serviceId}`);
 
 export default api;

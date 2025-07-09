@@ -19,9 +19,13 @@ namespace HealthcareSystem.Infrastructure.Services
 
         public async Task<WeeklyScheduleDTO> CreateWeeklyScheduleAsync(CreateWeeklyScheduleDTO createDto)
         {
+            Console.WriteLine($"CreateWeeklyScheduleAsync called with: UserId={createDto.UserId}, DayOfWeek={createDto.DayOfWeek}, ShiftType={createDto.ShiftType}");
+            
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserId == createDto.UserId && 
-                                         (u.RoleId == "ST" || u.RoleId == "CT"));
+                                         (u.RoleId == "ST" || u.RoleId == "CS"));
+
+            Console.WriteLine($"User found: {user?.UserId}, Role: {user?.RoleId}");
 
             if (user == null)
             {
@@ -212,7 +216,7 @@ namespace HealthcareSystem.Infrastructure.Services
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserId == userId && 
-                                         (u.RoleId == "ST" || u.RoleId == "CT"));
+                                         (u.RoleId == "ST" || u.RoleId == "CS"));
 
             if (user == null)
             {

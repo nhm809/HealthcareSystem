@@ -10,5 +10,6 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? PhoneNumber { get; set; }
         public DateOnly? CreateDate { get; set; }
+        public int? SpecialtyId { get; set; }
     }
 }

@@ -25,11 +25,37 @@ namespace Infrastructure.Services
             _config = config;
         }
 
-        public async Task<bool> RegisterAsync(RegisterDTO dto)
+        public async Task<int> RegisterAsync(RegisterDTO dto)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (existingUser != null)
             {
-                throw new Exception("Email already exists.");
+                if (existingUser.IsAvailable)
+                {
+                    throw new Exception("Email already exists.");
+                }
+                else
+                {
+                    existingUser.PhoneNumber = dto.PhoneNumber;
+                    existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+                    existingUser.CreateDate = DateOnly.FromDateTime(DateTime.Now);
+                    existingUser.Provider = "Local";
+                    existingUser.RoleId = "MB";
+                    existingUser.IsAvailable = false;
+
+                    try
+                    {
+                        _context.Users.Update(existingUser);
+                        await _context.SaveChangesAsync();
+
+                        return existingUser.UserId;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Database error: " + (ex.InnerException?.Message ?? ex.Message));
+                    }
+                }
             }
 
             if (await _context.Users.AnyAsync(u => u.PhoneNumber == dto.PhoneNumber))
@@ -43,20 +69,24 @@ namespace Infrastructure.Services
                 PhoneNumber = dto.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Provider = "Local",
-                RoleId = "MB"
+                RoleId = "MB",
+                IsAvailable = false,
+                CreateDate = DateOnly.FromDateTime(DateTime.Now)
             };
 
             try
             {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return true;
+
+                return user.UserId;
             }
             catch (Exception ex)
             {
                 throw new Exception("Database error: " + (ex.InnerException?.Message ?? ex.Message));
             }
         }
+
 
 
         public async Task<LoginResponseDTO> LoginAsync(LoginDTO dto)
@@ -66,6 +96,11 @@ namespace Infrastructure.Services
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
                 throw new Exception("Invalid email or password.");
+            }
+
+            if (!user.IsAvailable)
+            {
+                throw new Exception("User is not available.");
             }
 
             var RefreshToken = user.RefreshToken;
