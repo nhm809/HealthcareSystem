@@ -52,7 +52,7 @@ function AppointmentDetailModal({ open, onClose, appointmentId, onUpdateSuccess 
     const renderStatus = (status) => {
         const map = {
             'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
-            'da hoan thanh': { color: 'success', text: 'Hoàn thành' },
+            'da hoan thanh': { color: 'success', text: 'Đa hoàn thành' },
             'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
             'da huy': { color: 'default', text: 'Đã hủy' },
         };
@@ -106,32 +106,6 @@ function AppointmentDetailModal({ open, onClose, appointmentId, onUpdateSuccess 
                     )}
                 </Descriptions.Item>
             </Descriptions>
-            // <>
-            //     <Paragraph><Text strong>Khách hàng:</Text> {detail.memberName}</Paragraph>
-            //     <Paragraph><Text strong>Dịch vụ:</Text> {detail.serviceName}</Paragraph>
-            //     <Paragraph>
-            //         <Text strong>Thời gian:</Text> {dayjs(detail.startTime).format('DD/MM/YYYY HH:mm')} - {dayjs(detail.endTime).format('HH:mm')}
-            //     </Paragraph>
-            //     <Paragraph><Text strong>Triệu chứng:</Text> {detail.symptoms}</Paragraph>
-
-            //     <Paragraph><Text strong>Trạng thái:</Text></Paragraph>
-            //     <Select
-            //         value={status}
-            //         onChange={(value) => setStatus(value)}
-            //         style={{ width: '100%', marginBottom: 16 }}
-            //     >
-            //         <Option value="Dang cho kham">Đang chờ khám</Option>
-            //         <Option value="Da hoan thanh">Đã hoàn thành</Option>
-            //         <Option value="Da huy">Đã hủy</Option>
-            //     </Select>
-
-            //     <Paragraph><Text strong>Link Google Meet:</Text></Paragraph>
-            //     <Input
-            //         value={meetLink}
-            //         onChange={(e) => setMeetLink(e.target.value)}
-            //         placeholder="https://meet.google.com/..."
-            //     />
-            // </>
         ) : (
             <p>Đang tải dữ liệu...</p>
         )}
