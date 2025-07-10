@@ -25,7 +25,7 @@ function BookingConfirmation() {
     // const notiSentRef = useRef({});
     const navigate = useNavigate();
     const location = useLocation();
-    const { doctor, selectedDate, selectedTime } = location.state || {};
+    const { doctor, selectedDate, selectedTime, service } = location.state || {};
     const userId = Cookies.get('userId');
 
     useEffect(() => {
@@ -202,7 +202,7 @@ function BookingConfirmation() {
                             <p className="doctor-specialties">Chuyên khoa: {doctor?.specialties?.map(s => s.name).join(', ')}</p>
                             <p className="doctor-name">{doctor?.fullName}</p>
                         </div>
-                        <div className="price">150.000đ</div>
+                        <div className="price">{service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}</div>
                     </div>
                 </div>
 
@@ -236,6 +236,7 @@ function BookingConfirmation() {
                     onClose={() => setShowConfirmModal(false)}
                     doctor={doctor}
                     user={user}
+                    service={service}
                     selectedDate={selectedDate}
                     selectedTime={selectedTime}
                     symptom={symptom}

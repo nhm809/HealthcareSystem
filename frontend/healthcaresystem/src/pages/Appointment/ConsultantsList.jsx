@@ -1,5 +1,5 @@
 import { Card, Row, Col, Pagination, Select, Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import MainLayout from '@components/Layout/Layout';
@@ -16,9 +16,14 @@ const { Search } = Input;
  
 function Appointment() {
 
+     const [specialties, setSpecialties] = useState([]);
+     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
+     const [searchTerm, setSearchTerm] = useState('');
      const [doctors, setDoctors] = useState([]);
      const [currentPage, setCurrentPage] = useState(1);
      const navigate = useNavigate();
+     const { state } = useLocation();
+     const serviceId = state?.serviceId;     
 
      useEffect(() => {
           const fetchDoctors = async () => {
@@ -29,15 +34,31 @@ function Appointment() {
                          id: item.consultantId,
                          name: item.fullName,
                          specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
-                         // image: defaultdoctoravatar,
+                         image:  item.avatar?.trim() ? item.avatar : defaultdoctoravatar,                        
                     }));
+                    console.error(mappedDoctors);
                     setDoctors(mappedDoctors);
                } catch (error) {
                     console.error("Lỗi khi lấy danh sách bác sĩ:", error);
                }
           }; 
+          const fetchSpecialties = async () => {
+               try {
+                    const response = await api.get('/specialty/getAll');
+                    setSpecialties(response.data.data);
+               } catch (error) {
+                    console.error("Lỗi khi lấy danh sách chuyên khoa:", error);
+               }
+          };
+          fetchSpecialties();
           fetchDoctors();
      }, []);
+
+     const filteredDoctors = doctors.filter((doctor) => {
+          const matchSpecialty = !selectedSpecialty || doctor.specialization === selectedSpecialty;
+          const matchSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
+          return matchSpecialty && matchSearch;
+     });
 
      return (
           <MainLayout>
@@ -48,49 +69,40 @@ function Appointment() {
                          placeholder='Tìm bác sĩ, ...'
                          enterButton
                          className='doctor-list-search'
+                         onSearch={(value) => setSearchTerm(value)}
                     />
 
                     <div className='doctor-list-filters'>
                          <p>Chọn bác sĩ</p>
                          <Row gutter={[16,16]} justify={'center'} className='filters'>
                               <Col>
-                                   <Select placeholder='Chuyên khoa' className='filter-select'>
-                                        <Option value='sanphukhoa'>Sản phụ khoa</Option>
-                                        <Option value='nhi'>Nhi</Option>
-                                   </Select>
-                              </Col>
-                              <Col>
-                                   <Select placeholder='Ngày khám' className='filter-select'>
-                                        <Option value='today'>Hôm nay</Option>
-                                        <Option value='tomorrow'>Ngày mai</Option>
-                                   </Select>
-                              </Col>
-                              <Col>
-                                   <Select placeholder='Đánh giá' className='filter-select'>
-                                        <Option value='high'>Cao nhất</Option>
-                                        <Option value='low'>Thấp nhất</Option>
+                                   <Select
+                                        placeholder='Chuyên khoa'
+                                        className='filter-select'
+                                        allowClear
+                                        onChange={(value) => setSelectedSpecialty(value)}
+                                   >
+                                        {specialties.map((s) => (
+                                             <Option key={s.id} value={s.name}>{s.name}</Option>
+                                        ))}
                                    </Select>
                               </Col>
                          </Row>
                     </div>
 
                     <Row gutter={[16,16]}>
-                         {doctors.map((doctor) => (
+                         {filteredDoctors.slice((currentPage - 1) * 8, currentPage * 8).map((doctor) => (
                               <Col key={doctor.id} xs={24} sm={12} md={8} lg={6}>
                                    <Card 
                                         hoverable
                                         cover={
-                                             doctor.image ? (
-                                                  <img alt="doctor" src={defaultdoctoravatar} onClick={() => navigate(`/appointment/${doctor.id}`)} />
-                                             ) : (
-                                                  <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`)}>
-                                                       <img alt="doctor" src={defaultdoctoravatar}/>
-                                                  </div>
-                                             )
+                                             <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId } })}>
+                                                  <img alt="doctor" src={doctor.image}/>
+                                             </div>
                                         }
                                    >
                                         <Card.Meta title={doctor.name} description={doctor.specialization} />
-                                        <button className="book-button" onClick={() => navigate(`/appointment/${doctor.id}`)}>
+                                             <button className="book-button" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId } })}>
                                              <FontAwesomeIcon icon={faStethoscope} className="icon" />
                                              Đặt tư vấn
                                         </button>
@@ -103,7 +115,7 @@ function Appointment() {
                          <Pagination
                               current={currentPage}
                               onChange={setCurrentPage}
-                              total={doctors.length}
+                              total={filteredDoctors.length}
                               pageSize={8}
                          />
                     </div>

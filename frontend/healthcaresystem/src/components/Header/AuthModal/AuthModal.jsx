@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Modal, Box, Typography, Tabs, Tab } from '@mui/material';
 import FormInput from '../../FormInput/FormInput';
 import Button from '../../Button/Button';
@@ -31,6 +31,33 @@ function AuthModal({ open, onClose }) {
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const navigate = useNavigate();
+    const [showOtpVerify, setShowOtpVerify] = useState(false);
+    const [otpRegister, setOtpRegister] = useState('');
+    const [registerUserId, setRegisterUserId] = useState(null);
+    const [otpRegisterError, setOtpRegisterError] = useState('');
+    const [isOtpRegisterLoading, setIsOtpRegisterLoading] = useState(false);
+    const [otpCountdown, setOtpCountdown] = useState(180); // 3 phút = 180 giây
+    const otpTimerRef = useRef();
+
+    // Bắt đầu đếm ngược khi showOtpVerify
+    useEffect(() => {
+        if (showOtpVerify) {
+            setOtpCountdown(180);
+            if (otpTimerRef.current) clearInterval(otpTimerRef.current);
+            otpTimerRef.current = setInterval(() => {
+                setOtpCountdown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(otpTimerRef.current);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        } else {
+            if (otpTimerRef.current) clearInterval(otpTimerRef.current);
+        }
+        return () => { if (otpTimerRef.current) clearInterval(otpTimerRef.current); };
+    }, [showOtpVerify]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -90,7 +117,12 @@ function AuthModal({ open, onClose }) {
             }
         } catch (err) {
             console.error(err);
-            setError('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+            const msg = err.response?.data?.message || err.response?.data || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
+            if (msg === 'User is not available.') {
+                setError('Tài khoản của bạn không được phép đăng nhập vào hệ thống');
+            } else {
+                setError(msg);
+            }
             setInputErrors({});
         }
     };
@@ -116,14 +148,72 @@ function AuthModal({ open, onClose }) {
             });
 
             if (response.data.success) {
-                setTab(0);
+                // Lấy userId từ response
+                const userId = response.data.userId || response.data.data?.userId;
+                setRegisterUserId(userId);
+                // Gửi OTP
+                setIsOtpRegisterLoading(true);
+                await authApi.sendOtpRegisterVerify(userId);
+                setIsOtpRegisterLoading(false);
+                setShowOtpVerify(true);
                 setError('');
-                toast.success(response.data.message);
+                toast.success('Đăng ký thành công. Vui lòng kiểm tra email để lấy mã OTP xác thực.');
             }
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
             setInputErrors({});
+        }
+    };
+
+    const handleVerifyOtpRegister = async (e) => {
+        e.preventDefault();
+        setOtpRegisterError('');
+        setIsOtpRegisterLoading(true);
+        try {
+            const res = await authApi.verifyOtpRegister(registerUserId, otpRegister);
+            if (res.data.success || res.data === 'OTP xác thực thành công.') {
+                toast.success('Xác thực OTP thành công! Bạn có thể đăng nhập.');
+                setShowOtpVerify(false);
+                setTab(0); // Chuyển về tab đăng nhập
+                setOtpRegister('');
+                setRegisterUserId(null);
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                setPhoneNumber('');
+                setInputErrors({});
+            } else {
+                setOtpRegisterError(res.data.message || 'Xác thực OTP thất bại.');
+            }
+        } catch (err) {
+            setOtpRegisterError(err.response?.data?.message || 'Xác thực OTP thất bại.');
+        } finally {
+            setIsOtpRegisterLoading(false);
+        }
+    };
+
+    const handleResendOtpRegister = async () => {
+        setOtpRegisterError('');
+        setIsOtpRegisterLoading(true);
+        try {
+            await authApi.sendOtpRegisterVerify(registerUserId);
+            toast.success('Đã gửi lại OTP đến email của bạn.');
+            setOtpCountdown(180); // reset countdown
+            if (otpTimerRef.current) clearInterval(otpTimerRef.current);
+            otpTimerRef.current = setInterval(() => {
+                setOtpCountdown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(otpTimerRef.current);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        } catch (err) {
+            setOtpRegisterError('Gửi lại OTP thất bại.');
+        } finally {
+            setIsOtpRegisterLoading(false);
         }
     };
 
@@ -318,7 +408,7 @@ function AuthModal({ open, onClose }) {
                                 </form>
                             )}
 
-                            {tab === 1 && (
+                            {tab === 1 && !showOtpVerify && (
                                 <form className="auth-form" onSubmit={handleRegister} noValidate>
                                     <FormInput
                                         label="Email"
@@ -359,6 +449,33 @@ function AuthModal({ open, onClose }) {
                                         <img src="https://images.icon-icons.com/2429/PNG/512/google_logo_icon_147282.png" alt="Google" className="google-icon" />
                                         Đăng ký với Google
                                     </button>
+                                </form>
+                            )}
+                            {tab === 1 && showOtpVerify && (
+                                <form className="auth-form" onSubmit={handleVerifyOtpRegister}>
+                                    <Typography variant="h6" style={{ marginBottom: 8 }}>Nhập mã OTP đã gửi đến email</Typography>
+                                    <FormInput
+                                        label="Mã OTP"
+                                        value={otpRegister}
+                                        onChange={e => setOtpRegister(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                        error={otpRegisterError}
+                                        maxLength={6}
+                                    />
+                                    {otpCountdown > 0 ? (
+                                        <Typography style={{ color: '#1976d2', marginBottom: 8 }}>
+                                            Mã OTP sẽ hết hạn sau: {Math.floor(otpCountdown/60).toString().padStart(2, '0')}:{(otpCountdown%60).toString().padStart(2, '0')}
+                                        </Typography>
+                                    ) : (
+                                        <Button type="button" id="btn-style" onClick={handleResendOtpRegister} disabled={isOtpRegisterLoading} style={{ marginBottom: 8 }}>
+                                            Gửi lại OTP
+                                        </Button>
+                                    )}
+                                    <Button type="submit" id="btn-style" disabled={isOtpRegisterLoading || otpRegister.length !== 6 || otpCountdown === 0}>
+                                        XÁC THỰC OTP
+                                    </Button>
+                                    {otpRegisterError && (
+                                        <Typography className="error-message">{otpRegisterError}</Typography>
+                                    )}
                                 </form>
                             )}
                         </>

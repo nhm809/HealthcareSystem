@@ -20,6 +20,7 @@ import { notiApi } from '../../services/api';
 import dayjs from 'dayjs';
 import { authApi } from '../../services/api';
 import  logo  from '../../assets/imgs/logo.png'
+import NotificationDropdown from '../NotificationDropdown';
 
 const { Text } = Typography;
 
@@ -183,141 +184,12 @@ function Header() {
     {
       key: 'notifications',
       label: (
-        <div style={{ padding: '0' }}>
-          <div style={{
-            padding: '12px 16px',
-            borderBottom: '1px solid #f0f0f0',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: '#fafafa'
-          }}>
-            <Text strong style={{ fontSize: '14px', color: '#333' }}>
-              Thông báo {unreadCount > 0 && `(${unreadCount} mới)`}
-            </Text>
-            {unreadCount > 0 && (
-              <Button
-                type="text"
-                size="small"
-                onClick={handleMarkAllAsRead}
-                style={{
-                  fontSize: '12px',
-                  color: '#54AA7F',
-                  padding: '0',
-                  height: 'auto'
-                }}
-              >
-                <FontAwesomeIcon icon={faCheckDouble} style={{ marginRight: '4px' }} />
-                Đánh dấu đã đọc hết
-              </Button>
-            )}
-          </div>
-          
-          {notifications.length === 0 ? (
-            <div style={{
-              padding: '40px 16px',
-              textAlign: 'center',
-              color: '#999'
-            }}>
-              <FontAwesomeIcon 
-                icon={faBell} 
-                style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.5 }} 
-              />
-              <br />
-              <Text type="secondary">Không có thông báo nào</Text>
-            </div>
-          ) : (
-            <List
-              style={{
-                width: 350,
-                maxHeight: 400,
-                overflow: 'auto',
-                overflowX: 'hidden'
-              }}
-              dataSource={notifications}
-              renderItem={item => (
-                <List.Item
-                  onClick={() => handleNotificationClick(item.notificationId)}
-                  style={{
-                    cursor: 'pointer',
-                    backgroundColor: item.isRead ? 'transparent' : '#f8fffe',
-                    padding: '12px 16px',
-                    transition: 'all 0.3s ease',
-                    borderBottom: '1px solid #f0f0f0',
-                    position: 'relative',
-                    ':hover': {
-                      backgroundColor: item.isRead ? '#f5f5f5' : '#e6f7ff',
-                      transform: 'translateX(2px)'
-                    }
-                  }}
-                  className="notification-item"
-                >
-                  {!item.isRead && (
-                    <div style={{
-                      position: 'absolute',
-                      left: '8px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: '6px',
-                      height: '6px',
-                      backgroundColor: '#54AA7F',
-                      borderRadius: '50%'
-                    }} />
-                  )}
-                  
-                  <List.Item.Meta
-                    style={{ marginLeft: item.isRead ? '0' : '16px' }}
-                    title={
-                      <div style={{
-                        color: item.isRead ? '#666' : '#54AA7F',
-                        fontWeight: item.isRead ? 'normal' : '600',
-                        whiteSpace: 'normal',
-                        wordBreak: 'break-word',
-                        fontSize: '13px',
-                        lineHeight: '1.4',
-                        marginBottom: '4px'
-                      }}>
-                        {item.title}
-                      </div>
-                    }
-                    description={
-                      <div>
-                        <Text 
-                          type="secondary" 
-                          style={{ 
-                            whiteSpace: 'normal', 
-                            wordBreak: 'break-word',
-                            fontSize: '12px',
-                            lineHeight: '1.4',
-                            color: item.isRead ? '#999' : '#666'
-                          }}
-                        >
-                          {item.content.split('\n').map((line, index) => (
-                            <React.Fragment key={index}>
-                              {line}
-                              <br />
-                            </React.Fragment>
-                          ))}
-                        </Text>
-                        <div style={{ marginTop: '6px' }}>
-                          <Text 
-                            type="secondary" 
-                            style={{ 
-                              fontSize: '11px',
-                              color: '#bbb'
-                            }}
-                          >
-                            {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                          </Text>
-                        </div>
-                      </div>
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-          )}
-        </div>
+        <NotificationDropdown
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={handleNotificationClick}
+          onMarkAllAsRead={handleMarkAllAsRead}
+        />
       )
     }
   ];
@@ -422,7 +294,11 @@ function Header() {
 
           <div className="service-dropdown-content">
               <button className="stis-button" onClick={(() => navigate('/test-sti'))}>Xét Nghiệm STIs</button>
-              <button onClick={() => navigate('/appointment')}>Tư vấn Trực Tuyến</button>
+              <button onClick={() => navigate('/appointment', {
+                state: { serviceId: 2 }
+              })}>
+                Tư vấn Trực Tuyến
+              </button>
             </div>
           </div>
 

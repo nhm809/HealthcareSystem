@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';   
+import { useParams, useNavigate, useLocation } from 'react-router-dom';   
 import { Card, Select, Button } from 'antd';
 import './ConsultantDetail.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,6 +23,10 @@ function DoctorDetail() {
     const { id } = useParams();
     const [doctor, setDoctor] = useState(null);
     const [availableSlots, setAvailableSlots] = useState([]);
+    const [service, setService] = useState(null);
+    const { state } = useLocation();
+    const serviceId = state?.serviceId;
+
 
     const today = dayjs();
     const [selectedDate, setSelectedDate] = useState(today.format('YYYY-MM-DD'));
@@ -77,6 +81,18 @@ function DoctorDetail() {
         fetchDoctor();
     }, [id]);
 
+    useEffect(() => {
+        const fetchService = async () => {
+            try {
+                const response = await api.get(`/Service/${serviceId}`);
+                setService(response.data);
+            } catch (error) {
+                console.error("Lỗi tải thông tin dịch vụ:", error);
+            }
+        };
+        fetchService();
+    }, []);
+
     const handleTimeSelect = (time) => {
         setSelectedTime(time);
     };
@@ -107,7 +123,7 @@ function DoctorDetail() {
             <div className="doctor-detail-container">
                 <div className="doctor-info">
                     <img
-                        src={defaultdoctoravatar}
+                        src={doctor.avatar?.trim() ? doctor.avatar : defaultdoctoravatar}
                         alt="doctor"
                         className="doctor-image"
                     />
@@ -160,7 +176,8 @@ function DoctorDetail() {
                                     <span>
                                         <FontAwesomeIcon icon={faCircleCheck} />
                                     </span>
-                                    <strong>Tư vấn trực tuyến với {doctor?.fullName}</strong> 150.000 đ
+                                    <strong>Tư vấn trực tuyến với {doctor?.fullName}</strong>{' '}
+                                    {service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}
                                 </p>
                                 <Button
                                     type="primary"
@@ -170,6 +187,7 @@ function DoctorDetail() {
                                         doctor: doctor,
                                         selectedDate,
                                         selectedTime,
+                                        service: service,
                                         }
                                     })}
                                 >

@@ -84,13 +84,13 @@ const TestHistory = () => {
 
   const handlePayment = (record) => {
     // Navigate to payment page with test record info
-    navigate('/test-sti', { 
-      state: { 
+    navigate('/test-sti', {
+      state: {
         testRecordId: record.testServiceRecordId,
         serviceName: record.serviceName,
         amount: record.price || 0,
         isFromHistory: true
-      } 
+      }
     });
   };
 
@@ -114,13 +114,19 @@ const TestHistory = () => {
           feedbackDate: new Date().toISOString()
         })
       });
-      // Gọi API cập nhật status thành 'Da danh gia'
-      try {
-        await updateTestResult(null, {
-          testServiceRecordId: feedbackRecord.testServiceRecordId,
-          status: 'Da danh gia'
-        });
-      } catch {}
+      // Kiểm tra staffId
+      if (!feedbackRecord.staffId) {
+        message.error('Không tìm thấy nhân viên thực hiện để cập nhật trạng thái!');
+        setFeedbackLoading(false);
+        return;
+      }
+
+      await updateTestResult(feedbackRecord.staffId, {
+        testServiceRecordId: feedbackRecord.testServiceRecordId,
+        result: '',
+        notes: '',
+        status: 'Da danh gia'
+      });
       message.success('Đánh giá thành công!');
       setFeedbackModalVisible(false);
       setFeedbackRecord(null);
@@ -174,8 +180,8 @@ const TestHistory = () => {
         const status = (record.status || '').toLowerCase();
         if (status === 'dang thanh toan' || status === 'pending') {
           return (
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               size="small"
               onClick={(e) => {
                 e.stopPropagation();
@@ -209,7 +215,11 @@ const TestHistory = () => {
 
   // Helper để lọc theo trạng thái
   const filterByStatus = (statusList) =>
-    testRecords.filter(r => statusList.includes((r.status || '').toLowerCase()));
+    testRecords.filter(
+      r =>
+        statusList.includes((r.status || '').toLowerCase()) &&
+        (r.status || '').toLowerCase() !== 'da danh gia'
+    );
 
   const filterFeedback = () =>
     testRecords.filter(r => (r.status || '').toLowerCase() === 'da danh gia');
@@ -300,12 +310,12 @@ const TestHistory = () => {
       )
     },
     {
-      key: 'da-huy',
-      label: 'Đã hủy',
+      key: 'da-danh-gia',
+      label: 'Đã đánh giá',
       children: (
         <Table
           columns={columns}
-          dataSource={filterByStatus(['cancelled', 'da huy', 'khach hang khong den'])}
+          dataSource={filterFeedback()}
           rowKey="testServiceRecordId"
           pagination={{
             pageSize: 10,
@@ -321,12 +331,12 @@ const TestHistory = () => {
       )
     },
     {
-      key: 'da-danh-gia',
-      label: 'Đã đánh giá',
+      key: 'da-huy',
+      label: 'Đã hủy',
       children: (
         <Table
           columns={columns}
-          dataSource={filterFeedback()}
+          dataSource={filterByStatus(['cancelled', 'da huy', 'khach hang khong den'])}
           rowKey="testServiceRecordId"
           pagination={{
             pageSize: 10,
@@ -514,13 +524,12 @@ const TestHistory = () => {
           open={feedbackModalVisible}
           onCancel={() => setFeedbackModalVisible(false)}
           footer={null}
-          destroyOnClose
         >
           <Form form={form} layout="vertical" onFinish={submitFeedback}>
-            <Form.Item name="rating" label="Chất lượng dịch vụ" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}> 
+            <Form.Item name="rating" label="Chất lượng dịch vụ" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}>
               <Rate allowClear={false} />
             </Form.Item>
-            <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}> 
+            <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}>
               <Input.TextArea rows={4} placeholder="Nhận xét của bạn về dịch vụ..." />
             </Form.Item>
             <Form.Item>
