@@ -55,7 +55,7 @@ function Question() {
                         title: q.titleQuestion,
                         date: q.submitDate ? dayjs(q.submitDate).format('DD/MM/YYYY') : '',
                         content: q.content,
-                        answers: q.isAnswered,
+                        status: q.status,
                         gender: q.gender,
                         age: q.age,
                         likes: q.heartCount,
@@ -76,7 +76,7 @@ function Question() {
                         title: q.titleQuestion,
                         date: q.submitDate ? dayjs(q.submitDate).format('DD/MM/YYYY') : '',
                         content: q.content,
-                        answers: q.isAnswered,
+                        status: q.status,
                         gender: q.gender,
                         age: q.age,
                         likes: q.heartCount,
@@ -238,6 +238,20 @@ function Question() {
         return found ? found.name : 'Chuyên khoa khác';
     };
 
+    // Hàm xử lý hiển thị trạng thái câu hỏi
+    const getQuestionStatus = (status) => {
+        if (status === 'Da dong') {
+            return { text: 'Đã đóng', color: '#ff4d4f' };
+        } else {
+            return { text: 'Đang mở', color: '#52c41a' };
+        }
+    };
+
+    // Hàm kiểm tra câu hỏi có thể thêm câu hỏi con không
+    const canAddSubQuestion = (question) => {
+        return question.status !== 'Da dong' && userId == question?.memberId;
+    };
+
     // Hàm kiểm tra trạng thái đã cảm ơn
     const checkHeartStatus = async (questionId) => {
         const currentUserId = Cookies.get('userId');
@@ -364,16 +378,16 @@ function Question() {
                                                 >
                                                     {getSpecialtyName(selectedQuestion.specialtyId)}
                                                 </Tag>
-                                                <Tag
-                                                    color={selectedQuestion.answers ? customStyles.primaryColor : '#faad14'}
-                                                    style={{
+                                                                                                <Tag 
+                                                    color={getQuestionStatus(selectedQuestion.status).color}
+                                                    style={{ 
                                                         border: 'none',
                                                         borderRadius: 6,
                                                         fontWeight: 500
                                                     }}
                                                 >
-                                                    {selectedQuestion.answers ? 'Đã trả lời' : 'Đang mở'}
-                                    </Tag>
+                                                    {getQuestionStatus(selectedQuestion.status).text}
+                                                </Tag>
                                             </Space>
 
                                             <Title level={3} style={{
@@ -436,23 +450,23 @@ function Question() {
                                         <Divider style={{ margin: '32px 0' }} />
 
                                 {/* SubQuestionList hiển thị trao đổi chi tiết */}
-                                <SubQuestionList
-                                    question={selectedQuestion}
-                                    isConsultant={userRole === 'CS'}
-                                    consultant={selectedQuestion.consultant}
-                                    canAddSubQuestion={userId == selectedQuestion?.memberId}
-                                    onQuestionAnswered={async () => {
-                                        if (selectedQuestion?.id) {
-                                            try {
-                                                const res = await questionApi.getQuestionById(selectedQuestion.id);
-                                                setSelectedQuestion({
-                                                    ...selectedQuestion,
-                                                    ...res.data
-                                                });
+                                                                        <SubQuestionList
+                                            question={selectedQuestion}
+                                            isConsultant={userRole === 'CS'}
+                                            consultant={selectedQuestion.consultant}
+                                            canAddSubQuestion={canAddSubQuestion(selectedQuestion)}
+                                            onQuestionAnswered={async () => {
+                                                if (selectedQuestion?.id) {
+                                                    try {
+                                                        const res = await questionApi.getQuestionById(selectedQuestion.id);
+                                                        setSelectedQuestion({
+                                                            ...selectedQuestion,
+                                                            ...res.data
+                                                        });
                                                     } catch { }
-                                        }
-                                    }}
-                                />
+                                                }
+                                            }}
+                                        />
                             </div>
                         ) : (
                             <>

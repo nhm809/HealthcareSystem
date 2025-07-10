@@ -220,32 +220,34 @@ const QuestionManagement = () => {
      };
 
      const getAction = (record) => {
-          const status = getStatus(record);
-          if (status === 'closed' || status === 'answered') {
+          // Nếu câu hỏi đã đóng, chỉ hiển thị nút "Xem chi tiết"
+          if (record.status === 'Da dong') {
                return (
                     <Button
                          type="default"
                          icon={<EditOutlined />}
                          size="small"
-                         style={{ borderRadius: 6, marginRight: 8 }}
+                         style={{ borderRadius: 6 }}
                          onClick={() => handleReplyClick(record)}
                     >
                          Xem chi tiết
                     </Button>
                );
           }
-          return (
-               <Space>
-                    <Button
-                         type="primary"
-                         icon={<EditOutlined />}
-                         size="small"
-                         style={{ borderRadius: 6 }}
-                         onClick={() => handleReplyClick(record)}
-                    >
-                         Trả lời
-                    </Button>
-                    {record.status !== 'Da dong' && (
+          
+          // Nếu câu hỏi đã trả lời, hiển thị "Xem chi tiết" và "Đóng câu hỏi"
+          if (record.status === 'Da tra loi') {
+               return (
+                    <Space>
+                         <Button
+                              type="default"
+                              icon={<EditOutlined />}
+                              size="small"
+                              style={{ borderRadius: 6 }}
+                              onClick={() => handleReplyClick(record)}
+                         >
+                              Xem chi tiết
+                         </Button>
                          <Button
                               type="default"
                               danger
@@ -261,7 +263,37 @@ const QuestionManagement = () => {
                          >
                               Đóng câu hỏi
                          </Button>
-                    )}
+                    </Space>
+               );
+          }
+          
+          // Nếu câu hỏi chưa trả lời, hiển thị nút "Trả lời" và "Đóng câu hỏi"
+          return (
+               <Space>
+                    <Button
+                         type="primary"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Trả lời
+                    </Button>
+                    <Button
+                         type="default"
+                         danger
+                         icon={<StopOutlined />}
+                         size="small"
+                         style={{
+                              borderRadius: 6,
+                              background: '#fff0f0',
+                              color: '#d4380d',
+                              border: '1px solid #ffa39e'
+                         }}
+                         onClick={() => handleCloseQuestion(record)}
+                    >
+                         Đóng câu hỏi
+                    </Button>
                </Space>
           );
      };
