@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { Table, Tag, Spin, Typography, Card, Space, Tabs, Empty, Button, Modal, Rate, Input } from "antd";
+import { Table, Tag, Spin, Typography, Card, Space, Tabs, Empty, Button, Modal, Rate, Input, Form } from "antd";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../../components/Layout/Layout";
-import api from "../../services/api";
+import api, { authApi } from "../../services/api";
 import "./AppointmentHistory.css";
 
 const { Title } = Typography;
@@ -17,10 +17,10 @@ function AppointmentHistory() {
      const [loading, setLoading] = useState(true);
      const [isModalOpen, setIsModalOpen] = useState(false);
      const [selectedAppointment, setSelectedAppointment] = useState(null);
-     const [rating, setRating] = useState(0);
-     const [comment, setComment] = useState('');
      const navigate = useNavigate();
      const userId = Cookies.get('userId');
+     const [form] = Form.useForm();
+     const [feedbackLoading, setFeedbackLoading] = useState(false);
 
      useEffect(() => {
           if (!userId) {
@@ -62,31 +62,47 @@ function AppointmentHistory() {
 
      const openFeedbackModal = (record) => {
           setSelectedAppointment(record);
-          setRating(0);
-          setComment('');
+          form.resetFields();
           setIsModalOpen(true);
      };
 
-     const submitFeedback = async () => {
+     const submitFeedback = async (values) => {
           try {
+               setFeedbackLoading(true);
                const payload = {
                     appointmentId: selectedAppointment.appointmentId,
-                    rating,
-                    comment,
+                    rating: values.rating,
+                    comment: values.comment,
                     feedbackDate: new Date().toISOString()
                };
-               console.error('payload', payload);
 
                await api.post('/feedback/submit', payload);
-
                await api.patch(`/Appointment/update-status/${selectedAppointment.appointmentId}`, `"Da danh gia"`);
 
                toast.success('Gửi đánh giá thành công!');
                setIsModalOpen(false);
-               fetchAppointments(); // Refresh
+               form.resetFields(); // Reset form sau khi gửi
+               fetchAppointments(); // Refresh danh sách
           } catch (err) {
                console.error(err);
                toast.error('Gửi đánh giá thất bại');
+          } finally {
+               setFeedbackLoading(false);
+          }
+     };
+
+     const handlePayment = async (appointmentId) => {
+          try {
+               const res = await authApi.createPaypalUrl(null, appointmentId);
+               const paymentUrl = res.data?.paymentUrl || res.data?.PaymentUrl;
+               if (paymentUrl) {
+                    window.location.href = paymentUrl;
+               } else {
+                    toast.error('Không lấy được liên kết thanh toán!');
+               }
+          } catch (error) {
+               console.error(error);
+               toast.error('Thanh toán thất bại!');
           }
      };
 
@@ -146,11 +162,34 @@ function AppointmentHistory() {
           {
                title: 'Hành động',
                key: 'actions',
-               render: (_, record) => (
-                    <Button type="primary" size="small" onClick={() => openFeedbackModal(record)}>
-                         Đánh giá
-                    </Button>
-               )
+               render: (_, record) => {
+                    const status = (record.status || '').toLowerCase();
+                    if (status === 'dang thanh toan') {
+                         return (
+                              <Button
+                                   type="primary"
+                                   size="small"
+                                   onClick={() => handlePayment(record.appointmentId)}
+                                   style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+                              >
+                                   Thanh toán
+                              </Button>
+                         );
+                    }
+                    if (status === 'da hoan thanh') {
+                         return (
+                              <Button
+                                   type="primary"
+                                   size="small"
+                                   onClick={() => openFeedbackModal(record)}
+                                   style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+                              >
+                                   Đánh giá
+                              </Button>
+                         );
+                    }
+                    return null;
+               }
           }
      ];
 
@@ -181,7 +220,7 @@ function AppointmentHistory() {
                label: `Đang thanh toán (${getCountByStatus(['dang thanh toan'])})`,
                children: (
                     <Table
-                         columns={columns}
+                         columns={columnsWithAction}
                          dataSource={filterByStatus(['dang thanh toan'])}
                          rowKey="appointmentId"
                          pagination={{
@@ -277,27 +316,39 @@ function AppointmentHistory() {
                     </Card>
 
                     <Modal
-                         title="Đánh giá dịch vụ"
+                         title={<span style={{ color: '#1a3e72', fontWeight: 600 }}>Đánh giá dịch vụ</span>}
                          open={isModalOpen}
                          onCancel={() => setIsModalOpen(false)}
-                         onOk={submitFeedback}
-                         okText="Gửi đánh giá"
+                         footer={null}
                     >
-                         <div style={{ marginBottom: 8, fontWeight: 500 }}>
-                              * Chất lượng dịch vụ
-                         </div>
-                         <Rate onChange={setRating} value={rating} />
+                         <Form form={form} layout="vertical" onFinish={submitFeedback}>
+                              <Form.Item
+                                   name="rating"
+                                   label="Chất lượng dịch vụ"
+                                   rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}
+                              >
+                                   <Rate allowClear={false} />
+                              </Form.Item>
 
-                         <div style={{ marginTop: 16, marginBottom: 8, fontWeight: 500 }}>
-                              * Nhận xét
-                         </div>
-                         <Input.TextArea
-                              rows={4}
-                              placeholder="Nhận xét của bạn..."
-                              onChange={(e) => setComment(e.target.value)}
-                              value={comment}
-                         />
+                              <Form.Item
+                                   name="comment"
+                                   label="Nhận xét"
+                                   rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}
+                              >
+                                   <Input.TextArea
+                                        rows={4}
+                                        placeholder="Nhận xét của bạn..."
+                                   />
+                              </Form.Item>
+
+                              <Form.Item>
+                                   <Button type="primary" htmlType="submit" loading={feedbackLoading} block>
+                                        Gửi đánh giá
+                                   </Button>
+                              </Form.Item>
+                         </Form>
                     </Modal>
+
                </div>
           </MainLayout>
      );

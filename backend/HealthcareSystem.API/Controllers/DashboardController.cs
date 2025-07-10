@@ -42,5 +42,23 @@ namespace HealthcareSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        // Endpoint mới để so sánh doanh thu
+        [HttpPost("revenue-comparison")] // Endpoint mới: POST api/Dashboard/revenue-comparison
+        public async Task<IActionResult> GetRevenueComparison([FromBody] DashboardComparisonRequestDTO request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request body is null.");
+            }
+            try
+            {
+                var result = await _dashboardService.GetRevenueComparisonAsync(request);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

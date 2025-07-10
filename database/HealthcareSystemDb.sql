@@ -134,7 +134,7 @@ VALUES
 
 
 INSERT INTO Question (
-   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, HeartCount, AnsCount
+   MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, Heart, AnsCount
 )
 VALUES
 -- Câu hỏi về sức khỏe sinh sản nữ
@@ -160,8 +160,11 @@ VALUES
 -- Câu hỏi về giáo dục giới tính
 (20, 7, N'Nên dạy con về giới tính từ mấy tuổi?',
  N'Tôi có con gái 8 tuổi, muốn dạy về sự khác biệt giới tính và tôn trọng người khác. Nên bắt đầu thế nào cho phù hợp?',
- NULL, '2025-07-05 08:00:00', 9, N'Đã trả lời', 35, N'Nữ', 18, 4);
-
+ NULL, '2025-07-05 08:00:00', 9, N'Đã trả lời', 35, N'Nữ', 18, 4),
+ -- Câu hỏi về giáo dục giới tính
+(20, 7, N'Nên dạy con về giới tính từ mấy tuổi?',
+ N'Tôi có con gái 2 tuổi, muốn dạy về sự khác biệt giới tính và tôn trọng người khác. Nên bắt đầu thế nào cho phù hợp?',
+ NULL, '2025-07-05 08:00:00', 9, N'Bị từ chối', 35, N'Nữ', 18, 4);
 
  INSERT INTO [QuestionThreadItem] (
     QuestionID, SentAt, AnsweredAt, QuestionText, AnswerText, AttachmentPath, IsAnswered
@@ -450,15 +453,14 @@ VALUES
 
 
 --WeeklyOverrideSchedule--=====================================================================================================================================================
-INSERT INTO dbo.WeeklyOverrideSchedules
-(WeeklyOverrideScheduleId, UserId, Date, OverrideType, Reason, ShiftType, Status)
+INSERT INTO dbo.WeeklyOverrideSchedules (UserId, Date, OverrideType, Reason, ShiftType, Status)
 VALUES
-(1, 20, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
-(2, 21, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
-(3, 22, '2025-07-01 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
-(4, 22, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 3, N'Đã xác nhận'),
-(5, 22, '2025-07-27 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
-(6, 21, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
-(7, 19, '2025-07-04 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 3, N'Đã xác nhận'),
-(8, 20, '2025-07-05 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(9, 21, '2025-07-08 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt');
+(3, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(5, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(6, '2025-07-01 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(6, '2025-06-29 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 3, N'Đã xác nhận'),
+(6, '2025-07-27 00:00:00.0000000', N'Làm thêm', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(5, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
+(10, '2025-07-04 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 3, N'Đã xác nhận'),
+(3, '2025-07-05 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
+(5, '2025-07-08 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt');

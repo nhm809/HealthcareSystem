@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250710085334_newData")]
+    partial class newData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
@@ -375,8 +378,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Heart")
-                        .HasColumnType("bit");
+                    b.Property<int?>("HeartCount")
+                        .HasColumnType("int");
 
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
@@ -837,8 +840,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Member")
                         .WithMany("AppointmentMembers")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK__Appointme__Membe__3D5E1FD2");
 
                     b.HasOne("Domain.Entities.Service", "Service")

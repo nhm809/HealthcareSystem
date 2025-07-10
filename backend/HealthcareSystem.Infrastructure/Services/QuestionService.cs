@@ -22,7 +22,7 @@ namespace Infrastructure.Services
         public async Task<List<QuestionDTO>> GetAllQuestionsAsync()
         {
             return await _context.Questions
-                .Where(q => q.Status != "Bị từ chối" || q.Status != "Bi tu choi") 
+                .Where(q => q.Status != "Bị từ chối") 
                 .Select(q => new QuestionDTO
                 {
                     QuestionId = q.QuestionId,

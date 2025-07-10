@@ -43,6 +43,48 @@ namespace Infrastructure.Services
             return result;
         }
 
+        public async Task<List<ConsultantWithSpecialtyDTO>> GetConsultantsWithFreeSlotsByDateAsync(DateTime date)
+        {
+            var consultants = await _context.Users
+                .Where(u => u.RoleId == "CS")
+                .Include(u => u.Specialties)
+                .ToListAsync();
+
+            var result = new List<ConsultantWithSpecialtyDTO>();
+
+            foreach (var c in consultants)
+            {
+                var freeSlots = await GetAvailableTimeSlotsByDateAsync(c.UserId, date);
+
+                if (date.Date == DateTime.Today)
+                {
+                    var now = DateTime.Now.AddHours(1); // cộng thêm 1 tiếng
+                    freeSlots = freeSlots
+                        .Where(freeslot => freeslot.Start > now)
+                        .ToList();
+                }
+
+                if (freeSlots.Any())
+                {
+                    result.Add(new ConsultantWithSpecialtyDTO
+                    {
+                        ConsultantId = c.UserId,
+                        FullName = c.FullName,
+                        Email = c.Email,
+                        Avatar = c.Avatar,
+                        Specialties = c.Specialties.Select(s => new SpecialtyDTO
+                        {
+                            Id = s.SpecialtyId,
+                            Name = s.Name
+                        }).ToList(),
+                        FreeSlots = freeSlots
+                    });
+                }
+            }
+
+            return result;
+        }
+
         // ✅ Get detail of one consultant (chuyên môn + lịch làm việc)
         public async Task<ConsultantDetailDTO?> GetConsultantDetailAsync(int consultantId)
         {
@@ -161,13 +203,6 @@ namespace Infrastructure.Services
             return freeSlots;
         }
 
-        /// <summary>
-        /// Hàm trợ giúp để chuyển đổi ShiftType (số nguyên) sang cặp TimeSpan (StartTime, EndTime).
-        /// Dựa trên định nghĩa của bạn: 1: Ca 1, 2: Ca 2
-        /// </summary>
-        /// <param name="shiftType">Loại ca làm việc (1, 2, ...)</param>
-        /// <returns>Cặp TimeSpan chứa thời gian bắt đầu và kết thúc của ca.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Ném ra nếu shiftType không hợp lệ.</exception>
         private (TimeSpan Start, TimeSpan End) GetTimeRangeFromIntShiftType(int shiftType)
         {
             switch (shiftType)
@@ -182,5 +217,7 @@ namespace Infrastructure.Services
                     throw new ArgumentOutOfRangeException(nameof(shiftType), $"ShiftType {shiftType} không hợp lệ.");
             }
         }
+
+
     }
 }

@@ -4,6 +4,7 @@ using Infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthcareSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250708053926_newDatabase")]
+    partial class newDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
@@ -57,9 +60,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Symptoms")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId")
                         .HasName("PK__Appointm__8ECDFCA2D172AD9E");
@@ -306,14 +306,14 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.ToTable("Notification", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
+            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
                 {
-                    b.Property<int>("OtpId")
+                    b.Property<int>("Otpid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("OTPID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OtpId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Otpid"));
 
                     b.Property<string>("Code")
                         .HasMaxLength(15)
@@ -338,7 +338,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserID");
 
-                    b.HasKey("OtpId")
+                    b.HasKey("Otpid")
                         .HasName("PK__OTPReque__5C2EC562B070925E");
 
                     b.HasIndex("UserId");
@@ -358,9 +358,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AnsCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -375,19 +372,23 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Heart")
-                        .HasColumnType("bit");
+                    b.Property<int?>("HeartCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsAnswered")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsAnswered");
 
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
+                    b.Property<int?>("MessCount")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SpecialtyId")
                         .HasColumnType("int")
                         .HasColumnName("SpecialtyId");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("SubmitDate")
                         .HasColumnType("datetime");
@@ -419,9 +420,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Property<string>("AnswerText")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("AnsweredAt")
-                        .HasColumnType("datetime");
 
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(255)
@@ -500,7 +498,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
@@ -706,6 +704,9 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
@@ -837,8 +838,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Member")
                         .WithMany("AppointmentMembers")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK__Appointme__Membe__3D5E1FD2");
 
                     b.HasOne("Domain.Entities.Service", "Service")
@@ -934,10 +933,10 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OtpRequest", b =>
+            modelBuilder.Entity("Domain.Entities.Otprequest", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("OtpRequests")
+                        .WithMany("Otprequests")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__OTPReques__UserI__48CFD27E");
 
@@ -992,8 +991,6 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Member")
                         .WithMany("ReproductiveCycles")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK__Reproduct__Membe__2F10007B");
 
                     b.Navigation("Member");
@@ -1127,7 +1124,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("OtpRequests");
+                    b.Navigation("Otprequests");
 
                     b.Navigation("QuestionConsultants");
 

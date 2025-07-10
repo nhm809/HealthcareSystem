@@ -74,7 +74,7 @@ namespace Infrastructure.Services
                 .Select(a => new AppointmentListItemDto
                 {
                     AppointmentId = a.AppointmentId,
-                    MemberId = a.MemberId!.Value,
+                    MemberId = a.MemberId!,
                     MemberName = a.Member!.FullName!,
                     ConsultantId = a.ConsultantId!.Value,
                     ConsultantName = a.Consultant!.FullName!,
@@ -101,7 +101,7 @@ namespace Infrastructure.Services
             return new AppointmentDetailDto
             {
                 AppointmentId = a.AppointmentId,
-                MemberId = a.MemberId!.Value,
+                MemberId = a.MemberId!,
                 MemberName = a.Member!.FullName!,
                 ConsultantId = a.ConsultantId!.Value,
                 ConsultantName = a.Consultant!.FullName!,
@@ -124,7 +124,7 @@ namespace Infrastructure.Services
                 .Select(a => new AppointmentListItemDto
                 {
                     AppointmentId = a.AppointmentId,
-                    MemberId = a.MemberId!.Value,
+                    MemberId = a.MemberId!,
                     MemberName = a.Member!.FullName!,
                     ConsultantId = a.ConsultantId!.Value,
                     ConsultantName = a.Consultant!.FullName!,
@@ -162,7 +162,7 @@ namespace Infrastructure.Services
             await _context.SaveChangesAsync();
 
             // Nếu có member, gửi notification
-            if (appointment.MemberId.HasValue)
+            if (appointment.MemberId != null)
             {
                 var sendTime = DateTime.UtcNow.AddHours(7);
                 var formattedSendTime = sendTime.ToString("HH:mm dd/MM/yyyy");
@@ -179,7 +179,7 @@ namespace Infrastructure.Services
 
                 var notification = new Notification
                 {
-                    UserId = appointment.MemberId.Value,
+                    UserId = appointment.MemberId,
                     Title = "Link tư vấn đã sẵn sàng",
                     Content = content,
                     SendTime = sendTime,
