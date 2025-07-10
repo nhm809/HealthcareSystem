@@ -500,7 +500,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("MemberId")
+                    b.Property<int?>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
