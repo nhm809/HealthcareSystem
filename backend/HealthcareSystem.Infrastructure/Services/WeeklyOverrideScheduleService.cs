@@ -131,6 +131,41 @@ namespace Infrastructure.Services
             _context.WeeklyOverrideSchedules.Add(entity);
             await _context.SaveChangesAsync();
 
+            string title = "Đơn đăng ký nghỉ và làm thêm";
+            string content = $"Đơn đăng ký {entity.OverrideType?.ToLower()} của bạn đã được gửi đến Manager.";
+
+            // Gửi thông báo cho User
+            var notification = new Notification
+            {
+                UserId = entity.UserId,
+                Title = title,
+                Content = content,
+                SendTime = DateTime.UtcNow.AddHours(7),
+                IsRead = false
+            };
+            _context.Notifications.Add(notification);
+
+            var managerIds = _context.Users
+                .Where(u => u.RoleId == "MG")
+                .Select(u => u.UserId)
+                .ToList();
+            string managerTitle = $"Yêu cầu duyệt đơn nghỉ và làm thêm";
+            string managerContent = $"Có đơn đăng ký {entity.OverrideType?.ToLower()} mới cần duyệt.";
+            foreach (var managerId in managerIds)
+            {
+                var managerNotification = new Notification
+                {
+                    UserId = managerId,
+                    Title = managerTitle,
+                    Content = managerContent,
+                    SendTime = DateTime.UtcNow.AddHours(7),
+                    IsRead = false
+                };
+                _context.Notifications.Add(managerNotification);
+            }
+
+            await _context.SaveChangesAsync();
+
             return new WeeklyOverrideScheduleDTO
             {
                 WeeklyOverrideScheduleId = entity.WeeklyOverrideScheduleId,
@@ -188,7 +223,7 @@ namespace Infrastructure.Services
             entity.Status = dto.Status;
             await _context.SaveChangesAsync();
 
-            string title = "Cập nhật đăng ký nghỉ/làm thêm";
+            string title = "Cập nhật đăng ký nghỉ và làm thêm";
             string content = dto.Status == "Đã hủy"
                 ? $"Đơn đăng ký {entity.OverrideType?.ToLower()} của bạn đã được hủy."
                 : $"Đơn đăng ký {entity.OverrideType?.ToLower()} của bạn đã được Manager phản hồi.";

@@ -49,6 +49,7 @@ builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IWeeklyScheduleService, WeeklyScheduleService>();
 builder.Services.AddScoped<IWeeklyOverrideSchedule, WeeklyOverrideScheduleService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 builder.Services.AddHostedService<ReproductiveReminderJob>();
 
