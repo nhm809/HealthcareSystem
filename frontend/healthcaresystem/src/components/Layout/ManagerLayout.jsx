@@ -23,6 +23,7 @@ import SpecialtyManagement from '../../pages/Manager/SpecialtyManagement';
 import NotificationDropdown from '../NotificationDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
+import WeeklyOverrideScheduleManagement from '../../pages/Manager/WeeklyOverrideScheduleManagement';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -157,6 +158,11 @@ const ManagerLayout = () => {
                icon: <UserOutlined />,
                label: 'Cài đặt cá nhân',
           },
+          {
+               key: 'weekly-override-management',
+               icon: <ProfileOutlined />,
+               label: 'Đăng ký làm thêm/nghỉ',
+          },
      ];
 
      const renderContent = () => {
@@ -171,6 +177,8 @@ const ManagerLayout = () => {
                     return <EmployeeManagement/>;     
                case 'my-profile':
                     return <Profile hideBackButton={true} />;     
+               case 'weekly-override-management':
+                    return <WeeklyOverrideScheduleManagement />;
                default:
                     return <ManagerDashboard />;
           }
