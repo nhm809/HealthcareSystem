@@ -119,6 +119,10 @@ export const adminApi = {
      updateUser: (data) => api.put('/manageUser/updateUser', data),
 };
 
+export const dashboardApi = {
+     getRevenue: (data) => api.post('/Dashboard/revenue', data),
+};
+
 export const questionApi = {
      getAllQuestions: () => api.get('/question/getAll'),
      addQuestion: (data) => api.post('/question/add', data),
@@ -128,6 +132,8 @@ export const questionApi = {
      updateQuestionStatus: (questionId, status) => api.put(`/question/updateStatus/${questionId}`, status, {
           headers: { 'Content-Type': 'application/json' }
      }),
+     giveHeart: (questionId, memberId) => api.post('/question/giveHeart', { questionId, memberId }),
+     checkHeartStatus: (questionId, memberId) => api.get(`/question/checkHeart/${questionId}/${memberId}`),
 };
 
 export const messageApi = {
@@ -158,6 +164,8 @@ export const cancelTestRecord = (testServiceRecordId, userId) =>
      api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
 
 export const subQuestionApi = {
+     getSubQuestions: (questionId) => api.get(`/subQuestion/getByQuestionId/${questionId}`),
+     addSubQuestion: (data) => api.post('/subQuestion/add', data),
      answerSubQuestion: (data) => api.post('/subQuestion/answer', data),
      updateSubQuestion: (threadItemId, data) => api.put(`/subQuestion/update/${threadItemId}`, data),
 };
