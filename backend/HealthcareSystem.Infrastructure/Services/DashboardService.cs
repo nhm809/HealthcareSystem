@@ -250,5 +250,109 @@ namespace Infrastructure.Services
             // Công thức tính phần trăm thay đổi.
             return ((dCurrent - dPrevious) / dPrevious) * 100;
         }
+        // Phương thức mới để so sánh doanh thu giữa hai khoảng thời gian.
+        public async Task<RevenueComparisonDTO> GetRevenueComparisonAsync(DashboardComparisonRequestDTO request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ComparisonPeriod))
+            {
+                throw new ArgumentException("ComparisonPeriod must be specified (Day, Month, Year).");
+            }
+
+            DateTime currentStartDate, currentEndDate;
+            DateTime previousStartDate, previousEndDate;
+
+            // Xác định khoảng thời gian dựa trên ComparisonPeriod và các trường Year/Month/SpecificDate
+            switch (request.ComparisonPeriod.ToLower())
+            {
+                case "day":
+                    if (!request.SpecificDate.HasValue)
+                    {
+                        throw new ArgumentException("For 'Day' comparison, 'SpecificDate' must be provided.");
+                    }
+                    currentStartDate = request.SpecificDate.Value.Date;
+                    currentEndDate = request.SpecificDate.Value.Date;
+                    previousStartDate = currentStartDate.AddDays(-1);
+                    previousEndDate = currentStartDate.AddDays(-1);
+                    break;
+                case "month":
+                    if (!request.Year.HasValue || !request.Month.HasValue)
+                    {
+                        throw new ArgumentException("For 'Month' comparison, 'Year' and 'Month' must be provided.");
+                    }
+                    currentStartDate = new DateTime(request.Year.Value, request.Month.Value, 1);
+                    currentEndDate = currentStartDate.AddMonths(1).AddDays(-1); // Ngày cuối cùng của tháng hiện tại
+                    previousStartDate = currentStartDate.AddMonths(-1);
+                    previousEndDate = previousStartDate.AddMonths(1).AddDays(-1); // Ngày cuối cùng của tháng trước đó
+                    break;
+                case "year":
+                    if (!request.Year.HasValue)
+                    {
+                        throw new ArgumentException("For 'Year' comparison, 'Year' must be provided.");
+                    }
+                    currentStartDate = new DateTime(request.Year.Value, 1, 1);
+                    currentEndDate = new DateTime(request.Year.Value, 12, 31);
+                    previousStartDate = new DateTime(request.Year.Value - 1, 1, 1);
+                    previousEndDate = new DateTime(request.Year.Value - 1, 12, 31);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid ComparisonPeriod. Supported values are 'Day', 'Month', 'Year'.");
+            }
+
+            // Fetch invoices for current period
+            var currentPeriodInvoices = await _context.Invoices
+                .Where(i => i.Status == 1 && // Only paid invoices
+                            i.CreatedAt.HasValue &&
+                            i.CreatedAt.Value.Date >= currentStartDate &&
+                            i.CreatedAt.Value.Date <= currentEndDate)
+                .ToListAsync();
+
+            decimal currentRevenue = currentPeriodInvoices.Sum(i => i.TotalAmount ?? 0);
+
+            // Fetch invoices for previous period
+            var previousPeriodInvoices = await _context.Invoices
+                .Where(i => i.Status == 1 && // Only paid invoices
+                            i.CreatedAt.HasValue &&
+                            i.CreatedAt.Value.Date >= previousStartDate &&
+                            i.CreatedAt.Value.Date <= previousEndDate)
+                .ToListAsync();
+
+            decimal previousRevenue = previousPeriodInvoices.Sum(i => i.TotalAmount ?? 0);
+
+            // Calculate percentage change
+            decimal percentageChange = CalculateChangePercentage(currentRevenue, previousRevenue);
+
+            string changeDescription;
+            if (previousRevenue == 0 && currentRevenue == 0)
+            {
+                changeDescription = "không có doanh thu ở cả hai kỳ";
+            }
+            else if (previousRevenue == 0 && currentRevenue > 0)
+            {
+                changeDescription = $"không tăng không giảm so với {(request.ComparisonPeriod.ToLower() == "day" ? "ngày" : request.ComparisonPeriod.ToLower() == "month" ? "tháng" : "năm")} trước (có doanh thu mới)";
+            }
+            else if (percentageChange > 0)
+            {
+                changeDescription = $"tăng {Math.Round(percentageChange, 2)}% so với {(request.ComparisonPeriod.ToLower() == "day" ? "ngày" : request.ComparisonPeriod.ToLower() == "month" ? "tháng" : "năm")} trước";
+            }
+            else if (percentageChange < 0)
+            {
+                changeDescription = $"giảm {Math.Round(Math.Abs(percentageChange), 2)}% so với {(request.ComparisonPeriod.ToLower() == "day" ? "ngày" : request.ComparisonPeriod.ToLower() == "month" ? "tháng" : "năm")} trước";
+            }
+            else // percentageChange == 0 (bao gồm cả trường hợp previousRevenue > 0 và currentRevenue = previousRevenue)
+            {
+                changeDescription = "không thay đổi so với kỳ trước";
+            }
+
+            return new RevenueComparisonDTO
+            {
+                ComparisonPeriod = request.ComparisonPeriod,
+                CurrentPeriodRevenue = currentRevenue,
+                PreviousPeriodRevenue = previousRevenue,
+                PercentageChange = percentageChange,
+                ChangeDescription = changeDescription
+            };
+        }
+
+
     }
 }

@@ -7,5 +7,6 @@ namespace Application.DTOs
         public string FullName { get; set; }
         public string Email { get; set; }
         public List<SpecialtyDTO> Specialties { get; set; }
+        public List<FreeSlotDTO> FreeSlots { get; set; } = new();
     }
 }
