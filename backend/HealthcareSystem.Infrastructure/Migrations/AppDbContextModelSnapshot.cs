@@ -43,7 +43,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("MemberId")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
@@ -375,8 +375,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HeartCount")
-                        .HasColumnType("int");
+                    b.Property<bool?>("Heart")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("MemberId")
                         .HasColumnType("int")
@@ -837,6 +837,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Member")
                         .WithMany("AppointmentMembers")
                         .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK__Appointme__Membe__3D5E1FD2");
 
                     b.HasOne("Domain.Entities.Service", "Service")

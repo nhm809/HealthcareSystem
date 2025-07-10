@@ -35,7 +35,8 @@ function Question() {
     const [specialties, setSpecialties] = useState([]);
     const { questionId } = useParams();
     const navigate = useNavigate();
-    const [heartedQuestions, setHeartedQuestions] = useState(new Set());
+    // Remove all likes/heartCount logic, and use a Set to track liked questions by the current user
+    const [likedQuestions, setLikedQuestions] = useState(new Set());
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -58,15 +59,18 @@ function Question() {
                         status: q.status,
                         gender: q.gender,
                         age: q.age,
-                        likes: q.heartCount,
-                        answersCount: q.ansCount,
-                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
                         memberId: q.memberId,
                         attachmentPath: q.attachmentPath,
                         consultantId: q.consultantId,
                         consultant: q.consultant,
+                        heart: q.heart, // use heart field from API
+                        ansCount: q.ansCount,
+                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
                     };
                     setSelectedQuestion(formattedQuestion);
+                    // Set liked state for detail view
+                    if (q.heart) setLikedQuestions(prev => new Set([...prev, q.questionId]));
+                    else setLikedQuestions(prev => { const s = new Set([...prev]); s.delete(q.questionId); return s; });
                 } else {
                     // Otherwise, fetch the list of all questions
                     const res = await questionApi.getAllQuestions();
@@ -79,28 +83,20 @@ function Question() {
                         status: q.status,
                         gender: q.gender,
                         age: q.age,
-                        likes: q.heartCount,
-                        answersCount: q.ansCount,
-                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
                         memberId: q.memberId,
                         attachmentPath: q.attachmentPath,
                         consultantId: q.consultantId,
                         consultant: q.consultant,
+                        heart: q.heart, // use heart field from API
+                        ansCount: q.ansCount,
+                        submitDate: q.submitDate ? new Date(q.submitDate) : null,
                     }));
                     data.sort((a, b) => (b.submitDate?.getTime() || 0) - (a.submitDate?.getTime() || 0));
                     setQuestions(data);
-                    
-                    // Kiểm tra trạng thái đã cảm ơn cho tất cả câu hỏi
-                    if (userId) {
-                        const heartedSet = new Set();
-                        for (const question of data) {
-                            const isHearted = await checkHeartStatus(question.id);
-                            if (isHearted) {
-                                heartedSet.add(question.id);
-                            }
-                        }
-                        setHeartedQuestions(heartedSet);
-                    }
+                    // Set liked state for all questions
+                    const likedSet = new Set();
+                    data.forEach(q => { if (q.heart) likedSet.add(q.id); });
+                    setLikedQuestions(likedSet);
                 }
             } catch (error) {
                 message.error('Không thể tải dữ liệu câu hỏi');
@@ -252,60 +248,50 @@ function Question() {
         return question.status !== 'Da dong' && userId == question?.memberId;
     };
 
-    // Hàm kiểm tra trạng thái đã cảm ơn
-    const checkHeartStatus = async (questionId) => {
-        const currentUserId = Cookies.get('userId');
-        if (!currentUserId) return false;
-        
-        try {
-            const response = await questionApi.checkHeartStatus(questionId, Number(currentUserId));
-            return response.data; // Giả sử API trả về boolean
-        } catch (error) {
-            console.error('Check heart status error:', error);
-            return false;
-        }
-    };
-
-    // Hàm xử lý bấm cảm ơn
-    const handleGiveHeart = async (questionId, currentLikes) => {
+    // Update toggleLike to check if user is the author
+    const toggleLike = async (questionId) => {
         const currentUserId = Cookies.get('userId');
         if (!currentUserId) {
             setAuthModalOpen(true);
             return;
         }
-
-        // Kiểm tra đã cảm ơn chưa
-        if (heartedQuestions.has(questionId)) {
-            toast.info('Bạn đã cảm ơn câu hỏi này rồi!');
+        
+        // Find the question to check if current user is the author
+        const question = selectedQuestion?.id === questionId ? selectedQuestion : 
+                        questions.find(q => q.id === questionId);
+        
+        if (!question || Number(currentUserId) !== Number(question.memberId)) {
+            toast.error('Chỉ tác giả mới có thể thích câu hỏi của mình!');
             return;
         }
-
+        
+        const isLiked = likedQuestions.has(questionId);
         try {
-            await questionApi.giveHeart(questionId, Number(currentUserId));
-            
-            // Thêm vào danh sách đã cảm ơn
-            setHeartedQuestions(prev => new Set([...prev, questionId]));
-            
-            // Cập nhật số like trong state
+            await questionApi.updateHeart(questionId, Number(currentUserId), !isLiked);
+            setLikedQuestions(prev => {
+                const newSet = new Set([...prev]);
+                if (isLiked) newSet.delete(questionId);
+                else newSet.add(questionId);
+                return newSet;
+            });
+            // Update selectedQuestion if open
             if (selectedQuestion && selectedQuestion.id === questionId) {
-                setSelectedQuestion(prev => ({
-                    ...prev,
-                    likes: prev.likes + 1
-                }));
+                setSelectedQuestion(prev => ({ ...prev, heart: !isLiked }));
             }
-            
-            // Cập nhật trong danh sách câu hỏi
-            setQuestions(prev => prev.map(q => 
-                q.id === questionId 
-                    ? { ...q, likes: q.likes + 1 }
-                    : q
+            // Update in questions list
+            setQuestions(prev => prev.map(q =>
+                q.id === questionId ? { ...q, heart: !isLiked } : q
             ));
-            
-            toast.success('Đã gửi cảm ơn!');
         } catch (error) {
-            toast.error('Không thể gửi cảm ơn. Vui lòng thử lại!');
-            console.error('Give heart error:', error);
+            toast.error('Không thể cập nhật trạng thái thích. Vui lòng thử lại!');
+            console.error('Toggle like error:', error);
         }
+    };
+
+    // Helper function to check if current user is the author
+    const isAuthor = (question) => {
+        const currentUserId = Cookies.get('userId');
+        return currentUserId && Number(currentUserId) === Number(question?.memberId);
     };
 
     const customStyles = {
@@ -326,7 +312,7 @@ function Question() {
             }}>
                                 <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
                     <Row gutter={[32, 24]} justify="space-between">
-                        <Col xs={24} lg={selectedQuestion ? 24 : 14}>
+                        <Col xs={24} lg={selectedQuestion ? 24 : 16}>
                             <Card 
                                 style={{ 
                                     border: `1px solid ${customStyles.borderColor}`,
@@ -431,19 +417,23 @@ function Question() {
                                                 </Space>
                                                 <Space>
                                                     <MessageOutlined />
-                                                    <span>{selectedQuestion.answersCount || 0} câu trả lời</span>
+                                                    <span>{selectedQuestion.ansCount || 0} câu trả lời</span>
                                                 </Space>
-                                                <Space>
-                                                    <HeartOutlined 
-                                                        style={{ 
-                                                            cursor: heartedQuestions.has(selectedQuestion.id) ? 'default' : 'pointer',
-                                                            color: heartedQuestions.has(selectedQuestion.id) ? '#ff4d4f' : customStyles.primaryColor,
-                                                            fontSize: 16
-                                                        }}
-                                                        onClick={() => handleGiveHeart(selectedQuestion.id, selectedQuestion.likes)}
-                                                    />
-                                                    <span>{selectedQuestion.likes || 0} Cảm ơn</span>
-                                                </Space>
+                                                {isAuthor(selectedQuestion) && (
+                                                    <Space>
+                                                        <HeartOutlined 
+                                                            style={{ 
+                                                                cursor: 'pointer',
+                                                                color: likedQuestions.has(selectedQuestion.id) ? '#ff4d4f' : customStyles.primaryColor,
+                                                                fontSize: 16
+                                                            }}
+                                                            onClick={() => toggleLike(selectedQuestion.id)}
+                                                        />
+                                                        <span>
+                                                            {likedQuestions.has(selectedQuestion.id) ? 'Đã thích bởi tác giả' : 'Thích'}
+                                                        </span>
+                                                    </Space>
+                                                )}
                                             </div>
                                 </div>
 
@@ -615,23 +605,27 @@ function Question() {
                                                                 </Space>
                                                                 <Space>
                                                                     <MessageOutlined />
-                                                                    <span>{item.answersCount || 0} câu trả lời</span>
+                                                                    <span>{item.ansCount || 0} câu trả lời</span>
                                                                 </Space>
-                                                                <Space>
-                                                                    <HeartOutlined 
-                                                                        style={{ 
-                                                                            cursor: heartedQuestions.has(item.id) ? 'default' : 'pointer',
-                                                                            color: heartedQuestions.has(item.id) ? '#ff4d4f' : customStyles.primaryColor,
-                                                                            fontSize: 14
-                                                                        }}
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            e.stopPropagation();
-                                                                            handleGiveHeart(item.id, item.likes);
-                                                                        }}
-                                                                    />
-                                                                    <span>{item.likes || 0} Cảm ơn</span>
-                                                                </Space>
+                                                                {isAuthor(item) && (
+                                                                    <Space>
+                                                                        <HeartOutlined 
+                                                                            style={{ 
+                                                                                cursor: 'pointer',
+                                                                                color: likedQuestions.has(item.id) ? '#ff4d4f' : customStyles.primaryColor,
+                                                                                fontSize: 14
+                                                                            }}
+                                                                            onClick={e => {
+                                                                                e.preventDefault();
+                                                                                e.stopPropagation();
+                                                                                toggleLike(item.id);
+                                                                            }}
+                                                                        />
+                                                                        <span>
+                                                                            {likedQuestions.has(item.id) ? 'Đã thích bởi tác giả' : 'Thích'}
+                                                                        </span>
+                                                                    </Space>
+                                                                )}
                                                             </Space>
 
                                                             <Button
@@ -673,14 +667,14 @@ function Question() {
                     </Card>
                 </Col>
 
-                                                <Col xs={24} lg={10}>
+                                                <Col xs={24} lg={8}>
                     {!selectedQuestion && (
                                 <Card
                                     style={{ 
                                         border: `1px solid ${customStyles.borderColor}`,
                                         borderRadius: 12,
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                                        width: '350px'
+                                        width: '100%'
                                     }}
                                     bodyStyle={{ padding: 24 }}
                                 >
