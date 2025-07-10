@@ -257,7 +257,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 {
                     CycleID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberID = table.Column<int>(type: "int", nullable: true),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     CycleLength = table.Column<int>(type: "int", nullable: true),
                     PeriodLength = table.Column<int>(type: "int", nullable: true),
@@ -271,7 +271,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         name: "FK__Reproduct__Membe__2F10007B",
                         column: x => x.MemberID,
                         principalTable: "User",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

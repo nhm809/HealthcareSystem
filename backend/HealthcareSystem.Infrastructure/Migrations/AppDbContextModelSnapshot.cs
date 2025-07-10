@@ -500,7 +500,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("MemberId")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int")
                         .HasColumnName("MemberID");
 
@@ -990,6 +990,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     b.HasOne("Domain.Entities.User", "Member")
                         .WithMany("ReproductiveCycles")
                         .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK__Reproduct__Membe__2F10007B");
 
                     b.Navigation("Member");

@@ -3,7 +3,6 @@ import { Collapse, Card, Button, Input, Form, Spin, message, Avatar } from 'antd
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
-import api from '../../services/api';
 import { subQuestionApi, questionApi, getInfo } from '../../services/api';
 import logo from '../../assets/imgs/logo.png';
 
@@ -23,9 +22,11 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
   const fetchSubQuestions = async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/subQuestion/get/${question.id}`);
+      const res = await subQuestionApi.getSubQuestions(question.id);
+      console.log('Sub-questions response:', res.data);
       setSubQuestions(res.data);
-    } catch {
+    } catch (error) {
+      console.error('Error fetching sub-questions:', error);
       setSubQuestions([]);
     } finally {
       setLoading(false);
@@ -36,7 +37,10 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
     if (question?.id) fetchSubQuestions();
     if (question?.consultantId) {
       getInfo(question.consultantId)
-        .then(res => setConsultantInfo(res.data))
+        .then(res => {
+          console.log('Consultant info:', res.data); // Thêm log kiểm tra dữ liệu
+          setConsultantInfo(res.data)
+        })
         .catch(() => setConsultantInfo(null));
     }
     // eslint-disable-next-line
@@ -46,7 +50,7 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
   const handleCreate = async (values) => {
     setCreating(true);
     try {
-      await api.post('/subQuestion/add', {
+      await subQuestionApi.addSubQuestion({
         ThreadItemId: 0,
         QuestionId: question.id,
         QuestionText: values.questionText,
@@ -60,7 +64,8 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
       message.success('Gửi câu hỏi thành công!');
       form.resetFields();
       fetchSubQuestions();
-    } catch {
+    } catch (error) {
+      console.error('Error creating sub-question:', error);
       message.error('Gửi câu hỏi thất bại!');
     } finally {
       setCreating(false);
@@ -121,8 +126,8 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
     }
   };
 
-  // Hiển thị sub-question đầu tiên lấy từ câu hỏi cha
-  const firstSub = subQuestions.length > 0 ? subQuestions[0] : null;
+  // Hiển thị tất cả sub-questions
+  const allSubQuestions = subQuestions || [];
 
   // Form riêng cho panel đầu tiên
   const [firstPanelForm] = Form.useForm();
@@ -133,84 +138,80 @@ const SubQuestionList = ({ question, isConsultant, onQuestionAnswered, canAddSub
         <Spin />
       ) : (
         <Collapse accordion>
-          {/* Sub-question đầu tiên lấy từ câu hỏi cha */}
-          <Panel
-            header={
-              <div>
-                <Avatar src={logo} style={{ marginRight: 8 }} />
-                <b>{question.gender}, {question.age} tuổi</b> - {question.title}
-                <span style={{ marginLeft: 16, color: '#888' }}>{dayjs(question.submitDate).format('DD/MM/YYYY')}</span>
-              </div>
-            }
-            key="parent"
-          >
-            <div style={{ marginBottom: 8 }}>{question.content}</div>
-            {/* Consultant trả lời */}
-            {isConsultant && !firstSub?.answerText && (
-              <Form
-                form={firstPanelForm}
-                onFinish={(values) => handleAnswer({
-                  ...values,
-                  threadItemId: firstSub ? firstSub.threadItemId : 0,
-                  questionText: question.content,
-                })}
-                layout="vertical"
-              >
-                <Form.Item name="answerText" label="Trả lời" rules={[{ required: true, message: 'Nhập câu trả lời' }]}> 
-                  <Input.TextArea rows={2} placeholder="Nhập câu trả lời..." />
-                </Form.Item>
-                <Button type="primary" htmlType="submit">Gửi trả lời</Button>
-              </Form>
-            )}
-            {firstSub?.answerText && (
-              <div style={{ marginTop: 12, background: '#f6ffed', padding: 12, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Avatar src={consultantInfo?.avatarPath && consultantInfo.avatarPath.trim() !== '' ? consultantInfo.avatarPath : logo} />
-                <b>{consultantInfo?.fullName || consultantInfo?.name || 'Bác sĩ'}</b>
-                <span style={{ marginLeft: 8 }}>{firstSub.answerText}</span>
-              </div>
-            )}
-          </Panel>
-
-          {/* Các sub-question tiếp theo */}
-          {subQuestions.slice(1).map((sub) => (
+          {allSubQuestions.length === 0 ? (
+            // Nếu chưa có sub-question, render panel câu hỏi cha
             <Panel
               header={
                 <div>
                   <Avatar src={logo} style={{ marginRight: 8 }} />
-                  <b>Hỏi:</b> {sub.questionText}
-                  <span style={{ marginLeft: 16, color: '#888' }}>{dayjs(sub.sentAt).format('DD/MM/YYYY')}</span>
+                  <b>{question.gender}, {question.age} tuổi</b> - {question.title}
+                  <span style={{ marginLeft: 16, color: '#888' }}>{dayjs(question.submitDate).format('DD/MM/YYYY')}</span>
                 </div>
               }
-              key={sub.threadItemId}
+              key="parent"
             >
-              {/* Nếu đã có trả lời */}
-              {sub.answerText ? (
-                <div style={{ background: '#f6ffed', padding: 12, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Avatar src={consultantInfo?.avatarPath && consultantInfo.avatarPath.trim() !== '' ? consultantInfo.avatarPath : logo} />
-                  <b>{consultantInfo?.fullName || consultantInfo?.name || 'Bác sĩ'}</b>
-                  <span style={{ marginLeft: 8 }}>{sub.answerText}</span>
-                </div>
-              ) : (
-                isConsultant ? (
-                  <Form
-                    onFinish={(values) => handleAnswer({
-                      ...values,
-                      threadItemId: sub.threadItemId,
-                      questionText: sub.questionText,
-                    })}
-                    layout="vertical"
-                  >
-                    <Form.Item name="answerText" label="Trả lời" rules={[{ required: true, message: 'Nhập câu trả lời' }]}> 
-                      <Input.TextArea rows={2} placeholder="Nhập câu trả lời..." />
-                    </Form.Item>
-                    <Button type="primary" htmlType="submit">Gửi trả lời</Button>
-                  </Form>
-                ) : (
-                  <div style={{ color: '#888' }}>Chờ bác sĩ trả lời...</div>
-                )
+              <div style={{ marginBottom: 8 }}>{question.content}</div>
+              {isConsultant && (
+                <Form
+                  form={firstPanelForm}
+                  onFinish={(values) => handleAnswer({
+                    ...values,
+                    threadItemId: 0,
+                    questionText: question.content,
+                  })}
+                  layout="vertical"
+                >
+                  <Form.Item name="answerText" label="Trả lời" rules={[{ required: true, message: 'Nhập câu trả lời' }]}> 
+                    <Input.TextArea rows={2} placeholder="Nhập câu trả lời..." />
+                  </Form.Item>
+                  <Button type="primary" htmlType="submit">Gửi trả lời</Button>
+                </Form>
               )}
             </Panel>
-          ))}
+          ) : (
+            // Nếu đã có sub-question, render tất cả các panel sub-question
+            allSubQuestions.map((sub) => (
+              <Panel
+                header={
+                  <div>
+                    <Avatar src={logo} style={{ marginRight: 8 }} />
+                    <b>Hỏi:</b> {sub.questionText || 'Không có nội dung'}
+                    <span style={{ marginLeft: 16, color: '#888' }}>
+                      {sub.sentAt ? dayjs(sub.sentAt).format('DD/MM/YYYY') : 'Không có ngày'}
+                    </span>
+                  </div>
+                }
+                key={`sub-${sub.threadItemId}`}
+              >
+                {/* Nếu đã có trả lời */}
+                {sub.answerText ? (
+                  <div style={{ background: '#f6ffed', padding: 12, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Avatar src={consultantInfo?.avatar && consultantInfo.avatar.trim() !== '' ? consultantInfo.avatar : logo} />
+                    <b>{consultantInfo?.fullName || consultantInfo?.name || 'Bác sĩ'}</b>
+                    <span style={{ marginLeft: 8 }}>{sub.answerText}</span>
+                  </div>
+                ) : (
+                  isConsultant ? (
+                    <Form
+                      onFinish={(values) => handleAnswer({
+                        ...values,
+                        threadItemId: sub.threadItemId,
+                        questionText: sub.questionText,
+                      })}
+                      layout="vertical"
+                    >
+                      <Form.Item name="answerText" label="Trả lời" rules={[{ required: true, message: 'Nhập câu trả lời' }]}> 
+                        <Input.TextArea rows={2} placeholder="Nhập câu trả lời..." />
+                      </Form.Item>
+                      <Button type="primary" htmlType="submit">Gửi trả lời</Button>
+                    </Form>
+                  ) : (
+                    <div style={{ color: '#888' }}>Chờ bác sĩ trả lời...</div>
+                  )
+                )}
+              </Panel>
+            ))
+          )}
         </Collapse>
       )}
 
