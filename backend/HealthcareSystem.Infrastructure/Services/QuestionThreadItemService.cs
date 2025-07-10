@@ -102,7 +102,7 @@ namespace Infrastructure.Services
                 SendTime = DateTime.UtcNow
             };
             await _context.Notifications.AddAsync(memNoti);
-            await _context.Questions.AddAsync(question);
+            _context.Questions.Update(question);
             return await _context.SaveChangesAsync() > 0;
         }
 
