@@ -22,6 +22,7 @@ namespace Infrastructure.Services
         public async Task<List<QuestionDTO>> GetAllQuestionsAsync()
         {
             return await _context.Questions
+                .Where(q => q.Status != "Bị từ chối" || q.Status != "Bi tu choi") 
                 .Select(q => new QuestionDTO
                 {
                     QuestionId = q.QuestionId,
@@ -35,7 +36,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();
@@ -68,7 +69,7 @@ namespace Infrastructure.Services
                 Age = questionDto.Age,
                 Status = "Chua tra loi",
                 Gender = questionDto.Gender,
-                HeartCount = 0,
+                Heart = false,
                 AnsCount = 0
             };
 
@@ -132,14 +133,21 @@ namespace Infrastructure.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> GiveAHeart(QuestionDTO questionDto)
+        public async Task<bool> UpdateHeart(QuestionDTO questionDto)
         {
             var question = await _context.Questions.FindAsync(questionDto.QuestionId);
             if (question == null)
             {
                 return false;
             }
-            question.HeartCount = (question.HeartCount ?? 0) + 1;
+            if(question.Heart == true)
+            {
+                question.Heart = false;
+            }
+            else
+            {
+                question.Heart = true;
+            }
             _context.Questions.Update(question);
             return await _context.SaveChangesAsync() > 0;
 
@@ -165,7 +173,7 @@ namespace Infrastructure.Services
                 Status = question.Status,
                 Age = question.Age,
                 Gender = question.Gender,
-                HeartCount = question.HeartCount,
+                Heart = question.Heart,
                 AnsCount = question.AnsCount
             };
         }
@@ -187,7 +195,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();
@@ -210,7 +218,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();
