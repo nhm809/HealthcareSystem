@@ -119,7 +119,7 @@ function Question() {
         const matchSearch =
             q.title.toLowerCase().includes(searchText.toLowerCase()) ||
             q.content.toLowerCase().includes(searchText.toLowerCase());
-        const matchSpecialty = filterSpecialty ? q.specialtyId === filterSpecialty : true;
+        const matchSpecialty = filterSpecialty ? String(q.specialtyId) === filterSpecialty : true;
         return matchSearch && matchSpecialty;
     });
     const startIdx = (currentPage - 1) * pageSize;
@@ -476,7 +476,7 @@ function Question() {
                                                 marginBottom: 16,
                                                 textAlign: 'center'
                                             }}>
-                                                Hỏi đáp y tế
+                                                Hỏi đáp với bác sĩ
                                             </Title>
 
 
@@ -495,22 +495,22 @@ function Question() {
                                 />
 
                                             <div style={{ marginBottom: 24 }}>
-                                    {['Hô hấp', 'Chuyên khoa sản', 'HPV', 'Lậu', 'Sản phụ khoa'].map(tag => (
-                                        <Tag
-                                            key={tag}
-                                                        color={filterSpecialty === tag ? customStyles.primaryColor : undefined}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            borderRadius: 6,
-                                                            padding: '4px 12px',
-                                                            marginBottom: 8
-                                                        }}
+                                    {specialties.map(specialty => (
+                                        <Tag    
+                                            key={specialty.id}
+                                            color={filterSpecialty === String(specialty.id) ? customStyles.primaryColor : undefined}
+                                            style={{
+                                                cursor: 'pointer',
+                                                borderRadius: 6,
+                                                padding: '4px 12px',
+                                                marginBottom: 8
+                                            }}
                                             onClick={() => {
-                                                setFilterSpecialty(filterSpecialty === tag ? '' : tag);
+                                                setFilterSpecialty(filterSpecialty === String(specialty.id) ? '' : String(specialty.id));
                                                 setCurrentPage(1);
                                             }}
                                         >
-                                            {tag}
+                                            {specialty.name}
                                         </Tag>
                                     ))}
                                     {filterSpecialty && (
@@ -679,7 +679,8 @@ function Question() {
                                     style={{ 
                                         border: `1px solid ${customStyles.borderColor}`,
                                         borderRadius: 12,
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                                        width: '350px'
                                     }}
                                     bodyStyle={{ padding: 24 }}
                                 >
@@ -692,41 +693,58 @@ function Question() {
                                         textAlign: 'center'
                                     }}>
                                         <Title level={4} style={{ color: 'white', margin: 0 }}>
-                                            Đặt câu hỏi
+                                            ĐẶT CÂU HỎI
                                         </Title>
 
                                     </div>
 
                                                                         <Form layout="vertical" form={form} onFinish={handleSubmit} validateTrigger="onSubmit">
-                                        <Form.Item 
-                                            label="Tuổi" 
-                                            name="age" 
-                                            rules={[{ required: true, message: 'Nhập tuổi của bạn' }]}
-                                            required={false}
-                                        > 
-                                            <Input
-                                                placeholder="Nhập tuổi của bạn"
-                                                size="large"
-                                                style={{ borderRadius: 6 }}
-                                            />
-                                </Form.Item>
-
-                                                                                <Form.Item 
-                                            label="Giới tính" 
-                                            name="gender" 
-                                            rules={[{ required: true, message: 'Chọn giới tính' }]}
-                                            required={false}
-                                        > 
-                                            <Radio.Group style={{ width: '100%' }}>
-                                                <Radio value="Nam" style={{ marginRight: 16 }}>Nam</Radio>
-                                        <Radio value="Nữ">Nữ</Radio>
-                                    </Radio.Group>
-                                </Form.Item>
+                                        <Row gutter={16}>
+                                            <Col span={12}>
+                                                <Form.Item 
+                                                    label="Tuổi" 
+                                                    name="age" 
+                                                    rules={[
+                                                        { required: true, message: 'Vui lòng nhập tuổi' },
+                                                        {
+                                                            validator: (_, value) => {
+                                                                const age = parseInt(value);
+                                                                if (isNaN(age) || age < 1 || age > 120) {
+                                                                    return Promise.reject('Tuổi phải từ 1-120');
+                                                                }
+                                                                return Promise.resolve();
+                                                            }
+                                                        }
+                                                    ]}
+                                                    required={false}
+                                                > 
+                                                    <Input
+                                                        placeholder="Nhập tuổi"
+                                                        size="large"
+                                                        style={{ borderRadius: 6 }}
+                                                        type="number"
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item 
+                                                    label="Giới tính" 
+                                                    name="gender" 
+                                                    rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
+                                                    required={false}
+                                                > 
+                                                    <Radio.Group style={{ width: '100%' }}>
+                                                        <Radio value="Nam" style={{ marginRight: 16 }}>Nam</Radio>
+                                                        <Radio value="Nữ">Nữ</Radio>
+                                                    </Radio.Group>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
 
                                                                                 <Form.Item 
                                             label="Chuyên khoa" 
                                             name="specialty" 
-                                            rules={[{ required: true, message: 'Chọn chuyên khoa' }]}
+                                            rules={[{ required: true, message: 'Vui lòng chọn chuyên khoa' }]}
                                             required={false}
                                         > 
                                             <Select
@@ -734,43 +752,71 @@ function Question() {
                                                 size="large"
                                                 style={{ borderRadius: 6 }}
                                             >
-                                        {specialties.map(s => (
-                                            <Select.Option key={s.id} value={String(s.id)}>{s.name}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                                                {specialties.map(s => (
+                                                    <Select.Option key={s.id} value={String(s.id)}>{s.name}</Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
 
-                                                                                <Form.Item 
+                                        <Form.Item 
                                             label="Tiêu đề" 
                                             name="title" 
-                                            rules={[{ required: true, message: 'Nhập tiêu đề' }]}
+                                            rules={[
+                                                { required: true, message: 'Vui lòng nhập tiêu đề' },
+                                                { min: 5, max: 200, message: 'Tiêu đề phải từ 5-200 ký tự' }
+                                            ]}
                                             required={false}
                                         > 
                                             <Input
                                                 placeholder="Tiêu đề câu hỏi"
                                                 size="large"
                                                 style={{ borderRadius: 6 }}
+                                                maxLength={200}
                                             />
-                                </Form.Item>
+                                        </Form.Item>
 
-                                                                                <Form.Item 
+                                        <Form.Item 
                                             label="Nội dung câu hỏi" 
                                             name="content" 
-                                            rules={[{ required: true, message: 'Nhập nội dung câu hỏi' }]}
+                                            rules={[
+                                                { required: true, message: 'Vui lòng nhập nội dung câu hỏi' },
+                                                { min: 10, max: 2000, message: 'Nội dung phải từ 10-2000 ký tự' }
+                                            ]}
                                             required={false}
                                         > 
                                             <Input.TextArea
                                                 rows={4}
                                                 placeholder="Mô tả chi tiết vấn đề của bạn..."
                                                 style={{ borderRadius: 6 }}
+                                                maxLength={2000}
+                                                showCount
                                             />
-                                </Form.Item>
+                                        </Form.Item>
 
                                         <Form.Item
                                             label="Thêm ảnh"
                                             name="image"
                                             valuePropName="fileList"
                                             getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}
+                                            rules={[
+                                                {
+                                                    validator: (_, fileList) => {
+                                                        if (fileList && fileList.length > 0) {
+                                                            const file = fileList[0];
+                                                            const isImage = file.type.startsWith('image/');
+                                                            const isLt5M = file.size / 1024 / 1024 < 5;
+                                                            
+                                                            if (!isImage) {
+                                                                return Promise.reject('Chỉ được upload file ảnh!');
+                                                            }
+                                                            if (!isLt5M) {
+                                                                return Promise.reject('Ảnh phải nhỏ hơn 5MB!');
+                                                            }
+                                                        }
+                                                        return Promise.resolve();
+                                                    }
+                                                }
+                                            ]}
                                         >
                                             <Upload
                                                 listType="picture-card"

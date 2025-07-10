@@ -66,12 +66,17 @@ const QuestionManagement = () => {
           'all': 1,
           'unanswered': 1,
           'answered': 1,
-          'closed': 1
+          'closed': 1,
+          'rejected': 1
      });
 
      const [closeModalVisible, setCloseModalVisible] = useState(false);
      const [closingQuestion, setClosingQuestion] = useState(null);
      const [closeLoading, setCloseLoading] = useState(false);
+
+     const [rejectModalVisible, setRejectModalVisible] = useState(false);
+     const [rejectingQuestion, setRejectingQuestion] = useState(null);
+     const [rejectLoading, setRejectLoading] = useState(false);
 
      // Tách fetchQuestions ra ngoài để có thể gọi lại
      const fetchQuestions = async () => {
@@ -162,6 +167,7 @@ const QuestionManagement = () => {
           if (status === 'answered') return filteredQuestions.filter(item => item.status === 'Da tra loi');
           if (status === 'unanswered') return filteredQuestions.filter(item => item.status === 'Chua tra loi');
           if (status === 'closed') return filteredQuestions.filter(item => item.status === 'Da dong');
+          if (status === 'rejected') return filteredQuestions.filter(item => item.status === 'Bi tu choi');
           return filteredQuestions;
      };
 
@@ -178,6 +184,10 @@ const QuestionManagement = () => {
                case "Da dong":
                     return (
                          <Tag color="red">Đã đóng</Tag>
+                    );
+               case "Bi tu choi":
+                    return (
+                         <Tag color="magenta">Bị từ chối</Tag>
                     );
                default:
                     return (
@@ -219,9 +229,30 @@ const QuestionManagement = () => {
           }
      };
 
+     // Hàm từ chối câu hỏi
+     const handleRejectQuestion = (question) => {
+          setRejectingQuestion(question);
+          setRejectModalVisible(true);
+     };
+
+     const doRejectQuestion = async () => {
+          setRejectLoading(true);
+          try {
+               await questionApi.updateQuestionStatus(rejectingQuestion.key, JSON.stringify("Bi tu choi"));
+               message.success('Đã từ chối câu hỏi!');
+               setRejectModalVisible(false);
+               setRejectingQuestion(null);
+               fetchQuestions();
+          } catch {
+               message.error('Từ chối câu hỏi thất bại!');
+          } finally {
+               setRejectLoading(false);
+          }
+     };
+
      const getAction = (record) => {
           // Nếu câu hỏi đã đóng, chỉ hiển thị nút "Xem chi tiết"
-          if (record.status === 'Da dong') {
+          if (record.status === 'Da dong' || record.status === 'Bi tu choi') {
                return (
                     <Button
                          type="default"
@@ -267,6 +298,52 @@ const QuestionManagement = () => {
                );
           }
           
+          // Nếu câu hỏi chưa trả lời, hiển thị nút "Trả lời" và "Đóng câu hỏi"
+          if (record.status === 'Chua tra loi') {
+               return (
+                    <Space>
+                         <Button
+                              type="primary"
+                              icon={<EditOutlined />}
+                              size="small"
+                              style={{ borderRadius: 6 }}
+                              onClick={() => handleReplyClick(record)}
+                         >
+                              Trả lời
+                         </Button>
+                         <Button
+                              type="default"
+                              danger
+                              icon={<StopOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleCloseQuestion(record)}
+                         >
+                              Đóng câu hỏi
+                         </Button>
+                         <Button
+                              type="default"
+                              danger
+                              icon={<CloseCircleOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleRejectQuestion(record)}
+                         >
+                              Từ chối
+                         </Button>
+                    </Space>
+               );
+          }
           // Nếu câu hỏi chưa trả lời, hiển thị nút "Trả lời" và "Đóng câu hỏi"
           return (
                <Space>
@@ -360,7 +437,8 @@ const QuestionManagement = () => {
                'all': 1,
                'unanswered': 1,
                'answered': 1,
-               'closed': 1
+               'closed': 1,
+               'rejected': 1
           });
      }, [filters.searchText, filters.date]);
 
@@ -466,6 +544,31 @@ const QuestionManagement = () => {
                     </div>
                )
           },
+          {
+               key: 'rejected',
+               label: `Bị từ chối (${filterByStatus('rejected').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('rejected').slice((currentPage['rejected'] - 1) * pagination.pageSize, currentPage['rejected'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('rejected').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['rejected']}
+                                        total={filterByStatus('rejected').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('rejected', page)}
+                                        showSizeChanger={false}
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
      ];
 
      return (
@@ -563,6 +666,28 @@ const QuestionManagement = () => {
                               style={{ border: 'none' }}
                          >
                               Đồng ý đóng
+                         </Button>
+                    </div>
+               </AntdModal>
+               <AntdModal
+                    open={rejectModalVisible}
+                    onCancel={() => { setRejectModalVisible(false); setRejectingQuestion(null); }}
+                    footer={null}
+                    title={<span style={{ color: '#000' }}>Xác nhận từ chối câu hỏi</span>}
+               >
+                    <p>Bạn chắc chắn muốn từ chối câu hỏi này?</p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                         <Button onClick={() => { setRejectModalVisible(false); setRejectingQuestion(null); }}>
+                              Hủy
+                         </Button>
+                         <Button
+                              type="primary"
+                              danger
+                              loading={rejectLoading}
+                              onClick={doRejectQuestion}
+                              style={{ border: 'none' }}
+                         >
+                              Đồng ý từ chối
                          </Button>
                     </div>
                </AntdModal>
