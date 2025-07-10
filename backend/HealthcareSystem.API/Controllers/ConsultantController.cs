@@ -22,6 +22,16 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("available")]
+        public async Task<IActionResult> GetConsultantsWithFreeSlots([FromQuery] DateTime date)
+        {
+            if (date.Date < DateTime.Today)
+                return BadRequest("Ngày phải từ hôm nay trở đi.");
+
+            var result = await _consultantService.GetConsultantsWithFreeSlotsByDateAsync(date);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultantDetail(int id)
         {

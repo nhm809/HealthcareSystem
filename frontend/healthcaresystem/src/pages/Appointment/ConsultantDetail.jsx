@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';   
-import { Card, Select, Button } from 'antd';
+import { Card, Select, Button, Empty } from 'antd';
 import './ConsultantDetail.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -101,10 +101,34 @@ function DoctorDetail() {
         if (availableSlots.length === 0) {
             // Nếu là hôm nay và không còn slot => hiển thị thông báo
             if (selectedDate === dayjs().format('YYYY-MM-DD')) {
-                return <p className="no-slot-text">Không còn khung giờ phù hợp hôm nay, vui lòng chọn ngày khác.</p>;
+                return (
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            style={{ marginBlock: '0'}}
+                            description={
+                                <span style={{ fontSize: 16, color: '#888' }}>
+                                    Không còn khung giờ phù hợp hôm nay, vui lòng chọn ngày khác.
+                                </span>
+                            }
+                        />
+                    </div>
+                );
             }
             // Các ngày khác nhưng rỗng (ví dụ backend không có) => hiển thị chung
-            return <p className="no-slot-text">Không có khung giờ trống cho ngày này.</p>;
+            return (
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            style={{ marginBlock: '0'}}
+                            description={
+                                <span style={{ fontSize: 16, color: '#888' }}>
+                                    Không có khung giờ trống cho ngày này.
+                                </span>
+                            }
+                        />
+                    </div>
+                );
         }
 
         return availableSlots.map((time) => (
