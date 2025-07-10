@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Select, Typography, Row, Col, Space } from 'antd';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -22,6 +23,8 @@ const PermissionModal = ({ open, onClose, user, onSubmit }) => {
     const handleOk = () => {
         if (user && newRole !== user.roleId) {
             onSubmit(user.userId, newRole);
+        } else {
+            toast.warning("Vai trò bạn chọn giống với vai trò ban đầu");
         }
         onClose();
     };

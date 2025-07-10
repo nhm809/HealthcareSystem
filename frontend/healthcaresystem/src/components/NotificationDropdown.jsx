@@ -75,7 +75,7 @@ const NotificationDropdown = ({ notifications, unreadCount, onMarkAsRead, onMark
                   }
                   description={
                     <div>
-                      <span style={{ color: '#666', fontSize: 13 }}>{item.content}</span>
+                      <span style={{ color: '#666', fontSize: 13, whiteSpace: 'pre-line' }}>{item.content}</span>
                       <div style={{ color: '#bbb', fontSize: 11, marginTop: 4, display: 'flex', gap: 8 }}>
                         <span>{dayjs(item.sendTime).fromNow()}</span>
                         <span>({dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')})</span>

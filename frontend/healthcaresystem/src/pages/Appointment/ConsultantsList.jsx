@@ -70,6 +70,8 @@ function Appointment() {
                          enterButton
                          className='doctor-list-search'
                          onSearch={(value) => setSearchTerm(value)}
+                         onChange={(e) => setSearchTerm(e.target.value)} 
+                         allowClear
                     />
 
                     <div className='doctor-list-filters'>

@@ -16,39 +16,101 @@
   object-fit: cover;
 }
 
+/* Wrapper tổng */
 .doctor-list-search {
     display: flex;
     justify-content: center;
     margin-bottom: 24px;
     max-width: 600px;
-    border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 24px;
 }
 
+/* Input + icon wrapper */
+.doctor-list-search .ant-input-group-wrapper {
+    width: 100%;
+}
+
+/* Bo tròn tổng thể */
+.doctor-list-search .ant-input-affix-wrapper {
+    border-radius: 999px 0 0 999px !important; /* Bo trái */
+    border: 1px solid #ccc;
+    border-right: none;
+    height: 40px;
+    background-color: #fff;
+}
+
+/* Xóa viền bên trong input */
 .doctor-list-search .ant-input {
-    border-radius: 999px;
+    border: none !important;
+    outline: none;
+    height: 100%;
+    padding-left: 8px !important;
+    font-size: 15px;
+    color: #333;
+    background-color: transparent;
 }
 
-.doctor-list-search .ant-btn {
-    border-radius: 999px;
+.doctor-list-search .ant-input::placeholder {
+    color: #999;
+    font-weight: 500;
+}
+
+/* Nút tìm kiếm */
+.doctor-list-search .ant-input-group-addon .ant-input-search-button {
+    border-radius: 0 999px 999px 0 !important; /* Bo phải */
+    height: 40px;
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: #54AA7F;
+    color: white;
+    padding: 0 16px;
+    transition: background-color 0.3s;
+}
+
+.doctor-list-search .ant-input-group-addon .ant-input-search-button:hover {
+    background-color: #54AA7F;
 }
 
 .doctor-list-filters {
     margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
+/* Tiêu đề bên trái */
 .doctor-list-filters p {
     font-size: 18px;
     margin: 0;
-    font-weight: bold;
+    font-weight: 600;
+    color: #333;
 }
 
+/* Nhóm filter bên phải */
+.filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    border: none;
+}
+
+/* Mỗi select dropdown */
 .filter-select {
     width: 150px;
+    height: 32px;
+    border-radius: 8px !important;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+    border-color: #54AA7F !important;
 }
 
 .ant-card {
