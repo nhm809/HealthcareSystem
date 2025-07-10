@@ -56,7 +56,6 @@ namespace Infrastructure.Services
             }).ToList();
         }
 
-
         public async Task<SpecialtyDTO> CreateAsync(SpecialtyDTO specialtyDto)
         {
             var specialty = new Specialty
@@ -66,9 +65,16 @@ namespace Infrastructure.Services
             };
             _context.Specialties.Add(specialty);
             await _context.SaveChangesAsync();
-            specialtyDto.Id = specialty.SpecialtyId;
-            return specialtyDto;
+
+            return new SpecialtyDTO
+            {
+                Id = specialty.SpecialtyId,
+                Name = specialty.Name,
+                Description = specialty.Description
+            };
+
         }
+
 
 
         public async Task<bool> UpdateAsync(SpecialtyDTO specialtyDto)

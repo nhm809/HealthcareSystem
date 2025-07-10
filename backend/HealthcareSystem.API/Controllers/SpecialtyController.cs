@@ -83,16 +83,28 @@ public class SpecialtyController : ControllerBase
         {
             return BadRequest(new { success = false, message = "Invalid specialty data." });
         }
+
         try
         {
             var createdSpecialty = await _specialtyService.CreateAsync(specialtyDto);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdSpecialty.Id }, new { success = true, data = createdSpecialty });
+
+            return Ok(new
+            {
+                success = true,
+                data = createdSpecialty
+            });
         }
         catch (Exception ex)
         {
-            return StatusCode((int)HttpStatusCode.InternalServerError, new { success = false, message = ex.Message });
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                new { success = false, message = ex.Message }
+            );
         }
     }
+
+
+
 
     [HttpPut]
     [Route("update")]
