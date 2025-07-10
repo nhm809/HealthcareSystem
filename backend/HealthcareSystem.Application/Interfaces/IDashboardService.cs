@@ -11,5 +11,8 @@ namespace Application.Interfaces
 
         // CẬP NHẬT: Phương thức để lấy tổng doanh thu với các tham số linh hoạt hơn (DateRangeRequestDto).
         Task<TotalRevenueResponseDTO> GetTotalRevenueAsync(DateRangeRequestDTO request);
+
+        // Phương thức mới để so sánh doanh thu
+        Task<RevenueComparisonDTO> GetRevenueComparisonAsync(DashboardComparisonRequestDTO request);
     }
 }
