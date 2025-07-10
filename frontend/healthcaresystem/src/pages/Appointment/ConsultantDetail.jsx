@@ -123,7 +123,7 @@ function DoctorDetail() {
             <div className="doctor-detail-container">
                 <div className="doctor-info">
                     <img
-                        src={doctor.avatar?.trim() ? doctor.avatar : defaultdoctoravatar}
+                        src={doctor?.avatar?.trim() ? doctor.avatar : defaultdoctoravatar}
                         alt="doctor"
                         className="doctor-image"
                     />

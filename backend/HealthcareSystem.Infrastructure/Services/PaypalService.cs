@@ -263,7 +263,7 @@ namespace HealthcareSystem.Infrastructure.Services
                 }
 
                 // Create Notification for Member
-                if (appointment.MemberId.HasValue)
+                if (appointment.MemberId != null)
                 {
                     var paidAt = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm");
                     var consultantName = appointment.Consultant?.FullName ?? "Không xác định";
@@ -279,7 +279,7 @@ namespace HealthcareSystem.Infrastructure.Services
 
                     var notification = new Notification
                     {
-                        UserId = appointment.MemberId.Value,
+                        UserId = appointment.MemberId,
                         Title = "Thanh toán thành công lịch tư vấn",
                         Content = content,
                         SendTime = DateTime.UtcNow.AddHours(7),
