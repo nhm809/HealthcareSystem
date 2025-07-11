@@ -66,14 +66,14 @@ const EmployeeManagement = () => {
      const [specialties, setSpecialties] = useState([]);
      const [selectedSpecialties, setSelectedSpecialties] = useState([]);
      const [addingSpecialty, setAddingSpecialty] = useState(false);
-     const [setDeletingSpecialty] = useState(false);
+     const [deletingSpecialty, setDeletingSpecialty] = useState(false);
      const [userSpecialties, setUserSpecialties] = useState({});
      const [userSchedules, setUserSchedules] = useState({});
      const [loadingSchedule, setLoadingSchedule] = useState(false);
      const [addScheduleModalVisible, setAddScheduleModalVisible] = useState(false);
      const [addScheduleForm] = Form.useForm();
      const [addingSchedule, setAddingSchedule] = useState(false);
-     const [setDeletingSchedule] = useState(false);
+     const [deletingSchedule, setDeletingSchedule] = useState(false);
      const [noteModalVisible, setNoteModalVisible] = useState(false);
      const [selectedNote, setSelectedNote] = useState('');
      const [expandedDays, setExpandedDays] = useState(new Set());
