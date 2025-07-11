@@ -21,6 +21,7 @@ const TestHistory = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const userId = Cookies.get('userId');
+  const [paymentLoadingId, setPaymentLoadingId] = useState(null);
 
   useEffect(() => {
     if (!userId) {
@@ -82,16 +83,40 @@ const TestHistory = () => {
     }
   };
 
-  const handlePayment = (record) => {
-    // Navigate to payment page with test record info
-    navigate('/test-sti', {
-      state: {
-        testRecordId: record.testServiceRecordId,
-        serviceName: record.serviceName,
-        amount: record.price || 0,
-        isFromHistory: true
-      }
+  // Thêm hàm tạo order PayPal
+  const createPaypalOrder = async (testServiceRecordId) => {
+    const res = await fetch(`/api/Payment/create-paypal-url?testServiceRecordId=${testServiceRecordId}`, {
+      method: 'POST'
     });
+    if (!res.ok) throw new Error('Tạo order PayPal thất bại');
+    return res.json(); // { approvalUrl: 'https://www.paypal.com/checkoutnow?...' }
+  };
+
+  // Sửa handlePayment
+  const handlePayment = async (record) => {
+    try {
+      setPaymentLoadingId(record.testServiceRecordId);
+      const res = await fetch(`/api/Payment/create-paypal-url?testServiceRecordId=${record.testServiceRecordId}`, {
+        method: 'POST'
+      });
+      if (!res.ok) {
+        message.error('API trả về lỗi: ' + res.status);
+        setPaymentLoadingId(null);
+        return;
+      }
+      const data = await res.json();
+      console.log('PayPal API response:', data);
+      const approvalUrl = data.paymentUrl;
+      if (approvalUrl) {
+        window.location.href = approvalUrl;
+      } else {
+        message.error('Không thể tạo đơn PayPal! (paymentUrl không tồn tại)');
+        setPaymentLoadingId(null);
+      }
+    } catch (err) {
+      message.error('Có lỗi khi tạo đơn PayPal!');
+      setPaymentLoadingId(null);
+    }
   };
 
   const handleFeedback = (record) => {
@@ -183,9 +208,10 @@ const TestHistory = () => {
             <Button
               type="primary"
               size="small"
-              onClick={(e) => {
+              loading={paymentLoadingId === record.testServiceRecordId}
+              onClick={async (e) => {
                 e.stopPropagation();
-                handlePayment(record);
+                await handlePayment(record);
               }}
               style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
             >

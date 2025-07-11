@@ -10,6 +10,7 @@ import { notiApi, authApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
 import ConfirmTestModal from './ConfirmTestModal';
+import TestBanner from '../../assets/imgs/testbanner.jpg';
 
 function TestSti() {
      const navigate = useNavigate();
@@ -123,13 +124,39 @@ function TestSti() {
      };
      
      const handleFinish = async (values) => {
-          setFormData({
-               ...values,
-               isFromHistory,
-               existingTestRecord
-          });
-          setIsModalOpen(false);
-          setIsConfirmModalOpen(true);
+          try {
+               // Validation bổ sung trước khi submit
+               if (!values.fullName || !values.dob || !values.gender || !values.phone || !values.testDate) {
+                    message.error('Vui lòng điền đầy đủ thông tin bắt buộc');
+                    return;
+               }
+               
+               // Kiểm tra nếu đã chọn ngày nhưng chưa chọn ca làm việc
+               if (values.testDate && !values.shift) {
+                    message.error('Vui lòng chọn ca làm việc cho ngày đã chọn');
+                    return;
+               }
+               
+               // Kiểm tra xem có ca làm việc khả dụng không
+               if (values.shift && workShifts.length > 0) {
+                    const selectedShift = workShifts.find(shift => shift.shiftId === values.shift);
+                    if (!selectedShift || !selectedShift.isAvailable) {
+                         message.error('Ca làm việc đã chọn không khả dụng. Vui lòng chọn ca khác');
+                         return;
+                    }
+               }
+               
+               setFormData({
+                    ...values,
+                    isFromHistory,
+                    existingTestRecord
+               });
+               setIsModalOpen(false);
+               setIsConfirmModalOpen(true);
+          } catch (error) {
+               console.error('Error in form validation:', error);
+               message.error('Có lỗi xảy ra. Vui lòng thử lại');
+          }
      };
 
      // Xử lý khi ngày lấy mẫu thay đổi
@@ -168,7 +195,7 @@ function TestSti() {
 
                     <div className="test-introduce-right">
                          <img
-                              src="https://cdn-media.sforum.vn/storage/app/media/anh-dep-68.jpg"
+                              src={TestBanner}
                               alt="STI test"
                               style={{ width: '100%', borderRadius: '10px' }}
                          />
@@ -223,16 +250,40 @@ function TestSti() {
                               form={form}
                               layout="vertical"
                               onFinish={handleFinish}
+                              validateTrigger={['onBlur', 'onChange']}
+                              scrollToFirstError={true}
                          >
                               <Form.Item
                                    label="Họ và tên"
                                    name="fullName"
                                    rules={[
                                         { required: true, message: 'Vui lòng nhập họ và tên' },
-                                        { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự' }
+                                        { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự' },
+                                        { max: 50, message: 'Họ và tên không được quá 50 ký tự' },
+                                        {
+                                             pattern: /^[a-zA-ZÀ-ỹ\s]+$/,
+                                             message: 'Họ và tên chỉ được chứa chữ cái và khoảng trắng'
+                                        },
+                                        {
+                                             validator: (_, value) => {
+                                                  if (value) {
+                                                       const trimmedValue = value.trim();
+                                                       if (trimmedValue.length < 2) {
+                                                            return Promise.reject('Họ và tên phải có ít nhất 2 ký tự sau khi loại bỏ khoảng trắng');
+                                                       }
+                                                       if (trimmedValue.split(' ').length < 2) {
+                                                            return Promise.reject('Vui lòng nhập đầy đủ họ và tên');
+                                                       }
+                                                  }
+                                                  return Promise.resolve();
+                                             }
+                                        }
                                    ]}
                               >
-                                   <Input placeholder="Nhập họ và tên" />
+                                   <Input 
+                                        placeholder="Nhập họ và tên" 
+                                        maxLength={50}
+                                   />
                               </Form.Item>
                               <Form.Item
                                    label="Ngày sinh"
@@ -244,14 +295,35 @@ function TestSti() {
                                                   if (value) {
                                                        const today = new Date();
                                                        const birthDate = value.toDate();
+                                                       
+                                                       // Kiểm tra ngày sinh không được trong tương lai
                                                        if (birthDate >= today) {
                                                             return Promise.reject('Ngày sinh không được trong tương lai');
                                                        }
+                                                       
+                                                       // Tính tuổi chính xác
                                                        const age = today.getFullYear() - birthDate.getFullYear();
-                                                       if (age < 18) {
-                                                            return Promise.reject('Bạn phải từ 18 tuổi trở lên');
+                                                       const monthDiff = today.getMonth() - birthDate.getMonth();
+                                                       
+                                                       let actualAge = age;
+                                                       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                                            actualAge--;
                                                        }
-                                                       if (age > 100) {
+                                                       
+                                                       // Kiểm tra tuổi tối thiểu
+                                                       if (actualAge < 18) {
+                                                            return Promise.reject('Bạn phải từ 18 tuổi trở lên để sử dụng dịch vụ này');
+                                                       }
+                                                       
+                                                       // Kiểm tra tuổi tối đa
+                                                       if (actualAge > 100) {
+                                                            return Promise.reject('Ngày sinh không hợp lệ. Vui lòng kiểm tra lại');
+                                                       }
+                                                       
+                                                       // Kiểm tra ngày sinh không quá xa trong quá khứ
+                                                       const minBirthDate = new Date();
+                                                       minBirthDate.setFullYear(today.getFullYear() - 100);
+                                                       if (birthDate < minBirthDate) {
                                                             return Promise.reject('Ngày sinh không hợp lệ');
                                                        }
                                                   }
@@ -265,7 +337,10 @@ function TestSti() {
                                         style={{ width: '100%' }} 
                                         placeholder="dd/mm/yyyy"
                                         disabledDate={(current) => {
-                                             return current && current >= new Date();
+                                             const today = new Date();
+                                             const minDate = new Date();
+                                             minDate.setFullYear(today.getFullYear() - 100);
+                                             return current && (current >= today || current < minDate);
                                         }}
                                    />
                               </Form.Item>
@@ -285,10 +360,55 @@ function TestSti() {
                                    name="phone"
                                    rules={[
                                         { required: true, message: 'Vui lòng nhập số điện thoại' },
-                                        { pattern: /^0\d{9}$/, message: 'Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số' }
+                                        { 
+                                             pattern: /^0\d{9}$/, 
+                                             message: 'Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số' 
+                                        },
+                                        {
+                                             validator: (_, value) => {
+                                                  if (value) {
+                                                       // Loại bỏ khoảng trắng và ký tự đặc biệt
+                                                       const cleanPhone = value.replace(/\s+/g, '');
+                                                       
+                                                       // Kiểm tra độ dài
+                                                       if (cleanPhone.length !== 10) {
+                                                            return Promise.reject('Số điện thoại phải có đúng 10 chữ số');
+                                                       }
+                                                       
+                                                       // Kiểm tra bắt đầu bằng 0
+                                                       if (!cleanPhone.startsWith('0')) {
+                                                            return Promise.reject('Số điện thoại phải bắt đầu bằng số 0');
+                                                       }
+                                                       
+                                                       // Kiểm tra chỉ chứa số
+                                                       if (!/^\d+$/.test(cleanPhone)) {
+                                                            return Promise.reject('Số điện thoại chỉ được chứa chữ số');
+                                                       }
+                                                       
+                                                       // Kiểm tra các đầu số phổ biến của Việt Nam
+                                                       const validPrefixes = ['03', '05', '07', '08', '09'];
+                                                       const prefix = cleanPhone.substring(0, 2);
+                                                       if (!validPrefixes.includes(prefix)) {
+                                                            return Promise.reject('Số điện thoại không hợp lệ. Vui lòng kiểm tra lại');
+                                                       }
+                                                  }
+                                                  return Promise.resolve();
+                                             }
+                                        }
                                    ]}
                               >
-                                   <Input placeholder="Nhập số điện thoại" />
+                                   <Input 
+                                        placeholder="Nhập số điện thoại" 
+                                        maxLength={15}
+                                        onBlur={(e) => {
+                                             // Tự động format số điện thoại
+                                             const value = e.target.value.replace(/\s+/g, '');
+                                             if (value.length === 10 && /^0\d{9}$/.test(value)) {
+                                                  const formatted = value.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+                                                  e.target.value = formatted;
+                                             }
+                                        }}
+                                   />
                               </Form.Item>
                               <Form.Item
                                    label="Ngày lấy mẫu"
@@ -302,9 +422,19 @@ function TestSti() {
                                                        today.setHours(0, 0, 0, 0);
                                                        const selectedDate = value.toDate();
                                                        selectedDate.setHours(0, 0, 0, 0);
-                                                       
+                                                       // Chỉ cho phép chọn trong 14 ngày tới
+                                                       const maxDate = new Date();
+                                                       maxDate.setDate(today.getDate() + 14);
                                                        if (selectedDate <= today) {
                                                             return Promise.reject('Ngày lấy mẫu phải sau ngày hiện tại');
+                                                       }
+                                                       if (selectedDate > maxDate) {
+                                                            return Promise.reject('Chỉ được đặt lịch trong vòng 14 ngày tới');
+                                                       }
+                                                       // Không cho chọn cuối tuần
+                                                       const dayOfWeek = selectedDate.getDay();
+                                                       if (dayOfWeek === 0 || dayOfWeek === 6) {
+                                                            return Promise.reject('Ngày lấy mẫu không được chọn vào cuối tuần');
                                                        }
                                                   }
                                                   return Promise.resolve();
@@ -317,7 +447,17 @@ function TestSti() {
                                         style={{ width: '100%' }} 
                                         placeholder="dd/mm/yyyy"
                                         disabledDate={(current) => {
-                                             return current && current <= new Date();
+                                             const today = new Date();
+                                             today.setHours(0, 0, 0, 0);
+                                             const maxDate = new Date();
+                                             maxDate.setDate(today.getDate() + 14);
+                                             // Disable ngày hôm nay và trước đó, ngày sau 14 ngày, và cuối tuần
+                                             return current && (
+                                                  current <= today || 
+                                                  current > maxDate ||
+                                                  current.day() === 0 || 
+                                                  current.day() === 6
+                                             );
                                         }}
                                         onChange={handleTestDateChange}
                                    />
@@ -328,11 +468,26 @@ function TestSti() {
                                    <Form.Item
                                         label="Ca làm việc"
                                         name="shift"
-                                        rules={[{ required: true, message: 'Vui lòng chọn ca làm việc' }]}
+                                        rules={[
+                                             { required: true, message: 'Vui lòng chọn ca làm việc' },
+                                             {
+                                                  validator: (_, value) => {
+                                                       if (value && workShifts.length > 0) {
+                                                            const selectedShift = workShifts.find(shift => shift.shiftId === value);
+                                                            if (selectedShift && !selectedShift.isAvailable) {
+                                                                 return Promise.reject('Ca làm việc này đã hết chỗ. Vui lòng chọn ca khác');
+                                                            }
+                                                       }
+                                                       return Promise.resolve();
+                                                  }
+                                             }
+                                        ]}
                                    >
                                         <Radio.Group disabled={shiftsLoading}>
                                              {shiftsLoading ? (
-                                                  <div>Đang tải thông tin ca làm việc...</div>
+                                                  <div style={{ color: '#666', fontStyle: 'italic' }}>
+                                                       <div>Đang tải thông tin ca làm việc...</div>
+                                                  </div>
                                              ) : workShifts.length > 0 ? (
                                                   workShifts.map((shift) => (
                                                        <Radio 
@@ -342,15 +497,23 @@ function TestSti() {
                                                             style={{ 
                                                                  display: 'block', 
                                                                  marginBottom: 8,
-                                                                 opacity: shift.isAvailable ? 1 : 0.5
+                                                                 opacity: shift.isAvailable ? 1 : 0.5,
+                                                                 color: shift.isAvailable ? 'inherit' : '#999'
                                                             }}
                                                        >
-                                                            {shift.shiftName} ({shift.startTime} - {shift.endTime}) - {shift.status}
-                                                            {!shift.isAvailable && ' (Hết chỗ)'}
+                                                            <div>
+                                                                 <strong>{shift.shiftName}</strong> ({shift.startTime} - {shift.endTime})
+                                                            </div>
+                                                            <div style={{ fontSize: '12px', color: shift.isAvailable ? '#666' : '#999' }}>
+                                                                 Trạng thái: {shift.status}
+                                                                 {!shift.isAvailable && ' (Hết chỗ)'}
+                                                            </div>
                                                        </Radio>
                                                   ))
                                              ) : (
-                                                  <div>Không có ca làm việc nào cho ngày này</div>
+                                                  <div style={{ color: '#ff4d4f', fontStyle: 'italic' }}>
+                                                       Không có ca làm việc nào cho ngày này. Vui lòng chọn ngày khác.
+                                                  </div>
                                              )}
                                         </Radio.Group>
                                    </Form.Item>
@@ -360,7 +523,13 @@ function TestSti() {
                                    <Button onClick={handleCancel}>
                                         {isFromHistory ? 'Quay lại' : 'Hủy'}
                                    </Button>
-                                   <Button type="primary" htmlType="submit" loading={loading} style={{ minWidth: 100 }}>
+                                   <Button 
+                                        type="primary" 
+                                        htmlType="submit" 
+                                        loading={loading} 
+                                        style={{ minWidth: 100 }}
+                                        disabled={shiftsLoading}
+                                   >
                                         {isFromHistory ? 'Thanh toán' : 'Tiếp tục'}
                                    </Button>
                               </div>
