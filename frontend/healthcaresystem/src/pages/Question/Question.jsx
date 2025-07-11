@@ -419,7 +419,7 @@ function Question() {
                                                     <MessageOutlined />
                                                     <span>{selectedQuestion.ansCount || 0} câu trả lời</span>
                                                 </Space>
-                                                {isAuthor(selectedQuestion) && (
+                                                {isAuthor(selectedQuestion) ? (
                                                     <Space>
                                                         <HeartOutlined 
                                                             style={{ 
@@ -433,6 +433,18 @@ function Question() {
                                                             {likedQuestions.has(selectedQuestion.id) ? 'Đã thích bởi tác giả' : 'Thích'}
                                                         </span>
                                                     </Space>
+                                                ) : (
+                                                    selectedQuestion.heart && (
+                                                        <Space>
+                                                            <HeartOutlined 
+                                                                style={{ 
+                                                                    color: '#ff4d4f',
+                                                                    fontSize: 16
+                                                                }}
+                                                            />
+                                                            <span>Đã thích bởi tác giả</span>
+                                                        </Space>
+                                                    )
                                                 )}
                                             </div>
                                 </div>
@@ -607,25 +619,37 @@ function Question() {
                                                                     <MessageOutlined />
                                                                     <span>{item.ansCount || 0} câu trả lời</span>
                                                                 </Space>
-                                                                {isAuthor(item) && (
-                                                                    <Space>
-                                                                        <HeartOutlined 
-                                                                            style={{ 
-                                                                                cursor: 'pointer',
-                                                                                color: likedQuestions.has(item.id) ? '#ff4d4f' : customStyles.primaryColor,
-                                                                                fontSize: 14
-                                                                            }}
-                                                                            onClick={e => {
-                                                                                e.preventDefault();
-                                                                                e.stopPropagation();
-                                                                                toggleLike(item.id);
-                                                                            }}
-                                                                        />
-                                                                        <span>
-                                                                            {likedQuestions.has(item.id) ? 'Đã thích bởi tác giả' : 'Thích'}
-                                                                        </span>
-                                                                    </Space>
-                                                                )}
+                                                                                                                {isAuthor(item) ? (
+                                                    <Space>
+                                                        <HeartOutlined 
+                                                            style={{ 
+                                                                cursor: 'pointer',
+                                                                color: likedQuestions.has(item.id) ? '#ff4d4f' : customStyles.primaryColor,
+                                                                fontSize: 14
+                                                            }}
+                                                            onClick={e => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                toggleLike(item.id);
+                                                            }}
+                                                        />
+                                                        <span>
+                                                            {likedQuestions.has(item.id) ? 'Đã thích bởi tác giả' : 'Thích'}
+                                                        </span>
+                                                    </Space>
+                                                ) : (
+                                                    item.heart && (
+                                                        <Space>
+                                                            <HeartOutlined 
+                                                                style={{ 
+                                                                    color: '#ff4d4f',
+                                                                    fontSize: 14
+                                                                }}
+                                                            />
+                                                            <span>Đã thích bởi tác giả</span>
+                                                        </Space>
+                                                    )
+                                                )}
                                                             </Space>
 
                                                             <Button
