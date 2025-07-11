@@ -698,7 +698,7 @@ function Question() {
                                         border: `1px solid ${customStyles.borderColor}`,
                                         borderRadius: 12,
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                                        width: '100%'
+                                        width: '380px'
                                     }}
                                     bodyStyle={{ padding: 24 }}
                                 >
