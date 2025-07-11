@@ -123,6 +123,16 @@ export const dashboardApi = {
      getRevenue: (data) => api.post('/Dashboard/revenue', data),
 };
 
+export const invoiceApi = {
+     searchByDate: (data) => api.post('/Invoice/search-by-date', data),
+};
+
+export const feedbackApi = {
+     getServiceSummary: () => api.get('/feedback/service-summary'),
+     getFeedbacksByService: (serviceId, pageNumber = 1, pageSize = 10) =>
+         api.get(`/feedback/service/${serviceId}`, { params: { pageNumber, pageSize } }),
+};
+
 export const questionApi = {
      getAllQuestions: () => api.get('/question/getAll'),
      addQuestion: (data) => api.post('/question/add', data),
