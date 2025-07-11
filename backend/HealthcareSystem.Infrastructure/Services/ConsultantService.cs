@@ -7,7 +7,7 @@ using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
-using HealthcareSystem.Application.DTOs; // Đảm bảo DTO này được sử dụng nếu cần
+using HealthcareSystem.Application.DTOs;
 
 namespace Infrastructure.Services
 {
@@ -93,6 +93,17 @@ namespace Infrastructure.Services
 
         public async Task<List<FreeSlotDTO>> GetAvailableTimeSlotsByDateAsync(int consultantId, DateTime date)
         {
+            // Bước 1: Kiểm tra xem consultant có tồn tại và IsAvailable hay không
+            var consultant = await _context.Users
+                                    .Where(u => u.UserId == consultantId)
+                                    .Select(u => new { u.IsAvailable, u.RoleId }) // Chỉ lấy những thuộc tính cần thiết
+                                    .FirstOrDefaultAsync();
+
+            if (consultant == null || !consultant.IsAvailable || consultant.RoleId != "CS") // Chỉ xử lý cho consultant và phải có IsAvailable = true
+            {
+                return new List<FreeSlotDTO>();
+            }
+
             if (date.DayOfWeek == DayOfWeek.Sunday) return new List<FreeSlotDTO>();
 
             int dayOfWeek = (int)date.DayOfWeek;
