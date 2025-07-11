@@ -6,9 +6,10 @@ import { consultantBlogApi } from '../../services/api';
 import dayjs from 'dayjs';
 import { DatePicker } from 'antd';
 import { ToastContext } from '../../contexts/ToastProvider';
+import './BlogManagement.css';
 
 const { Option } = Select;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { TabPane } = Tabs;
 
 const topicOptions = [
@@ -222,138 +223,145 @@ const BlogManagement = () => {
      });
 
      return (
-          <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 0' }}>
-               <Space direction="vertical" size={32} style={{ width: '100%' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                         <Title level={2} style={{ margin: 0, color: '#1a3e72', fontWeight: 700 }}>Quản lý Blog của bạn</Title>
-                         <Button
-                              type="primary"
-                              icon={<PlusOutlined />}
-                              size="large"
-                              style={{ borderRadius: 8, fontWeight: 600, boxShadow: '0 2px 8px rgba(24,144,255,0.12)' }}
-                              onClick={() => setModalOpen(true)}
-                         >
-                              Tạo blog mới
-                         </Button>
-                    </div>
-                    <Tabs activeKey={activeTab} onChange={setActiveTab}>
-                         <TabPane tab="Blog hiện tại" key="active">
-                              <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
-                                   <Input.Search
-                                        placeholder="Tìm kiếm tiêu đề blog..."
-                                        allowClear
-                                        value={searchText}
-                                        onChange={e => setSearchText(e.target.value)}
-                                        style={{ width: 320 }}
-                                   />
-                                   <DatePicker
-                                        placeholder="Chọn ngày đăng"
-                                        allowClear
-                                        value={searchDate}
-                                        onChange={date => setSearchDate(date)}
-                                        style={{ width: 180 }}
-                                        format="DD/MM/YYYY"
-                                   />
-                              </div>
-                              <Card
-                                   title={<span style={{ fontWeight: 600, fontSize: 20, color: '#1a3e72' }}><FileTextOutlined style={{ marginRight: 8 }} />Các blog đã tạo</span>}
-                                   style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.07)', borderRadius: 12 }}
-                                   bodyStyle={{ padding: 24 }}
+          <div className="blog-management-container">
+               <div className="blog-header">
+                    <Row justify="space-between" align="middle">
+                         <Col>
+                              <h1>Quản lý Blog</h1>
+                              <p style={{ marginBottom: '10px'}}>Tạo và quản lý các bài viết chuyên môn của bạn</p>
+                         </Col>
+                         <Col>
+                              <Button
+                                   className="create-blog-btn"
+                                   icon={<PlusOutlined />}
+                                   size="large"
+                                   onClick={() => setModalOpen(true)}
                               >
-                                   {loading ? (
-                                        <div style={{ textAlign: 'center', padding: 32 }}><Spin size="large" /></div>
-                                   ) : (
-                                        <List
-                                             grid={{ gutter: 24, column: 2 }}
-                                             dataSource={filteredBlogs}
-                                             locale={{ emptyText: 'Chưa có blog nào.' }}
-                                             renderItem={blog => (
-                                                  <List.Item>
-                                                       <div style={{ position: 'relative' }}>
-                                                            <Card
-                                                                 hoverable
-                                                                 style={{ borderRadius: 10, boxShadow: '0 1px 8px rgba(24,144,255,0.08)', transition: 'box-shadow 0.2s', minHeight: 320 }}
-                                                                 cover={<img alt={blog.title} src={blog.thumbnailImagePath} style={{ height: 200, objectFit: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10 }} />}
-                                                                 onClick={() => openEditModal(blog)}
-                                                            >
-                                                                 <Card.Meta
-                                                                      title={<span style={{ fontWeight: 600, fontSize: 18, color: '#1a3e72' }}>{blog.title}</span>}
-                                                                      description={
-                                                                           <>
-                                                                                <div style={{ margin: '8px 0', color: '#5fc9a7', fontWeight: 500 }}>{blog.topic}</div>
-                                                                                <Paragraph ellipsis={{ rows: 2, expandable: false }} style={{ marginBottom: 8 }}>{blog.description}</Paragraph>
-                                                                                <div style={{ color: '#888', fontSize: 13 }}><b>Ngày đăng:</b> {blog.publishDate?.split('T')[0]}</div>
-                                                                           </>
-                                                                      }
-                                                                 />
-                                                            </Card>
-                                                            <Dropdown
-                                                                 overlay={
-                                                                      <Menu>
-                                                                           <Menu.Item key="edit" onClick={e => { e.domEvent.stopPropagation(); openEditModal(blog); }}>
-                                                                                Cập nhật
-                                                                           </Menu.Item>
-                                                                           <Menu.Item key="delete">
-                                                                                <Popconfirm title="Bạn chắc chắn muốn xóa blog này?" onConfirm={e => { e.stopPropagation(); handleDeleteBlog(blog.blogID); }} onCancel={e => e.stopPropagation()} okText="Xóa" cancelText="Hủy">
-                                                                                     <span onClick={e => e.stopPropagation()}>Xóa</span>
-                                                                                </Popconfirm>
-                                                                           </Menu.Item>
-                                                                      </Menu>
-                                                                 }
-                                                                 trigger={["click"]}
-                                                            >
-                                                                 <Button type="text" icon={<MoreOutlined />} onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 8, right: 8, zIndex: 2 }} />
-                                                            </Dropdown>
+                                   Tạo blog mới
+                              </Button>
+                         </Col>
+                    </Row>
+                                   
+                <Tabs activeKey={activeTab} onChange={setActiveTab} className="blog-tabs">
+                         <TabPane tab="Blog hiện tại" key="active">
+                              <div className="filter-section">
+                                   <Row justify="end" gutter={[16, 16]}>
+                                        <Col>
+                                             <DatePicker
+                                                  placeholder="Chọn ngày đăng"
+                                                  allowClear
+                                                  value={searchDate}
+                                                  onChange={date => setSearchDate(date)}
+                                                  style={{ width: 180 }}
+                                                  format="DD/MM/YYYY"
+                                             />
+                                        </Col>
+                                        <Col>
+                                             <Input.Search
+                                                  placeholder="Tìm kiếm tiêu đề blog..."
+                                                  value={searchText}
+                                                  onChange={(e) => setSearchText(e.target.value)}
+                                                  style={{ width: 200 }}
+                                             />
+                                        </Col>
+                                   </Row>
+                              </div>
+                              
+                              {loading ? (
+                                   <div style={{ textAlign: 'center', padding: 64 }}><Spin size="large" /></div>
+                              ) : filteredBlogs.length > 0 ? (
+                                   <div className="blog-grid">
+                                        {filteredBlogs.map(blog => (
+                                             <div key={blog.blogID} className="blog-card" onClick={() => openEditModal(blog)}>
+                                                  <div className="blog-card-actions">
+                                                       <Dropdown
+                                                            overlay={
+                                                                 <Menu>
+                                                                      <Menu.Item key="edit" onClick={e => { e.domEvent.stopPropagation(); openEditModal(blog); }}>
+                                                                           Cập nhật
+                                                                      </Menu.Item>
+                                                                      <Menu.Item key="delete">
+                                                                           <Popconfirm title="Bạn chắc chắn muốn xóa blog này?" onConfirm={e => { e.stopPropagation(); handleDeleteBlog(blog.blogID); }} onCancel={e => e.stopPropagation()} okText="Xóa" cancelText="Hủy">
+                                                                                <span onClick={e => e.stopPropagation()}>Xóa</span>
+                                                                           </Popconfirm>
+                                                                      </Menu.Item>
+                                                                 </Menu>
+                                                            }
+                                                            trigger={["click"]}
+                                                       >
+                                                            <Button className="blog-action-btn" icon={<MoreOutlined />} onClick={e => e.stopPropagation()} />
+                                                       </Dropdown>
+                                                  </div>
+                                                  <img 
+                                                       className="blog-card-image" 
+                                                       src={blog.thumbnailImagePath} 
+                                                       alt={blog.title}
+                                                  />
+                                                  <div className="blog-card-content">
+                                                       <div className="blog-card-topic">{blog.topic}</div>
+                                                       <h3 className="blog-card-title">{blog.title}</h3>
+                                                       <p className="blog-card-description">{blog.description}</p>
+                                                       <div className="blog-card-meta">
+                                                            <span>Ngày đăng: {blog.publishDate?.split('T')[0]}</span>
                                                        </div>
-                                                  </List.Item>
-                                             )}
-                                        />
-                                   )}
-                              </Card>
+                                                  </div>
+                                             </div>
+                                        ))}
+                                   </div>
+                              ) : (
+                                   <div className="empty-state">
+                                        <div className="empty-state-icon">📝</div>
+                                        <div className="empty-state-title">Chưa có blog nào</div>
+                                        <div className="empty-state-description">Tạo blog đầu tiên của bạn để chia sẻ kiến thức chuyên môn</div>
+                                   </div>
+                              )}
                          </TabPane>
                          <TabPane tab="Blog đã xóa" key="deleted">
-                              <Card
-                                   title={<span style={{ fontWeight: 600, fontSize: 20, color: '#d9534f' }}><FileTextOutlined style={{ marginRight: 8 }} />Các blog đã xóa</span>}
-                                   style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.07)', borderRadius: 12 }}
-                                   bodyStyle={{ padding: 24 }}
-                              >
-                                   {loading ? (
-                                        <div style={{ textAlign: 'center', padding: 32 }}><Spin size="large" /></div>
-                                   ) : (
-                                        <List
-                                             grid={{ gutter: 24, column: 2 }}
-                                             dataSource={deletedBlogs}
-                                             locale={{ emptyText: 'Không có blog đã xóa.' }}
-                                             renderItem={blog => (
-                                                  <List.Item>
-                                                       <Card
-                                                            style={{ borderRadius: 10, boxShadow: '0 1px 8px rgba(24,144,255,0.08)', transition: 'box-shadow 0.2s', minHeight: 320, opacity: 0.7 }}
-                                                            cover={<img alt={blog.title} src={blog.thumbnailImagePath} style={{ height: 200, objectFit: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10, filter: 'grayscale(1)' }} />}
-                                                            actions={[
-                                                                 <Button type="primary" onClick={() => handleRestoreBlog(blog.blogID)}>Khôi phục</Button>
-                                                            ]}
-                                                       >
-                                                            <Card.Meta
-                                                                 title={<span style={{ fontWeight: 600, fontSize: 18, color: '#d9534f' }}>{blog.title}</span>}
-                                                                 description={
-                                                                      <>
-                                                                           <div style={{ margin: '8px 0', color: '#5fc9a7', fontWeight: 500 }}>{blog.topic}</div>
-                                                                           <Paragraph ellipsis={{ rows: 2, expandable: false }} style={{ marginBottom: 8 }}>{blog.description}</Paragraph>
-                                                                           <div style={{ color: '#888', fontSize: 13 }}><b>Ngày đăng:</b> {blog.publishDate?.split('T')[0]}</div>
-                                                                      </>
-                                                                 }
-                                                            />
-                                                       </Card>
-                                                  </List.Item>
-                                             )}
-                                        />
-                                   )}
-                              </Card>
+                              {loading ? (
+                                   <div style={{ textAlign: 'center', padding: 64 }}><Spin size="large" /></div>
+                              ) : deletedBlogs.length > 0 ? (
+                                   <div className="blog-grid">
+                                        {deletedBlogs.map(blog => (
+                                             <div key={blog.blogID} className="blog-card deleted-blog-card">
+                                                  <img 
+                                                       className="blog-card-image" 
+                                                       src={blog.thumbnailImagePath} 
+                                                       alt={blog.title}
+                                                  />
+                                                  <div className="blog-card-content">
+                                                       <div className="blog-card-topic">{blog.topic}</div>
+                                                       <h3 className="blog-card-title" style={{ color: '#d9534f' }}>{blog.title}</h3>
+                                                       <p className="blog-card-description">{blog.description}</p>
+                                                       <div className="blog-card-meta">
+                                                            <span>Ngày đăng: {blog.publishDate?.split('T')[0]}</span>
+                                                            <Button 
+                                                                 className="restore-btn" 
+                                                                 size="small"
+                                                                 onClick={(e) => {
+                                                                      e.stopPropagation();
+                                                                      handleRestoreBlog(blog.blogID);
+                                                                 }}
+                                                            >
+                                                                 Khôi phục
+                                                            </Button>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        ))}
+                                   </div>
+                              ) : (
+                                   <div className="empty-state">
+                                        <div className="empty-state-icon">🗑️</div>
+                                        <div className="empty-state-title">Không có blog đã xóa</div>
+                                        <div className="empty-state-description">Các blog đã xóa sẽ hiển thị ở đây</div>
+                                   </div>
+                              )}
                          </TabPane>
                     </Tabs>
-               </Space>
+               </div>
                <Modal
-                    title={<span style={{ fontWeight: 700, fontSize: 22, color: '#1a3e72' }}>Tạo blog mới</span>}
+                    className="blog-modal"
+                    title={<span>Tạo blog mới</span>}
                     open={modalOpen}
                     onCancel={() => { setModalOpen(false); setThumbnailPreview(''); setFileList([]); form.resetFields(); }}
                     footer={null}
@@ -480,7 +488,8 @@ const BlogManagement = () => {
                     </div>
                </Modal>
                <Modal
-                    title={<span style={{ fontWeight: 700, fontSize: 22, color: '#1a3e72' }}>Chỉnh sửa blog</span>}
+                    className="blog-modal"
+                    title={<span style={{color: 'black'}}>Chỉnh sửa blog</span>}
                     open={editModalOpen}
                     onCancel={() => { setEditModalOpen(false); setEditingBlog(null); setEditFileList([]); setEditThumbnailPreview(''); }}
                     footer={null}
