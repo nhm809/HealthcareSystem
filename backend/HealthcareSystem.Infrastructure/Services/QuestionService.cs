@@ -50,7 +50,7 @@ namespace Infrastructure.Services
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
                 .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId)
-                && u.RoleId == "CS")
+                && u.RoleId == "CS" && u.IsAvailable )
                 .ToListAsync();
 
             if (!consultants.Any()) return false;
