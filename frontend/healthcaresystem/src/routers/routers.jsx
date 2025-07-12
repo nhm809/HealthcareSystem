@@ -59,6 +59,10 @@ const routers = [
           path: 'test-sti',
           component: lazy(() => import('../pages/TestSti/PaypalCallback'))
      },
+     {
+          path: '/error',
+          component: lazy(() => import('../pages/PaymentErrorPage'))
+     },
     // Staff route: NO children, just component
      {
           path: '/staff',
