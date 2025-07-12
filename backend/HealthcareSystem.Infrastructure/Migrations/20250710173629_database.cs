@@ -114,7 +114,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 {
                     AppointmentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberID = table.Column<int>(type: "int", nullable: true),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
                     MeetLink = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     ServiceID = table.Column<int>(type: "int", nullable: true),
                     ConsultantID = table.Column<int>(type: "int", nullable: true),
@@ -135,7 +135,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         name: "FK__Appointme__Membe__3D5E1FD2",
                         column: x => x.MemberID,
                         principalTable: "User",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK__Appointme__Servi__3E52440B",
                         column: x => x.ServiceID,
@@ -228,7 +229,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                     Status = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     Age = table.Column<int>(type: "int", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeartCount = table.Column<int>(type: "int", nullable: true),
+                    Heart = table.Column<bool>(type: "bit", nullable: true),
                     AnsCount = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -257,7 +258,7 @@ namespace HealthcareSystem.Infrastructure.Migrations
                 {
                     CycleID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberID = table.Column<int>(type: "int", nullable: true),
+                    MemberID = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: true),
                     CycleLength = table.Column<int>(type: "int", nullable: true),
                     PeriodLength = table.Column<int>(type: "int", nullable: true),
@@ -271,7 +272,8 @@ namespace HealthcareSystem.Infrastructure.Migrations
                         name: "FK__Reproduct__Membe__2F10007B",
                         column: x => x.MemberID,
                         principalTable: "User",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

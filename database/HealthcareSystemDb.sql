@@ -160,8 +160,11 @@ VALUES
 -- Câu hỏi về giáo dục giới tính
 (20, 7, N'Nên dạy con về giới tính từ mấy tuổi?',
  N'Tôi có con gái 8 tuổi, muốn dạy về sự khác biệt giới tính và tôn trọng người khác. Nên bắt đầu thế nào cho phù hợp?',
- NULL, '2025-07-05 08:00:00', 9, N'Đã trả lời', 35, N'Nữ', 18, 4);
-
+ NULL, '2025-07-05 08:00:00', 9, N'Đã trả lời', 35, N'Nữ', 18, 4),
+ -- Câu hỏi về giáo dục giới tính
+(20, 7, N'Nên dạy con về giới tính từ mấy tuổi?',
+ N'Tôi có con gái 2 tuổi, muốn dạy về sự khác biệt giới tính và tôn trọng người khác. Nên bắt đầu thế nào cho phù hợp?',
+ NULL, '2025-07-05 08:00:00', 9, N'Bị từ chối', 35, N'Nữ', 18, 4);
 
  INSERT INTO [QuestionThreadItem] (
     QuestionID, SentAt, AnsweredAt, QuestionText, AnswerText, AttachmentPath, IsAnswered

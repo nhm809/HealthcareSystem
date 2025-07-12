@@ -123,6 +123,16 @@ export const dashboardApi = {
      getRevenue: (data) => api.post('/Dashboard/revenue', data),
 };
 
+export const invoiceApi = {
+     searchByDate: (data) => api.post('/Invoice/search-by-date', data),
+};
+
+export const feedbackApi = {
+     getServiceSummary: () => api.get('/feedback/service-summary'),
+     getFeedbacksByService: (serviceId, pageNumber = 1, pageSize = 10) =>
+         api.get(`/feedback/service/${serviceId}`, { params: { pageNumber, pageSize } }),
+};
+
 export const questionApi = {
      getAllQuestions: () => api.get('/question/getAll'),
      addQuestion: (data) => api.post('/question/add', data),
@@ -132,8 +142,7 @@ export const questionApi = {
      updateQuestionStatus: (questionId, status) => api.put(`/question/updateStatus/${questionId}`, status, {
           headers: { 'Content-Type': 'application/json' }
      }),
-     giveHeart: (questionId, memberId) => api.post('/question/giveHeart', { questionId, memberId }),
-     checkHeartStatus: (questionId, memberId) => api.get(`/question/checkHeart/${questionId}/${memberId}`),
+     updateHeart: (questionId, memberId, heart) => api.post('/question/updateHeart', { questionId, memberId, heart }),
 };
 
 export const messageApi = {
@@ -186,6 +195,13 @@ export const manageUserApi = {
 
 export const getWeeklySchedule = (userId, offset = 0) =>
      api.get(`/schedule/week/${userId}`, { params: { offset } });
+
+export const weeklyOverrideScheduleApi = {
+     createOverrideSchedule: (data) => api.post('/WeeklyOverrideSchedule', data),
+     getOverrideSchedules: (params) => api.get('/WeeklyOverrideSchedule', { params }),
+     updateOverrideStatus: (data) => api.put('/WeeklyOverrideSchedule/status', data),
+     deleteOverrideSchedule: (id) => api.delete(`/WeeklyOverrideSchedule/${id}`),
+};
 
 // Request interceptor
 api.interceptors.request.use(

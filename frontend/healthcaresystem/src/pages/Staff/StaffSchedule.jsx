@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Pagination, Button, Tag, Card, Row, Col, Modal, Form, Select, Input, message, Upload, Tabs } from 'antd';
+import { Table, Pagination, Button, Tag, Card, Row, Col, Modal, Form, Select, Input, message, Upload, Tabs, Image } from 'antd';
 import { getTestServiceRecordsByStaff, updateTestResult, authApi } from '../../services/api';
 import Cookies from 'js-cookie';
 import { UploadOutlined, ClockCircleOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined, MinusCircleOutlined, IdcardOutlined, InfoCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -444,79 +444,147 @@ const StaffSchedule = () => {
               </div>
 
               {/* Tiến trình xét nghiệm */}
-              <div style={{ 
-                backgroundColor: '#fff', 
-                padding: '20px', 
-                borderRadius: '12px', 
-                marginBottom: '24px',
-                border: '1px solid #e9ecef',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-              }}>
-                <h3 style={{ 
-                  color: '#2563EB', 
-                  marginBottom: '16px', 
-                  fontSize: '16px', 
-                  fontWeight: 600,
-                  borderBottom: '2px solid #2563EB',
-                  paddingBottom: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
+              {selectedTest && selectedTest.status !== 'Da hoan thanh' && (
+                <div style={{ 
+                  backgroundColor: '#fff', 
+                  padding: '20px', 
+                  borderRadius: '12px', 
+                  marginBottom: '24px',
+                  border: '1px solid #e9ecef',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}>
-                  <SyncOutlined /> Tiến trình xét nghiệm
-                </h3>
-                <Form form={form} layout="vertical" onFinish={handleUpdateStatus}>
-                  <Form.Item 
-                    name="status" 
-                    label={
-                      <span style={{ fontWeight: 600, color: '#333' }}>
-                        Trạng thái hiện tại
-                      </span>
-                    }
-                  >
-                    <Select 
-                      options={statusOptions} 
-                      style={{ borderRadius: '8px' }}
-                      size="large"
-                      onChange={(value) => setSelectedStatus(value)}
-                    />
-                  </Form.Item>
-                  <Form.Item 
-                    name="notes" 
-                    label={
-                      <span style={{ fontWeight: 600, color: '#333' }}>
-                        Ghi chú
-                      </span>
-                    }
-                  >
-                    <Input.TextArea 
-                      placeholder="Thêm ghi chú hoặc comment cho nội bộ..." 
-                      rows={4}
-                      style={{ borderRadius: '8px' }}
-                    />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button 
-                      type="primary" 
-                      htmlType="submit"
-                      size="large"
-                      style={{ 
-                        backgroundColor: '#2563EB', 
-                        borderColor: '#2563EB',
-                        borderRadius: '8px',
-                        fontWeight: 600,
-                        height: '40px',
-                        padding: '0 24px'
-                      }}
+                  <h3 style={{ 
+                    color: '#2563EB', 
+                    marginBottom: '16px', 
+                    fontSize: '16px', 
+                    fontWeight: 600,
+                    borderBottom: '2px solid #2563EB',
+                    paddingBottom: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8
+                  }}>
+                    <SyncOutlined /> Tiến trình xét nghiệm
+                  </h3>
+                  <Form form={form} layout="vertical" onFinish={handleUpdateStatus}>
+                    <Form.Item 
+                      name="status" 
+                      label={
+                        <span style={{ fontWeight: 600, color: '#333' }}>
+                          Trạng thái hiện tại
+                        </span>
+                      }
                     >
-                      Cập nhật trạng thái
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                      <Select 
+                        options={statusOptions} 
+                        style={{ borderRadius: '8px' }}
+                        size="large"
+                        onChange={(value) => setSelectedStatus(value)}
+                      />
+                    </Form.Item>
+                    <Form.Item 
+                      name="notes" 
+                      label={
+                        <span style={{ fontWeight: 600, color: '#333' }}>
+                          Ghi chú
+                        </span>
+                      }
+                    >
+                      <Input.TextArea 
+                        placeholder="Thêm ghi chú..." 
+                        rows={4}
+                        style={{ borderRadius: '8px' }}
+                      />
+                    </Form.Item>
+                    {/* Chỉ hiện upload khi chọn Đã hoàn thành và trạng thái thực tế chưa phải Đã hoàn thành */}
+                    {form.getFieldValue('status') === 'Da hoan thanh' && (!selectedTest.result || selectedTest.result === '' || selectedTest.result.startsWith('http')) && (
+                      <div style={{ marginBottom: 16 }}>
+                        <div style={{ fontWeight: 600, marginBottom: '12px', color: '#333' }}>
+                          Tải kết quả mới:
+                        </div>
+                        <Upload
+                          name="result"
+                          showUploadList={false}
+                          accept=".jpg,.jpeg,.png,.pdf"
+                          customRequest={async ({ file, onSuccess, onError }) => {
+                            setUploadingResult(true);
+                            try {
+                              const url = await uploadToCloudinary(file);
+                              setSelectedTest(prev => ({ ...prev, result: url }));
+                              message.success('Tải ảnh kết quả lên thành công!');
+                              // Hiển thị ảnh ngay sau khi upload
+                              // Không cần form.setFieldsValue vì không có field result trong form
+                              onSuccess();
+                            } catch (err) {
+                              message.error('Tải kết quả lên thất bại!');
+                              onError(err);
+                            } finally {
+                              setUploadingResult(false);
+                            }
+                          }}
+                        >
+                          <Button 
+                            icon={<UploadOutlined />} 
+                            loading={uploadingResult} 
+                            size="large"
+                            style={{ 
+                              backgroundColor: '#2563EB', 
+                              borderColor: '#2563EB',
+                              borderRadius: '8px',
+                              fontWeight: 600,
+                              height: '40px',
+                              padding: '0 24px',
+                              color: "white"
+                            }}
+                          >
+                            Tải kết quả lên
+                          </Button>
+                        </Upload>
+                        <div style={{ 
+                          fontSize: '12px', 
+                          color: '#6c757d', 
+                          marginTop: '8px',
+                          fontStyle: 'italic'
+                        }}>
+                          Hỗ trợ: JPG, JPEG, PNG
+                        </div>
+                        {/* Hiển thị ảnh preview ngay sau khi upload */}
+                        {selectedTest.result && selectedTest.result.startsWith('http') && (
+                          <div style={{ marginTop: 16 }}>
+                            <Image
+                              src={selectedTest.result}
+                              alt="Kết quả xét nghiệm"
+                              style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', border: '2px solid #e9ecef' }}
+                              preview={true}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <Form.Item>
+                      <Button 
+                        type="primary" 
+                        htmlType="submit"
+                        size="large"
+                        style={{ 
+                          backgroundColor: '#2563EB', 
+                          borderColor: '#2563EB',
+                          borderRadius: '8px',
+                          fontWeight: 600,
+                          height: '40px',
+                          padding: '0 24px'
+                        }}
+                        disabled={form.getFieldValue('status') === 'Da hoan thanh' && (!selectedTest.result || selectedTest.result === '')}
+                      >
+                        Cập nhật trạng thái
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+              )}
 
-              {/* Kết quả xét nghiệm - hiển thị khi chọn "Đã hoàn thành" */}
-              {selectedStatus === 'Da hoan thanh' && (
+              {/* Kết quả xét nghiệm - chỉ hiện khi trạng thái thực tế là Đã hoàn thành */}
+              {selectedTest && selectedTest.status === 'Da hoan thanh' && (
                 <div style={{ 
                   backgroundColor: '#fff', 
                   padding: '20px', 
@@ -537,7 +605,6 @@ const StaffSchedule = () => {
                   }}>
                     <CheckCircleOutlined /> Kết quả xét nghiệm
                   </h3>
-                  
                   {/* Hiển thị kết quả hiện tại */}
                   <div style={{ marginBottom: '20px' }}>
                     <div style={{ fontWeight: 600, marginBottom: '12px', color: '#333' }}>
@@ -558,15 +625,11 @@ const StaffSchedule = () => {
                                 Đã có kết quả
                               </Tag>
                             </div>
-                            <img 
-                              src={selectedTest.result} 
-                              alt="Kết quả xét nghiệm" 
-                              style={{ 
-                                maxWidth: '100%', 
-                                maxHeight: '200px', 
-                                borderRadius: '8px',
-                                border: '2px solid #e9ecef'
-                              }} 
+                            <Image
+                              src={selectedTest.result}
+                              alt="Kết quả xét nghiệm"
+                              style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', border: '2px solid #e9ecef' }}
+                              preview={true}
                             />
                           </div>
                         ) : (
@@ -595,56 +658,6 @@ const StaffSchedule = () => {
                           Chưa có kết quả
                         </div>
                       )}
-                    </div>
-                  </div>
-
-                  {/* Upload kết quả mới */}
-                  <div>
-                    <div style={{ fontWeight: 600, marginBottom: '12px', color: '#333' }}>
-                      Tải kết quả mới:
-                    </div>
-                    <Upload
-                      name="result"
-                      showUploadList={false}
-                      accept=".jpg,.jpeg,.png,.pdf"
-                      customRequest={async ({ file, onSuccess, onError }) => {
-                        setUploadingResult(true);
-                        try {
-                          const url = await uploadToCloudinary(file);
-                          setSelectedTest(prev => ({ ...prev, result: url }));
-                          message.success('✅ Tải ảnh kết quả lên thành công!');
-                          onSuccess();
-                        } catch (err) {
-                          message.error('❌ Tải ảnh lên thất bại!');
-                          onError(err);
-                        } finally {
-                          setUploadingResult(false);
-                        }
-                      }}
-                    >
-                      <Button 
-                        icon={<UploadOutlined />} 
-                        loading={uploadingResult} 
-                        size="large"
-                        style={{ 
-                          backgroundColor: '#2563EB', 
-                          borderColor: '#2563EB',
-                          borderRadius: '8px',
-                          fontWeight: 600,
-                          height: '40px',
-                          padding: '0 24px'
-                        }}
-                      >
-                        Tải kết quả lên
-                      </Button>
-                    </Upload>
-                    <div style={{ 
-                      fontSize: '12px', 
-                      color: '#6c757d', 
-                      marginTop: '8px',
-                      fontStyle: 'italic'
-                    }}>
-                      Hỗ trợ: JPG, JPEG, PNG, PDF (Tối đa 10MB)
                     </div>
                   </div>
                 </div>
