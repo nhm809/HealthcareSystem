@@ -154,7 +154,7 @@ namespace HealthcareSystem.Infrastructure.Services
                                 amount = new
                                 {
                                     currency_code = "USD",
-                                    value = amount.ToString("F2")
+                                    value = (amount * 1.05m).ToString("F2")
                                 },
                                 description = description
                             }
@@ -224,25 +224,32 @@ namespace HealthcareSystem.Infrastructure.Services
                     amount = testServiceRecord.Service?.Price ?? 0;
                     description = $"Thanh toán xét nghiệm - {testServiceRecord.FullNameOfMember}";
                     
-                    await _context.SaveChangesAsync(); // Save status change first
+                    await _context.SaveChangesAsync(); 
                     
                     // Assign staff after payment confirmation
                     await _testServiceRecordService.AssignStaffToTestRecordAsync(testServiceRecordId.Value);
-                }
 
+                    var paidAt = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm");
+                    var testServiceRecordName = testServiceRecord.Staff?.FullName ?? "Không xác định";
+                    var testServiceRecordTime = testServiceRecord.TestDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
 
-                if (testServiceRecord.MemberId.HasValue)
-                {
-                    var Notification = new Notification
+                    var content =
+                        $@"Dịch vụ: {testServiceRecord.Service?.Name}
+                        Bác sĩ tư vấn: {testServiceRecordName}
+                        Ngày hẹn: {testServiceRecordTime}
+                        Thời gian thanh toán: {paidAt}
+                        Số tiền: {amount * 1,05:N0} VND
+                        Mã giao dịch: {transactionId}";
+
+                    var notification = new Notification
                     {
-                        UserId = testServiceRecord.MemberId.Value,
-                        Title = "Thanh toán thành công",
-                        Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
-                        SendTime = DateTime.UtcNow.AddHours(7),///////////
+                        UserId = testServiceRecord.MemberId,
+                        Title = "Thanh toán thành công đơn xét nghiệm",
+                        Content = content,
+                        SendTime = DateTime.UtcNow.AddHours(7),
                         IsRead = false
                     };
-
-                    _context.Notifications.Add(Notification);
+                    _context.Notifications.Add(notification);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -274,7 +281,7 @@ namespace HealthcareSystem.Infrastructure.Services
                         Bác sĩ tư vấn: {consultantName}
                         Ngày hẹn: {appointmentTime}
                         Thời gian thanh toán: {paidAt}
-                        Số tiền: {amount:N0} VND
+                        Số tiền: {amount*1,05:N0} VND
                         Mã giao dịch: {transactionId}";
 
                     var notification = new Notification
@@ -296,17 +303,17 @@ namespace HealthcareSystem.Infrastructure.Services
             {
                 TestServiceRecordId = testServiceRecordId,
                 AppointmentId = appointmentId,
-                TotalAmount = amount,
+                TotalAmount = amount * 1.05m,
                 PaymentMethod = "PayPal",
                 TransactionId = transactionId,
-                CreatedAt = DateTime.UtcNow,
-                PaidAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.AddHours(7),
+                PaidAt = DateTime.UtcNow.AddHours(7),
                 UnitPrice = "VND",
                 TaxRate = amount * 0.05m,
                 Status = 1
             };
 
-            
+
             _context.Invoices.Add(invoice);
 
             await _context.SaveChangesAsync();
