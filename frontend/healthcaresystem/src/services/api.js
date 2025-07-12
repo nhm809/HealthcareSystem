@@ -106,13 +106,13 @@ export const adminApi = {
      getRecentUsers: () => api.get('/manageUser/getTenLatestUsers'),
      setUserStatus: (userId, isAvailable) =>
           api.put(`/manageUser/setStatusUser/${userId}/${isAvailable}`),
-     getUsersPerPage: (page, pageSize, search, role) =>
+     getUsersPerPage: (page, pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/loadUserPerPage/${page}/${pageSize}`, {
-               params: { search, role },
+               params: { search, role, isAvailable },
           }),
-     getPageCount: (pageSize, search, role) =>
+     getPageCount: (pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/countPage`, {
-          params: { pageSize, search, role },
+          params: { pageSize, search, role, isAvailable },
           }),
      getUserDetail: (userId) =>
           api.get(`/user/get/${userId}`),
