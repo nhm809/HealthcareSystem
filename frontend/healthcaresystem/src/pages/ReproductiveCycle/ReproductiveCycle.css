@@ -373,7 +373,7 @@
   justify-content: center;
 }
 
-.ant-table-wrapper .ant-table-pagination-right {
+.all-custom-cycle-table .ant-table-wrapper .ant-table-pagination-right {
   display: flex;
   justify-content: center;
   margin: 20px 0 0 0 !important;

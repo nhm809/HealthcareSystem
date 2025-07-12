@@ -7,6 +7,7 @@ import {
   Modal,
   Form,
   DatePicker,
+  TimePicker,
   InputNumber,
   message,
   Row,
@@ -501,6 +502,9 @@ function ReproductiveCycle() {
             </Form.Item>
             <Form.Item name="periodLength" label="Số ngày hành kinh" rules={[{ required: true , message: "Vui lòng nhập số ngày hành kinh" }]}>
               <InputNumber min={1} max={10} step={1} style={{ width: "100%" }} placeholder="Nhập số ngày" className="custom-input" />
+            </Form.Item>
+            <Form.Item name="pillTime" label="Thời gian uống thuốc (nếu có)" >
+              <TimePicker format="HH:mm" style={{ width: "100%" }} className="custom-input" placeholder="Chọn giờ uống thuốc" />
             </Form.Item>
           </Form>
         </Modal>
