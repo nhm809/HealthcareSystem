@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Modal, Box, Typography, Tabs, Tab } from '@mui/material';
 import FormInput from '../../FormInput/FormInput';
+import PasswordInput from '../../FormInput/PasswordInput';
 import Button from '../../Button/Button';
 import { authApi } from '../../../services/api';
 import './AuthModal.css';
@@ -38,6 +39,10 @@ function AuthModal({ open, onClose }) {
     const [isOtpRegisterLoading, setIsOtpRegisterLoading] = useState(false);
     const [otpCountdown, setOtpCountdown] = useState(180); // 3 phút = 180 giây
     const otpTimerRef = useRef();
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
+    const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
+    const [isNewPasswordValid, setIsNewPasswordValid] = useState(false);
+    const [isConfirmNewPasswordValid, setIsConfirmNewPasswordValid] = useState(false);
 
     // Bắt đầu đếm ngược khi showOtpVerify
     useEffect(() => {
@@ -139,6 +144,17 @@ function AuthModal({ open, onClose }) {
                 return;
             }
 
+            // Kiểm tra validation password
+            if (!isPasswordValid) {
+                setError('Mật khẩu không đáp ứng yêu cầu bảo mật');
+                return;
+            }
+
+            if (!isConfirmPasswordValid) {
+                setError('Mật khẩu nhập lại không khớp');
+                return;
+            }
+
             setInputErrors({});
 
             const response = await authApi.register({
@@ -183,6 +199,10 @@ function AuthModal({ open, onClose }) {
                 setConfirmPassword('');
                 setPhoneNumber('');
                 setInputErrors({});
+                setIsPasswordValid(false);
+                setIsConfirmPasswordValid(false);
+                setIsNewPasswordValid(false);
+                setIsConfirmNewPasswordValid(false);
             } else {
                 setOtpRegisterError(res.data.message || 'Xác thực OTP thất bại.');
             }
@@ -226,6 +246,10 @@ function AuthModal({ open, onClose }) {
         setConfirmPassword('');
         setPhoneNumber('');
         setShowForgotPassword(false);
+        setIsPasswordValid(false);
+        setIsConfirmPasswordValid(false);
+        setIsNewPasswordValid(false);
+        setIsConfirmNewPasswordValid(false);
     };
 
     const handleSendOTP = async (e) => {
@@ -265,7 +289,13 @@ function AuthModal({ open, onClose }) {
                 return;
             }
 
-            if (newPassword !== confirmNewPassword) {
+            // Kiểm tra validation password mới
+            if (!isNewPasswordValid) {
+                setError('Mật khẩu mới không đáp ứng yêu cầu bảo mật');
+                return;
+            }
+
+            if (!isConfirmNewPasswordValid) {
                 setError('Mật khẩu mới không khớp');
                 return;
             }
@@ -285,6 +315,10 @@ function AuthModal({ open, onClose }) {
                 setNewPassword('');
                 setConfirmNewPassword('');
                 setIsOtpSent(false);
+                setIsPasswordValid(false);
+                setIsConfirmPasswordValid(false);
+                setIsNewPasswordValid(false);
+                setIsConfirmNewPasswordValid(false);
             }
         } catch (err) {
             console.error(err);
@@ -302,6 +336,10 @@ function AuthModal({ open, onClose }) {
         setConfirmNewPassword('');
         setIsOtpSent(false);
         setError('');
+        setIsPasswordValid(false);
+        setIsConfirmPasswordValid(false);
+        setIsNewPasswordValid(false);
+        setIsConfirmNewPasswordValid(false);
     };
 
     return (
@@ -323,9 +361,8 @@ function AuthModal({ open, onClose }) {
                                         onChange={e => setEmail(e.target.value)}
                                         error={inputErrors.email}
                                     />
-                                    <FormInput
+                                    <PasswordInput
                                         label="Mật khẩu"
-                                        type="password"
                                         value={password}
                                         onChange={e => setPassword(e.target.value)}
                                         error={inputErrors.password}
@@ -422,21 +459,30 @@ function AuthModal({ open, onClose }) {
                                         onChange={e => setPhoneNumber(e.target.value)}
                                         error={inputErrors.phoneNumber}
                                     />
-                                    <FormInput
+                                    <PasswordInput
                                         label="Mật khẩu"
-                                        type="password"
                                         value={password}
                                         onChange={e => setPassword(e.target.value)}
                                         error={inputErrors.password}
+                                        showValidation={true}
+                                        onValidationChange={setIsPasswordValid}
                                     />
-                                    <FormInput
+                                    <PasswordInput
                                         label="Nhập lại mật khẩu"
-                                        type="password"
                                         value={confirmPassword}
                                         onChange={e => setConfirmPassword(e.target.value)}
                                         error={inputErrors.confirmPassword}
+                                        showValidation={false}
+                                        onValidationChange={setIsConfirmPasswordValid}
+                                        confirmPassword={password}
                                     />
-                                    <Button type="submit" id="btn-style">TIẾP TỤC</Button>
+                                    <Button 
+                                        type="submit" 
+                                        id="btn-style"
+                                        disabled={!isPasswordValid || !isConfirmPasswordValid}
+                                    >
+                                        TIẾP TỤC
+                                    </Button>
                                     {error && (
                                         <Typography className="error-message">{error}</Typography>
                                     )}
@@ -445,10 +491,67 @@ function AuthModal({ open, onClose }) {
                                         <span className="auth-divider-text">Hoặc đăng ký với</span>
                                         <span></span>
                                     </div>
-                                    <button type="button" className="google-btn">
-                                        <img src="https://images.icon-icons.com/2429/PNG/512/google_logo_icon_147282.png" alt="Google" className="google-icon" />
-                                        Đăng ký với Google
-                                    </button>
+                                    <GoogleOAuthProvider clientId="643990637416-5eu4q1ptjimm46k4v8aj3k86grjuiie9.apps.googleusercontent.com">
+                                        <GoogleLogin
+                                            onSuccess={async (credentialResponse) => {
+                                                try {
+                                                    console.log("Google Token:", credentialResponse.credential);
+                                                    if (!credentialResponse.credential) {
+                                                        toast.error('Không nhận được token từ Google');
+                                                        return;
+                                                    }
+
+                                                    // Gửi token trực tiếp
+                                                    const response = await authApi.googleLogin(credentialResponse.credential);
+                                                    console.log("Backend Response:", response.data);
+
+                                                    if (response.data.success) {
+                                                        const googleUser = response.data.data;
+                                                        console.log("Google User Data:", googleUser);
+
+                                                        // Lưu thông tin user
+                                                        const userInfo = {
+                                                            email: googleUser.email,
+                                                            roleId: "MB", // Default role cho Google users
+                                                            phoneNumber: "", // Empty phone number
+                                                            avatarPath: googleUser.picture
+                                                        };
+                                                        console.log("User Info to save:", userInfo);
+                                                        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+                                                        // Lưu email và ID
+                                                        Cookies.set('email', googleUser.email);
+                                                        Cookies.set('userId', googleUser.userId); // Sử dụng userId từ backend
+                                                        Cookies.set('token', googleUser.token); // Lưu JWT token
+
+                                                        // Update user state in Header
+                                                        const headerUser = {
+                                                            email: googleUser.email,
+                                                            roleId: "MB",
+                                                            phoneNumber: "",
+                                                            avatar: googleUser.picture
+                                                        };
+                                                        console.log("Header User:", headerUser);
+                                                        window.dispatchEvent(new CustomEvent('userLogin', { detail: headerUser }));
+
+                                                        toast.success('Đăng nhập thành công');
+                                                        onClose();
+                                                    }
+                                                } catch (err) {
+                                                    console.error('Lỗi đăng nhập Google:', err);
+                                                    console.error('Response data:', err.response?.data);
+                                                    console.error('Response status:', err.response?.status);
+                                                    console.error('Request data:', err.config?.data);
+                                                    console.error('Full error:', err);
+                                                    toast.error(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
+                                                }
+                                            }}
+                                            onError={(error) => {
+                                                console.error('Google login error:', error);
+                                                toast.error('Đăng nhập với Google thất bại');
+                                            }}
+                                        />
+                                    </GoogleOAuthProvider>
                                 </form>
                             )}
                             {tab === 1 && showOtpVerify && (
@@ -501,26 +604,29 @@ function AuthModal({ open, onClose }) {
                                             onChange={e => setOtp(e.target.value)}
                                             error={inputErrors.otp}
                                         />
-                                        <FormInput
+                                        <PasswordInput
                                             label="Mật khẩu mới"
-                                            type="password"
                                             value={newPassword}
                                             onChange={e => setNewPassword(e.target.value)}
                                             error={inputErrors.newPassword}
+                                            showValidation={true}
+                                            onValidationChange={setIsNewPasswordValid}
                                         />
-                                        <FormInput
+                                        <PasswordInput
                                             label="Nhập lại mật khẩu mới"
-                                            type="password"
                                             value={confirmNewPassword}
                                             onChange={e => setConfirmNewPassword(e.target.value)}
                                             error={inputErrors.confirmNewPassword}
+                                            showValidation={false}
+                                            onValidationChange={setIsConfirmNewPasswordValid}
+                                            confirmPassword={newPassword}
                                         />
                                     </>
                                 )}
                                 <Button 
                                     type="submit" 
                                     id="btn-style"
-                                    disabled={isLoading}
+                                    disabled={isLoading || (isOtpSent && (!isNewPasswordValid || !isConfirmNewPasswordValid))}
                                 >
                                     {isOtpSent ? 'ĐẶT LẠI MẬT KHẨU' : 'GỬI OTP'}
                                 </Button>
