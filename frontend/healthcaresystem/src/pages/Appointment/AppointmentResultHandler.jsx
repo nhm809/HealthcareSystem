@@ -15,7 +15,9 @@ export default function AppointmentResultHandler() {
             const appointmentId = params.get('appointmentId');
 
             if (!handler || !appointmentId || !userId) {
-                navigate('/appointment');
+                navigate('/appointment', {
+                    state: { serviceId: 2 }
+                });
                 return;
             }
 
@@ -25,7 +27,9 @@ export default function AppointmentResultHandler() {
             const sentConsultant = sessionStorage.getItem(keyConsultant);
 
             if (sentMember && sentConsultant) {
-                navigate('/appointment');
+                navigate('/appointment', {
+                    state: { serviceId: 2 }
+                });
                 return;
             }
 
@@ -50,7 +54,9 @@ export default function AppointmentResultHandler() {
             } catch (err) {
                 console.error('Lỗi khi tạo notification:', err);
             } finally {
-                navigate('/appointment');
+                navigate('/appointment', {
+                    state: { serviceId: 2 }
+                });
             }
         };
         run();
