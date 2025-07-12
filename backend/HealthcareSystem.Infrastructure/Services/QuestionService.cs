@@ -22,7 +22,7 @@ namespace Infrastructure.Services
         public async Task<List<QuestionDTO>> GetAllQuestionsAsync()
         {
             return await _context.Questions
-                .Where(q => q.Status != "Bị từ chối" || q.Status != "Bi tu choi") 
+                .Where(q => q.Status != "Bị từ chối") 
                 .Select(q => new QuestionDTO
                 {
                     QuestionId = q.QuestionId,
@@ -50,7 +50,7 @@ namespace Infrastructure.Services
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
                 .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId)
-                && u.RoleId == "CS")
+                && u.RoleId == "CS" && u.IsAvailable )
                 .ToListAsync();
 
             if (!consultants.Any()) return false;
