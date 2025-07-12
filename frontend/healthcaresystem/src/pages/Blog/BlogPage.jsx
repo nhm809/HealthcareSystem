@@ -175,12 +175,12 @@ function BlogPage() {
                 )}
               </div>
               <Pagination
-              current={currentPage}
-              pageSize={pageSize}
-              total={filteredBlogs.length}
-              onChange={handlePageChange}
-              className="blog-pagination"
-            />
+                current={currentPage}
+                pageSize={pageSize}
+                total={filteredBlogs.length}
+                onChange={handlePageChange}
+                className="blog-pagination"
+              />
             </>
           )}
         </div>

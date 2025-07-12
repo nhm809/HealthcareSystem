@@ -26,6 +26,7 @@ function DoctorDetail() {
     const [service, setService] = useState(null);
     const { state } = useLocation();
     const serviceId = state?.serviceId;
+    const [consultationCount, setConsultationCount] = useState(0);
 
 
     const today = dayjs();
@@ -79,6 +80,24 @@ function DoctorDetail() {
             }
         };
         fetchDoctor();
+
+        const fetchConsultationCount = async () => {
+            try {
+                const res = await api.get(`/Appointment/consultant/${id}`);
+                const appointments = res.data?.data || [];
+
+                const completedAppointments = appointments.filter(app =>
+                    app.status?.toLowerCase() === "da hoan thanh" || app.status?.toLowerCase() === "da danh gia"
+                );
+
+                setConsultationCount(completedAppointments.length);
+            } catch (error) {
+                console.error("Lỗi khi lấy lượt tư vấn:", error);
+                setConsultationCount(0);
+            }
+        };
+
+        if (id) fetchConsultationCount();
     }, [id]);
 
     useEffect(() => {
@@ -154,13 +173,16 @@ function DoctorDetail() {
                     <div className="doctor-details">
                         <h3>{doctor?.fullName}</h3>
                         <div className="specialty-tags">
-                            {doctor?.specialties?.map((spec, index) => (
+                            {doctor?.specialties?.length > 0 ? (
+                                doctor.specialties.map((spec, index) => (
                                 <span key={spec.id || index} className="specialty-tag">{spec.name}</span>
-                            ))}
+                                ))
+                            ) : (
+                                <span className="specialty-tag empty">Chưa cập nhật</span>
+                            )}
                         </div>
                         <div className="doctor-stats">
-                        <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>47</strong></p>
-                        <p><FontAwesomeIcon icon={faStar} /> Đánh giá: <strong>5</strong> (<em>17 đánh giá</em>)</p>
+                            <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>{consultationCount}</strong></p>
                         </div>
                     </div>
                 </div>
@@ -224,7 +246,11 @@ function DoctorDetail() {
 
                     <div className="experience-card">
                         <h4>KINH NGHIỆM KHÁM CHỮA BỆNH</h4>
-                        <p>BS. Nguyễn Văn Minh - Sản phụ khoa</p>
+                        <p>
+                            BS. {doctor?.fullName} 
+                              {doctor?.specialties?.length ? ` - ${doctor.specialties.map(s => s.name).join(', ')}` : ' - Chưa cập nhật'}
+                        </p>
+
                     </div>
                 </div>
 

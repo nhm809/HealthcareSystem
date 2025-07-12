@@ -45,7 +45,7 @@ namespace Infrastructure.Services
         }
 
 
-        public async Task<int> CountPage(int pageSize, string? search = null, string? role = null)
+        public async Task<int> CountPage(int pageSize, string? search = null, string? role = null, bool? isAvailable = null)
         {
             var query = _context.Users.AsQueryable();
 
@@ -59,13 +59,18 @@ namespace Infrastructure.Services
                 query = query.Where(u => u.RoleId == role);
             }
 
+            if (isAvailable.HasValue)
+            {
+                query = query.Where(u => u.IsAvailable == isAvailable.Value);
+            }
+
             int totalUsers = await query.CountAsync();
             int totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
             return totalPages;
         }
 
 
-        public async Task<IEnumerable<ManageUserDTO>> GetUsersPerPageAsync(int page, int pageSize, string? search, string? roleId)
+        public async Task<IEnumerable<ManageUserDTO>> GetUsersPerPageAsync(int page, int pageSize, string? search, string? roleId, bool? isAvailable)
         {
             var query = _context.Users.AsQueryable();
 
@@ -78,6 +83,11 @@ namespace Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(roleId))
             {
                 query = query.Where(u => u.RoleId == roleId);
+            }
+
+            if (isAvailable.HasValue)
+            {
+                query = query.Where(u => u.IsAvailable == isAvailable.Value);
             }
 
             var userList = await query

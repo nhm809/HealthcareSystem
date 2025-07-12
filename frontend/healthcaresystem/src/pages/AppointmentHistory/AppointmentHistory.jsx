@@ -28,7 +28,6 @@ function AppointmentHistory() {
                toast.warning('Đăng nhập để xem lịch sử đặt lịch');
                return;
           }
-
           fetchAppointments();
      }, [userId]);
 

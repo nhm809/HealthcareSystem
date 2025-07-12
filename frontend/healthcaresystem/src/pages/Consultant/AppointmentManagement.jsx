@@ -70,6 +70,7 @@ function AppointmentManagement () {
           const map = {
                'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
                'da hoan thanh': { color: 'success', text: 'Đã hoàn thành' },
+               'da danh gia': { color: 'success', text: 'Đã hoàn thành' },
                'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
                'da huy': { color: 'default', text: 'Đã hủy' },
           };
@@ -190,11 +191,11 @@ function AppointmentManagement () {
           },
           {
                key: 'da-hoan-thanh',
-               label: `Đã hoàn thành (${getCountByStatus(['da hoan thanh'])})`,
+               label: `Đã hoàn thành (${getCountByStatus(['da hoan thanh', 'da danh gia'])})`,
                children: (
                <Table
                     columns={columns}
-                    dataSource={applyFilters(filterByStatus(['da hoan thanh']))}
+                    dataSource={applyFilters(filterByStatus(['da hoan thanh', 'da danh gia']))}
                     rowKey="appointmentId"
                     pagination={{
                          pageSize: 3,

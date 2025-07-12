@@ -9,8 +9,8 @@ namespace Application.Interfaces
     public interface IManageUserService
     {
         Task<IEnumerable<UserInfoDTO>> GetAllUsersAsync();
-        Task<int> CountPage(int pageSize, string? search = null, string? role = null);
-        Task<IEnumerable<ManageUserDTO>> GetUsersPerPageAsync(int page, int pageSize, string? search, string? roleId);
+        Task<int> CountPage(int pageSize, string? search = null, string? role = null, bool? isAvailable = null);
+        Task<IEnumerable<ManageUserDTO>> GetUsersPerPageAsync(int page, int pageSize, string? search, string? roleId, bool? isAvailable);
         Task<bool> UpdateUserAsync(ManageUserDTO userDto);
         Task<bool> DeleteUserAsync(int userId);
         Task<Object> CountUsers();
