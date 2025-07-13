@@ -89,7 +89,7 @@
 }
 
 .admin-dashboard .ant-table-thead > tr > th {
-  background-color: #277DA1 !important;
+  background-color: #43AA8B !important;
   color: white !important;
   font-weight: bold !important;
   padding: 12px 24px !important;
@@ -123,7 +123,7 @@
 }
 
 .dashboard-pagination .ant-pagination-item-active {
-  background-color: #277DA1;
+  background-color: #43AA8B;
 }
 
 .dashboard-pagination .ant-pagination-item-active a {

@@ -466,18 +466,23 @@ const ManagerDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoiceData.map((inv) => (
-                                            <tr key={inv.invoiceId}>
-                                                <td>{inv.invoiceId}</td>
-                                                <td>{formatCurrency(inv.totalAmount)}</td>
-                                                <td>{inv.paymentMethod}</td>
-                                                <td>{inv.transactionId}</td>
-                                                <td>{inv.createdAt ? new Date(inv.createdAt).toLocaleString('vi-VN') : ''}</td>
-                                                <td>{inv.paidAt ? new Date(inv.paidAt).toLocaleString('vi-VN') : ''}</td>
-                                                <td>{formatCurrency(inv.taxRate)}</td>
-                                                <td>{inv.unitPrice}</td>
-                                            </tr>
-                                        ))}
+                                        {invoiceData.map((inv) => {
+                                            // Tính thuế thành tiền: totalAmount đã bao gồm thuế
+                                            // Thuế = Tổng tiền - (Tổng tiền / (1 + taxRate))
+                                            const taxAmount = inv.totalAmount - (inv.totalAmount / (1 + inv.taxRate));
+                                            return (
+                                                <tr key={inv.invoiceId}>
+                                                    <td>{inv.invoiceId}</td>
+                                                    <td>{formatCurrency(inv.totalAmount)}</td>
+                                                    <td>{inv.paymentMethod}</td>
+                                                    <td>{inv.transactionId}</td>
+                                                    <td>{inv.createdAt ? new Date(inv.createdAt).toLocaleString('vi-VN') : ''}</td>
+                                                    <td>{inv.paidAt ? new Date(inv.paidAt).toLocaleString('vi-VN') : ''}</td>
+                                                    <td>{formatCurrency(taxAmount)}</td>
+                                                    <td>{inv.unitPrice}</td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
