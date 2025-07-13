@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';   
-import { Card, Select, Button } from 'antd';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';   
+import { Card, Select, Button, Empty } from 'antd';
 import './ConsultantDetail.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -23,6 +23,11 @@ function DoctorDetail() {
     const { id } = useParams();
     const [doctor, setDoctor] = useState(null);
     const [availableSlots, setAvailableSlots] = useState([]);
+    const [service, setService] = useState(null);
+    const { state } = useLocation();
+    const serviceId = state?.serviceId;
+    const [consultationCount, setConsultationCount] = useState(0);
+
 
     const today = dayjs();
     const [selectedDate, setSelectedDate] = useState(today.format('YYYY-MM-DD'));
@@ -75,7 +80,37 @@ function DoctorDetail() {
             }
         };
         fetchDoctor();
+
+        const fetchConsultationCount = async () => {
+            try {
+                const res = await api.get(`/Appointment/consultant/${id}`);
+                const appointments = res.data?.data || [];
+
+                const completedAppointments = appointments.filter(app =>
+                    app.status?.toLowerCase() === "da hoan thanh" || app.status?.toLowerCase() === "da danh gia"
+                );
+
+                setConsultationCount(completedAppointments.length);
+            } catch (error) {
+                console.error("Lỗi khi lấy lượt tư vấn:", error);
+                setConsultationCount(0);
+            }
+        };
+
+        if (id) fetchConsultationCount();
     }, [id]);
+
+    useEffect(() => {
+        const fetchService = async () => {
+            try {
+                const response = await api.get(`/Service/${serviceId}`);
+                setService(response.data);
+            } catch (error) {
+                console.error("Lỗi tải thông tin dịch vụ:", error);
+            }
+        };
+        fetchService();
+    }, []);
 
     const handleTimeSelect = (time) => {
         setSelectedTime(time);
@@ -85,10 +120,34 @@ function DoctorDetail() {
         if (availableSlots.length === 0) {
             // Nếu là hôm nay và không còn slot => hiển thị thông báo
             if (selectedDate === dayjs().format('YYYY-MM-DD')) {
-                return <p className="no-slot-text">Không còn khung giờ phù hợp hôm nay, vui lòng chọn ngày khác.</p>;
+                return (
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            style={{ marginBlock: '0'}}
+                            description={
+                                <span style={{ fontSize: 16, color: '#888' }}>
+                                    Không còn khung giờ phù hợp hôm nay, vui lòng chọn ngày khác.
+                                </span>
+                            }
+                        />
+                    </div>
+                );
             }
             // Các ngày khác nhưng rỗng (ví dụ backend không có) => hiển thị chung
-            return <p className="no-slot-text">Không có khung giờ trống cho ngày này.</p>;
+            return (
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            style={{ marginBlock: '0'}}
+                            description={
+                                <span style={{ fontSize: 16, color: '#888' }}>
+                                    Không có khung giờ trống cho ngày này.
+                                </span>
+                            }
+                        />
+                    </div>
+                );
         }
 
         return availableSlots.map((time) => (
@@ -107,20 +166,23 @@ function DoctorDetail() {
             <div className="doctor-detail-container">
                 <div className="doctor-info">
                     <img
-                        src={defaultdoctoravatar}
+                        src={doctor?.avatar?.trim() ? doctor.avatar : defaultdoctoravatar}
                         alt="doctor"
                         className="doctor-image"
                     />
                     <div className="doctor-details">
                         <h3>{doctor?.fullName}</h3>
                         <div className="specialty-tags">
-                            {doctor?.specialties?.map((spec, index) => (
+                            {doctor?.specialties?.length > 0 ? (
+                                doctor.specialties.map((spec, index) => (
                                 <span key={spec.id || index} className="specialty-tag">{spec.name}</span>
-                            ))}
+                                ))
+                            ) : (
+                                <span className="specialty-tag empty">Chưa cập nhật</span>
+                            )}
                         </div>
                         <div className="doctor-stats">
-                        <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>47</strong></p>
-                        <p><FontAwesomeIcon icon={faStar} /> Đánh giá: <strong>5</strong> (<em>17 đánh giá</em>)</p>
+                            <p><FontAwesomeIcon icon={faUserFriends} /> Lượt tư vấn: <strong>{consultationCount}</strong></p>
                         </div>
                     </div>
                 </div>
@@ -160,7 +222,8 @@ function DoctorDetail() {
                                     <span>
                                         <FontAwesomeIcon icon={faCircleCheck} />
                                     </span>
-                                    <strong>Tư vấn trực tuyến với {doctor?.fullName}</strong> 150.000 đ
+                                    <strong>Tư vấn trực tuyến với {doctor?.fullName}</strong>{' '}
+                                    {service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}
                                 </p>
                                 <Button
                                     type="primary"
@@ -170,6 +233,7 @@ function DoctorDetail() {
                                         doctor: doctor,
                                         selectedDate,
                                         selectedTime,
+                                        service: service,
                                         }
                                     })}
                                 >
@@ -182,7 +246,11 @@ function DoctorDetail() {
 
                     <div className="experience-card">
                         <h4>KINH NGHIỆM KHÁM CHỮA BỆNH</h4>
-                        <p>BS. Nguyễn Văn Minh - Sản phụ khoa</p>
+                        <p>
+                            BS. {doctor?.fullName} 
+                              {doctor?.specialties?.length ? ` - ${doctor.specialties.map(s => s.name).join(', ')}` : ' - Chưa cập nhật'}
+                        </p>
+
                     </div>
                 </div>
 

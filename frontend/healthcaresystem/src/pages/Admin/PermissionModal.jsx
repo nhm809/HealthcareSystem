@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Select, Typography, Row, Col, Space } from 'antd';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -22,6 +23,8 @@ const PermissionModal = ({ open, onClose, user, onSubmit }) => {
     const handleOk = () => {
         if (user && newRole !== user.roleId) {
             onSubmit(user.userId, newRole);
+        } else {
+            toast.warning("Vai trò bạn chọn giống với vai trò ban đầu");
         }
         onClose();
     };
@@ -47,7 +50,7 @@ const PermissionModal = ({ open, onClose, user, onSubmit }) => {
                         cursor: 'pointer',
                     }}>Hủy</button>
                     <button onClick={handleOk} className="ant-btn ant-btn-primary" style={{ 
-                        backgroundColor: '#54AA7F',
+                        backgroundColor: '#43AA8B',
                         color: '#fff',
                         border: 'none',
                         borderRadius: 4,

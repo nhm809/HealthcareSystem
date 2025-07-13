@@ -1,25 +1,141 @@
+.question-management {
+  max-width: 100%;
+  width: 100%;
+}
+
+.question-management .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+}
+
+.question-management .ant-card-body {
+  padding: 24px !important;
+}
+
+.question-management .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.question-management .ant-tabs-tab-active {
+  color: #43AA8B !important;
+}
+
+.question-management .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.question-management .ant-table-thead > tr > th {
+  background-color: #e8f5e8;
+  color: #43AA8B;
+  font-weight: 600;
+  text-align: center;
+}
+
+.question-management .ant-table-tbody > tr > td {
+  text-align: center;
+}
+
+.question-management .ant-spin {
+  margin: 40px auto;
+  display: block;
+}
+
+.question-pagination {
+  display: flex;
+  justify-content: center !important;
+  margin-top: 20px;
+}
+
+.question-pagination .ant-pagination-item {
+  border: none;
+  background-color: #e8f5e8;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.question-pagination .ant-pagination-item-active {
+  background-color: #43AA8B;
+}
+
+.question-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.question-pagination .ant-pagination-item-active a:hover {
+  color: white;
+}
+
+.question-pagination .ant-pagination-prev .ant-pagination-item-link,
+.question-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #e8f5e8;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.question-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #d4f0d4;
+  border-radius: 50%;
+}
+
+.question-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.question-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #d4f0d4;
+  border-radius: 50%;
+}
+
+.question-pagination .ant-pagination-disabled {
+  opacity: 0.5;
+}
+
+.custom-question-tabs .ant-tabs-nav {
+  background: transparent !important;
+  border-bottom: none !important;
+  margin-bottom: 0;
+}
+
 .custom-question-tabs .ant-tabs-tab {
   margin: 0 8px 0 0;
-  padding: 12px 20px;
-  border-radius: 8px 8px 0 0;
+  padding: 12px 20px 8px 20px;
+  border-radius: 0;
   font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: 16px;
+  background: transparent !important;
+  transition: color 0.3s;
 }
 
 .custom-question-tabs .ant-tabs-tab:hover {
-  background-color: #e6f7ff;
-  color: #1890ff;
+  background: transparent !important;
+  color: #43AA8B !important;
 }
 
 .custom-question-tabs .ant-tabs-tab-active {
-  background-color: white;
-  color: #1890ff;
-  border-bottom: 2px solid #1890ff;
+  background: transparent !important;
+  color: #43AA8B !important;
+  border-bottom: none !important;
 }
 
 .custom-question-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #1890ff;
+  color: #43AA8B !important;
   font-weight: 600;
+}
+
+.custom-question-tabs .ant-tabs-ink-bar {
+  background: #43AA8B !important;
+  height: 2px !important;
+  border-radius: 2px;
 }
 
 .custom-question-tabs .ant-tabs-content-holder {
@@ -28,15 +144,7 @@
   border-radius: 0 0 16px 16px;
 }
 
-.custom-question-tabs .ant-tabs-nav {
-  margin-bottom: 0;
-}
-
 .custom-question-tabs .ant-tabs-tab-btn {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-}
-
-.custom-question-tabs .ant-tabs-ink-bar {
-  display: none;
 } 

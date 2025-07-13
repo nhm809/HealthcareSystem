@@ -1,0 +1,160 @@
+/* Sidebar (Sider) */
+.staff-sider {
+  background-color: #43AA8B;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.staff-sider-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo MedSex */
+.staff-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 16px;
+}
+
+.staff-logo-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.staff-logo-text {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: 'Saira Stencil One', sans-serif;
+  line-height: 1;
+}
+
+/* Avatar + Tên Staff */
+.staff-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.staff-avatar-name {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 5px;
+  text-align: center;
+  word-break: break-word;
+  color: #ffffff;
+}
+
+/* Menu */
+.staff-sider .ant-menu-dark {
+  margin-top: 24px;
+  background-color: #43AA8B !important;
+}
+
+.staff-sider .ant-menu-dark .ant-menu-item {
+  width: 100%;
+  border-radius: 0 !important;
+  background-color: #43AA8B;
+  color: #ffffff;
+  margin: 0 !important;
+  padding-left: 32px !important;
+}
+
+.staff-sider .ant-menu-dark .ant-menu-item:hover {
+  background-color: #03D092 !important;
+  color: #ffffff !important;
+}
+
+.staff-sider .ant-menu-dark .ant-menu-item-selected {
+  background-color: #03D092;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.staff-sider .ant-menu-dark .ant-menu-item-selected svg {
+  color: #ffffff !important;
+  font-size: 18px;
+}
+
+/* Đăng xuất */
+.staff-logout-wrapper {
+  flex-shrink: 0;
+}
+
+.staff-logout-button {
+  height: 40px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 8px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.staff-logout-button:hover {
+  background-color: #03D092 !important;
+  color: #ffffff !important;
+}
+
+.staff-logout-button:hover .staff-logout-icon svg {
+  color: #ffffff !important;
+}
+
+.staff-logout-icon svg {
+  font-size: 14px;
+}
+
+/* Header */
+.staff-header {
+  position: fixed;
+  top: 0;
+  left: 300px; /* Bằng chiều rộng sider */
+  right: 0;
+  height: 84px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  z-index: 10;
+}
+
+.staff-header-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #28a48f;
+}
+
+/* Icon notification */
+.ant-badge {
+  cursor: pointer;
+}
+
+/* Content */
+.staff-content {
+  background: #ffffff;
+  margin-left: 300px; /* Bằng chiều rộng sider */
+  margin-top: 84px; /* Bằng chiều cao header */
+  min-height: calc(100vh - 84px);
+} 

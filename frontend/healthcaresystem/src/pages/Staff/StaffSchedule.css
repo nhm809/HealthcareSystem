@@ -1,9 +1,9 @@
 /* StaffSchedule.css */
 .staff-schedule-table .ant-table-thead > tr > th {
-  background-color: #2563EB !important;
+  background-color: #43AA8B !important;
   color: white !important;
   font-weight: 600;
-  border-bottom: 2px solid #2563EB;
+  border-bottom: 2px solid #43AA8B;
   text-align: center;
 }
 
@@ -22,11 +22,11 @@
 
 .staff-schedule-table .table-row-even:hover,
 .staff-schedule-table .table-row-odd:hover {
-  background-color: #e6f7ff !important;
+  background-color: #e8f5e8 !important;
 }
 
 .staff-schedule-table .ant-table-tbody > tr:hover > td {
-  background-color: #e6f7ff !important;
+  background-color: #e8f5e8 !important;
 }
 
 /* Tabs styling */
@@ -39,7 +39,7 @@
 }
 
 .ant-tabs-tab:hover {
-  color: #2563EB;
+  color: #43AA8B;
 }
 
 /* .ant-tabs-tab-active {
@@ -59,8 +59,8 @@
 
 /* Modal styling */
 .ant-modal-header {
-  background-color: #2563EB;
-  border-bottom: 2px solid #2563EB;
+  background-color: #43AA8B;
+  border-bottom: 2px solid #43AA8B;
 }
 
 .ant-modal-title {
@@ -77,13 +77,13 @@
 
 /* Button styling */
 .ant-btn-primary {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: #43AA8B;
+  border-color: #43AA8B;
 }
 
 .ant-btn-primary:hover {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: #03D092;
+  border-color: #03D092;
 }
 
 /* Form styling */
@@ -98,8 +98,8 @@
 }
 
 .ant-input:focus, .ant-select-focused .ant-select-selector {
-  border-color: #2563EB;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #43AA8B;
+  box-shadow: 0 0 0 2px rgba(67, 170, 139, 0.2);
 }
 
 /* Status tag styling */
@@ -117,8 +117,8 @@
 }
 
 .ant-pagination-item-active {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: #43AA8B;
+  border-color: #43AA8B;
 }
 
 .ant-pagination-item-active a {
@@ -164,11 +164,11 @@
 
 .custom-staff-tabs .ant-tabs-tab:hover {
   background: #f0f0f0 !important;
-  color: #2563EB !important;
+  color: #43AA8B !important;
 }
 
 .custom-staff-tabs .ant-tabs-ink-bar {
-  background: #2563EB !important;
+  background: #43AA8B !important;
   height: 3px;
   border-radius: 2px;
 }

@@ -17,6 +17,9 @@ import AdminDashboard from '../../pages/Admin/AdminDashboard';
 import UserManagement from '../../pages/Admin/UserManagement';
 import Profile from '../../pages/Profile/Profile';
 import Logos from '../../assets/imgs/Logos.png';
+import NotificationDropdown from '../NotificationDropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 import './AdminLayout.css';
 
@@ -92,6 +95,17 @@ function AdminLayout() {
         }
     };
 
+    const handleMarkAllAsRead = async () => {
+        try {
+            await notiApi.markAllAsRead(Cookies.get('userId'));
+            setNotifications((prev) => prev.map(n => ({ ...n, isRead: true })));
+            setUnreadCount(0);
+        } catch (err) {
+            toast.error('Lỗi đánh dấu tất cả thông báo đã đọc');
+            console.error('Error marking all notifications as read: ', err);
+        }
+    };
+
     const handleLogout = () => {
         Cookies.remove('email');
         Cookies.remove('userId');
@@ -107,38 +121,13 @@ function AdminLayout() {
         {
             key: 'notifications',
             label: (
-                <List
-                    style={{ width: 300, maxHeight: 400, overflowY: 'auto' }}
-                    dataSource={notifications}
-                    renderItem={(item) => (
-                        <List.Item
-                            onClick={() => handleNotificationClick(item.notificationId)}
-                            style={{
-                                background: item.isRead ? 'transparent' : '#f0f0f0',
-                                cursor: 'pointer',
-                                padding: 8,
-                            }}
-                        >
-                            <List.Item.Meta
-                                title={
-                                    <span style={{ fontWeight: item.isRead ? 'normal' : 'bold' }}>
-                                        {item.title}
-                                    </span>
-                                }
-                                description={
-                                    <>
-                                        <Text type="secondary">{item.content}</Text>
-                                        <br />
-                                        <Text type="secondary" style={{ fontSize: 12 }}>
-                                            {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                                        </Text>
-                                    </>
-                                }
-                            />
-                        </List.Item>
-                    )}
+                <NotificationDropdown
+                    notifications={notifications}
+                    unreadCount={unreadCount}
+                    onMarkAsRead={handleNotificationClick}
+                    onMarkAllAsRead={handleMarkAllAsRead}
                 />
-            ),
+            )
         },
     ];
 
@@ -170,14 +159,14 @@ function AdminLayout() {
                         <span className="logo-text">MedSex</span>
                     </div>
 
-                    <div className="admin-avatar-container">
-                        <Avatar
-                            size={160}
-                            src={userInfo?.avatar || null}
-                            icon={!userInfo?.avatar && <UserOutlined />}
-                        />
-                        <div className="admin-avatar-name">{userInfo?.fullName || "(ADMIN)"}</div>
-                    </div>
+                                            <div className="admin-avatar-container">
+                            <Avatar
+                                size={80}
+                                src={userInfo?.avatar || null}
+                                icon={!userInfo?.avatar && <UserOutlined />}
+                            />
+                            <div className="admin-avatar-name">{userInfo?.fullName || "(ADMIN)"}</div>
+                        </div>
                     
 
                     <Menu
@@ -205,7 +194,7 @@ function AdminLayout() {
                     <span className="admin-header-text">Admin Dashboard</span>
                     <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
                         <Badge count={unreadCount}>
-                            <BellOutlined style={{ fontSize: 28, cursor: 'pointer' }} />
+                            <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
                         </Badge>
                     </Dropdown>
                 </Header>

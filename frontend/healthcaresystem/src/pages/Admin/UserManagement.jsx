@@ -39,10 +39,19 @@ function UserManagement() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [detailVisible, setDetailVisible] = useState(false);
     const [permissionVisible, setPermissionVisible] = useState(false);
+    const [statusFilter, setStatusFilter] = useState(null);
 
     const fetchUsers = async () => {
+            console.log("Fetch Users With Params:", {
+        page,
+        pageSize,
+        searchTerm,
+        roleFilter,
+        statusFilter
+    }); // <- Thêm dòng này
+
         try {
-            const res = await adminApi.getUsersPerPage(page, pageSize, searchTerm, roleFilter);
+            const res = await adminApi.getUsersPerPage(page, pageSize, searchTerm, roleFilter, statusFilter);
             console.log(res);
             setUsers(res.data.users);
         } catch (err) {
@@ -53,7 +62,7 @@ function UserManagement() {
 
     const fetchPageCount = async () => {
         try {
-            const res = await adminApi.getPageCount(pageSize, searchTerm, roleFilter);
+            const res = await adminApi.getPageCount(pageSize, searchTerm, roleFilter, statusFilter);
             setTotalPages(res.data.count);
         } catch (err) {
             toast.error('Lỗi khi đếm số trang');
@@ -64,7 +73,7 @@ function UserManagement() {
     useEffect(() => {
         fetchUsers();
         fetchPageCount();
-    }, [page, searchTerm, roleFilter]);
+    }, [page, searchTerm, roleFilter, statusFilter]);
 
     const handleDelete = (user) => {
         confirm({
@@ -110,7 +119,7 @@ function UserManagement() {
                     AD: 'volcano',
                     MG: 'geekblue',
                 };
-                return <Tag color={colorMap[roleId]}>{roleMap[roleId] || 'Không xác định'}</Tag>;
+                return <Tag color={colorMap[roleId]} style={{ fontSize: 13}}>{roleMap[roleId] || 'Không xác định'}</Tag>;
             },
         },
         {
@@ -119,7 +128,7 @@ function UserManagement() {
             key: 'isAvailable',
             width: '15%',
             render: (isAvailable) => (
-                <Tag color={isAvailable ? 'green' : 'red'}>
+                <Tag color={isAvailable ? 'green' : 'red'} style={{ fontSize: 13 }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontSize: 10 }}>●</span>
                         {isAvailable ? 'Khả dụng' : 'Đã khóa'}
@@ -200,7 +209,23 @@ function UserManagement() {
                             setSearchTerm(value);
                             setPage(1);
                         }}
+                        onChange={(e) => setSearchTerm(e.target.value)} 
                     />
+                </Col>
+                <Col span={4}>
+                    <Select
+                        allowClear
+                        placeholder="Lọc theo trạng thái"
+                        style={{ width: '100%' }}
+                        onChange={(value) => {
+                            console.log("Trạng thái được chọn:", value); // DEBUG
+                            setStatusFilter(value);
+                            setPage(1);
+                        }}
+                    >
+                        <Option value={true}>Khả dụng</Option>
+                        <Option value={false}>Đã khóa</Option>
+                    </Select>
                 </Col>
                 <Col span={4}>
                     <Select

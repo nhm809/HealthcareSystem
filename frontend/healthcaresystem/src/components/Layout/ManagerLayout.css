@@ -1,0 +1,160 @@
+/* Sidebar (Sider) */
+.manager-sider {
+  background-color: #43AA8B;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.manager-sider-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo MedSex */
+.manager-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 16px;
+}
+
+.manager-logo-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.manager-logo-text {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: 'Saira Stencil One', sans-serif;
+  line-height: 1;
+}
+
+/* Avatar + Tên Manager */
+.manager-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.manager-avatar-name {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 5px;
+  text-align: center;
+  word-break: break-word;
+  color: #ffffff;
+}
+
+/* Menu */
+.manager-sider .ant-menu-dark {
+  margin-top: 24px;
+  background-color: #43AA8B !important;
+}
+
+.manager-sider .ant-menu-dark .ant-menu-item {
+  width: 100%;
+  border-radius: 0 !important;
+  background-color: #43AA8B;
+  color: #ffffff;
+  margin: 0 !important;
+  padding-left: 32px !important;
+}
+
+.manager-sider .ant-menu-dark .ant-menu-item:hover {
+  background-color: #03D092 !important;
+  color: #ffffff !important;
+}
+
+.manager-sider .ant-menu-dark .ant-menu-item-selected {
+  background-color: #03D092;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.manager-sider .ant-menu-dark .ant-menu-item-selected svg {
+  color: #ffffff !important;
+  font-size: 18px;
+}
+
+/* Đăng xuất */
+.manager-logout-wrapper {
+  flex-shrink: 0;
+}
+
+.manager-logout-button {
+  height: 40px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 8px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.manager-logout-button:hover {
+  background-color: #03D092 !important;
+  color: #ffffff !important;
+}
+
+.manager-logout-button:hover .manager-logout-icon svg {
+  color: #ffffff !important;
+}
+
+.manager-logout-icon svg {
+  font-size: 14px;
+}
+
+/* Header */
+.manager-header {
+  position: fixed;
+  top: 0;
+  left: 300px; /* Bằng chiều rộng sider */
+  right: 0;
+  height: 84px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 32px;
+  z-index: 10;
+}
+
+.manager-header-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #28a48f;
+}
+
+/* Icon notification */
+.ant-badge {
+  cursor: pointer;
+}
+
+/* Content */
+.manager-content {
+  background: #ffffff;
+  margin-left: 300px; /* Bằng chiều rộng sider */
+  margin-top: 84px; /* Bằng chiều cao header */
+  min-height: calc(100vh - 84px);
+} 

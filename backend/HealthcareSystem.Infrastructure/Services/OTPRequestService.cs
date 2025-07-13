@@ -43,8 +43,8 @@ namespace Infrastructure.Services
                 UserId = userId,
                 Code = otpCode,
                 Email = user.Email,
-                CreatedAt = DateTime.UtcNow,
-                ExpiredAt = DateTime.UtcNow.AddMinutes(3),
+                CreatedAt = DateTime.UtcNow.AddHours(7),
+                ExpiredAt = DateTime.UtcNow.AddHours(7).AddMinutes(3),
                 IsVerified = 0
             };
 
@@ -121,8 +121,8 @@ namespace Infrastructure.Services
             {
                 Code = otpCode,
                 Email = userEmail,
-                CreatedAt = DateTime.UtcNow,
-                ExpiredAt = DateTime.UtcNow.AddMinutes(3),
+                CreatedAt = DateTime.UtcNow.AddHours(7),
+                ExpiredAt = DateTime.UtcNow.AddHours(7).AddMinutes(3),
                 IsVerified = 0
             };
 
@@ -211,7 +211,7 @@ namespace Infrastructure.Services
                                      .FirstOrDefaultAsync(u => u.Email == dto.Email);
             }
 
-            if (otpRequest == null || otpRequest.ExpiredAt < DateTime.UtcNow || user == null)
+            if (otpRequest == null || otpRequest.ExpiredAt < DateTime.UtcNow.AddHours(7) || user == null)
             {
                 return false;
             }

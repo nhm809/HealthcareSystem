@@ -8,7 +8,7 @@ namespace Domain.Entities
     {
         public int CycleId { get; set; }
 
-        public int? MemberId { get; set; }
+        public int MemberId { get; set; }
 
         public DateOnly? StartDate { get; set; }
 

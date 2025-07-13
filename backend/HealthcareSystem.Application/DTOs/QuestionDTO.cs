@@ -26,7 +26,7 @@ namespace Application.DTOs
 
         public string? Gender { get; set; }
 
-        public int? HeartCount { get; set; }
+        public bool? Heart { get; set; }
 
         public int? AnsCount { get; set; }
 

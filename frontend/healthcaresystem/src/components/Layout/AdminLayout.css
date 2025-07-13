@@ -31,7 +31,7 @@
 
 .logo-text {
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 800;
   color: #ffffff;
   font-family: 'Saira Stencil One', sans-serif;
   line-height: 1;
@@ -107,12 +107,12 @@
 }
 
 .admin-logout-button:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ff4d4f;
+  background-color: #03D092 !important;
+  color: #ffffff !important;
 }
 
 .admin-logout-button:hover .admin-logout-icon svg {
-  color: #ff4d4f !important;
+  color: #ffffff !important;
 }
 
 .admin-logout-icon svg {

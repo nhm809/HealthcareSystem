@@ -9,10 +9,30 @@ export const validateLogin = ({ email, password }) => {
 
     if (!password) {
         errors.password = 'Vui lòng nhập mật khẩu.';
-    } else if (password.length < 1) {
-        errors.password = 'Mật khẩu phải có ít nhất 6 ký tự.';
     }
 
+    return errors;
+};
+
+export const validatePassword = (password) => {
+    const errors = [];
+    
+    if (password.length < 8) {
+        errors.push('Ít nhất 8 ký tự');
+    }
+    if (!/[A-Z]/.test(password)) {
+        errors.push('Có chữ in hoa');
+    }
+    if (!/[a-z]/.test(password)) {
+        errors.push('Có chữ thường');
+    }
+    if (!/\d/.test(password)) {
+        errors.push('Có số');
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        errors.push('Có ký tự đặc biệt');
+    }
+    
     return errors;
 };
 

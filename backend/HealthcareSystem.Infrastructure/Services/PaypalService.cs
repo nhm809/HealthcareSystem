@@ -29,8 +29,9 @@ namespace HealthcareSystem.Infrastructure.Services
         private const string PAYMENT_PENDING_STATUS = "Dang thanh toan";
         private readonly INotiService _notiService;
         private readonly ITestServiceRecord _testServiceRecordService;
+        const decimal taxRate = 0.05m;
 
-        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger,INotiService notiService, ITestServiceRecord testServiceRecordService)
+        public PayPalService(IConfiguration configuration, AppDbContext context, System.Net.Http.IHttpClientFactory httpClientFactory, ILogger<PayPalService> logger, INotiService notiService, ITestServiceRecord testServiceRecordService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -154,7 +155,7 @@ namespace HealthcareSystem.Infrastructure.Services
                                 amount = new
                                 {
                                     currency_code = "USD",
-                                    value = amount.ToString("F2")
+                                    value = (amount * (1 + taxRate)).ToString("F2")
                                 },
                                 description = description
                             }
@@ -223,9 +224,9 @@ namespace HealthcareSystem.Infrastructure.Services
                     testServiceRecord.Status = "Dang cho kham";
                     amount = testServiceRecord.Service?.Price ?? 0;
                     description = $"Thanh toán xét nghiệm - {testServiceRecord.FullNameOfMember}";
-                    
+
                     await _context.SaveChangesAsync(); // Save status change first
-                    
+
                     // Assign staff after payment confirmation
                     await _testServiceRecordService.AssignStaffToTestRecordAsync(testServiceRecordId.Value);
                 }
@@ -238,7 +239,7 @@ namespace HealthcareSystem.Infrastructure.Services
                         UserId = testServiceRecord.MemberId.Value,
                         Title = "Thanh toán thành công",
                         Content = "Bạn đã thanh toán thành công đặt lịch xét nghiệm.",
-                        SendTime = DateTime.UtcNow.AddHours(7),///////////
+                        SendTime = DateTime.UtcNow.AddHours(7),
                         IsRead = false
                     };
 
@@ -255,21 +256,20 @@ namespace HealthcareSystem.Infrastructure.Services
                     .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 if (appointment != null)
                 {
-                    appointment.Status = "Dang cho tu van";
+                    appointment.Status = "Dang cho kham";
                     amount = appointment.Service?.Price ?? 0;
                     description = $"Thanh toán khám - {appointment.Member?.FullName}";
 
                     await _context.SaveChangesAsync();
                 }
 
-                // Create Notification for Member
-                if (appointment.MemberId.HasValue)
+                if (appointment.MemberId != null)
                 {
                     var paidAt = DateTime.UtcNow.AddHours(7).ToString("dd/MM/yyyy HH:mm");
                     var consultantName = appointment.Consultant?.FullName ?? "Không xác định";
                     var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
 
-                    var content = 
+                    var content =
                         $@"Dịch vụ: {appointment.Service?.Name}
                         Bác sĩ tư vấn: {consultantName}
                         Ngày hẹn: {appointmentTime}
@@ -279,7 +279,7 @@ namespace HealthcareSystem.Infrastructure.Services
 
                     var notification = new Notification
                     {
-                        UserId = appointment.MemberId.Value,
+                        UserId = appointment.MemberId,
                         Title = "Thanh toán thành công lịch tư vấn",
                         Content = content,
                         SendTime = DateTime.UtcNow.AddHours(7),
@@ -291,22 +291,25 @@ namespace HealthcareSystem.Infrastructure.Services
                 }
             }
 
+            
+            decimal totalAmount = amount * (1 + taxRate);
+
             // Tạo mới Invoice
             var invoice = new Invoice
             {
                 TestServiceRecordId = testServiceRecordId,
                 AppointmentId = appointmentId,
-                TotalAmount = amount,
+                TotalAmount = totalAmount,
                 PaymentMethod = "PayPal",
                 TransactionId = transactionId,
-                CreatedAt = DateTime.UtcNow,
-                PaidAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.AddHours(7),
+                PaidAt = DateTime.UtcNow.AddHours(7),
                 UnitPrice = "VND",
-                TaxRate = amount * 0.05m,
+                TaxRate = taxRate, 
                 Status = 1
             };
 
-            
+
             _context.Invoices.Add(invoice);
 
             await _context.SaveChangesAsync();

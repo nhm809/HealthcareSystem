@@ -53,6 +53,10 @@ export const authApi = {
 
      getTestServiceRecordDetail: (testServiceRecordId, memberId) =>
           api.get(`/TestServiceRecord/${testServiceRecordId}/${memberId}`),
+
+     // OTP for registration
+     sendOtpRegisterVerify: (userId) => api.post(`/otp/sendOtpByUserId/${userId}`),
+     verifyOtpRegister: (userId, code) => api.post('/otp/verify', { UserId: userId, Code: code }),
 };
 
 export const notiApi = {
@@ -92,7 +96,7 @@ export const assignTestToStaff = async (testServiceRecordId, staffId) => {
 };
 
 export const updateTestResult = async (staffId, data) => {
-     return await axios.put('/api/TestServiceRecord/update-result', data, {
+     return await api.put('/TestServiceRecord/update-result', data, {
           params: { staffId }
      });
 };
@@ -102,17 +106,31 @@ export const adminApi = {
      getRecentUsers: () => api.get('/manageUser/getTenLatestUsers'),
      setUserStatus: (userId, isAvailable) =>
           api.put(`/manageUser/setStatusUser/${userId}/${isAvailable}`),
-     getUsersPerPage: (page, pageSize, search, role) =>
+     getUsersPerPage: (page, pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/loadUserPerPage/${page}/${pageSize}`, {
-               params: { search, role },
+               params: { search, role, isAvailable },
           }),
-     getPageCount: (pageSize, search, role) =>
+     getPageCount: (pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/countPage`, {
-          params: { pageSize, search, role },
+          params: { pageSize, search, role, isAvailable },
           }),
      getUserDetail: (userId) =>
           api.get(`/user/get/${userId}`),
      updateUser: (data) => api.put('/manageUser/updateUser', data),
+};
+
+export const dashboardApi = {
+     getRevenue: (data) => api.post('/Dashboard/revenue', data),
+};
+
+export const invoiceApi = {
+     searchByDate: (data) => api.post('/Invoice/search-by-date', data),
+};
+
+export const feedbackApi = {
+     getServiceSummary: () => api.get('/feedback/service-summary'),
+     getFeedbacksByService: (serviceId, pageNumber = 1, pageSize = 10) =>
+         api.get(`/feedback/service/${serviceId}`, { params: { pageNumber, pageSize } }),
 };
 
 export const questionApi = {
@@ -124,6 +142,7 @@ export const questionApi = {
      updateQuestionStatus: (questionId, status) => api.put(`/question/updateStatus/${questionId}`, status, {
           headers: { 'Content-Type': 'application/json' }
      }),
+     updateHeart: (questionId, memberId, heart) => api.post('/question/updateHeart', { questionId, memberId, heart }),
 };
 
 export const messageApi = {
@@ -133,6 +152,11 @@ export const messageApi = {
 
 export const specialtyApi = {
      getAllSpecialties: () => api.get('/specialty/getAll'),
+     getSpecialtyById: (id) => api.get(`/specialty/getById/${id}`),
+     getSpecialtiesByUserId: (userId) => api.get(`/specialty/getByUserID/${userId}`),
+     updateSpecialty: (data) => api.put('/specialty/update', data),
+     createSpecialty: (data) => api.post('/specialty/create', data),
+     deleteSpecialty: (id) => api.delete(`/specialty/delete/${id}`),
 };
 
 export const consultantBlogApi = {
@@ -149,6 +173,8 @@ export const cancelTestRecord = (testServiceRecordId, userId) =>
      api.put(`/TestServiceRecord/cancel`, null, { params: { testServiceRecordId, userId } });
 
 export const subQuestionApi = {
+     getSubQuestions: (questionId) => api.get(`/subQuestion/getByQuestionId/${questionId}`),
+     addSubQuestion: (data) => api.post('/subQuestion/add', data),
      answerSubQuestion: (data) => api.post('/subQuestion/answer', data),
      updateSubQuestion: (threadItemId, data) => api.put(`/subQuestion/update/${threadItemId}`, data),
 };
@@ -160,6 +186,21 @@ export const manageUserApi = {
      updateUserAvailability: (userId, isAvailable) => api.put(`/manageUser/updateAvailability/${userId}`, { isAvailable }),
      updateUserRole: (userId, roleId) => api.put('/manageUser/updateUser', { userId, roleId }),
      updateUserAvailabilityToggle: (userId, isAvailable) => api.put('/manageUser/updateUser', { userId, isAvailable }),
+     addSpecialty: (userId, specialtyId) => api.post('/manageUser/addSpecialty', { userId, specialtyId }),
+     deleteSpecialty: (userId, specialtyId) => api.delete('/manageUser/deleteSpecialty', { data: { userId, specialtyId } }),
+     getUserSchedule: (userId) => api.get(`/WeeklySchedule/user/${userId}`),
+     addWorkSchedule: (data) => api.post('/WeeklySchedule', data),
+     deleteWorkSchedule: (weeklyScheduleId) => api.delete(`/WeeklySchedule/${weeklyScheduleId}`),
+};
+
+export const getWeeklySchedule = (userId, offset = 0) =>
+     api.get(`/schedule/week/${userId}`, { params: { offset } });
+
+export const weeklyOverrideScheduleApi = {
+     createOverrideSchedule: (data) => api.post('/WeeklyOverrideSchedule', data),
+     getOverrideSchedules: (params) => api.get('/WeeklyOverrideSchedule', { params }),
+     updateOverrideStatus: (data) => api.put('/WeeklyOverrideSchedule/status', data),
+     deleteOverrideSchedule: (id) => api.delete(`/WeeklyOverrideSchedule/${id}`),
 };
 
 // Request interceptor
@@ -236,5 +277,7 @@ api.interceptors.response.use(
           return Promise.reject(error);
      }
 );
+
+export const deleteService = (serviceId) => api.delete(`/Service/${serviceId}`);
 
 export default api;

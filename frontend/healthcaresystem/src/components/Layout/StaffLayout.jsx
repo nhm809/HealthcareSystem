@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography } from 'antd';
+import { Layout, Menu, Avatar, Dropdown, Badge, List, Typography, Button } from 'antd';
 import {
   DashboardOutlined,
   CalendarOutlined,
   TeamOutlined,
   MedicineBoxOutlined,
   BellOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import Dashboard from '../../pages/Staff/StaffDashboard';
 import StaffSchedule from '../../pages/Staff/StaffSchedule';
@@ -13,10 +14,14 @@ import TestDone from '../../pages/Staff/TestDone';
 import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faBell, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import { notiApi, authApi, getInfo } from '../../services/api';
 import dayjs from 'dayjs';
+import Schedule from '../Schedule/schedule';
+import NotificationDropdown from '../NotificationDropdown';
+import Logos from '../../assets/imgs/Logos.png';
+import './StaffLayout.css';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -106,58 +111,29 @@ const StaffLayout = () => {
     }
   };
 
+  // Notification logic giống Header.jsx
+  const handleMarkAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter(n => !n.isRead);
+      await Promise.all(unreadNotifications.map(noti => notiApi.markAsRead(noti.notificationId)));
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
+  };
   const notificationItems = [
     {
       key: 'notifications',
       label: (
-        <List
-          style={{
-            width: 300,
-            maxHeight: 400,
-            overflow: 'auto',
-            overflowX: 'hidden',
-          }}
-          dataSource={notifications}
-          renderItem={(item) => (
-            <List.Item
-              onClick={() => handleNotificationClick(item.notificationId)}
-              style={{
-                cursor: 'pointer',
-                backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                padding: '8px 12px',
-                borderBottom: '1px solid #f0f0f0',
-              }}
-            >
-              <List.Item.Meta
-                title={
-                  <div
-                    style={{
-                      color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
-                      fontWeight: item.isRead ? 'normal' : 'bold',
-                      whiteSpace: 'normal',
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                }
-                description={
-                  <>
-                    <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                      {item.content}
-                    </Text>
-                    <br />
-                    <Text type="secondary" style={{ fontSize: '12px' }}>
-                      {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                    </Text>
-                  </>
-                }
-              />
-            </List.Item>
-          )}
+        <NotificationDropdown
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={handleNotificationClick}
+          onMarkAllAsRead={handleMarkAllAsRead}
         />
-      ),
-    },
+      )
+    }
   ];
 
   const menuItems = [
@@ -165,6 +141,11 @@ const StaffLayout = () => {
       key: 'my-schedule',
       icon: <CalendarOutlined />,
       label: 'Các xét nghiệm đang thực hiện',
+    },
+    {
+      key: 'work-schedule',
+      icon: <CalendarOutlined />,
+      label: 'Lịch làm việc',
     },
     {
       key: 'my-profile',
@@ -177,8 +158,10 @@ const StaffLayout = () => {
     switch (selectedKey) {
       case 'my-schedule':
         return <StaffSchedule />;
+      case 'work-schedule':
+        return <Schedule />;
       case 'my-profile':
-        return <Profile hideBackButton={true} />; 
+        return <Profile hideBackButton={true} />;
       default:
         return <StaffSchedule />;
     }
@@ -186,96 +169,63 @@ const StaffLayout = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        collapsible
-        style={{ background: '#001529', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-        width={300}
-      >
-        <div>
-          <div style={{
-            height: 48,
-            margin: 16,
-            background: 'rgba(255,255,255,0.15)',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontWeight: 'bold',
-            fontSize: 18
-          }}>
-            STAFF
+      <Sider width={300} className="staff-sider">
+        <div className="staff-sider-top">
+          <div className="staff-logo">
+            <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+            <span className="staff-logo-text">MedSex</span>
           </div>
-          <div style={{ textAlign: 'center', marginBottom: 16 }}>
-            <Avatar size={80} src={userInfo?.avatarPath || userInfo?.avatar} />
-            <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
-              {userInfo?.fullName}
-            </div>
+
+          <div className="staff-avatar-container">
+            <Avatar
+              size={80}
+              src={userInfo?.avatar || null}
+              icon={!userInfo?.avatar && <UserOutlined />}
+            />
+            <div className="staff-avatar-name">{userInfo?.fullName || "(STAFF)"}</div>
           </div>
+          
+
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[selectedKey]}
             items={menuItems}
             onClick={({ key }) => setSelectedKey(key)}
-            style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
+            style={{ fontSize: 16 }}
           />
         </div>
-        <div style={{ padding: 16 }}>
-          <button
-            onClick={() => {
-              Cookies.remove('email');
-              Cookies.remove('userid');
-              Cookies.remove('userId');
-              Cookies.remove('token');
-              Cookies.remove('refreshToken');
-              localStorage.removeItem('userInfo');
-              navigate('/');
-              window.location.reload();
-            }}
-            style={{
-              width: '100%',
-              background: 'none',
-              border: 'none',
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: 16,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: '12px 0',
-              borderRadius: 8,
-              cursor: 'pointer',
-              transition: 'background 0.2s',
-            }}
-            onMouseOver={e => e.currentTarget.style.background = '#222b3a'}
-            onMouseOut={e => e.currentTarget.style.background = 'none'}
-          >
-            <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: 8 }} /> Đăng xuất
-          </button>
+
+        <div className="staff-logout-wrapper">
+        <button onClick={() => {
+          Cookies.remove('email');
+          Cookies.remove('userid');
+          Cookies.remove('userId');
+          Cookies.remove('token');
+          Cookies.remove('refreshToken');
+          localStorage.removeItem('userInfo');
+          navigate('/');
+          window.location.reload();
+        }} className="staff-logout-button">
+          <span className="staff-logout-icon">
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          </span>
+          <span className="staff-logout-text">Đăng xuất</span>
+        </button>
         </div>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+        <Header className="staff-header">
+          <span className="staff-header-text">Staff Dashboard</span>
+          <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
             <Badge count={unreadCount}>
-              <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+              <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
             </Badge>
           </Dropdown>
         </Header>
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: '#f5f5f5',
-              borderRadius: 8,
-              boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-            }}
-          >
-            {renderContent()}
-          </div>
+
+        <Content className="staff-content">
+          {renderContent()}
         </Content>
       </Layout>
     </Layout>

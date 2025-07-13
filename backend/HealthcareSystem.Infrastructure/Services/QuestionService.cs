@@ -22,6 +22,7 @@ namespace Infrastructure.Services
         public async Task<List<QuestionDTO>> GetAllQuestionsAsync()
         {
             return await _context.Questions
+                .Where(q => q.Status != "Bị từ chối") 
                 .Select(q => new QuestionDTO
                 {
                     QuestionId = q.QuestionId,
@@ -35,7 +36,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();
@@ -49,7 +50,7 @@ namespace Infrastructure.Services
             var consultants = await _context.Users
                 .Include(u => u.Specialties)
                 .Where(u => u.Specialties.Any(s => s.SpecialtyId == questionDto.SpecialtyId)
-                && u.RoleId == "CS")
+                && u.RoleId == "CS" && u.IsAvailable )
                 .ToListAsync();
 
             if (!consultants.Any()) return false;
@@ -63,12 +64,12 @@ namespace Infrastructure.Services
                 TitleQuestion = questionDto.TitleQuestion,
                 Content = questionDto.Content,
                 AttachmentPath = questionDto.AttachmentPath,
-                SubmitDate = DateTime.UtcNow,
+                SubmitDate = DateTime.UtcNow.AddHours(7),
                 ConsultantId = luckyPerson.UserId,
                 Age = questionDto.Age,
                 Status = "Chua tra loi",
                 Gender = questionDto.Gender,
-                HeartCount = 0,
+                Heart = false,
                 AnsCount = 0
             };
 
@@ -81,14 +82,14 @@ namespace Infrastructure.Services
                     UserId = luckyPerson.UserId,
                     Content = $"Bạn có một câu hỏi mới từ {questionDto.MemberId}",
                     IsRead = false,
-                    SendTime = DateTime.UtcNow
+                    SendTime = DateTime.UtcNow.AddHours(7) 
                 },
                 new Notification
                 {
                     UserId = questionDto.MemberId.Value,
                     Content = "Câu hỏi của bạn đã được gửi thành công và sẽ sớm được trả lời.",
                     IsRead = false,
-                    SendTime = DateTime.UtcNow
+                    SendTime = DateTime.UtcNow.AddHours(7)
                 }
             };
 
@@ -113,7 +114,7 @@ namespace Infrastructure.Services
                 UserId = question.MemberId ?? 0,
                 Content = "Câu hỏi của bạn: " + status,
                 IsRead = false,
-                SendTime = DateTime.UtcNow
+                SendTime = DateTime.UtcNow.AddHours(7)
             };
 
             await _context.Notifications.AddAsync(notification);
@@ -132,14 +133,21 @@ namespace Infrastructure.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> GiveAHeart(QuestionDTO questionDto)
+        public async Task<bool> UpdateHeart(QuestionDTO questionDto)
         {
             var question = await _context.Questions.FindAsync(questionDto.QuestionId);
             if (question == null)
             {
                 return false;
             }
-            question.HeartCount = (question.HeartCount ?? 0) + 1;
+            if(question.Heart == true)
+            {
+                question.Heart = false;
+            }
+            else
+            {
+                question.Heart = true;
+            }
             _context.Questions.Update(question);
             return await _context.SaveChangesAsync() > 0;
 
@@ -165,7 +173,7 @@ namespace Infrastructure.Services
                 Status = question.Status,
                 Age = question.Age,
                 Gender = question.Gender,
-                HeartCount = question.HeartCount,
+                Heart = question.Heart,
                 AnsCount = question.AnsCount
             };
         }
@@ -187,7 +195,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();
@@ -210,7 +218,7 @@ namespace Infrastructure.Services
                     Status = q.Status,
                     Age = q.Age,
                     Gender = q.Gender,
-                    HeartCount = q.HeartCount,
+                    Heart = q.Heart,
                     AnsCount = q.AnsCount
                 })
                 .ToListAsync();

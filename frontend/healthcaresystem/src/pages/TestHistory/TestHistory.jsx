@@ -21,6 +21,7 @@ const TestHistory = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const userId = Cookies.get('userId');
+  const [paymentLoadingId, setPaymentLoadingId] = useState(null);
 
   useEffect(() => {
     if (!userId) {
@@ -82,16 +83,40 @@ const TestHistory = () => {
     }
   };
 
-  const handlePayment = (record) => {
-    // Navigate to payment page with test record info
-    navigate('/test-sti', { 
-      state: { 
-        testRecordId: record.testServiceRecordId,
-        serviceName: record.serviceName,
-        amount: record.price || 0,
-        isFromHistory: true
-      } 
+  // Thêm hàm tạo order PayPal
+  const createPaypalOrder = async (testServiceRecordId) => {
+    const res = await fetch(`/api/Payment/create-paypal-url?testServiceRecordId=${testServiceRecordId}`, {
+      method: 'POST'
     });
+    if (!res.ok) throw new Error('Tạo order PayPal thất bại');
+    return res.json(); // { approvalUrl: 'https://www.paypal.com/checkoutnow?...' }
+  };
+
+  // Sửa handlePayment
+  const handlePayment = async (record) => {
+    try {
+      setPaymentLoadingId(record.testServiceRecordId);
+      const res = await fetch(`/api/Payment/create-paypal-url?testServiceRecordId=${record.testServiceRecordId}`, {
+        method: 'POST'
+      });
+      if (!res.ok) {
+        message.error('API trả về lỗi: ' + res.status);
+        setPaymentLoadingId(null);
+        return;
+      }
+      const data = await res.json();
+      console.log('PayPal API response:', data);
+      const approvalUrl = data.paymentUrl;
+      if (approvalUrl) {
+        window.location.href = approvalUrl;
+      } else {
+        message.error('Không thể tạo đơn PayPal! (paymentUrl không tồn tại)');
+        setPaymentLoadingId(null);
+      }
+    } catch (err) {
+      message.error('Có lỗi khi tạo đơn PayPal!');
+      setPaymentLoadingId(null);
+    }
   };
 
   const handleFeedback = (record) => {
@@ -114,13 +139,19 @@ const TestHistory = () => {
           feedbackDate: new Date().toISOString()
         })
       });
-      // Gọi API cập nhật status thành 'Da danh gia'
-      try {
-        await updateTestResult(null, {
-          testServiceRecordId: feedbackRecord.testServiceRecordId,
-          status: 'Da danh gia'
-        });
-      } catch {}
+      // Kiểm tra staffId
+      if (!feedbackRecord.staffId) {
+        message.error('Không tìm thấy nhân viên thực hiện để cập nhật trạng thái!');
+        setFeedbackLoading(false);
+        return;
+      }
+
+      await updateTestResult(feedbackRecord.staffId, {
+        testServiceRecordId: feedbackRecord.testServiceRecordId,
+        result: '',
+        notes: '',
+        status: 'Da danh gia'
+      });
       message.success('Đánh giá thành công!');
       setFeedbackModalVisible(false);
       setFeedbackRecord(null);
@@ -174,12 +205,13 @@ const TestHistory = () => {
         const status = (record.status || '').toLowerCase();
         if (status === 'dang thanh toan' || status === 'pending') {
           return (
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               size="small"
-              onClick={(e) => {
+              loading={paymentLoadingId === record.testServiceRecordId}
+              onClick={async (e) => {
                 e.stopPropagation();
-                handlePayment(record);
+                await handlePayment(record);
               }}
               style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
             >
@@ -209,7 +241,11 @@ const TestHistory = () => {
 
   // Helper để lọc theo trạng thái
   const filterByStatus = (statusList) =>
-    testRecords.filter(r => statusList.includes((r.status || '').toLowerCase()));
+    testRecords.filter(
+      r =>
+        statusList.includes((r.status || '').toLowerCase()) &&
+        (r.status || '').toLowerCase() !== 'da danh gia'
+    );
 
   const filterFeedback = () =>
     testRecords.filter(r => (r.status || '').toLowerCase() === 'da danh gia');
@@ -300,12 +336,12 @@ const TestHistory = () => {
       )
     },
     {
-      key: 'da-huy',
-      label: 'Đã hủy',
+      key: 'da-danh-gia',
+      label: 'Đã đánh giá',
       children: (
         <Table
           columns={columns}
-          dataSource={filterByStatus(['cancelled', 'da huy', 'khach hang khong den'])}
+          dataSource={filterFeedback()}
           rowKey="testServiceRecordId"
           pagination={{
             pageSize: 10,
@@ -321,12 +357,12 @@ const TestHistory = () => {
       )
     },
     {
-      key: 'da-danh-gia',
-      label: 'Đã đánh giá',
+      key: 'da-huy',
+      label: 'Đã hủy',
       children: (
         <Table
           columns={columns}
-          dataSource={filterFeedback()}
+          dataSource={filterByStatus(['cancelled', 'da huy', 'khach hang khong den'])}
           rowKey="testServiceRecordId"
           pagination={{
             pageSize: 10,
@@ -514,13 +550,12 @@ const TestHistory = () => {
           open={feedbackModalVisible}
           onCancel={() => setFeedbackModalVisible(false)}
           footer={null}
-          destroyOnClose
         >
           <Form form={form} layout="vertical" onFinish={submitFeedback}>
-            <Form.Item name="rating" label="Chất lượng dịch vụ" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}> 
+            <Form.Item name="rating" label="Chất lượng dịch vụ" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}>
               <Rate allowClear={false} />
             </Form.Item>
-            <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}> 
+            <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}>
               <Input.TextArea rows={4} placeholder="Nhận xét của bạn về dịch vụ..." />
             </Form.Item>
             <Form.Item>

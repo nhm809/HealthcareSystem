@@ -18,6 +18,10 @@ import {
      Spin,
      Image,
      Tabs,
+     Card,
+     Row,
+     Col,
+     Empty,
 } from 'antd';
 import {
      ReloadOutlined,
@@ -66,12 +70,17 @@ const QuestionManagement = () => {
           'all': 1,
           'unanswered': 1,
           'answered': 1,
-          'closed': 1
+          'closed': 1,
+          'rejected': 1
      });
 
      const [closeModalVisible, setCloseModalVisible] = useState(false);
      const [closingQuestion, setClosingQuestion] = useState(null);
      const [closeLoading, setCloseLoading] = useState(false);
+
+     const [rejectModalVisible, setRejectModalVisible] = useState(false);
+     const [rejectingQuestion, setRejectingQuestion] = useState(null);
+     const [rejectLoading, setRejectLoading] = useState(false);
 
      // Tách fetchQuestions ra ngoài để có thể gọi lại
      const fetchQuestions = async () => {
@@ -162,6 +171,7 @@ const QuestionManagement = () => {
           if (status === 'answered') return filteredQuestions.filter(item => item.status === 'Da tra loi');
           if (status === 'unanswered') return filteredQuestions.filter(item => item.status === 'Chua tra loi');
           if (status === 'closed') return filteredQuestions.filter(item => item.status === 'Da dong');
+          if (status === 'rejected') return filteredQuestions.filter(item => item.status === 'Bị từ chối');
           return filteredQuestions;
      };
 
@@ -178,6 +188,10 @@ const QuestionManagement = () => {
                case "Da dong":
                     return (
                          <Tag color="red">Đã đóng</Tag>
+                    );
+               case "Bị từ chối":
+                    return (
+                         <Tag color="magenta">Bị từ chối</Tag>
                     );
                default:
                     return (
@@ -219,33 +233,56 @@ const QuestionManagement = () => {
           }
      };
 
+     // Hàm từ chối câu hỏi
+     const handleRejectQuestion = (question) => {
+          setRejectingQuestion(question);
+          setRejectModalVisible(true);
+     };
+
+     const doRejectQuestion = async () => {
+          setRejectLoading(true);
+          try {
+               await questionApi.updateQuestionStatus(rejectingQuestion.key, JSON.stringify("Bị từ chối"));
+               message.success('Đã từ chối câu hỏi!');
+               setRejectModalVisible(false);
+               setRejectingQuestion(null);
+               fetchQuestions();
+          } catch {
+               message.error('Từ chối câu hỏi thất bại!');
+          } finally {
+               setRejectLoading(false);
+          }
+     };
+
      const getAction = (record) => {
-          const status = getStatus(record);
-          if (status === 'closed' || status === 'answered') {
+          // Nếu câu hỏi đã đóng hoặc bị từ chối, chỉ hiển thị nút "Xem chi tiết"
+          if (record.status === 'Da dong' || record.status === 'Bị từ chối') {
                return (
                     <Button
                          type="default"
                          icon={<EditOutlined />}
                          size="small"
-                         style={{ borderRadius: 6, marginRight: 8 }}
+                         style={{ borderRadius: 6 }}
                          onClick={() => handleReplyClick(record)}
                     >
                          Xem chi tiết
                     </Button>
                );
           }
-          return (
-               <Space>
-                    <Button
-                         type="primary"
-                         icon={<EditOutlined />}
-                         size="small"
-                         style={{ borderRadius: 6 }}
-                         onClick={() => handleReplyClick(record)}
-                    >
-                         Trả lời
-                    </Button>
-                    {record.status !== 'Da dong' && (
+          
+          // Nếu câu hỏi đã trả lời, hiển thị "Xem chi tiết" và "Đóng câu hỏi"
+          if (record.status === 'Da tra loi') {
+               return (
+                    <Space>
+                         <Button
+                              type="default"
+                              icon={<EditOutlined />}
+                              size="small"
+                              style={{ borderRadius: 6 }}
+                              onClick={() => handleReplyClick(record)}
+                         >
+                              Xem chi tiết
+                         </Button>
                          <Button
                               type="default"
                               danger
@@ -261,7 +298,83 @@ const QuestionManagement = () => {
                          >
                               Đóng câu hỏi
                          </Button>
-                    )}
+                    </Space>
+               );
+          }
+          
+          // Nếu câu hỏi chưa trả lời, hiển thị nút "Trả lời" và "Đóng câu hỏi"
+          if (record.status === 'Chua tra loi') {
+               return (
+                    <Space>
+                         <Button
+                              type="primary"
+                              icon={<EditOutlined />}
+                              size="small"
+                              style={{ borderRadius: 6 }}
+                              onClick={() => handleReplyClick(record)}
+                         >
+                              Trả lời
+                         </Button>
+                         <Button
+                              type="default"
+                              danger
+                              icon={<StopOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleCloseQuestion(record)}
+                         >
+                              Đóng câu hỏi
+                         </Button>
+                         <Button
+                              type="default"
+                              danger
+                              icon={<CloseCircleOutlined />}
+                              size="small"
+                              style={{
+                                   borderRadius: 6,
+                                   background: '#fff0f0',
+                                   color: '#d4380d',
+                                   border: '1px solid #ffa39e'
+                              }}
+                              onClick={() => handleRejectQuestion(record)}
+                         >
+                              Từ chối
+                         </Button>
+                    </Space>
+               );
+          }
+          // Nếu câu hỏi chưa trả lời, hiển thị nút "Trả lời" và "Đóng câu hỏi"
+          return (
+               <Space>
+                    <Button
+                         type="primary"
+                         icon={<EditOutlined />}
+                         size="small"
+                         style={{ borderRadius: 6 }}
+                         onClick={() => handleReplyClick(record)}
+                    >
+                         Trả lời
+                    </Button>
+                    <Button
+                         type="default"
+                         danger
+                         icon={<StopOutlined />}
+                         size="small"
+                         style={{
+                              borderRadius: 6,
+                              background: '#fff0f0',
+                              color: '#d4380d',
+                              border: '1px solid #ffa39e'
+                         }}
+                         onClick={() => handleCloseQuestion(record)}
+                    >
+                         Đóng câu hỏi
+                    </Button>
                </Space>
           );
      };
@@ -328,7 +441,8 @@ const QuestionManagement = () => {
                'all': 1,
                'unanswered': 1,
                'answered': 1,
-               'closed': 1
+               'closed': 1,
+               'rejected': 1
           });
      }, [filters.searchText, filters.date]);
 
@@ -353,6 +467,7 @@ const QuestionManagement = () => {
                                         pageSize={pagination.pageSize}
                                         onChange={(page) => handlePageChange('all', page)}
                                         showSizeChanger={false}
+                                        className="question-pagination"
                                    />
                               </div>
                          )}
@@ -378,6 +493,7 @@ const QuestionManagement = () => {
                                         pageSize={pagination.pageSize}
                                         onChange={(page) => handlePageChange('unanswered', page)}
                                         showSizeChanger={false}
+                                        className="question-pagination"
                                    />
                               </div>
                          )}
@@ -403,6 +519,7 @@ const QuestionManagement = () => {
                                         pageSize={pagination.pageSize}
                                         onChange={(page) => handlePageChange('answered', page)}
                                         showSizeChanger={false}
+                                        className="question-pagination"
                                    />
                               </div>
                          )}
@@ -428,6 +545,33 @@ const QuestionManagement = () => {
                                         pageSize={pagination.pageSize}
                                         onChange={(page) => handlePageChange('closed', page)}
                                         showSizeChanger={false}
+                                        className="question-pagination"
+                                   />
+                              </div>
+                         )}
+                    </div>
+               )
+          },
+          {
+               key: 'rejected',
+               label: `Bị từ chối (${filterByStatus('rejected').length})`,
+               children: (
+                    <div>
+                         <Table 
+                              dataSource={filterByStatus('rejected').slice((currentPage['rejected'] - 1) * pagination.pageSize, currentPage['rejected'] * pagination.pageSize)} 
+                              columns={columns} 
+                              pagination={false} 
+                              loading={loading} 
+                         />
+                         {filterByStatus('rejected').length > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                                   <Pagination
+                                        current={currentPage['rejected']}
+                                        total={filterByStatus('rejected').length}
+                                        pageSize={pagination.pageSize}
+                                        onChange={(page) => handlePageChange('rejected', page)}
+                                        showSizeChanger={false}
+                                        className="question-pagination"
                                    />
                               </div>
                          )}
@@ -437,34 +581,62 @@ const QuestionManagement = () => {
      ];
 
      return (
-          <div style={{ background: '#fff', borderRadius: 8, padding: 24 }}>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1890ff', margin: 0 }}>Consultant Dashboard</h1>
-                    {/* <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
-                         <Badge count={unreadCount}>
-                              <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
-                         </Badge>
-                    </Dropdown> */}
-               </div>
-               <Space style={{ marginBottom: 16 }} wrap>
-                    <DatePicker placeholder="mm/dd/yyyy" onChange={(date) => handleFilterChange('date', date)} value={filters.date} />
-                    <Input.Search
-                         placeholder="Tìm kiếm khách hàng..."
-                         style={{ width: 220 }}
-                         value={filters.searchText}
-                         onChange={(e) => handleFilterChange('searchText', e.target.value)}
-                         allowClear
-                    />
-                    <Button icon={<ReloadOutlined />} onClick={handleRefresh}>
-                         Làm mới
-                    </Button>
-               </Space>
-               <Tabs 
-                    defaultActiveKey="all" 
-                    items={tabItems} 
-                    tabBarStyle={{ background: '#f8f9fa', borderRadius: '16px 16px 0 0', padding: '0 16px', borderBottom: '1px solid #e0e0e0' }}
-                    className="custom-question-tabs"
-               />
+          <div className="question-management">
+               <Card>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                         <div style={{ textAlign: 'left' }}>
+                              <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1a3e72', margin: 0 }}>Consultant Dashboard</h1>
+                         </div>
+                         
+                         <Row justify="end" gutter={[16, 16]} style={{ marginBottom: 16 }}>
+                              <Col>
+                                   <DatePicker 
+                                        placeholder="mm/dd/yyyy" 
+                                        onChange={(date) => handleFilterChange('date', date)} 
+                                        value={filters.date} 
+                                   />
+                              </Col>
+                              <Col>
+                                   <Input.Search
+                                        placeholder="Tìm kiếm khách hàng..."
+                                        style={{ width: 220 }}
+                                        value={filters.searchText}
+                                        onChange={(e) => handleFilterChange('searchText', e.target.value)}
+                                        allowClear
+                                   />
+                              </Col>
+                              <Col>
+                                   <Button 
+                                        icon={<ReloadOutlined />} 
+                                        onClick={handleRefresh}
+                                   >
+                                        Làm mới
+                                   </Button>
+                              </Col>
+                         </Row>
+
+                         {loading ? (
+                              <div style={{ textAlign: 'center', padding: '50px' }}>
+                                   <Spin size="large" />
+                              </div>
+                         ) : allQuestions.length > 0 ? (
+                              <Tabs 
+                                   defaultActiveKey="all" 
+                                   items={tabItems} 
+                                   tabBarStyle={{ 
+                                        background: '#f8f9fa', 
+                                        borderRadius: '16px 16px 0 0', 
+                                        padding: '0 16px', 
+                                        borderBottom: '1px solid #e0e0e0' 
+                                   }} 
+                                   className="custom-question-tabs"
+                              />
+                         ) : (
+                              <Empty description="Bạn chưa có câu hỏi nào" />
+                         )}
+                    </Space>
+               </Card>
+               
                {selectedQuestion && (
                     <Modal
                          title="Chi tiết câu hỏi"
@@ -512,6 +684,7 @@ const QuestionManagement = () => {
                          </div>
                     </Modal>
                )}
+               
                <AntdModal
                     open={closeModalVisible}
                     onCancel={() => { setCloseModalVisible(false); setClosingQuestion(null); }}
@@ -531,6 +704,29 @@ const QuestionManagement = () => {
                               style={{ border: 'none' }}
                          >
                               Đồng ý đóng
+                         </Button>
+                    </div>
+               </AntdModal>
+               
+               <AntdModal
+                    open={rejectModalVisible}
+                    onCancel={() => { setRejectModalVisible(false); setRejectingQuestion(null); }}
+                    footer={null}
+                    title={<span style={{ color: '#000' }}>Xác nhận từ chối câu hỏi</span>}
+               >
+                    <p>Bạn chắc chắn muốn từ chối câu hỏi này?</p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                         <Button onClick={() => { setRejectModalVisible(false); setRejectingQuestion(null); }}>
+                              Hủy
+                         </Button>
+                         <Button
+                              type="primary"
+                              danger
+                              loading={rejectLoading}
+                              onClick={doRejectQuestion}
+                              style={{ border: 'none' }}
+                         >
+                              Đồng ý từ chối
                          </Button>
                     </div>
                </AntdModal>

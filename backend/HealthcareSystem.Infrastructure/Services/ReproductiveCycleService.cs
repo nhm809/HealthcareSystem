@@ -85,9 +85,9 @@ namespace Infrastructure.Services
                 var length = cycle.CycleLength.Value;
 
                 endDate = start.AddDays(length);
-                ovulationDate = start.AddDays(length - 14);
-                fertileStart = ovulationDate.Value.AddDays(-5);
-                fertileEnd = ovulationDate;
+                ovulationDate = start.AddDays((length + 1) - 14);
+                fertileStart = ovulationDate.Value.AddDays(-2);
+                fertileEnd = ovulationDate.Value.AddDays(2);
             }
 
             _context.ReproductiveCycles.Update(cycle);
@@ -131,9 +131,9 @@ namespace Infrastructure.Services
                 var start = cycle.StartDate.Value;
                 var length = cycle.CycleLength.Value;
                 endDate = start.AddDays(length);
-                ovulationDate = start.AddDays(length - 14);
-                fertileStart = ovulationDate.Value.AddDays(-5);
-                fertileEnd = ovulationDate;
+                ovulationDate = start.AddDays((length + 1) - 14);
+                fertileStart = ovulationDate.Value.AddDays(-2);
+                fertileEnd = ovulationDate.Value.AddDays(2);
             }
 
             return new ReproductiveCycleDTO

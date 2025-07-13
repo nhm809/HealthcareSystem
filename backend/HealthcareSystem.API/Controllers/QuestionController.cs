@@ -73,14 +73,14 @@ public class QuestionController : ControllerBase
         return Ok(true);
     }
 
-    [HttpPost("giveHeart")]
-    public async Task<ActionResult<bool>> GiveAHeart([FromBody] QuestionDTO questionDto)
+    [HttpPost("updateHeart")]
+    public async Task<ActionResult<bool>> UpdateHeart([FromBody] QuestionDTO questionDto)
     {
         if (questionDto == null || questionDto.QuestionId <= 0)
         {
             return BadRequest("Invalid question data.");
         }
-        var result = await _questionService.GiveAHeart(questionDto);
+        var result = await _questionService.UpdateHeart(questionDto);
         if (!result)
         {
             return StatusCode(500, "An error occurred while giving a heart.");

@@ -9,6 +9,7 @@ import {
      SettingOutlined,
      LogoutOutlined,
      BellOutlined,
+     UserOutlined,
 } from '@ant-design/icons';
 import AppointmentManagement from '../../pages/Consultant/AppointmentManagement';
 // Placeholder components for other menu items
@@ -16,7 +17,12 @@ import Profile from '../../pages/Profile/Profile';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { notiApi, authApi, getInfo } from '../../services/api';
-import dayjs from 'dayjs';
+import Schedule from '../Schedule/schedule';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+import NotificationDropdown from '../NotificationDropdown';
+import Logos from '../../assets/imgs/Logos.png';
+import './ConsultantLayout.css';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -106,58 +112,29 @@ const ConsultantLayout = () => {
           }
      };
 
+     // Notification logic giống Header.jsx
+     const handleMarkAllAsRead = async () => {
+          try {
+               const unreadNotifications = notifications.filter(n => !n.isRead);
+               await Promise.all(unreadNotifications.map(noti => notiApi.markAsRead(noti.notificationId)));
+               setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+               setUnreadCount(0);
+          } catch (err) {
+               console.error('Error marking all notifications as read:', err);
+          }
+     };
      const notificationItems = [
           {
                key: 'notifications',
                label: (
-                    <List
-                         style={{
-                              width: 300,
-                              maxHeight: 400,
-                              overflow: 'auto',
-                              overflowX: 'hidden',
-                         }}
-                         dataSource={notifications}
-                         renderItem={(item) => (
-                              <List.Item
-                                   onClick={() => handleNotificationClick(item.notificationId)}
-                                   style={{
-                                        cursor: 'pointer',
-                                        backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                                        padding: '8px 12px',
-                                        borderBottom: '1px solid #f0f0f0',
-                                   }}
-                              >
-                                   <List.Item.Meta
-                                        title={
-                                             <div
-                                                  style={{
-                                                       color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
-                                                       fontWeight: item.isRead ? 'normal' : 'bold',
-                                                       whiteSpace: 'normal',
-                                                       wordBreak: 'break-word',
-                                                  }}
-                                             >
-                                                  {item.title}
-                                             </div>
-                                        }
-                                        description={
-                                             <>
-                                                  <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                                       {item.content}
-                                                  </Text>
-                                                  <br />
-                                                  <Text type="secondary" style={{ fontSize: '12px' }}>
-                                                       {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                                                  </Text>
-                                             </>
-                                        }
-                                   />
-                              </List.Item>
-                         )}
+                    <NotificationDropdown
+                         notifications={notifications}
+                         unreadCount={unreadCount}
+                         onMarkAsRead={handleNotificationClick}
+                         onMarkAllAsRead={handleMarkAllAsRead}
                     />
-               ),
-          },
+               )
+          }
      ];
 
      const menuItems = [
@@ -165,6 +142,11 @@ const ConsultantLayout = () => {
                key: 'dashboard',
                icon: <CalendarOutlined />,
                label: 'Danh sách lịch hẹn',
+          },
+          {
+               key: 'work-schedule',
+               icon: <CalendarOutlined />,
+               label: 'Lịch làm việc',
           },
           {
                key: 'questions',
@@ -187,6 +169,8 @@ const ConsultantLayout = () => {
           switch (selectedKey) {
                case 'dashboard':
                     return <AppointmentManagement />;
+               case 'work-schedule':
+                    return <Schedule />;
                case 'questions':
                     return <QuestionManagement />;
                case 'blogs':
@@ -200,88 +184,63 @@ const ConsultantLayout = () => {
 
      return (
           <Layout style={{ minHeight: '100vh' }}>
-               <Sider
-                    collapsible
-                    style={{ background: '#001529', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                    width={300}
-               >
-                    <div>
-                         <div style={{
-                              height: 48,
-                              margin: 16,
-                              background: 'rgba(255,255,255,0.15)',
-                              borderRadius: 8,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: '#fff',
-                              fontWeight: 'bold',
-                              fontSize: 18
-                         }}>
-                              CONSULTANT
+               <Sider width={300} className="consultant-sider">
+                    <div className="consultant-sider-top">
+                         <div className="consultant-logo">
+                              <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+                              <span className="consultant-logo-text">MedSex</span>
                          </div>
-                         <div style={{ textAlign: 'center', marginBottom: 16 }}>
-                              <Avatar size={80} src={userInfo?.avatarPath || userInfo?.avatar} />
-                              <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
-                                   {userInfo?.fullName}
-                              </div>
+
+                         <div className="consultant-avatar-container">
+                              <Avatar
+                                   size={80}
+                                   src={userInfo?.avatar || null}
+                                   icon={!userInfo?.avatar && <UserOutlined />}
+                              />
+                              <div className="consultant-avatar-name">{userInfo?.fullName || "(CONSULTANT)"}</div>
                          </div>
+                         
+
                          <Menu
                               theme="dark"
                               mode="inline"
                               selectedKeys={[selectedKey]}
                               items={menuItems}
                               onClick={({ key }) => setSelectedKey(key)}
-                              style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
+                              style={{ fontSize: 16 }}
                          />
                     </div>
-                    <div style={{ padding: 16 }}>
-                         <button
-                              onClick={() => {
-                                   Cookies.remove('email');
-                                   Cookies.remove('userid');
-                                   Cookies.remove('userId');
-                                   Cookies.remove('token');
-                                   Cookies.remove('refreshToken');
-                                   localStorage.removeItem('userInfo');
-                                   navigate('/');
-                                   window.location.reload();
-                              }}
-                              style={{
-                                   width: '100%',
-                                   background: 'none',
-                                   border: 'none',
-                                   color: '#fff',
-                                   fontWeight: 600,
-                                   fontSize: 16,
-                                   display: 'flex',
-                                   alignItems: 'center',
-                                   justifyContent: 'center',
-                                   gap: 10,
-                                   padding: '12px 0',
-                                   borderRadius: 8,
-                                   cursor: 'pointer',
-                                   transition: 'background 0.2s',
-                              }}
-                              onMouseOver={e => e.currentTarget.style.background = '#222b3a'}
-                              onMouseOut={e => e.currentTarget.style.background = 'none'}
-                         >
-                              <LogoutOutlined style={{ marginRight: 8 }} /> Đăng xuất
-                         </button>
+
+                    <div className="consultant-logout-wrapper">
+                    <button onClick={() => {
+                         Cookies.remove('email');
+                         Cookies.remove('userid');
+                         Cookies.remove('userId');
+                         Cookies.remove('token');
+                         Cookies.remove('refreshToken');
+                         localStorage.removeItem('userInfo');
+                         navigate('/');
+                         window.location.reload();
+                    }} className="consultant-logout-button">
+                         <span className="consultant-logout-icon">
+                         <LogoutOutlined />
+                         </span>
+                         <span className="consultant-logout-text">Đăng xuất</span>
+                    </button>
                     </div>
                </Sider>
                <Layout>
-                    <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                         <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+                    <Header className="consultant-header">
+                         <span className="consultant-header-text">Consultant Dashboard</span>
+                         <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
                               <Badge count={unreadCount}>
-                                   <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+                                   <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
                               </Badge>
                          </Dropdown>
                     </Header>
-                    <Content style={{ margin: '24px' }}>
-                         <div>
-                              {renderContent()}
-                         </div>
+
+                    <Content className="consultant-content">
+                         {renderContent()}
                     </Content>
                </Layout>
           </Layout>

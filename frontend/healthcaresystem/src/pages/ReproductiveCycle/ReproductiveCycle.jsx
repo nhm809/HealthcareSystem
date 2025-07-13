@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AuthModal from '../../components/Header/AuthModal/AuthModal';
 import Cookies from 'js-cookie';
 import {
@@ -7,6 +7,7 @@ import {
   Modal,
   Form,
   DatePicker,
+  TimePicker,
   InputNumber,
   message,
   Row,
@@ -20,6 +21,7 @@ import "./ReproductiveCycle.css";
 import MainLayout from "../../components/Layout/Layout";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faTrashAlt,
   faRotateLeft,
   faEgg,
   faHeartCircleBolt,
@@ -28,6 +30,7 @@ import {
   faCalendarDays,
   faDroplet
 } from '@fortawesome/free-solid-svg-icons'
+import { toast } from "react-toastify";
 
 function ReproductiveCycle() {
   const [cycles, setCycles] = useState([]);
@@ -50,14 +53,17 @@ function ReproductiveCycle() {
   };
 
   useEffect(() => {
-    fetchCycles();
+    if (memberId) {
+      fetchCycles();
+    } else {
+      toast.warning("Vui lòng đăng nhập để theo dõi chu kỳ.", { toastId: "no-login" });
+    }
   }, [memberId]);
 
-  useEffect(() => {
-    if (cycles.length > 0) {
-      // Cập nhật lịch đánh dấu
-      setMarkedDays(getMarkedDays(cycles));
 
+  useEffect(() => {
+    setMarkedDays(getMarkedDays(cycles));
+    if (cycles.length > 0) {
       // Nếu modal đang mở → gán predictedCycle vào form
       if (isModalVisible) {
         const predicted = getPredictedCycle(cycles);
@@ -73,27 +79,21 @@ function ReproductiveCycle() {
   }, [cycles, isModalVisible]);
 
   const fetchCycles = async () => { 
-    if (!memberId) {
-      message.warning("Vui lòng đăng nhập để theo dõi chu kỳ.");
-      setCycles([]);
-      return;
-    }
-
     try {
       const res = await api.get(`/cycle/${memberId}`);
       const data = res.data || [];
 
       if (data.length === 0) {
-        message.info("Bạn chưa khai báo chu kỳ nào. Hãy nhấn 'Khai báo chu kỳ' để bắt đầu.");
+        toast.info("Bạn chưa khai báo chu kỳ nào.", { toastId: "no-cycle-info" });
       }
 
       setCycles(data);
     } catch (err) {
       if (err.response?.status === 404) {
-        message.info("Bạn chưa khai báo bất kỳ chu kỳ nào");
+        toast.info("Bạn chưa khai báo chu kỳ nào.", { toastId: "no-cycle-404" });
         setCycles([]);
       } else {
-        message.error("Không thể tải dữ liệu chu kỳ");
+        toast.error("Không thể tải dữ liệu chu kỳ", { toastId: "fetch-error" });
       }
     }
   };
@@ -194,7 +194,7 @@ function ReproductiveCycle() {
       console.log("StartDate đang nhập:", startDate.format("YYYY-MM-DD"));
 
       if (isDuplicate) {
-        message.warning("Chu kỳ với ngày bắt đầu này đã tồn tại!");
+        toast.warning("Chu kỳ với ngày bắt đầu này đã tồn tại!");
         return;
       }
 
@@ -208,22 +208,80 @@ function ReproductiveCycle() {
         pillTime: values.pillTime ? values.pillTime.format("HH:mm:ss") : null,
       };
       await api.post("/cycle/add", payload);
-      message.success("Khai báo thành công!");
+      toast.success("Khai báo thành công!");
       setIsModalVisible(false);
       form.resetFields();
       fetchCycles();
     } catch (err) {
-      message.error("Vui lòng nhập đầy đủ thông tin");
+      toast.error("Vui lòng nhập đầy đủ thông tin");
     }
   };
 
   const columns = [
-    { title: "Bắt đầu", dataIndex: "startDate" },
-    { title: "Kết thúc", dataIndex: "endDate" },
-    { title: "Rụng trứng", dataIndex: "ovulationDate" },
-    { title: "Độ dài chu kỳ", dataIndex: "cycleLength" },
-    { title: "Số ngày hành kinh", dataIndex: "periodLength" },
+    { title: "Bắt đầu", width: '16%', dataIndex: "startDate" },
+    { title: "Kết thúc", width: '17%', dataIndex: "endDate" },
+    { title: "Rụng trứng", width: '17%', dataIndex: "ovulationDate" },
+    { title: "Độ dài chu kỳ", width: '18%', dataIndex: "cycleLength" },
+    { title: "Số ngày hành kinh", width: '19%', dataIndex: "periodLength" },
+    {
+      title: "Hành động",
+      dataIndex: "action",
+      width: '13%',
+      render: (_, record) => (
+        <Button
+          type="text"
+          danger
+          icon={<FontAwesomeIcon icon={faTrashAlt} />}
+          onClick={() => handleDeleteCycle(record.id)}
+        />
+      ),
+    },
   ];
+
+  const handleDeleteCycle = async (cycleId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc chắn muốn xóa chu kỳ này?",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk: async () => {
+        try {
+          await api.delete(`/cycle/delete/${cycleId}`);
+          toast.success("Đã xóa chu kỳ thành công!");
+          fetchCycles(); // Tải lại danh sách chu kỳ
+        } catch (err) {
+          toast.error("Xóa chu kỳ thất bại!");
+        }
+      }
+    });
+  };
+
+  const getCurrentCycleWarning = (latestCycle) => {
+    if (!latestCycle) return "Không có dữ liệu";
+
+    const start = moment(latestCycle.startDate);
+    const now = moment();
+
+    const { cycleLength, periodLength } = latestCycle;
+
+    if (cycleLength < 21 || cycleLength > 35) {
+      return "Độ dài chu kỳ bất thường";
+    }
+
+    if (periodLength < 2 || periodLength > 7) {
+      return "Số ngày hành kinh bất thường";
+    }
+
+    if (now.diff(start, 'days') > 60) {
+      return "Đã hơn 60 ngày chưa cập nhật chu kỳ mới";
+    }
+
+    return "Bình thường";
+  };
+
+  const warning = getCurrentCycleWarning(cycles[cycles.length - 1]);
+  const color = warning === "Bình thường" ? "green" : "red";
 
   return (
     <MainLayout>
@@ -366,7 +424,7 @@ function ReproductiveCycle() {
                         </div>
                         <div className="text-wrapper">
                           <div className="label">Cảnh báo chu kỳ</div>
-                          <div className="value">Bình thường</div>
+                          <div className="value" style={{ color }}>{warning}</div>
                         </div>
                       </li>
                     </ul>
@@ -390,7 +448,7 @@ function ReproductiveCycle() {
                 )}
               </div>
               <Table
-                dataSource={cycles.slice(0, 3).map((c, i) => ({ ...c, key: i }))}
+                dataSource={cycles.slice(0, 3).map((c, i) => ({ ...c, key: c.cycleId || i, id: c.cycleId }))}
                 columns={columns}
                 pagination={false}
                 bordered={false}
@@ -403,17 +461,22 @@ function ReproductiveCycle() {
         <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={defaultTab} />
 
         <Modal
-          title="Tất cả lịch sử chu kỳ"
+          title={
+            <div style={{ fontSize: 24, fontWeight: "bold", color: '#44a383', marginBottom: 16 }}>
+              Tất cả lịch sử chu kỳ
+            </div>
+          }
           open={isHistoryModalVisible}
           onCancel={() => setIsHistoryModalVisible(false)}
           footer={null}
-          width={700}
+          width={900}
+          centered
         >
           <Table
-            dataSource={cycles.map((c, i) => ({ ...c, key: i }))}
+            dataSource={cycles.map((c, i) => ({ ...c, key: c.cycleId || i, id: c.cycleId }))}
             columns={columns}
-            pagination={{ pageSize: 5 }}
-            bordered
+            pagination={{ pageSize: 5, className:"cycle-pagination" }}
+            className="all-custom-cycle-table"
           />
         </Modal>
 
@@ -439,6 +502,9 @@ function ReproductiveCycle() {
             </Form.Item>
             <Form.Item name="periodLength" label="Số ngày hành kinh" rules={[{ required: true , message: "Vui lòng nhập số ngày hành kinh" }]}>
               <InputNumber min={1} max={10} step={1} style={{ width: "100%" }} placeholder="Nhập số ngày" className="custom-input" />
+            </Form.Item>
+            <Form.Item name="pillTime" label="Thời gian uống thuốc (nếu có)" >
+              <TimePicker format="HH:mm" style={{ width: "100%" }} className="custom-input" placeholder="Chọn giờ uống thuốc" />
             </Form.Item>
           </Form>
         </Modal>

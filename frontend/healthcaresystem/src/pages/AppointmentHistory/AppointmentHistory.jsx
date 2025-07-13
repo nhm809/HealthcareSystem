@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { Table, Tag, Spin, Typography, Card, Space, Tabs, Empty, Button } from "antd";
+import { Table, Tag, Spin, Typography, Card, Space, Tabs, Empty, Button, Modal, Rate, Input, Form } from "antd";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../../components/Layout/Layout";
-import api from "../../services/api";
+import api, { authApi } from "../../services/api";
 import "./AppointmentHistory.css";
 
 const { Title } = Typography;
@@ -15,8 +15,12 @@ const { Title } = Typography;
 function AppointmentHistory() {
      const [appointments, setAppointments] = useState([]);
      const [loading, setLoading] = useState(true);
+     const [isModalOpen, setIsModalOpen] = useState(false);
+     const [selectedAppointment, setSelectedAppointment] = useState(null);
      const navigate = useNavigate();
      const userId = Cookies.get('userId');
+     const [form] = Form.useForm();
+     const [feedbackLoading, setFeedbackLoading] = useState(false);
 
      useEffect(() => {
           if (!userId) {
@@ -24,7 +28,6 @@ function AppointmentHistory() {
                toast.warning('Đăng nhập để xem lịch sử đặt lịch');
                return;
           }
-
           fetchAppointments();
      }, [userId]);
 
@@ -45,14 +48,61 @@ function AppointmentHistory() {
      const renderStatus = (status) => {
           const map = {
                'dang cho kham': { color: 'processing', text: 'Đang chờ khám' },
-               'da hoan thanh': { color: 'success', text: 'Hoàn thành' },
+               'da hoan thanh': { color: 'success', text: 'Đã hoàn thành' },
                'dang thanh toan': { color: 'warning', text: 'Đang thanh toán' },
                'da huy': { color: 'default', text: 'Đã hủy' },
+               'da danh gia': { color: 'orange', text: 'Đã đánh giá' },
           };
 
           const key = (status || '').toLowerCase();
           const config = map[key] || { color: 'default', text: status };
           return <Tag color={config.color} style={{ fontSize: '14px' }}>{config.text}</Tag>;
+     };
+
+     const openFeedbackModal = (record) => {
+          setSelectedAppointment(record);
+          form.resetFields();
+          setIsModalOpen(true);
+     };
+
+     const submitFeedback = async (values) => {
+          try {
+               setFeedbackLoading(true);
+               const payload = {
+                    appointmentId: selectedAppointment.appointmentId,
+                    rating: values.rating,
+                    comment: values.comment,
+                    feedbackDate: new Date().toISOString()
+               };
+
+               await api.post('/feedback/submit', payload);
+               await api.patch(`/Appointment/update-status/${selectedAppointment.appointmentId}`, `"Da danh gia"`);
+
+               toast.success('Gửi đánh giá thành công!');
+               setIsModalOpen(false);
+               form.resetFields(); // Reset form sau khi gửi
+               fetchAppointments(); // Refresh danh sách
+          } catch (err) {
+               console.error(err);
+               toast.error('Gửi đánh giá thất bại');
+          } finally {
+               setFeedbackLoading(false);
+          }
+     };
+
+     const handlePayment = async (appointmentId) => {
+          try {
+               const res = await authApi.createPaypalUrl(null, appointmentId);
+               const paymentUrl = res.data?.paymentUrl || res.data?.PaymentUrl;
+               if (paymentUrl) {
+                    window.location.href = paymentUrl;
+               } else {
+                    toast.error('Không lấy được liên kết thanh toán!');
+               }
+          } catch (error) {
+               console.error(error);
+               toast.error('Thanh toán thất bại!');
+          }
      };
 
      const columns = [
@@ -103,6 +153,48 @@ function AppointmentHistory() {
                dataIndex: 'status',
                key: 'status',
                render: renderStatus
+          },
+     ];
+
+     const columnsWithAction = [
+          ...columns,
+          {
+               title: 'Hành động',
+               key: 'actions',
+               render: (_, record) => {
+                    const status = (record.status || '').toLowerCase();
+                    if (status === 'dang thanh toan') {
+                         return (
+                              <Button
+                                   type="primary"
+                                   size="small"
+                                   onClick={() => handlePayment(record.appointmentId)}
+                                   style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+                              >
+                                   Thanh toán
+                              </Button>
+                         );
+                    }
+                    if (status === 'da hoan thanh') {
+                         const endTime = dayjs(record.startTime).add(record.duration || 30, 'minute'); // Giả sử mặc định 30 phút nếu không có
+                         const daysSince = dayjs().diff(endTime, 'day');
+                         if (daysSince <= 7) {
+                              return (
+                                   <Button
+                                        type="primary"
+                                        size="small"
+                                        onClick={() => openFeedbackModal(record)}
+                                        style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+                                   >
+                                        Đánh giá
+                                   </Button>
+                              );
+                         } else {
+                              return <Tag color="red">Quá hạn</Tag>;
+                         }
+                    }
+                    return null;
+               }
           }
      ];
 
@@ -123,7 +215,7 @@ function AppointmentHistory() {
                          rowKey="appointmentId"
                          pagination={{
                               pageSize: 5,
-                              showQuickJumper: true,
+                              className: 'appointment-pagination',
                          }}
                     />
                )
@@ -133,12 +225,12 @@ function AppointmentHistory() {
                label: `Đang thanh toán (${getCountByStatus(['dang thanh toan'])})`,
                children: (
                     <Table
-                         columns={columns}
+                         columns={columnsWithAction}
                          dataSource={filterByStatus(['dang thanh toan'])}
                          rowKey="appointmentId"
                          pagination={{
                          pageSize: 5,
-                         showQuickJumper: true,
+                         className: 'appointment-pagination',
                          }}
                     />
                )
@@ -153,7 +245,7 @@ function AppointmentHistory() {
                     rowKey="appointmentId"
                     pagination={{
                     pageSize: 5,
-                    showQuickJumper: true,
+                    className: 'appointment-pagination',
                     }}
                />
                )
@@ -163,12 +255,12 @@ function AppointmentHistory() {
                label: `Đã hoàn thành (${getCountByStatus(['da hoan thanh'])})`,
                children: (
                <Table
-                    columns={columns}
+                    columns={columnsWithAction}
                     dataSource={filterByStatus(['da hoan thanh'])}
                     rowKey="appointmentId"
                     pagination={{
                     pageSize: 5,
-                    showQuickJumper: true,
+                    className: 'appointment-pagination',
                     }}
                />
                )
@@ -183,9 +275,21 @@ function AppointmentHistory() {
                     rowKey="appointmentId"
                     pagination={{
                     pageSize: 5,
-                    showQuickJumper: true,
+                    className: 'appointment-pagination',
                     }}
                />
+               )
+          },
+          {
+               key: 'da-danh-gia',
+               label: `Đã đánh giá (${getCountByStatus(['da danh gia'])})`,
+               children: (
+                    <Table
+                         columns={columns}
+                         dataSource={filterByStatus(['da danh gia'])}
+                         rowKey="appointmentId"
+                         pagination={{ pageSize: 5, className: 'appointment-pagination', }}
+                    />
                )
           },
      ];
@@ -195,7 +299,7 @@ function AppointmentHistory() {
                <div className="appointment-history">
                     <Card>
                          <Space direction="vertical" style={{ width: '100%' }}>
-                              <div style={{ textAlign: 'center' }}>
+                              <div style={{ textAlign: 'left' }}>
                                    <Title level={2} style={{ color: '#1a3e72' }}>Lịch sử tư vấn</Title>
                               </div>
                               {loading ? (
@@ -215,6 +319,41 @@ function AppointmentHistory() {
                               )}
                          </Space>
                     </Card>
+
+                    <Modal
+                         title={<span style={{ color: '#1a3e72', fontWeight: 600 }}>Đánh giá dịch vụ</span>}
+                         open={isModalOpen}
+                         onCancel={() => setIsModalOpen(false)}
+                         footer={null}
+                    >
+                         <Form form={form} layout="vertical" onFinish={submitFeedback}>
+                              <Form.Item
+                                   name="rating"
+                                   label="Chất lượng dịch vụ"
+                                   rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}
+                              >
+                                   <Rate allowClear={false} />
+                              </Form.Item>
+
+                              <Form.Item
+                                   name="comment"
+                                   label="Nhận xét"
+                                   rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}
+                              >
+                                   <Input.TextArea
+                                        rows={4}
+                                        placeholder="Nhận xét của bạn..."
+                                   />
+                              </Form.Item>
+
+                              <Form.Item>
+                                   <Button type="primary" htmlType="submit" loading={feedbackLoading} block>
+                                        Gửi đánh giá
+                                   </Button>
+                              </Form.Item>
+                         </Form>
+                    </Modal>
+
                </div>
           </MainLayout>
      );

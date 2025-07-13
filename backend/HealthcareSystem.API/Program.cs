@@ -26,7 +26,7 @@ builder.Services.AddHttpClient("PayPalClient", client =>
     client.DefaultRequestHeaders.Accept.Clear();
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
-
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IOTPRequestService, OTPRequestService>();
 builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 builder.Services.AddScoped<IReproductiveCycleService, ReproductiveCycleService>();
@@ -48,7 +48,10 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IManageUserService, ManageUserService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IWeeklyScheduleService, WeeklyScheduleService>();
+builder.Services.AddScoped<IWeeklyOverrideSchedule, WeeklyOverrideScheduleService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+builder.Services.AddHostedService<ReproductiveReminderJob>();
 
 
 // Thêm CORS

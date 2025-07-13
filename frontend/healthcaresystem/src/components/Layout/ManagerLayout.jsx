@@ -19,6 +19,13 @@ import dayjs from 'dayjs';
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import ServiceManagement from '../../pages/Manager/ServiceManagement';
 import EmployeeManagement from '../../pages/Manager/EmployeeManagement';
+import SpecialtyManagement from '../../pages/Manager/SpecialtyManagement';
+import NotificationDropdown from '../NotificationDropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+import WeeklyOverrideScheduleManagement from '../../pages/Manager/WeeklyOverrideScheduleManagement';
+import Logos from '../../assets/imgs/Logos.png';
+import './ManagerLayout.css';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -105,58 +112,26 @@ const ManagerLayout = () => {
           } catch (err) {}
      };
 
+     const handleMarkAllAsRead = async () => {
+          try {
+               await notiApi.markAllAsRead(Cookies.get('userId'));
+               setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+               setUnreadCount(0);
+          } catch (err) {}
+     };
+
      const notificationItems = [
           {
                key: 'notifications',
                label: (
-                    <List
-                         style={{
-                              width: 300,
-                              maxHeight: 400,
-                              overflow: 'auto',
-                              overflowX: 'hidden',
-                         }}
-                         dataSource={notifications}
-                         renderItem={(item) => (
-                              <List.Item
-                                   onClick={() => handleNotificationClick(item.notificationId)}
-                                   style={{
-                                        cursor: 'pointer',
-                                        backgroundColor: item.isRead ? 'transparent' : '#f0f0f0',
-                                        padding: '8px 12px',
-                                        borderBottom: '1px solid #f0f0f0',
-                                   }}
-                              >
-                                   <List.Item.Meta
-                                        title={
-                                             <div
-                                                  style={{
-                                                       color: item.isRead ? 'rgba(0, 0, 0, 0.45)' : '#1890ff',
-                                                       fontWeight: item.isRead ? 'normal' : 'bold',
-                                                       whiteSpace: 'normal',
-                                                       wordBreak: 'break-word',
-                                                  }}
-                                             >
-                                                  {item.title}
-                                             </div>
-                                        }
-                                        description={
-                                             <>
-                                                  <Text type="secondary" style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                                       {item.content}
-                                                  </Text>
-                                                  <br />
-                                                  <Text type="secondary" style={{ fontSize: '12px' }}>
-                                                       {dayjs(item.sendTime).format('DD/MM/YYYY HH:mm')}
-                                                  </Text>
-                                             </>
-                                        }
-                                   />
-                              </List.Item>
-                         )}
+                    <NotificationDropdown
+                         notifications={notifications}
+                         unreadCount={unreadCount}
+                         onMarkAsRead={handleNotificationClick}
+                         onMarkAllAsRead={handleMarkAllAsRead}
                     />
-               ),
-          },
+               )
+          }
      ];
 
      const menuItems = [
@@ -171,15 +146,25 @@ const ManagerLayout = () => {
                label: 'Dịch vụ',
           },
           {
+               key: 'specialty-management',
+               icon: <ProfileOutlined />, // hoặc AppstoreOutlined nếu muốn
+               label: 'Chuyên khoa',
+          },
+          {
                key: 'employee-management',
                icon: <TeamOutlined />,
                label: 'Nhân viên'
           },
           {
+               key: 'weekly-override-management',
+               icon: <ProfileOutlined />,
+               label: 'Đăng ký làm thêm/nghỉ',
+          },
+          {
                key: 'my-profile',
                icon: <UserOutlined />,
                label: 'Cài đặt cá nhân',
-          },
+          }
      ];
 
      const renderContent = () => {
@@ -188,10 +173,14 @@ const ManagerLayout = () => {
                     return <ManagerDashboard />;
                case 'service-management':
                     return <ServiceManagement/>;
+               case 'specialty-management':
+                    return <SpecialtyManagement/>;
                case 'employee-management':
                     return <EmployeeManagement/>;     
                case 'my-profile':
                     return <Profile hideBackButton={true} />;     
+               case 'weekly-override-management':
+                    return <WeeklyOverrideScheduleManagement />;
                default:
                     return <ManagerDashboard />;
           }
@@ -199,26 +188,23 @@ const ManagerLayout = () => {
 
      return (
           <Layout style={{ minHeight: '100vh' }}>
-               <Sider
-                    collapsible
-                    style={{ background: '#001529', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                    width={300}
-               >
-                    <div>
-                         <div style={{
-                              height: 48,
-                              margin: 16,
-                              background: 'rgba(255,255,255,0.15)',
-                              borderRadius: 8,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: '#fff',
-                              fontWeight: 'bold',
-                              fontSize: 18
-                         }}>
-                              MANAGER
+               <Sider width={300} className="manager-sider">
+                    <div className="manager-sider-top">
+                         <div className="manager-logo">
+                              <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+                              <span className="manager-logo-text">MedSex</span>
                          </div>
+
+                         <div className="manager-avatar-container">
+                              <Avatar
+                                   size={80}
+                                   src={userInfo?.avatar || null}
+                                   icon={!userInfo?.avatar && <UserOutlined />}
+                              />
+                              <div className="manager-avatar-name">{userInfo?.fullName || "(MANAGER)"}</div>
+                         </div>
+                         
+
                          <Menu
                               theme="dark"
                               mode="inline"
@@ -228,57 +214,41 @@ const ManagerLayout = () => {
                                    setSelectedKey(key);
                                    localStorage.setItem('managerSelectedKey', key);
                               }}
-                              style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
+                              style={{ fontSize: 16 }}
                          />
                     </div>
-                    <div style={{ padding: 16 }}>
-                         <button
-                              onClick={() => {
-                                   Cookies.remove('email');
-                                   Cookies.remove('userid');
-                                   Cookies.remove('userId');
-                                   Cookies.remove('token');
-                                   Cookies.remove('refreshToken');
-                                   localStorage.removeItem('userInfo');
-                                   localStorage.removeItem('managerSelectedKey');
-                                   navigate('/');
-                                   window.location.reload();
-                              }}
-                              style={{
-                                   width: '100%',
-                                   background: 'none',
-                                   border: 'none',
-                                   color: '#fff',
-                                   fontWeight: 600,
-                                   fontSize: 16,
-                                   display: 'flex',
-                                   alignItems: 'center',
-                                   justifyContent: 'center',
-                                   gap: 10,
-                                   padding: '12px 0',
-                                   borderRadius: 8,
-                                   cursor: 'pointer',
-                                   transition: 'background 0.2s',
-                              }}
-                              onMouseOver={e => e.currentTarget.style.background = '#222b3a'}
-                              onMouseOut={e => e.currentTarget.style.background = 'none'}
-                         >
-                              <LogoutOutlined style={{ marginRight: 8 }} /> Đăng xuất
-                         </button>
+
+                    <div className="manager-logout-wrapper">
+                    <button onClick={() => {
+                         Cookies.remove('email');
+                         Cookies.remove('userid');
+                         Cookies.remove('userId');
+                         Cookies.remove('token');
+                         Cookies.remove('refreshToken');
+                         localStorage.removeItem('userInfo');
+                         localStorage.removeItem('managerSelectedKey');
+                         navigate('/');
+                         window.location.reload();
+                    }} className="manager-logout-button">
+                         <span className="manager-logout-icon">
+                         <LogoutOutlined />
+                         </span>
+                         <span className="manager-logout-text">Đăng xuất</span>
+                    </button>
                     </div>
                </Sider>
                <Layout>
-                    <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                         <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+                    <Header className="manager-header">
+                         <span className="manager-header-text">Manager Dashboard</span>
+                         <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
                               <Badge count={unreadCount}>
-                                   <BellOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
+                                   <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
                               </Badge>
                          </Dropdown>
                     </Header>
-                    <Content style={{ margin: '24px' }}>
-                         <div>
-                              {renderContent()}
-                         </div>
+
+                    <Content className="manager-content">
+                         {renderContent()}
                     </Content>
                </Layout>
           </Layout>

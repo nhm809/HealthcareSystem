@@ -7,7 +7,7 @@ namespace Domain.Entities
     {
         public int AppointmentId { get; set; }
 
-        public int? MemberId { get; set; }
+        public int MemberId { get; set; }
 
         public string? MeetLink { get; set; }
 
