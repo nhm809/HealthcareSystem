@@ -111,7 +111,6 @@
     border: none !important;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    text-align: center;
 }
 
 .ant-card-cover img {
@@ -119,7 +118,7 @@
     object-fit: cover;
 }
 
-.ant-card-body {
+.consultant-list .ant-card-body {
     padding: 0 !important;
 }
 
