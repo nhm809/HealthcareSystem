@@ -140,11 +140,38 @@ namespace Infrastructure.Services
 
         public async Task<bool> UpdateAppointmentStatusAsync(int appointmentId, string newStatus)
         {
+            var appointment = await _context.Appointments
+                .Include(a => a.Member)
+                .Include(a => a.Service)
+                .Include(a => a.Consultant)
+                .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+
+            if (appointment == null) return false;
+
             var a = await _context.Appointments.FindAsync(appointmentId);
             if (a == null) return false;
 
             a.Status = newStatus;
             await _context.SaveChangesAsync();
+
+            if (newStatus == "Da hoan thanh")
+            {
+                var sendTime = DateTime.UtcNow.AddHours(7);
+                var formattedSendTime = sendTime.ToString("HH:mm dd/MM/yyyy");
+                var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
+                var consultantName = appointment.Consultant?.FullName ?? "Chuyên gia";
+
+                var notification = new Notification
+                {
+                    UserId = appointment.MemberId,
+                    Title = "Cuộc hẹn đã hoàn thành",
+                    Content = $"Lịch hẹn của bạn với {consultantName} vào lúc {appointmentTime} đã hoàn thành. Bạn có thể đánh giá trong vòng 7 ngày tới",
+                    SendTime = sendTime,
+                    IsRead = false
+                };
+                await _context.Notifications.AddAsync(notification);
+                await _context.SaveChangesAsync();
+            }
             return true;
         }
 
@@ -165,7 +192,6 @@ namespace Infrastructure.Services
             if (appointment.MemberId != null)
             {
                 var sendTime = DateTime.UtcNow.AddHours(7);
-                var formattedSendTime = sendTime.ToString("HH:mm dd/MM/yyyy");
                 var appointmentTime = appointment.StartTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa có lịch hẹn";
                 var consultantName = appointment.Consultant?.FullName ?? "Chuyên gia";
                 var serviceName = appointment.Service?.Name ?? "Dịch vụ";
@@ -174,8 +200,7 @@ namespace Infrastructure.Services
                     $@"Dịch vụ: {serviceName}
                     Bác sĩ: {consultantName}
                     Ngày hẹn: {appointmentTime}
-                    Link: {meetLink}
-                    Thời gian gửi: {formattedSendTime}";
+                    Link: {meetLink}";
 
                 var notification = new Notification
                 {
