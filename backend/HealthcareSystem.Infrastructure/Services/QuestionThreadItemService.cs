@@ -45,7 +45,7 @@ namespace Infrastructure.Services
             {
                 QuestionId = dto.QuestionId,
                 QuestionText = dto.QuestionText,
-                SentAt = DateTime.UtcNow,
+                SentAt = DateTime.UtcNow.AddHours(7),
                 AttachmentPath = dto.AttachmentPath,
                 IsAnswered = false 
             };
@@ -60,7 +60,7 @@ namespace Infrastructure.Services
                 UserId = question.MemberId,
                 Content = $"Bạn đã đặt câu hỏi thành công {dto.QuestionText}",
                 IsRead = false,
-                SendTime = DateTime.UtcNow
+                SendTime = DateTime.UtcNow.AddHours(7)
             };
 
             var consNoti = new Notification
@@ -68,7 +68,7 @@ namespace Infrastructure.Services
                 UserId = question.ConsultantId,
                 Content = $"Bạn có một câu hỏi mới từ {dto.QuestionText}",
                 IsRead = false,
-                SendTime = DateTime.UtcNow
+                SendTime = DateTime.UtcNow.AddHours(7)
             };
 
             await _context.Notifications.AddRangeAsync(memNoti, consNoti);
@@ -87,7 +87,7 @@ namespace Infrastructure.Services
                 return false;
             subQuestion.AnswerText = dto.AnswerText;
             subQuestion.IsAnswered = true;
-            subQuestion.AnsweredAt = DateTime.UtcNow;
+            subQuestion.AnsweredAt = DateTime.UtcNow.AddHours(7);
             _context.QuestionThreadItems.Update(subQuestion);
             var question = await _context.Questions
                 .FirstOrDefaultAsync(q => q.QuestionId == subQuestion.QuestionId);
@@ -99,7 +99,7 @@ namespace Infrastructure.Services
                 UserId = question.MemberId,
                 Content = $"Câu hỏi của bạn đã được trả lời: {dto.AnswerText}",
                 IsRead = false,
-                SendTime = DateTime.UtcNow
+                SendTime = DateTime.UtcNow.AddHours(7)
             };
             await _context.Notifications.AddAsync(memNoti);
             _context.Questions.Update(question);
@@ -116,7 +116,7 @@ namespace Infrastructure.Services
                 return false;
             subQuestion.QuestionText = dto.QuestionText;
             subQuestion.AttachmentPath = dto.AttachmentPath;
-            subQuestion.AnsweredAt = DateTime.UtcNow;
+            subQuestion.AnsweredAt = DateTime.UtcNow.AddHours(7);
             subQuestion.IsAnswered = true;
             _context.QuestionThreadItems.Update(subQuestion);
             return await _context.SaveChangesAsync() > 0;

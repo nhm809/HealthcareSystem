@@ -28,7 +28,7 @@ namespace Infrastructure.Services
                 RecordId = dto.RecordId,
                 Rating = dto.Rating,
                 Comment = dto.Comment,
-                FeedbackDate = DateTime.UtcNow
+                FeedbackDate = DateTime.UtcNow.AddHours(7)
             };
 
             _context.Feedbacks.Add(feedback);
