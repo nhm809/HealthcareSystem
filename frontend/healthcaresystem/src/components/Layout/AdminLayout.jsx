@@ -159,14 +159,14 @@ function AdminLayout() {
                         <span className="logo-text">MedSex</span>
                     </div>
 
-                    <div className="admin-avatar-container">
-                        <Avatar
-                            size={160}
-                            src={userInfo?.avatar || null}
-                            icon={!userInfo?.avatar && <UserOutlined />}
-                        />
-                        <div className="admin-avatar-name">{userInfo?.fullName || "(ADMIN)"}</div>
-                    </div>
+                                            <div className="admin-avatar-container">
+                            <Avatar
+                                size={80}
+                                src={userInfo?.avatar || null}
+                                icon={!userInfo?.avatar && <UserOutlined />}
+                            />
+                            <div className="admin-avatar-name">{userInfo?.fullName || "(ADMIN)"}</div>
+                        </div>
                     
 
                     <Menu
