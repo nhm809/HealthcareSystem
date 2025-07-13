@@ -341,11 +341,18 @@ namespace Infrastructure.Services
 
             bool statusChanged = request.Status != oldStatus;
             bool notesChanged = !string.IsNullOrEmpty(request.Notes) && request.Notes != oldNotes;
-            bool resultChanged = request.Result != oldResult;
+            bool resultChanged = !string.IsNullOrEmpty(request.Result) && request.Result != oldResult;
 
             testServiceRecord.Status = request.Status;
-            testServiceRecord.Notes = request.Notes;
-            testServiceRecord.Result = request.Result;
+            // Chỉ cập nhật Notes và Result nếu chúng được cung cấp và không rỗng
+            if (!string.IsNullOrEmpty(request.Notes))
+            {
+                testServiceRecord.Notes = request.Notes;
+            }
+            if (!string.IsNullOrEmpty(request.Result))
+            {
+                testServiceRecord.Result = request.Result;
+            }
 
             List<string> changedFields = new();
             if (statusChanged) changedFields.Add("trạng thái");

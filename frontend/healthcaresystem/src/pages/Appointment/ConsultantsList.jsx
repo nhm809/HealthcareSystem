@@ -110,7 +110,7 @@ function Appointment() {
 
      const filteredDoctors = doctors.filter((doctor) => {
           const matchSpecialty = !selectedSpecialty || doctor.specialization === selectedSpecialty;
-          const matchSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase());
+          const matchSearch = !searchTerm || (doctor.name && doctor.name.toLowerCase().includes(searchTerm.toLowerCase()));
           return matchSpecialty && matchSearch;
      });
 

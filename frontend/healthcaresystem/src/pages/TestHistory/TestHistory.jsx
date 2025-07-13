@@ -146,12 +146,21 @@ const TestHistory = () => {
         return;
       }
 
-      await updateTestResult(feedbackRecord.staffId, {
+      // Cập nhật trạng thái và giữ nguyên kết quả, ghi chú
+      const updateData = {
         testServiceRecordId: feedbackRecord.testServiceRecordId,
-        result: '',
-        notes: '',
         status: 'Da danh gia'
-      });
+      };
+      
+      // Chỉ thêm result và notes nếu chúng có giá trị
+      if (feedbackRecord.result) {
+        updateData.result = feedbackRecord.result;
+      }
+      if (feedbackRecord.notes) {
+        updateData.notes = feedbackRecord.notes;
+      }
+      
+      await updateTestResult(feedbackRecord.staffId, updateData);
       message.success('Đánh giá thành công!');
       setFeedbackModalVisible(false);
       setFeedbackRecord(null);
