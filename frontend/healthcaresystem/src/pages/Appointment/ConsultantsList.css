@@ -106,33 +106,37 @@
     border-color: #54AA7F !important;
 }
 
-.ant-card {
+.doctor-list-contanter .ant-card {
     overflow: hidden;
     border: none !important;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.ant-card-cover img {
+.doctor-list-contanter .ant-card-cover img {
     height: 220px;
     object-fit: cover;
 }
 
-.consultant-list .ant-card-body {
+.doctor-list-contanter .ant-card-body {
     padding: 0 !important;
 }
 
-.ant-card-meta-title {
+.doctor-list-contanter .ant-card-meta-title {
     margin: 8px 0 2px 0 !important;
     font-weight: bold !important;
     font-size: 16px;
+    display: flex;
+    justify-content: center;
 }
 
-.ant-card-meta-description {
+.doctor-list-contanter .ant-card-meta-description {
     margin: 0 0 8px 0 !important;
     color: #325BAF !important;
     font-weight: 500;
     font-size: 14px;
+    display: flex;
+    justify-content: center;
 }
 
 .book-button {

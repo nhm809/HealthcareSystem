@@ -28,7 +28,7 @@ public class AppointmentCleanupJob : BackgroundService
             var notiService = scope.ServiceProvider.GetRequiredService<INotiService>();
 
             var now = DateTime.UtcNow.AddHours(7);
-            var limit = now.AddDays(1);
+            var limit = now.AddHours(1);
 
             var pendingAppointments = await context.Appointments
                 .Where(a => a.Status == "Dang thanh toan" && a.StartTime <= limit)
@@ -54,8 +54,8 @@ public class AppointmentCleanupJob : BackgroundService
             }
 
             // Nhắc người dùng thanh toán nếu sắp đến cuộc hẹn
-            var reminderStart = now.AddHours(24);
-            var reminderEnd = now.AddHours(48);
+            var reminderStart = now.AddHours(1);
+            var reminderEnd = now.AddHours(2);
 
             var remindAppointments = await context.Appointments
                 .Where(a => a.Status == "Dang thanh toan" &&
@@ -80,7 +80,7 @@ public class AppointmentCleanupJob : BackgroundService
                 {
                     UserId = appt.MemberId,
                     Title = "Nhắc thanh toán cuộc hẹn",
-                    Content = $"Bạn có cuộc hẹn với {appt.Consultant.FullName} vào {appt.StartTime:HH:mm dd/MM/yyyy}. Vui lòng hoàn thành thanh toán trước giờ tư vấn 1 để không bị hủy.",
+                    Content = $"Bạn có cuộc hẹn với {appt.Consultant.FullName} vào {appt.StartTime:HH:mm dd/MM/yyyy}. Vui lòng hoàn thành thanh toán trước giờ tư vấn 1 giờ để không bị hủy.",
                     SendTime = DateTime.UtcNow.AddHours(7),
                     IsRead = false,
                 });

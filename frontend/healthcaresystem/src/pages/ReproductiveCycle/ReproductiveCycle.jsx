@@ -14,7 +14,11 @@ import {
   Col,
   Table,
 } from "antd";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 import moment from "moment";
 import api from "../../services/api";
 import "./ReproductiveCycle.css";
@@ -40,6 +44,16 @@ function ReproductiveCycle() {
   const [defaultTab, setDefaultTab] = useState(0);
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const latestCycle = cycles.length > 0
+    ? [...cycles].sort((a, b) => moment(b.startDate).diff(moment(a.startDate)))[0]
+    : null;
+
+  const latestCycleDateRange = latestCycle
+    ? {
+        start: moment(latestCycle.startDate),
+        end: moment(latestCycle.endDate),
+      }
+    : null;
 
   const memberId = Cookies.get('userId'); //Cookies.get('userId')
 
@@ -156,11 +170,6 @@ function ReproductiveCycle() {
     const predictedCycle = getPredictedCycle(cycles);
     if (predictedCycle) {
       markRange(predictedCycle.startDate, predictedCycle.endDate, "predicted-menstruation", "Dự đoán kinh");
-      // markRange(predictedCycle.fertileStart, predictedCycle.fertileEnd, "predicted-fertile", "Dự đoán thụ thai");
-      // map.set(predictedCycle.ovulationDate.format("YYYY-MM-DD"), {
-      //   type: "predicted-ovulation",
-      //   text: "Dự đoán rụng trứng",
-      // });
     }
 
     return map;
@@ -170,8 +179,12 @@ function ReproductiveCycle() {
     const dateStr = value.format("YYYY-MM-DD");
     const info = markedDays.get(dateStr);
 
+    const isInLatestCycle = latestCycleDateRange &&
+      value.isSameOrAfter(latestCycleDateRange.start, "day") &&
+      value.isSameOrBefore(latestCycleDateRange.end, "day");
+
     return (
-      <div className={`cycle-cell-wrapper ${info?.type || ""}`}>
+      <div className={`cycle-cell-wrapper ${info?.type || ""} ${isInLatestCycle ? 'latest-cycle' : ''}`}>
         <div className="date-number">{value.date()}</div>
       </div>
     );
@@ -318,7 +331,7 @@ function ReproductiveCycle() {
                   return (
                     <div className="calendar-title-bar">
                       <div className="calendar-header">
-                        <span role="img"><FontAwesomeIcon icon={faCalendarDays} size="lg" style={{color: "#DB2777",}} /></span>  Lịch chu kỳ tháng {dayjs().format("MM/YYYY")}
+                        <span role="img"><FontAwesomeIcon icon={faCalendarDays} size="lg" style={{color: "#DB2777",}} /></span>  Lịch chu kỳ tháng {current.format("MM/YYYY")}
                       </div>
 
                       <div className="calendar-header-wrapper">
