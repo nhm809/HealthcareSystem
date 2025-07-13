@@ -539,3 +539,20 @@
      font-weight: 500;
      font-size: 0.875rem;
 }
+
+/* Chỉ style riêng cho input password trong modal đổi mật khẩu của Profile */
+.profile-container .ant-modal .password-input-container .MuiOutlinedInput-root {
+  border-radius: 6px;
+  border: 1px solid #000 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.profile-container .ant-modal .password-input-container .MuiOutlinedInput-root.Mui-focused {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 2px #00000022 !important;
+}
+
+.profile-container .ant-modal .password-input-container .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}

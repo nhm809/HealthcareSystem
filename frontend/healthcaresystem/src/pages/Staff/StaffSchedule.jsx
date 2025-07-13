@@ -164,8 +164,8 @@ const StaffSchedule = () => {
             handleModalOpen(record);
           }}
           style={{
-            backgroundColor: '#2563EB',
-            borderColor: '#2563EB',
+            backgroundColor: '#43AA8B',
+            borderColor: '#43AA8B',
             borderRadius: '6px',
             fontWeight: 500,
             height: '32px',
@@ -191,6 +191,7 @@ const StaffSchedule = () => {
             loading={loading}
             pagination={false}
             rowKey="key"
+            className="staff-schedule-table"
           />
           {filterByStatus(['Dang cho kham']).length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
@@ -200,12 +201,8 @@ const StaffSchedule = () => {
                 pageSize={pageSize}
                 onChange={(page) => handlePageChange('dang-cho-kham', page)}
                 showSizeChanger={false}
-                itemRender={(page, type, originalElement) => {
-                  if (type === 'page') {
-                    return <Button shape="circle" type={page === currentPage['dang-cho-kham'] ? 'primary' : 'default'}>{page}</Button>;
-                  }
-                  return originalElement;
-                }}
+                showQuickJumper
+                showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} mục`}
               />
             </div>
           )}
@@ -223,6 +220,7 @@ const StaffSchedule = () => {
             loading={loading}
             pagination={false}
             rowKey="key"
+            className="staff-schedule-table"
           />
           {filterByStatus(['Dang thuc hien']).length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
@@ -232,12 +230,8 @@ const StaffSchedule = () => {
                 pageSize={pageSize}
                 onChange={(page) => handlePageChange('dang-thuc-hien', page)}
                 showSizeChanger={false}
-                itemRender={(page, type, originalElement) => {
-                  if (type === 'page') {
-                    return <Button shape="circle" type={page === currentPage['dang-thuc-hien'] ? 'primary' : 'default'}>{page}</Button>;
-                  }
-                  return originalElement;
-                }}
+                showQuickJumper
+                showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} mục`}
               />
             </div>
           )}
@@ -255,6 +249,7 @@ const StaffSchedule = () => {
             loading={loading}
             pagination={false}
             rowKey="key"
+            className="staff-schedule-table"
           />
           {filterByStatus(['Da hoan thanh']).length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
@@ -264,12 +259,8 @@ const StaffSchedule = () => {
                 pageSize={pageSize}
                 onChange={(page) => handlePageChange('da-hoan-thanh', page)}
                 showSizeChanger={false}
-                itemRender={(page, type, originalElement) => {
-                  if (type === 'page') {
-                    return <Button shape="circle" type={page === currentPage['da-hoan-thanh'] ? 'primary' : 'default'}>{page}</Button>;
-                  }
-                  return originalElement;
-                }}
+                showQuickJumper
+                showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} mục`}
               />
             </div>
           )}
@@ -287,6 +278,7 @@ const StaffSchedule = () => {
             loading={loading}
             pagination={false}
             rowKey="key"
+            className="staff-schedule-table"
           />
           {filterByStatus(['Da huy', 'Khach hang khong den']).length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
@@ -296,12 +288,8 @@ const StaffSchedule = () => {
                 pageSize={pageSize}
                 onChange={(page) => handlePageChange('da-huy', page)}
                 showSizeChanger={false}
-                itemRender={(page, type, originalElement) => {
-                  if (type === 'page') {
-                    return <Button shape="circle" type={page === currentPage['da-huy'] ? 'primary' : 'default'}>{page}</Button>;
-                  }
-                  return originalElement;
-                }}
+                showQuickJumper
+                showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} mục`}
               />
             </div>
           )}
@@ -371,7 +359,7 @@ const StaffSchedule = () => {
   return (
     <Row gutter={32}>
       <Col span={24}>
-        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 0' }}>Quản lý xét nghiệm</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 26, margin: '16px 16px' }}>Quản lý xét nghiệm</h2>
         <Card style={{ borderRadius: 16, boxShadow: '0 2px 12px #0001' }} bodyStyle={{ padding: 0 }}>
           {data.length > 0 ? (
             <Tabs 
@@ -394,7 +382,7 @@ const StaffSchedule = () => {
             setSelectedStatus(''); // Reset selectedStatus khi đóng modal
           }}
           title={
-            <div style={{ color: '#2563EB', fontSize: '18px', fontWeight: 600 }}>
+            <div style={{ color: '#43AA8B', fontSize: '18px', fontWeight: 600 }}>
               Chi tiết xét nghiệm
             </div>
           }
@@ -413,11 +401,11 @@ const StaffSchedule = () => {
                 border: '1px solid #e9ecef'
               }}>
                 <h3 style={{ 
-                  color: '#2563EB', 
+                  color: '#43AA8B', 
                   marginBottom: '16px', 
                   fontSize: '16px', 
                   fontWeight: 600,
-                  borderBottom: '2px solid #2563EB',
+                  borderBottom: '2px solid #43AA8B',
                   paddingBottom: '8px',
                   display: 'flex',
                   alignItems: 'center',
@@ -444,7 +432,15 @@ const StaffSchedule = () => {
               </div>
 
               {/* Tiến trình xét nghiệm */}
-              {selectedTest && selectedTest.status !== 'Da hoan thanh' && (
+              {selectedTest && selectedTest.status !== 'Da hoan thanh' && (() => {
+                // Kiểm tra xem đã đến ngày xét nghiệm chưa
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const testDate = selectedTest.testDate ? new Date(selectedTest.testDate) : null;
+                testDate?.setHours(0, 0, 0, 0);
+                const isTestDateReached = testDate && today >= testDate;
+                
+                return isTestDateReached ? (
                 <div style={{ 
                   backgroundColor: '#fff', 
                   padding: '20px', 
@@ -454,11 +450,11 @@ const StaffSchedule = () => {
                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}>
                   <h3 style={{ 
-                    color: '#2563EB', 
+                    color: '#43AA8B', 
                     marginBottom: '16px', 
                     fontSize: '16px', 
                     fontWeight: 600,
-                    borderBottom: '2px solid #2563EB',
+                    borderBottom: '2px solid #43AA8B',
                     paddingBottom: '8px',
                     display: 'flex',
                     alignItems: 'center',
@@ -528,8 +524,8 @@ const StaffSchedule = () => {
                             loading={uploadingResult} 
                             size="large"
                             style={{ 
-                              backgroundColor: '#2563EB', 
-                              borderColor: '#2563EB',
+                              backgroundColor: '#43AA8B', 
+                              borderColor: '#43AA8B',
                               borderRadius: '8px',
                               fontWeight: 600,
                               height: '40px',
@@ -567,8 +563,8 @@ const StaffSchedule = () => {
                         htmlType="submit"
                         size="large"
                         style={{ 
-                          backgroundColor: '#2563EB', 
-                          borderColor: '#2563EB',
+                          backgroundColor: '#43AA8B', 
+                          borderColor: '#43AA8B',
                           borderRadius: '8px',
                           fontWeight: 600,
                           height: '40px',
@@ -581,7 +577,26 @@ const StaffSchedule = () => {
                     </Form.Item>
                   </Form>
                 </div>
-              )}
+              ) : (
+                <div style={{ 
+                  backgroundColor: '#fff3cd', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #ffeaa7',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    color: '#856404',
+                    fontWeight: 500
+                  }}>
+                    <InfoCircleOutlined style={{ marginRight: 8, fontSize: 16 }} />
+                    Chưa đến ngày xét nghiệm ({selectedTest.testDate ? new Date(selectedTest.testDate).toLocaleDateString('vi-VN') : 'Chưa có ngày'}). Chỉ có thể cập nhật trạng thái khi đến ngày xét nghiệm.
+                  </div>
+                </div>
+              );
+              })()}
 
               {/* Kết quả xét nghiệm - chỉ hiện khi trạng thái thực tế là Đã hoàn thành */}
               {selectedTest && selectedTest.status === 'Da hoan thanh' && (
@@ -593,11 +608,11 @@ const StaffSchedule = () => {
                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}>
                   <h3 style={{ 
-                    color: '#2563EB', 
+                    color: '#43AA8B', 
                     marginBottom: '16px', 
                     fontSize: '16px', 
                     fontWeight: 600,
-                    borderBottom: '2px solid #2563EB',
+                    borderBottom: '2px solid #43AA8B',
                     paddingBottom: '8px',
                     display: 'flex',
                     alignItems: 'center',

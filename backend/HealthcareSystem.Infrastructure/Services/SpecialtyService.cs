@@ -21,12 +21,14 @@ namespace Infrastructure.Services
 
         public async Task<IEnumerable<SpecialtyDTO>> GetAllAsync()
         {
-            return await _context.Set<Specialty>()
+            return await _context.Specialties
+                .Where(s => !s.IsDeleted) 
                 .Select(s => new SpecialtyDTO
                 {
                     Id = s.SpecialtyId,
                     Name = s.Name,
-                    Description = s.Description
+                    Description = s.Description,
+                    IsDeleted = s.IsDeleted
                 }).ToListAsync();
         }
 
@@ -38,14 +40,16 @@ namespace Infrastructure.Services
             {
                 Id = specialty.SpecialtyId,
                 Name = specialty.Name,
-                Description = specialty.Description
+                Description = specialty.Description,
+                IsDeleted = specialty.IsDeleted
+
             };
         }
 
         public async Task<List<SpecialtyDTO>> GetByUserIdAsync(int userId)
         {
             var specialties = await _context.Specialties
-                .Where(s => s.Users.Any(u => u.UserId == userId))
+                .Where(s => s.Users.Any(u => u.UserId == userId) && !s.IsDeleted)
                 .ToListAsync();
 
             return specialties.Select(s => new SpecialtyDTO
@@ -61,7 +65,8 @@ namespace Infrastructure.Services
             var specialty = new Specialty
             {
                 Name = specialtyDto.Name,
-                Description = specialtyDto.Description
+                Description = specialtyDto.Description,
+                IsDeleted = false
             };
             _context.Specialties.Add(specialty);
             await _context.SaveChangesAsync();
@@ -70,7 +75,8 @@ namespace Infrastructure.Services
             {
                 Id = specialty.SpecialtyId,
                 Name = specialty.Name,
-                Description = specialty.Description
+                Description = specialty.Description,
+                IsDeleted = specialty.IsDeleted
             };
 
         }
@@ -96,11 +102,11 @@ namespace Infrastructure.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var specialty = await _context.Set<Specialty>().FindAsync(id);
+            var specialty = await _context.Specialties.FindAsync(id);
             if (specialty == null) return false;
-            _context.Set<Specialty>().Remove(specialty);
-            await _context.SaveChangesAsync();
-            return true;
+            specialty.IsDeleted = true; 
+            _context.Specialties.Update(specialty);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

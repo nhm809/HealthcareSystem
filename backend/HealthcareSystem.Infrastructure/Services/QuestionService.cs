@@ -64,7 +64,7 @@ namespace Infrastructure.Services
                 TitleQuestion = questionDto.TitleQuestion,
                 Content = questionDto.Content,
                 AttachmentPath = questionDto.AttachmentPath,
-                SubmitDate = DateTime.UtcNow,
+                SubmitDate = DateTime.UtcNow.AddHours(7),
                 ConsultantId = luckyPerson.UserId,
                 Age = questionDto.Age,
                 Status = "Chua tra loi",
@@ -82,14 +82,14 @@ namespace Infrastructure.Services
                     UserId = luckyPerson.UserId,
                     Content = $"Bạn có một câu hỏi mới từ {questionDto.MemberId}",
                     IsRead = false,
-                    SendTime = DateTime.UtcNow
+                    SendTime = DateTime.UtcNow.AddHours(7) 
                 },
                 new Notification
                 {
                     UserId = questionDto.MemberId.Value,
                     Content = "Câu hỏi của bạn đã được gửi thành công và sẽ sớm được trả lời.",
                     IsRead = false,
-                    SendTime = DateTime.UtcNow
+                    SendTime = DateTime.UtcNow.AddHours(7)
                 }
             };
 
@@ -114,7 +114,7 @@ namespace Infrastructure.Services
                 UserId = question.MemberId ?? 0,
                 Content = "Câu hỏi của bạn: " + status,
                 IsRead = false,
-                SendTime = DateTime.UtcNow
+                SendTime = DateTime.UtcNow.AddHours(7)
             };
 
             await _context.Notifications.AddAsync(notification);

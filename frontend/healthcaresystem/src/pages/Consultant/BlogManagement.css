@@ -8,12 +8,12 @@
 }
 
 .blog-header {
-  background: #54AA7F;
+  background: #43AA8B;
   border-radius: 16px;
   padding: 32px;
   margin-bottom: 32px;
   color: white;
-  box-shadow: 0 8px 32px rgba(84, 170, 127, 0.2);
+  box-shadow: 0 8px 32px rgba(67, 170, 139, 0.2);
 }
 
 .blog-header h1 {
@@ -31,7 +31,7 @@
 
 .create-blog-btn {
   background: white !important;
-  color: #54AA7F !important;
+  color: #43AA8B !important;
   border: none !important;
   border-radius: 12px !important;
   height: 48px !important;
@@ -107,7 +107,7 @@
 .blog-card:hover {
   transform: translateY(-4px) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
-  border-color: #54AA7F !important;
+  border-color: #43AA8B !important;
 }
 
 .blog-card-image {
@@ -140,7 +140,7 @@
 .blog-card-topic {
   display: inline-block;
   padding: 4px 12px;
-  background: #54AA7F;
+  background: #43AA8B;
   color: white;
   border-radius: 20px;
   font-size: 12px;
@@ -225,7 +225,7 @@
 }
 
 .restore-btn {
-  background: #54AA7F !important;
+  background: #43AA8B !important;
   border: none !important;
   border-radius: 8px !important;
   color: white !important;
@@ -237,7 +237,7 @@
 
 .restore-btn:hover {
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(84, 170, 127, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(67, 170, 139, 0.3) !important;
 }
 
 /* Modal Improvements */
