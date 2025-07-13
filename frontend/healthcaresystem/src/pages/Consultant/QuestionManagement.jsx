@@ -58,6 +58,7 @@ const QuestionManagement = () => {
           status: 'all',
           searchText: '',
      });
+     const [isRefreshing, setIsRefreshing] = useState(false);
      const [isModalVisible, setIsModalVisible] = useState(false);
      const [selectedQuestion, setSelectedQuestion] = useState(null);
      const [setMessages] = useState([]);
@@ -108,8 +109,13 @@ const QuestionManagement = () => {
                     }))
                     .sort((a, b) => dayjs(b.sentTime).diff(dayjs(a.sentTime)));
                setAllQuestions(formattedQuestions);
-          } catch {
-               message.error('Không thể tải danh sách câu hỏi');
+          } catch (error) {
+               // Chỉ hiện thông báo lỗi khi thực sự có lỗi hệ thống, không phải khi không có data
+               if (error.response && error.response.status !== 404) {
+                    message.error('Không thể tải danh sách câu hỏi');
+               }
+               // Nếu là lỗi 404 hoặc không có data, set array rỗng
+               setAllQuestions([]);
           } finally {
                setLoading(false);
           }
@@ -421,10 +427,14 @@ const QuestionManagement = () => {
      };
 
      const handleRefresh = () => {
+          // Đánh dấu là đang refresh để không reset pagination
+          setIsRefreshing(true);
           setFilters({
                date: null,
                searchText: '',
           });
+          // Gọi lại API để tải dữ liệu mới
+          fetchQuestions();
      };
 
      // Hàm xử lý thay đổi trang cho từng tab
@@ -436,15 +446,21 @@ const QuestionManagement = () => {
      };
 
      useEffect(() => {
-          // Reset tất cả trang về 1 khi thay đổi filter
-          setCurrentPage({
-               'all': 1,
-               'unanswered': 1,
-               'answered': 1,
-               'closed': 1,
-               'rejected': 1
-          });
-     }, [filters.searchText, filters.date]);
+          // Chỉ reset trang về 1 khi user thực sự thay đổi filter, không phải khi refresh
+          if (!isRefreshing && (filters.searchText || filters.date)) {
+               setCurrentPage({
+                    'all': 1,
+                    'unanswered': 1,
+                    'answered': 1,
+                    'closed': 1,
+                    'rejected': 1
+               });
+          }
+          // Reset flag after effect runs
+          if (isRefreshing) {
+               setIsRefreshing(false);
+          }
+     }, [filters.searchText, filters.date, isRefreshing]);
 
      // Tạo tab items cho từng trạng thái
      const tabItems = [
@@ -584,25 +600,12 @@ const QuestionManagement = () => {
           <div className="question-management">
                <Card>
                     <Space direction="vertical" style={{ width: '100%' }}>
-                         <div style={{ textAlign: 'left' }}>
-                              <h1 style={{ fontSize: 28, fontWeight: 700, color: '#1a3e72', margin: 0 }}>Consultant Dashboard</h1>
-                         </div>
-                         
                          <Row justify="end" gutter={[16, 16]} style={{ marginBottom: 16 }}>
                               <Col>
                                    <DatePicker 
                                         placeholder="mm/dd/yyyy" 
                                         onChange={(date) => handleFilterChange('date', date)} 
                                         value={filters.date} 
-                                   />
-                              </Col>
-                              <Col>
-                                   <Input.Search
-                                        placeholder="Tìm kiếm khách hàng..."
-                                        style={{ width: 220 }}
-                                        value={filters.searchText}
-                                        onChange={(e) => handleFilterChange('searchText', e.target.value)}
-                                        allowClear
                                    />
                               </Col>
                               <Col>
