@@ -444,7 +444,15 @@ const StaffSchedule = () => {
               </div>
 
               {/* Tiến trình xét nghiệm */}
-              {selectedTest && selectedTest.status !== 'Da hoan thanh' && (
+              {selectedTest && selectedTest.status !== 'Da hoan thanh' && (() => {
+                // Kiểm tra xem đã đến ngày xét nghiệm chưa
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const testDate = selectedTest.testDate ? new Date(selectedTest.testDate) : null;
+                testDate?.setHours(0, 0, 0, 0);
+                const isTestDateReached = testDate && today >= testDate;
+                
+                return isTestDateReached ? (
                 <div style={{ 
                   backgroundColor: '#fff', 
                   padding: '20px', 
@@ -581,7 +589,26 @@ const StaffSchedule = () => {
                     </Form.Item>
                   </Form>
                 </div>
-              )}
+              ) : (
+                <div style={{ 
+                  backgroundColor: '#fff3cd', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #ffeaa7',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    color: '#856404',
+                    fontWeight: 500
+                  }}>
+                    <InfoCircleOutlined style={{ marginRight: 8, fontSize: 16 }} />
+                    Chưa đến ngày xét nghiệm ({selectedTest.testDate ? new Date(selectedTest.testDate).toLocaleDateString('vi-VN') : 'Chưa có ngày'}). Chỉ có thể cập nhật trạng thái khi đến ngày xét nghiệm.
+                  </div>
+                </div>
+              );
+              })()}
 
               {/* Kết quả xét nghiệm - chỉ hiện khi trạng thái thực tế là Đã hoàn thành */}
               {selectedTest && selectedTest.status === 'Da hoan thanh' && (
