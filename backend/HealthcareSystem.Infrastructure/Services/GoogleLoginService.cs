@@ -73,10 +73,10 @@ namespace Infrastructure.Services
                         FullName = payload.Name,
                         Avatar = payload.Picture,
                         Email = payload.Email,
-                        CreateDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                        CreateDate = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7)),
                         RoleId = "MB",
                         RefreshToken = refreshToken,
-                        RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7)
+                        RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(7).AddDays(7)
 
                     };
 
@@ -97,7 +97,7 @@ namespace Infrastructure.Services
                     Locale = payload.Locale,
                     Token = tokenHandler.WriteToken(token),
                     RefreshToken = user.RefreshToken,
-                    ExpiresAcessToken = DateTime.UtcNow.AddHours(1),
+                    ExpiresAcessToken = DateTime.UtcNow.AddHours(7).AddHours(1),
                     ExpiresRefreshToken = user.RefreshTokenExpiryTime
                 };
             }

@@ -11,43 +11,42 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 
 INSERT INTO dbo.[User] (Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
 VALUES
-('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$I7u7265V6yLnMR.g0ZH/Qu1GfirXoVuRVwx/5ENzNjnXThniKpUmS', 'mexnguyen894@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
-('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$5EH5uUDhYtbvWYprxlnXNumNRoc4r2da4sPq0RJMGHvKruHze6TU2', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
-('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$Dg3KUA/rwSHhlS8RqyNeD.GtY8hGofB7EOkNg85JpUjV9ZdonSOmi', 'pndhai@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$TecvUfIiUGGWuev92j7aC.Pf0mcWcM15s7AcTTB4hoBd0sLGY4iDa', 'hieubmk2210@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$vcMfsYFkGY4Gvw0brZjEI.J2UTnTLFNyEhXtuaSlasyrx2H6ZavUi', 'totn786@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'mexnguyen894@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
+('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
+('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
 
-('Local', NULL, N'Phạm Văn A', '$2b$12$OdTQAm4XyIfYNGX6YTbbreJuBrm7g.2uthbgiWa8gTwiHpt/ELaqK', 'st1@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị B', '$2b$12$8EJzAFRsSaBdXhuqnMeW3u.5IF/acHNCI/VPF4MtVFoKlng2stZye', 'st2@gmail.com', '0900000002', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn C', '$2b$12$M1lJLkhfVgkZR6HYb8BbQ.JmcFfEiZ6IT3mBMq8HzVwL8SR6stSoG', 'st3@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị D', '$2b$12$X8JKqyGGMxJZd5mopqMSNupuK1gMmrIs3drqRww3hlgZcCeZx1/wa', 'st4@gmail.com', '0900000004', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn E', '$2b$12$xw5g4eI7FNs3esky1P4Ude6WklBHHBgs8.e7.hZQMbUXAYwj0Ez5G', 'st5@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0900000002', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0900000004', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
 
-('Local', NULL, N'Phạm Thị F', '$2b$12$lAb8//DkG53COfGdbP3Cs.hFkNInSeJ/1a88IUupjNKR0MdKNeYYq', 'cs1@gmail.com', '0900000011', '1990-01-01', 'FEMALE', N'Tân Bình, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn G', '$2b$12$ydSjlUKcXwdKZCYjLh9cp.jMyndG3/N/CMhYo0OP/kAFiHct2slt2', 'cs2@gmail.com', '0900000012', '1990-01-01', 'MALE', N'Gò Vấp, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị H', '$2b$12$phW.cMwsgZ2ViqtvY0w8jeOYUDke5TjDIq5ubssScu5yUOvykO7kq', 'cs3@gmail.com', '0900000013', '1990-01-01', 'FEMALE', N'Phú Nhuận, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn I', '$2b$12$e69j0zAlEtiHCksiwIzSr.JhhciT6iN7bYVy1.J2rUXr08Wqf7C0a', 'cs4@gmail.com', '0900000014', '1990-01-01', 'MALE', N'Thủ Đức, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Thị K', '$2b$12$5uLlXV5QZvbZMJZp3qYGAetrRGlVjt8PUO2d2jud0EoHihCnnCUBi', 'cs5@gmail.com', '0900000015', '1990-01-01', 'FEMALE', N'Bình Thạnh, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0900000011', '1990-01-01', 'FEMALE', N'Tân Bình, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0900000012', '1990-01-01', 'MALE', N'Gò Vấp, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0900000013', '1990-01-01', 'FEMALE', N'Phú Nhuận, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0900000014', '1990-01-01', 'MALE', N'Thủ Đức, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0900000015', '1990-01-01', 'FEMALE', N'Bình Thạnh, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
 
-('Local', NULL, N'Phạm Văn L', '$2b$12$7Lv4zBiO1HM/EbGebtWFkubQgwqS9v738i2IrRPFXbLcGCfpGxETi', 'mb1@gmail.com', '0900000021', '1990-01-01', 'MALE', N'Hải Châu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị M', '$2b$12$HmNpMcpM9pUMwOY6Vx62C.p8Xp/PBYzfStvNgZzq0utDKMBbGzoO6', 'mb2@gmail.com', '0900000022', '1990-01-01', 'FEMALE', N'Thanh Khê, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Trần Văn N', '$2b$12$ha.0fzaCvqYitpRnhkXSvOPcqwyFb0BCMLBHwIAM8hQolxujvU6mW', 'mb3@gmail.com', '0900000023', '1990-01-01', 'MALE', N'Sơn Trà, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Lê Thị O', '$2b$12$EsbGV4OAAAwiwhhAC/mF1.T0ZLWv/FQKD.NH3zu5dCXraE1QBVmgq', 'mb4@gmail.com', '0900000024', '1990-01-01', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn P', '$2b$12$tcg4VIop6/ni8hWsrJjC/.FYo88d/EuQYF/y.gONQSAHx2WnlKf.m', 'mb5@gmail.com', '0900000025', '1990-01-01', 'MALE', N'Liên Chiểu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1);
-
+('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0900000021', '1990-01-01', 'MALE', N'Hải Châu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0900000022', '1990-01-01', 'FEMALE', N'Thanh Khê, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0900000023', '1990-01-01', 'MALE', N'Sơn Trà, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0900000024', '1990-01-01', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0900000025', '1990-01-01', 'MALE', N'Liên Chiểu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1);
 
 
 
 --Specialty--=====================================================================================================================================================
-INSERT INTO Specialty ([Name], [Description]) VALUES
-(N'Sản Phụ Khoa', N'Tư vấn và điều trị các vấn đề liên quan đến chu kỳ kinh nguyệt, sinh sản, viêm nhiễm phụ khoa, kế hoạch hóa gia đình, và sức khỏe sinh sản nữ.'),
-(N'Nam Khoa', N'Tư vấn và điều trị các vấn đề sinh lý nam, rối loạn cương dương, sức khỏe tinh trùng, bệnh lý tiết niệu nam.'),
-(N'Da liễu - STIs', N'Chẩn đoán và điều trị các bệnh lây truyền qua đường tình dục như HIV, giang mai, lậu, sùi mào gà,... và tư vấn phòng tránh.'),
-(N'Tâm lý học', N'Tư vấn các vấn đề tâm lý liên quan đến giới tính, bản dạng giới, rối loạn lo âu, trầm cảm, và hỗ trợ cho nhóm LGBTQ+.'),
-(N'Y học tổng quát', N'Đánh giá tổng quát sức khỏe, tư vấn điều trị các bệnh nền ảnh hưởng đến sinh sản, kê đơn thuốc cơ bản.'),
-(N'Dược học', N'Tư vấn sử dụng thuốc tránh thai, thuốc điều trị STIs, giải thích tác dụng phụ và tương tác thuốc.'),
-(N'Giáo dục giới tính', N'Cung cấp kiến thức về sức khỏe giới tính, tình dục an toàn và nâng cao nhận thức cộng đồng.'),
-(N'Xét nghiệm y khoa', N'Thực hiện và phân tích các xét nghiệm STIs, hỗ trợ quản lý quy trình xét nghiệm và trả kết quả.');
+INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
+(N'Sản Phụ Khoa', N'Tư vấn và điều trị các vấn đề liên quan đến chu kỳ kinh nguyệt, sinh sản, viêm nhiễm phụ khoa, kế hoạch hóa gia đình, và sức khỏe sinh sản nữ.', 0),
+(N'Nam Khoa', N'Tư vấn và điều trị các vấn đề sinh lý nam, rối loạn cương dương, sức khỏe tinh trùng, bệnh lý tiết niệu nam.', 0),
+(N'Da liễu - STIs', N'Chẩn đoán và điều trị các bệnh lây truyền qua đường tình dục như HIV, giang mai, lậu, sùi mào gà,... và tư vấn phòng tránh.', 0),
+(N'Tâm lý học', N'Tư vấn các vấn đề tâm lý liên quan đến giới tính, bản dạng giới, rối loạn lo âu, trầm cảm, và hỗ trợ cho nhóm LGBTQ+.', 0),
+(N'Y học tổng quát', N'Đánh giá tổng quát sức khỏe, tư vấn điều trị các bệnh nền ảnh hưởng đến sinh sản, kê đơn thuốc cơ bản.', 0),
+(N'Dược học', N'Tư vấn sử dụng thuốc tránh thai, thuốc điều trị STIs, giải thích tác dụng phụ và tương tác thuốc.', 0),
+(N'Giáo dục giới tính', N'Cung cấp kiến thức về sức khỏe giới tính, tình dục an toàn và nâng cao nhận thức cộng đồng.', 0),
+(N'Xét nghiệm y khoa', N'Thực hiện và phân tích các xét nghiệm STIs, hỗ trợ quản lý quy trình xét nghiệm và trả kết quả.', 0);
 
 
 --Service--=====================================================================================================================================================

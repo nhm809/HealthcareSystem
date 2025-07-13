@@ -124,12 +124,30 @@
      text-align: center;
 }
 
+.test-tile {
+     text-align: center;
+     margin-bottom: 20px;
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+}
+
 .test-tile-1 {
      color: #54AA7F;
+     margin: 0;
+     font-size: 28px;
+     font-weight: 600;
+     line-height: 1.2;
 }
 
 .test-tile-2 {
      color: #FF8C00;
+     margin: 0;
+     font-size: 28px;
+     font-weight: 600;
+     line-height: 1.2;
 }
 
 .box-test-introduce {
@@ -431,6 +449,17 @@
   .doctor-card {
     width: 95vw;
     max-width: 340px;
+  }
+  
+  .test-tile {
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .test-tile-1,
+  .test-tile-2 {
+    font-size: 24px;
+    line-height: 1.2;
   }
 }
 /* End: Featured Doctors Section */

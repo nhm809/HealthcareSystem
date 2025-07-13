@@ -39,7 +39,7 @@ namespace Infrastructure.Services
                 {
                     existingUser.PhoneNumber = dto.PhoneNumber;
                     existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-                    existingUser.CreateDate = DateOnly.FromDateTime(DateTime.Now);
+                    existingUser.CreateDate = DateOnly.FromDateTime(DateTime.Now.AddHours(7));
                     existingUser.Provider = "Local";
                     existingUser.RoleId = "MB";
                     existingUser.IsAvailable = false;
@@ -71,7 +71,7 @@ namespace Infrastructure.Services
                 Provider = "Local",
                 RoleId = "MB",
                 IsAvailable = false,
-                CreateDate = DateOnly.FromDateTime(DateTime.Now)
+                CreateDate = DateOnly.FromDateTime(DateTime.Now.AddHours(7))
             };
 
             try
@@ -104,16 +104,16 @@ namespace Infrastructure.Services
             }
 
             var RefreshToken = user.RefreshToken;
-            if (string.IsNullOrEmpty(RefreshToken) || user.RefreshTokenExpiryTime < DateTime.Now)
+            if (string.IsNullOrEmpty(RefreshToken) || user.RefreshTokenExpiryTime < DateTime.Now.AddHours(7))
             {
                 RefreshToken = GenerateRefreshToken();
                 user.RefreshToken = RefreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(15);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddHours(7).AddDays(15);
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
             }
 
-            var expiresAcessToken = DateTime.Now.AddHours(1);
+            var expiresAcessToken = DateTime.Now.AddHours(7).AddHours(1);
             var token = GenerateJwtToken(user, expiresAcessToken);
 
             return new LoginResponseDTO
