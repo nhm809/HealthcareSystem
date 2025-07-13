@@ -19,7 +19,7 @@
 }
 
 .appointment-list .ant-tabs-tab-active {
-  color: #1a3e72 !important;
+  color: #43AA8B !important;
 }
 
 .appointment-list .ant-table {
@@ -28,8 +28,8 @@
 }
 
 .appointment-list .ant-table-thead > tr > th {
-  background-color: #e6f0ff;
-  color: #1a3e72;
+  background-color: #e8f5e8;
+  color: #43AA8B;
   font-weight: 600;
   text-align: center;
 }
@@ -51,7 +51,7 @@
 
 .appointment-pagination .ant-pagination-item {
   border: none;
-  background-color: #dbe5f1;
+  background-color: #e8f5e8;
   border-radius: 50%;
   width: 35px;
   height: 35px;
@@ -61,7 +61,7 @@
 }
 
 .appointment-pagination .ant-pagination-item-active {
-  background-color: #277DA1;
+  background-color: #43AA8B;
 }
 
 .appointment-pagination .ant-pagination-item-active a {
@@ -74,7 +74,7 @@
 
 .appointment-pagination .ant-pagination-prev .ant-pagination-item-link,
 .appointment-pagination .ant-pagination-next .ant-pagination-item-link {
-  background-color: #dbe5f1;
+  background-color: #e8f5e8;
   border-radius: 50%;
   width: 35px;
   height: 35px;
@@ -86,13 +86,13 @@
 }
 
 .appointment-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
-  background-color: #c6daf3;
+  background-color: #d4f0d4;
   border-radius: 50%;
 }
 
 .appointment-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
 .appointment-pagination .ant-pagination-next .ant-pagination-item-link:hover {
-  background-color: #c6daf3;
+  background-color: #d4f0d4;
   border-radius: 50%;
 }
 

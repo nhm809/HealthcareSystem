@@ -1,6 +1,6 @@
 /* Nền header */
 .user-management .ant-table-thead > tr > th {
-  background-color: #277DA1 !important;
+  background-color: #43AA8B !important;
   color: white !important;
   font-weight: bold !important;
   padding: 12px 24px !important;
@@ -41,8 +41,8 @@
 }
 
 .user-management .ant-input-search-button {
-  background-color: #277DA1 !important;
-  border-color: #277DA1 !important;
+  background-color: #43AA8B !important;
+  border-color: #43AA8B !important;
   color: white !important;
   font-weight: bold;
 }
@@ -81,7 +81,7 @@
 }
 
 .management-pagination .ant-pagination-item-active {
-  background-color: #277DA1;
+  background-color: #43AA8B;
 }
 
 .management-pagination .ant-pagination-item-active a {

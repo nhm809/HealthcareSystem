@@ -50,7 +50,7 @@ const PermissionModal = ({ open, onClose, user, onSubmit }) => {
                         cursor: 'pointer',
                     }}>Hủy</button>
                     <button onClick={handleOk} className="ant-btn ant-btn-primary" style={{ 
-                        backgroundColor: '#54AA7F',
+                        backgroundColor: '#43AA8B',
                         color: '#fff',
                         border: 'none',
                         borderRadius: 4,
