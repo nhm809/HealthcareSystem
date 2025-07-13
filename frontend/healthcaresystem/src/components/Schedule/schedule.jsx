@@ -10,11 +10,7 @@ const { TextArea } = Input;
 
 const weekdayNames = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
 
-function getMonday(date) {
-     const d = dayjs(date);
-     const day = d.day();
-     return d.subtract((day === 0 ? 6 : day - 1), 'day');
-}
+
 
 const Schedule = () => {
      const [weekData, setWeekData] = useState([]);
@@ -39,20 +35,21 @@ const Schedule = () => {
           getWeeklySchedule(userId, offset)
                .then(res => {
                     const apiData = res.data || [];
-                    const today = dayjs();
-                    const monday = getMonday(today.add(offset, 'week'));
-                    const days = [];
-                    for (let i = 0; i < 7; i++) {
-                         const d = monday.add(i, 'day');
-                         const found = apiData.find(x => dayjs(x.date).isSame(d, 'day'));
-                         days.push({
-                              date: d.format(),
-                              shifts: found ? found.shifts : []
-                         });
-                    }
+                    console.log('API data:', apiData); // Debug log
+                    
+                    // Chỉ hiển thị những ngày có lịch làm việc
+                    const days = apiData.map(item => ({
+                         date: item.date,
+                         shifts: item.shifts || []
+                    }));
+                    
+                    // Sắp xếp theo ngày
+                    days.sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
+                    
                     setWeekData(days);
                })
-               .catch(() => {
+               .catch((error) => {
+                    console.error('Load schedule error:', error);
                     message.error('Không thể tải lịch tuần');
                })
                .finally(() => setLoading(false));
@@ -130,7 +127,6 @@ const Schedule = () => {
      };
 
      const formatDate = (dateStr) => dayjs(dateStr).format('DD/MM');
-     const getWeekday = (index) => weekdayNames[index];
 
      // Table columns for override registrations
      const columns = [
@@ -227,38 +223,36 @@ const Schedule = () => {
                {loading ? (
                     <Spin size="large" style={{ display: 'block', margin: '40px auto' }} />
                ) : (
-                    <Row gutter={8} justify="center" align="middle" style={{ flexWrap: 'nowrap', overflowX: 'auto' }}>
+                    <Row gutter={8} justify="center" align="middle" style={{ flexWrap: 'wrap', gap: '8px' }}>
                          {weekData.length === 0 && <div>Không có dữ liệu lịch tuần này.</div>}
-                         {weekData.map((day, idx) => {
-                              const isOff = day.shifts.length === 0;
+                         {weekData.map((day) => {
+                              const dayOfWeek = dayjs(day.date).day(); // 0=Sunday, 1=Monday, etc.
+                              const weekdayName = weekdayNames[dayOfWeek === 0 ? 6 : dayOfWeek - 1]; // Convert to Mon=0, Sun=6
+                              
                               return (
-                                   <Col key={day.date} style={{ minWidth: 110, flex: '0 0 1', display: 'flex', justifyContent: 'center' }}>
-                                        <Tooltip title={isOff ? 'Nghỉ' : 'Có ca làm việc'}>
+                                   <Col key={day.date} style={{ minWidth: 110, display: 'flex', justifyContent: 'center' }}>
+                                        <Tooltip title="Có ca làm việc">
                                              <Card
-                                                  hoverable={!isOff}
+                                                  hoverable
                                                   style={{
                                                        textAlign: 'center',
                                                        marginBottom: 0,
                                                        background: '#fff',
-                                                       opacity: isOff ? 0.5 : 1,
-                                                       border: isOff ? '1px dashed #d9d9d9' : '1.5px solid #91d5ff',
+                                                       border: '1.5px solid #91d5ff',
                                                        borderRadius: 10,
                                                        boxShadow: 'none',
-                                                       cursor: isOff ? 'not-allowed' : 'pointer',
+                                                       cursor: 'pointer',
                                                        minHeight: 110,
                                                        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-                                                       padding: 0
+                                                       padding: 0,
+                                                       transition: 'all 0.3s ease'
                                                   }}
-                                                  onClick={() => !isOff && onSelect(day.date, day.shifts)}
+                                                  onClick={() => onSelect(day.date, day.shifts)}
                                                   bodyStyle={{ padding: 10 }}
                                              >
-                                                  <div style={{ fontWeight: 500, fontSize: 15, color: isOff ? '#aaa' : '#222', marginBottom: 2 }}>{getWeekday(idx)}</div>
-                                                  <div style={{ fontSize: 20, fontWeight: 500, color: isOff ? '#bbb' : '#222', marginBottom: 4 }}>{formatDate(day.date)}</div>
-                                                  {isOff ? (
-                                                       <div style={{ color: '#bbb', fontSize: 16, marginTop: 4 }}><RestOutlined /> Nghỉ</div>
-                                                  ) : (
-                                                       <Badge count={day.shifts.length} style={{ backgroundColor: '#1890ff', fontSize: 12, boxShadow: 'none' }} />
-                                                  )}
+                                                  <div style={{ fontWeight: 500, fontSize: 15, color: '#222', marginBottom: 2 }}>{weekdayName}</div>
+                                                  <div style={{ fontSize: 20, fontWeight: 500, color: '#222', marginBottom: 4 }}>{formatDate(day.date)}</div>
+                                                  <Badge count={day.shifts.length} style={{ backgroundColor: '#1890ff', fontSize: 12, boxShadow: 'none' }} />
                                              </Card>
                                         </Tooltip>
                                    </Col>
@@ -281,9 +275,24 @@ const Schedule = () => {
                          renderItem={item => (
                               <List.Item style={{ borderRadius: 6, marginBottom: 6, background: '#f6faff', border: '1px solid #e6f7ff' }}>
                                    <div style={{ width: '100%', padding: '20px' }}>
-                                        <b>Ca:</b> {getShiftName(item.shiftType)}<br />
-                                        <b>Trạng thái:</b> {item.status}<br />
-                                        {item.note && <><b>Ghi chú:</b> {item.note}</>}
+                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+                                             <ClockCircleOutlined style={{ marginRight: 8, color: '#1890ff' }} />
+                                             <b>Ca:</b> {getShiftName(item.shiftType)}
+                                             <span style={{ marginLeft: 8, color: '#666' }}>
+                                                  ({item.shiftType === 1 ? '8:00 - 12:00' : '13:00 - 17:00'})
+                                             </span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+                                             <Badge 
+                                                  status={item.status === 'Làm việc' ? 'success' : 'default'} 
+                                                  text={<b>Trạng thái: {item.status}</b>}
+                                             />
+                                        </div>
+                                        {item.note && (
+                                             <div style={{ marginTop: 8, padding: 8, background: '#fffbe6', borderRadius: 4, border: '1px solid #ffe58f' }}>
+                                                  <b>Ghi chú:</b> {item.note}
+                                             </div>
+                                        )}
                                    </div>
                               </List.Item>
                          )}

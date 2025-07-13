@@ -185,7 +185,7 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                     ) : (
                         <>
                             <Descriptions.Item label="Giá gốc">{calculatePriceWithVAT().originalPrice?.toLocaleString()}đ</Descriptions.Item>
-                            <Descriptions.Item label="Thuế VAT (5%)">{calculatePriceWithVAT().vat?.toLocaleString()}đ</Descriptions.Item>
+                            <Descriptions.Item label="VAT (5%)">{calculatePriceWithVAT().vat?.toLocaleString()}đ</Descriptions.Item>
                             <Descriptions.Item label="Tổng cộng">
                                 <span style={{ fontWeight: 'bold', color: '#1890ff' }}>
                                     {calculatePriceWithVAT().total?.toLocaleString()}đ

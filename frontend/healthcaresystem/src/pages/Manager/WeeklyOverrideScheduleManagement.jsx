@@ -151,11 +151,6 @@ const WeeklyOverrideScheduleManagement = () => {
       >
         <Row gutter={16}>
           <Col span={4}>
-            <Form.Item name="userId" label="Mã nhân viên">
-              <Input placeholder="Nhập userId" type="number" min={1} />
-            </Form.Item>
-          </Col>
-          <Col span={4}>
             <Form.Item name="status" label="Trạng thái">
               <Select allowClear placeholder="Chọn trạng thái">
                 {statusOptions.map(s => <Option key={s} value={s}>{s}</Option>)}
