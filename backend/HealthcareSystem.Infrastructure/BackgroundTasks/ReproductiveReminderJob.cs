@@ -31,6 +31,10 @@ public class ReproductiveReminderJob : BackgroundService
 
             var cycles = await context.ReproductiveCycles
                 .Where(c => c.StartDate.HasValue && c.CycleLength.HasValue)
+                .GroupBy(c => c.MemberId)
+                .Select(g => g
+                    .OrderByDescending(c => c.StartDate)
+                    .First())
                 .ToListAsync(stoppingToken);
 
             foreach (var cycle in cycles)

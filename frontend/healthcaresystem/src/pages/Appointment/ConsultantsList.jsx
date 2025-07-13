@@ -40,25 +40,15 @@ function Appointment() {
      useEffect(() => {
           const fetchDoctors = async () => {
                try {
-                    const response = await api.get('/consultants');
-                    const data = response.data;
-                    const mappedDoctors = data.map((item) => ({
-                         id: item.consultantId,
-                         name: item.fullName,
-                         specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
-                         image:  item.avatar?.trim() ? item.avatar : defaultdoctoravatar,                        
-                    }));
-                    setDoctors(mappedDoctors);
-               } catch (error) {
-                    console.error("Lỗi khi lấy danh sách bác sĩ:", error);
-               }
-          }; 
+                    let response;
 
-          const fetchDoctorsWithSlots = async () => {
-               try {
-                    const response = await api.get(`/consultants/available?date=${dayjs(selectedDate).format('YYYY-MM-DD')}`);
-                    const data = response.data;
+                    if (selectedDate) {
+                         response = await api.get(`/consultants/available?date=${dayjs(selectedDate).format('YYYY-MM-DD')}`);
+                    } else {
+                         response = await api.get('/consultants');
+                    }
 
+                    const data = response.data;
                     const mappedDoctors = data.map((item) => ({
                          id: item.consultantId,
                          name: item.fullName,
@@ -68,11 +58,9 @@ function Appointment() {
 
                     setDoctors(mappedDoctors);
                } catch (error) {
-                    console.error("Lỗi khi lấy danh sách bác sĩ theo ngày:", error);
+                    console.error("Lỗi khi lấy danh sách bác sĩ:", error);
                }
           };
-
-          if (selectedDate) {fetchDoctorsWithSlots()};
 
           const fetchSpecialties = async () => {
                try {
@@ -82,31 +70,11 @@ function Appointment() {
                     console.error("Lỗi khi lấy danh sách chuyên khoa:", error);
                }
           };
-          fetchSpecialties();
+
           fetchDoctors();
+          fetchSpecialties();
      }, [selectedDate]);
 
-     // useEffect(() => {
-     //      const fetchDoctorsWithSlots = async () => {
-     //           try {
-     //                const response = await api.get(`/consultants/available?date=${dayjs(selectedDate).format('YYYY-MM-DD')}`);
-     //                const data = response.data;
-
-     //                const mappedDoctors = data.map((item) => ({
-     //                     id: item.consultantId,
-     //                     name: item.fullName,
-     //                     specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
-     //                     image: item.avatar?.trim() ? item.avatar : defaultdoctoravatar,
-     //                }));
-
-     //                setDoctors(mappedDoctors);
-     //           } catch (error) {
-     //                console.error("Lỗi khi lấy danh sách bác sĩ theo ngày:", error);
-     //           }
-     //      };
-
-     //      if (selectedDate) {fetchDoctorsWithSlots()};
-     // }, [selectedDate]);
 
      const filteredDoctors = doctors.filter((doctor) => {
           const matchSpecialty = !selectedSpecialty || doctor.specialization === selectedSpecialty;
@@ -181,13 +149,13 @@ function Appointment() {
                                         <Card 
                                              hoverable
                                              cover={
-                                                  <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId } })}>
+                                                  <div className="doctor-icon" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId, selectedDate } })}>
                                                        <img alt="doctor" src={doctor.image}/>
                                                   </div>
                                              }
                                         >
                                              <Card.Meta title={doctor.name} description={doctor.specialization} />
-                                                  <button className="book-button" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId } })}>
+                                                  <button className="book-button" onClick={() => navigate(`/appointment/${doctor.id}`, { state: { serviceId, selectedDate } })}>
                                                   <FontAwesomeIcon icon={faStethoscope} className="icon" />
                                                   Đặt tư vấn
                                              </button>
