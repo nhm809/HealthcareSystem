@@ -197,7 +197,7 @@ const ManagerLayout = () => {
 
                          <div className="manager-avatar-container">
                               <Avatar
-                                   size={160}
+                                   size={80}
                                    src={userInfo?.avatar || null}
                                    icon={!userInfo?.avatar && <UserOutlined />}
                               />
