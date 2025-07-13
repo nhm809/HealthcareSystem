@@ -159,6 +159,13 @@ function TestSti() {
           }
      };
 
+     // Hàm xử lý khi đóng modal xác nhận
+     const handleConfirmModalClose = () => {
+          setIsConfirmModalOpen(false);
+          // Mở lại modal đăng ký thông tin
+          setIsModalOpen(true);
+     };
+
      // Xử lý khi ngày lấy mẫu thay đổi
      const handleTestDateChange = (date) => {
           form.setFieldsValue({ shift: undefined }); // Reset shift selection
@@ -539,7 +546,7 @@ function TestSti() {
 
                <ConfirmTestModal 
                     open={isConfirmModalOpen}
-                    onClose={() => setIsConfirmModalOpen(false)}
+                    onClose={handleConfirmModalClose}
                     formData={formData}
                     userId={userId}
                />
