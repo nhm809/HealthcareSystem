@@ -1,10 +1,43 @@
 import { Modal, Descriptions, Button, message } from 'antd';
 import { authApi } from '../../services/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 function ConfirmTestModal({ open, onClose, formData, userId }) {
     const [loading, setLoading] = useState(false);
+    const [serviceInfo, setServiceInfo] = useState(null);
+    const [serviceLoading, setServiceLoading] = useState(false);
+
+    // Lấy thông tin dịch vụ khi component mount
+    useEffect(() => {
+        const fetchServiceInfo = async () => {
+            if (open && !formData?.isFromHistory) {
+                setServiceLoading(true);
+                try {
+                    const response = await authApi.getServiceById(1); // Service ID 1 cho STI test
+                    setServiceInfo(response.data);
+                } catch (error) {
+                    console.error('Error fetching service info:', error);
+                    message.error('Không thể tải thông tin dịch vụ');
+                } finally {
+                    setServiceLoading(false);
+                }
+            }
+        };
+
+        fetchServiceInfo();
+    }, [open, formData?.isFromHistory]);
+
+    // Tính toán giá tiền với VAT
+    const calculatePriceWithVAT = () => {
+        if (!serviceInfo) return { originalPrice: 0, vat: 0, total: 0 };
+        
+        const originalPrice = serviceInfo.price || 0;
+        const vat = Math.round(originalPrice * 0.05); // VAT 5%
+        const total = originalPrice + vat;
+        
+        return { originalPrice, vat, total };
+    };
 
     // Hàm lấy tên ca làm việc từ shiftId
     const getShiftName = (shiftId) => {
@@ -146,8 +179,20 @@ function ConfirmTestModal({ open, onClose, formData, userId }) {
                     <Descriptions.Item label="Số điện thoại">{formData?.phone}</Descriptions.Item>
                     <Descriptions.Item label="Ngày lấy mẫu">{formData?.testDate?.format('DD/MM/YYYY')}</Descriptions.Item>
                     <Descriptions.Item label="Ca làm việc">{formData?.shift ? getShiftName(formData.shift) : 'Chưa chọn'}</Descriptions.Item>
-                    <Descriptions.Item label="Dịch vụ">Gói xét nghiệm STIs</Descriptions.Item>
-                    <Descriptions.Item label="Giá tiền">1,000,000đ</Descriptions.Item>
+                    <Descriptions.Item label="Dịch vụ">{serviceInfo?.name || 'Gói xét nghiệm STIs'}</Descriptions.Item>
+                    {serviceLoading ? (
+                        <Descriptions.Item label="Giá tiền">Đang tải...</Descriptions.Item>
+                    ) : (
+                        <>
+                            <Descriptions.Item label="Giá gốc">{calculatePriceWithVAT().originalPrice?.toLocaleString()}đ</Descriptions.Item>
+                            <Descriptions.Item label="Thuế VAT (5%)">{calculatePriceWithVAT().vat?.toLocaleString()}đ</Descriptions.Item>
+                            <Descriptions.Item label="Tổng cộng">
+                                <span style={{ fontWeight: 'bold', color: '#1890ff' }}>
+                                    {calculatePriceWithVAT().total?.toLocaleString()}đ
+                                </span>
+                            </Descriptions.Item>
+                        </>
+                    )}
                 </Descriptions>
             )}
         </Modal>

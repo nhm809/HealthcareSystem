@@ -48,25 +48,12 @@ function Appointment() {
                          specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
                          image:  item.avatar?.trim() ? item.avatar : defaultdoctoravatar,                        
                     }));
-                    console.error(mappedDoctors);
                     setDoctors(mappedDoctors);
                } catch (error) {
                     console.error("Lỗi khi lấy danh sách bác sĩ:", error);
                }
           }; 
-          const fetchSpecialties = async () => {
-               try {
-                    const response = await api.get('/specialty/getAll');
-                    setSpecialties(response.data.data);
-               } catch (error) {
-                    console.error("Lỗi khi lấy danh sách chuyên khoa:", error);
-               }
-          };
-          fetchSpecialties();
-          fetchDoctors();
-     }, []);
 
-     useEffect(() => {
           const fetchDoctorsWithSlots = async () => {
                try {
                     const response = await api.get(`/consultants/available?date=${dayjs(selectedDate).format('YYYY-MM-DD')}`);
@@ -85,8 +72,41 @@ function Appointment() {
                }
           };
 
-          fetchDoctorsWithSlots();
+          if (selectedDate) {fetchDoctorsWithSlots()};
+
+          const fetchSpecialties = async () => {
+               try {
+                    const response = await api.get('/specialty/getAll');
+                    setSpecialties(response.data.data);
+               } catch (error) {
+                    console.error("Lỗi khi lấy danh sách chuyên khoa:", error);
+               }
+          };
+          fetchSpecialties();
+          fetchDoctors();
      }, [selectedDate]);
+
+     // useEffect(() => {
+     //      const fetchDoctorsWithSlots = async () => {
+     //           try {
+     //                const response = await api.get(`/consultants/available?date=${dayjs(selectedDate).format('YYYY-MM-DD')}`);
+     //                const data = response.data;
+
+     //                const mappedDoctors = data.map((item) => ({
+     //                     id: item.consultantId,
+     //                     name: item.fullName,
+     //                     specialization: item.specialties?.[0]?.name || "Chưa cập nhật",
+     //                     image: item.avatar?.trim() ? item.avatar : defaultdoctoravatar,
+     //                }));
+
+     //                setDoctors(mappedDoctors);
+     //           } catch (error) {
+     //                console.error("Lỗi khi lấy danh sách bác sĩ theo ngày:", error);
+     //           }
+     //      };
+
+     //      if (selectedDate) {fetchDoctorsWithSlots()};
+     // }, [selectedDate]);
 
      const filteredDoctors = doctors.filter((doctor) => {
           const matchSpecialty = !selectedSpecialty || doctor.specialization === selectedSpecialty;

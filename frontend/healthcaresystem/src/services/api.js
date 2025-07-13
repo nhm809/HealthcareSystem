@@ -106,13 +106,13 @@ export const adminApi = {
      getRecentUsers: () => api.get('/manageUser/getTenLatestUsers'),
      setUserStatus: (userId, isAvailable) =>
           api.put(`/manageUser/setStatusUser/${userId}/${isAvailable}`),
-     getUsersPerPage: (page, pageSize, search, role) =>
+     getUsersPerPage: (page, pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/loadUserPerPage/${page}/${pageSize}`, {
-               params: { search, role },
+               params: { search, role, isAvailable },
           }),
-     getPageCount: (pageSize, search, role) =>
+     getPageCount: (pageSize, search, role, isAvailable) =>
           api.get(`/manageUser/countPage`, {
-          params: { pageSize, search, role },
+          params: { pageSize, search, role, isAvailable },
           }),
      getUserDetail: (userId) =>
           api.get(`/user/get/${userId}`),
@@ -121,6 +121,16 @@ export const adminApi = {
 
 export const dashboardApi = {
      getRevenue: (data) => api.post('/Dashboard/revenue', data),
+};
+
+export const invoiceApi = {
+     searchByDate: (data) => api.post('/Invoice/search-by-date', data),
+};
+
+export const feedbackApi = {
+     getServiceSummary: () => api.get('/feedback/service-summary'),
+     getFeedbacksByService: (serviceId, pageNumber = 1, pageSize = 10) =>
+         api.get(`/feedback/service/${serviceId}`, { params: { pageNumber, pageSize } }),
 };
 
 export const questionApi = {

@@ -206,18 +206,13 @@
   color: #333;
 }
 
-.symptom-textarea {
-  padding: 0;
-  border: none;
-  box-shadow: none;
-  resize: none;
-  font-size: 14px;
-}
-
-.symptom-textarea:focus {
-  outline: none;
-  box-shadow: none;
-  border: none;
+.symptom-textarea.ant-input,
+.symptom-textarea.ant-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  resize: none !important;
+  padding: 4px 0;
 }
 
 .button-container {

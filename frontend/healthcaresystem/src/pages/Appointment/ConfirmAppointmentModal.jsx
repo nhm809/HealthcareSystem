@@ -1,13 +1,15 @@
 import { Modal, Descriptions, Button, message } from 'antd';
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { authApi } from '../../services/api';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, selectedTime, service, symptom }) {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleConfirm = async () => {
     try {
@@ -15,7 +17,10 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
       const userId = Cookies.get('userId');
       const token = Cookies.get('token');
       if (!userId || !token) {
-        message.error('Vui lòng đăng nhập lại!');
+        toast.error('Vui lòng đăng nhập lại!');
+        navigate('/appointment', {
+              state: { serviceId: 2 }
+        });
         return;
       }
 
@@ -45,14 +50,23 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
         if (paymentUrl) {
           window.location.href = paymentUrl;
         } else {
-          message.error("Không lấy được link thanh toán!");
+          toast.error("Không lấy được link thanh toán!");
+          navigate('/appointment', {
+                state: { serviceId: 2 }
+          });
         }
       } else {
-        message.error("Đặt lịch không thành công!");
+        toast.error("Đặt lịch không thành công!");
+        navigate('/appointment', {
+              state: { serviceId: 2 }
+        });
       }
     } catch (error) {
       console.error(error);
-      message.error("Có lỗi xảy ra khi đặt lịch!");
+      toast.error("Có lỗi xảy ra khi đặt lịch!");
+      navigate('/appointment', {
+            state: { serviceId: 2 }
+      });
     } finally {
       setLoading(false);
     }
@@ -83,9 +97,11 @@ function ConfirmAppointmentModal({ open, onClose, doctor, user, selectedDate, se
         <Descriptions.Item label="Giờ tư vấn">{selectedTime}</Descriptions.Item>
         <Descriptions.Item label="Triệu chứng">{symptom}</Descriptions.Item>
         <Descriptions.Item label="Bác sĩ">{doctor?.fullName}</Descriptions.Item>
-        <Descriptions.Item label="Chuyên khoa">{doctor?.specialties?.map(s => s.name).join(', ')}</Descriptions.Item>
+        <Descriptions.Item label="Chuyên khoa">{doctor?.specialties?.length ? doctor.specialties.map(s => s.name).join(', ') : 'Chưa cập nhật'}</Descriptions.Item>
         <Descriptions.Item label="Hình thức">Tư vấn trực tuyến</Descriptions.Item>
-        <Descriptions.Item label="Giá">{service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}</Descriptions.Item>
+        <Descriptions.Item label="Giá dịch vụ">{service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : 'XXX.000 đ'}</Descriptions.Item>
+        <Descriptions.Item label="VAT(5%)">{service ? new Intl.NumberFormat('vi-VN').format(service.price * 0.05) + ' đ' : 'XXX.000 đ'}</Descriptions.Item>
+        <Descriptions.Item label="Tổng cộng">{service ? new Intl.NumberFormat('vi-VN').format(service.price * 1.05) + ' đ' : 'XXX.000 đ'}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );

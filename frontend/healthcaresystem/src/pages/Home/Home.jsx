@@ -16,7 +16,7 @@ import menstrual3 from '../../assets/imgs/menstrual3.png';
 import menstrual4 from '../../assets/imgs/menstrual4.png';
 import malefemaledoctor from '../../assets/imgs/malefemaledoctor.png';
 import secury from '../../assets/imgs/secury.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -66,40 +66,21 @@ const feedbacks = [
   },
 ];
 
-// Mẫu data bác sĩ nổi bật
-const sampleDoctors = [
-  {
-    id: 1,
-    name: 'BS. Nguyễn Văn Minh',
-    degree: 'Tiến sĩ Y học',
-    specialty: 'Sản phụ khoa',
-    image: 'https://www.fvhospital.com/wp-content/uploads/2018/03/dr-vo-trieu-dat-2020.jpg',
-  },
-  {
-    id: 2,
-    name: 'BS. Trần Thị Lan',
-    degree: 'Tiến sĩ Y học',
-    specialty: 'Nhi khoa',
-    image: 'https://images2.thanhnien.vn/thumb_w/686/528068263637045248/2024/3/7/41498385661961282804899348165590311304931596n-17098051418122006775403-0-286-2048-1822-crop-1709805739243640175866.jpg',
-  },
-  {
-    id: 3,
-    name: 'BS. Lê Văn Hùng',
-    degree: 'Thạc sĩ Y học',
-    specialty: 'Nội tổng quát',
-    image: 'https://benhvienyhoccotruyentrunguong.vn/wp-content/uploads/2023/02/z4116185322565_271625759017eab5b27d099b7f49e49a-scaled.jpg',
-  },
-];
+
 
 function Home() {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [animate, setAnimate] = useState(false);
-  const [featuredDoctors, setFeaturedDoctors] = useState([]);
 
+  // Khởi tạo AOS
   useEffect(() => {
-    AOS.init({ duration: 800, once: true });
-    AOS.refreshHard();
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100,
+      easing: 'ease-in-out'
+    });
   }, []);
 
   useEffect(() => {
@@ -115,13 +96,7 @@ function Home() {
     return () => clearTimeout(timeout);
   }, [activeIndex]);
 
-  useEffect(() => {
-    // Giả lập gọi API lấy 3 bác sĩ nổi bật
-    // Sau này thay bằng fetch('/api/doctors?limit=3')
-    setTimeout(() => {
-      setFeaturedDoctors(sampleDoctors);
-    }, 300);
-  }, []);
+
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev - 1 + feedbacks.length) % feedbacks.length);
@@ -200,14 +175,14 @@ function Home() {
           {/* End: customer feedback */}
 
           {/*  Start: Test STIs*/}
-          <div className="test-introduce" data-aos="fade-up">
+          <div className="test-introduce" style={{ display: 'flex', flexDirection: 'column', gap: '40px' }} data-aos="fade-up">
             <div className="test-tile" data-aos="fade-down">
               <h1 className="test-tile-1">Đăng ký xét nghiệp nhanh chóng</h1>
               <h1 className="test-tile-2">Không chờ đợi</h1>
             </div>
 
-            <div className="box-test-introduce" data-aos="fade-up" data-aos-delay="200">
-              <div className="box-1-test-introduce" data-aos="fade-right" data-aos-delay="300">
+            <div className="box-test-introduce" style={{ display: 'flex', flexDirection: 'row', gap: '20px', width: '100%' }} data-aos="fade-up" data-aos-delay="200">
+              <div className="box-1-test-introduce" style={{ flex: '1' }} data-aos="fade-right" data-aos-delay="300">
                 <div className="box-left">
                   <h3>Đặt xét nghiệm nhanh chóng</h3>
                   <p>Đặt lịch xét nghiệm nhanh chóng với chức năng đặt lịch trên Website của chúng tôi chỉ với vài bước.</p>
@@ -218,7 +193,7 @@ function Home() {
                 </div>
               </div>
 
-              <div className="box-2-test-introduce" data-aos="fade-left" data-aos-delay="400">
+              <div className="box-2-test-introduce" style={{ flex: '1' }} data-aos="fade-left" data-aos-delay="400">
                 <div className="box-left">
                   <h3>Bảo mật tuyệt đối</h3>
                   <p>Thông tin cá nhân và kết quả được bảo vệ ở mức cao nhất.</p>
@@ -236,8 +211,8 @@ function Home() {
               </div>
 
               <div className="process-test-inside">
-                <div className="box-test-parent">
-                  <div className="box-test-child" data-aos="zoom-in" data-aos-delay="600">
+                <div className="box-test-parent" style={{ display: 'flex', flexDirection: 'row', gap: '10px', width: '100%' }}>
+                  <div className="box-test-child" style={{ flex: '1' }} data-aos="zoom-in" data-aos-delay="600">
                     <div className="proccess-component">
                       <div className="process-number">
                         <h3>1</h3>
@@ -249,7 +224,7 @@ function Home() {
                     </div>
                   </div>
 
-                  <div className="box-test-child" data-aos="zoom-in" data-aos-delay="700">
+                  <div className="box-test-child" style={{ flex: '1' }} data-aos="zoom-in" data-aos-delay="700">
                     <div className="proccess-component">
                       <div className="process-number">
                         <h3>2</h3>
@@ -261,8 +236,7 @@ function Home() {
                     </div>
                   </div>
 
-
-                  <div className="box-test-child" data-aos="zoom-in" data-aos-delay="800">
+                  <div className="box-test-child" style={{ flex: '1' }} data-aos="zoom-in" data-aos-delay="800">
                     <div className="proccess-component">
                       <div className="process-number">
                         <h3>3</h3>
@@ -274,8 +248,7 @@ function Home() {
                     </div>
                   </div>
 
-
-                  <div className="box-test-child" data-aos="zoom-in" data-aos-delay="900">
+                  <div className="box-test-child" style={{ flex: '1' }} data-aos="zoom-in" data-aos-delay="900">
                     <div className="proccess-component">
                       <div className="process-number">
                         <h3>4</h3>
@@ -287,9 +260,7 @@ function Home() {
                     </div>
                   </div>
 
-
                 </div>
-
 
                 <Button type="primary" style={{ margin: '20px' }} className="book-test-btn" onClick={() => navigate('/test-sti')}>
                   <CalendarOutlined />
@@ -299,11 +270,8 @@ function Home() {
               </div>
             </div>
 
-            {/*  End: Test STIs*/}
-
-            {/*  Start: Component*/}
-            <div className="appointment" data-aos="fade-up">
-              <div className="appointment-left" data-aos="fade-right" data-aos-delay="200">
+            <div className="appointment" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }} data-aos="fade-up" data-aos-delay="1000">
+              <div className="appointment-left" style={{ flex: '1' }} data-aos="fade-right" data-aos-delay="1100">
                 <h3>Đặt lịch tư vấn online 1-1 với bác sĩ chuyên môn</h3>
                 <p>Nhanh chóng kết nối với các chuyên gia hàng đầu, nhận tư vấn cá nhân hóa về sức khỏe sinh sản và các vấn đề bạn quan tâm, ngay tại nhà.</p>
                 <Button type="primary" className="book-test-btn" onClick={() => navigate('/appointment')}>
@@ -312,16 +280,11 @@ function Home() {
                 </Button>
               </div>
 
-              <div className="appointment-right" data-aos="fade-left" data-aos-delay="300">
+              <div className="appointment-right" style={{ flex: '1' }} data-aos="fade-left" data-aos-delay="1200">
                   <img src={malefemaledoctor} alt="" />
               </div>
 
-
             </div>
-
-            {/*  End: Component*/}
-
-
 
           </div>
 
@@ -339,7 +302,7 @@ function Home() {
             <div className="menstrual-cycle-left" data-aos="fade-right" data-aos-delay="200">
               <h1>Theo dõi chu kỳ sinh sản</h1>
                       <p>Hệ thống theo dõi chu kỳ kinh sản bằng cách dựa trên chu kỳ kinh nguyệt. Giúp bạn chủ động kiểm soát và bảo vệ sức khỏe sinh sản của mình mọi lúc, mọi nơi.</p>
-                      <Button type="primary" className="book-test-btn" onClick={() => navigate('/appointment')}>
+                      <Button type="primary" className="book-test-btn" onClick={() => navigate('/reproductive-cycle')}>
                 Dùng ngay
                   <ForwardOutlined />
                 </Button>
@@ -365,44 +328,14 @@ function Home() {
             </div>
 
             <div className="question-right" data-aos="fade-left" data-aos-delay="300">
-              <Button type="primary" className="book-test-btn" onClick={() => navigate('/appointment')}>
+              <Button type="primary" className="book-test-btn" onClick={() => navigate('/question')}>
                 Hãy đặt câu hỏi cho chúng tôi ngay
               </Button>
             </div>
           </div>
           {/* End: Question */}
 
-          {/* Section: Những bác sĩ nổi bật */}
-          <div className="featured-doctors-section" data-aos="fade-up">
-            <h2>Những bác sĩ nổi bật</h2>
-            <div className="featured-doctors-list">
-              {featuredDoctors.map((doctor, idx) => (
-                <div
-                  key={doctor.id}
-                  className="doctor-card"
-                  data-aos="zoom-in"
-                  data-aos-delay={100 + idx * 120}
-                >
-                  <img
-                    src={doctor.image}
-                    alt={doctor.name}
-                  />
-                  <div className="doctor-card-info">
-                    <div className="doctor-name">{doctor.name}</div>
-                    <div className="doctor-specialty">{doctor.specialty}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{ marginTop: 18, textAlign: 'right', width: '100%' }}>
-              <span
-                style={{ color: '#3b6fd6', fontWeight: 500, fontSize: 18, cursor: 'pointer', float: 'right', display: 'inline-block' }}
-                onClick={() => navigate('/doctors')}
-              >
-                Xem tất cả các bác sĩ &rarr;
-              </span>
-            </div>
-          </div>
+
 
           <div style={{ height: '100px' }}></div>
         </div>

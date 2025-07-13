@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { dashboardApi } from '../../services/api';
+import { dashboardApi, invoiceApi, feedbackApi } from '../../services/api';
 import './ManagerDashboard.css';
 
 const ManagerDashboard = () => {
@@ -15,6 +15,18 @@ const ManagerDashboard = () => {
         year: new Date().getFullYear()
     });
     const [year, setYear] = useState(new Date().getFullYear());
+    const [invoiceData, setInvoiceData] = useState([]);
+    const [invoiceLoading, setInvoiceLoading] = useState(false);
+    const [feedbackData, setFeedbackData] = useState([]);
+    const [feedbackLoading, setFeedbackLoading] = useState(false);
+    const [showRevenueSection, setShowRevenueSection] = useState(false);
+    const [selectedService, setSelectedService] = useState(null);
+    const [serviceFeedbacks, setServiceFeedbacks] = useState([]);
+    const [serviceFeedbackLoading, setServiceFeedbackLoading] = useState(false);
+    const [serviceFeedbackPage, setServiceFeedbackPage] = useState(1);
+    const [serviceFeedbackTotal, setServiceFeedbackTotal] = useState(0);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const [serviceFeedbackPageSize] = useState(10);
 
     const fetchRevenue = async (requestData) => {
         setLoading(true);
@@ -29,6 +41,80 @@ const ManagerDashboard = () => {
         }
     };
 
+    const fetchInvoices = async (requestData) => {
+        setInvoiceLoading(true);
+        try {
+            const response = await invoiceApi.searchByDate(requestData);
+            setInvoiceData(response.data || []);
+        } catch (error) {
+            console.error('Error fetching invoice data:', error);
+            setInvoiceData([]);
+        } finally {
+            setInvoiceLoading(false);
+        }
+    };
+
+    const fetchFeedback = async () => {
+        setFeedbackLoading(true);
+        try {
+            const response = await feedbackApi.getServiceSummary();
+            setFeedbackData(response.data || []);
+        } catch (error) {
+            console.error('Error fetching feedback data:', error);
+            setFeedbackData([]);
+        } finally {
+            setFeedbackLoading(false);
+        }
+    };
+
+    const openServiceFeedback = async (service) => {
+        setSelectedService(service);
+        setShowFeedbackModal(true);
+        setServiceFeedbackPage(1);
+        await fetchServiceFeedbacks(service.serviceId, 1);
+    };
+
+    const fetchServiceFeedbacks = async (serviceId, pageNumber) => {
+        setServiceFeedbackLoading(true);
+        try {
+            const response = await feedbackApi.getFeedbacksByService(serviceId, pageNumber, serviceFeedbackPageSize);
+            setServiceFeedbacks(response.data.feedbacks || []);
+            setServiceFeedbackTotal(response.data.totalCount || response.data.feedbacks?.length || 0);
+        } catch (error) {
+            setServiceFeedbacks([]);
+            setServiceFeedbackTotal(0);
+        } finally {
+            setServiceFeedbackLoading(false);
+        }
+    };
+
+    const handleFeedbackPageChange = async (newPage) => {
+        setServiceFeedbackPage(newPage);
+        if (selectedService) {
+            await fetchServiceFeedbacks(selectedService.serviceId, newPage);
+        }
+    };
+
+    const closeFeedbackModal = () => {
+        setShowFeedbackModal(false);
+        setSelectedService(null);
+        setServiceFeedbacks([]);
+        setServiceFeedbackPage(1);
+        setServiceFeedbackTotal(0);
+    };
+
+    useEffect(() => {
+        fetchFeedback();
+        // Load today's revenue by default
+        const today = new Date().toISOString().split('T')[0];
+        const defaultRequestData = {
+            start: new Date(today).toISOString(),
+            end: new Date(today).toISOString()
+        };
+        fetchRevenue(defaultRequestData);
+        fetchInvoices(defaultRequestData);
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         let requestData = {};
@@ -42,7 +128,7 @@ const ManagerDashboard = () => {
                 break;
             case 'monthYear':
                 requestData = {
-                    month: monthYear.month + 1, // Chuyển từ 0-11 sang 1-12
+                    month: monthYear.month + 1,
                     year: monthYear.year
                 };
                 break;
@@ -54,6 +140,8 @@ const ManagerDashboard = () => {
         }
 
         fetchRevenue(requestData);
+        fetchInvoices(requestData);
+        setShowRevenueSection(true);
     };
 
     const formatCurrency = (amount) => {
@@ -71,8 +159,113 @@ const ManagerDashboard = () => {
         return months[monthIndex];
     };
 
+    // Star rendering helper
+    const renderStars = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            if (rating >= i) {
+                stars.push('full');
+            } else if (rating >= i - 0.5) {
+                stars.push('half');
+            } else {
+                stars.push('empty');
+            }
+        }
+        return stars;
+    };
+
     return (
         <div className="manager-dashboard">
+            
+
+            <div className="feedback-section">
+                <h2>Thống kê đánh giá dịch vụ</h2>
+                {feedbackLoading ? (
+                    <div className="loading-container">
+                        <div className="loading-spinner"></div>
+                        <p>Đang tải dữ liệu đánh giá...</p>
+                    </div>
+                ) : feedbackData && feedbackData.length > 0 ? (
+                    <div className="feedback-cards">
+                        {feedbackData.map((service) => (
+                            <div key={service.serviceId} className="feedback-card" onClick={() => openServiceFeedback(service)} style={{ cursor: 'pointer' }}>
+                                <div className="service-info">
+                                    <h3>{service.serviceName}</h3>
+                                    <div className="rating-display">
+                                        <div className="stars">
+                                            {renderStars(service.averageRating).map((type, idx) => (
+                                                <span key={idx} className={`star ${type}`}>★</span>
+                                            ))}
+                                        </div>
+                                        <span className="rating-text">
+                                            {service.averageRating.toFixed(1)}/5.0
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="feedback-stats">
+                                    <div className="stat-item">
+                                        <span className="stat-label">Số đánh giá:</span>
+                                        <span className="stat-value">{service.feedbackCount}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Điểm trung bình:</span>
+                                        <span className="stat-value">{service.averageRating.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="no-data">
+                        <div className="no-data-icon">⭐</div>
+                        <p>Chưa có dữ liệu đánh giá dịch vụ.</p>
+                    </div>
+                )}
+                {showFeedbackModal && (
+                    <div className="modal-overlay" onClick={closeFeedbackModal}>
+                        <div className="modal-content" onClick={e => e.stopPropagation()}>
+                            <button className="modal-close" onClick={closeFeedbackModal}>×</button>
+                            <h2>Feedback cho dịch vụ: {selectedService?.serviceName}</h2>
+                            {serviceFeedbackLoading ? (
+                                <div className="loading-container">
+                                    <div className="loading-spinner"></div>
+                                    <p>Đang tải feedback...</p>
+                                </div>
+                            ) : serviceFeedbacks.length > 0 ? (
+                                <div className="service-feedback-list">
+                                    {serviceFeedbacks.map(fb => (
+                                        <div key={fb.feedbackId} className="service-feedback-item">
+                                            <div className="service-feedback-header">
+                                                <span className="service-feedback-user">{fb.userName}</span>
+                                                <span className="service-feedback-rating">
+                                                    {renderStars(fb.rating).map((type, idx) => (
+                                                        <span key={idx} className={`star ${type}`}>★</span>
+                                                    ))}
+                                                </span>
+                                                <span className="service-feedback-date">{new Date(fb.createdAt).toLocaleString('vi-VN')}</span>
+                                            </div>
+                                            <div className="service-feedback-comment">{fb.comment}</div>
+                                        </div>
+                                    ))}
+                                    {serviceFeedbackTotal > serviceFeedbackPageSize && (
+                                        <div className="pagination">
+                                            <button disabled={serviceFeedbackPage === 1} onClick={() => handleFeedbackPageChange(serviceFeedbackPage - 1)}>Trước</button>
+                                            <span>Trang {serviceFeedbackPage}</span>
+                                            <button disabled={serviceFeedbacks.length < serviceFeedbackPageSize} onClick={() => handleFeedbackPageChange(serviceFeedbackPage + 1)}>Sau</button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="no-data">
+                                    <div className="no-data-icon">📝</div>
+                                    <p>Không có feedback nào cho dịch vụ này.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <div className="dashboard-header">
                 <h1>Thống Kê Doanh Thu</h1>
                 <p>Quản lý và theo dõi doanh thu hệ thống</p>
@@ -180,75 +373,128 @@ const ManagerDashboard = () => {
                 </form>
             </div>
 
-            <div className="revenue-results">
-                {loading && (
-                    <div className="loading-container">
-                        <div className="loading-spinner"></div>
-                        <p>Đang tải dữ liệu...</p>
-                    </div>
-                )}
-
-                {!loading && revenueData && (
-                    <div className="revenue-display">
-                        <div className="revenue-summary">
-                            <div className="summary-card total-revenue">
-                                <div className="card-icon">💰</div>
-                                <div className="card-content">
-                                    <h3>Tổng doanh thu</h3>
-                                    <p className="amount">{formatCurrency(revenueData.total || 0)}</p>
-                                </div>
-                            </div>
+            {showRevenueSection && (
+                <div className="revenue-results">
+                    {loading && (
+                        <div className="loading-container">
+                            <div className="loading-spinner"></div>
+                            <p>Đang tải dữ liệu...</p>
                         </div>
+                    )}
 
-                        {revenueData.dailyData && revenueData.dailyData.length > 0 && (
-                            <div className="revenue-chart">
-                                <h3>Biểu đồ doanh thu theo ngày</h3>
-                                <div className="chart-container">
-                                    {revenueData.dailyData.map((day, index) => (
-                                        <div key={index} className="chart-bar">
-                                            <div 
-                                                className="bar-fill"
-                                                style={{ 
-                                                    height: `${Math.max(5, (day.total / Math.max(...revenueData.dailyData.map(d => d.total))) * 100)}%` 
-                                                }}
-                                            ></div>
-                                            <span className="bar-label">{formatCurrency(day.total)}</span>
-                                            <span className="bar-date">{new Date(day.date).toLocaleDateString('vi-VN')}</span>
-                                        </div>
-                                    ))}
+                    {!loading && revenueData && (
+                        <div className="revenue-display">
+                            <div className="revenue-summary">
+                                <div className="summary-card total-revenue">
+                                    <div className="card-icon">💰</div>
+                                    <div className="card-content">
+                                        <h3>Tổng doanh thu</h3>
+                                        <p className="amount">{formatCurrency(revenueData.total || 0)}</p>
+                                    </div>
                                 </div>
                             </div>
-                        )}
 
-                        {revenueData.monthlyData && revenueData.monthlyData.length > 0 && (
-                            <div className="revenue-chart">
-                                <h3>Biểu đồ doanh thu theo tháng</h3>
-                                <div className="chart-container">
-                                    {revenueData.monthlyData.map((month, index) => (
-                                        <div key={index} className="chart-bar">
-                                            <div 
-                                                className="bar-fill"
-                                                style={{ 
-                                                    height: `${Math.max(5, (month.total / Math.max(...revenueData.monthlyData.map(m => m.total))) * 100)}%` 
-                                                }}
-                                            ></div>
-                                            <span className="bar-label">{formatCurrency(month.total)}</span>
-                                            <span className="bar-date">{getMonthName(month.month - 1)}</span>
-                                        </div>
-                                    ))}
+                            {revenueData.dailyData && revenueData.dailyData.length > 0 && (
+                                <div className="revenue-chart">
+                                    <h3>Biểu đồ doanh thu theo ngày</h3>
+                                    <div className="chart-container">
+                                        {revenueData.dailyData.map((day, index) => (
+                                            <div key={index} className="chart-bar">
+                                                <div 
+                                                    className="bar-fill"
+                                                    style={{ 
+                                                        height: `${Math.max(5, (day.total / Math.max(...revenueData.dailyData.map(d => d.total))) * 100)}%` 
+                                                    }}
+                                                ></div>
+                                                <span className="bar-label">{formatCurrency(day.total)}</span>
+                                                <span className="bar-date">{new Date(day.date).toLocaleDateString('vi-VN')}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
+                            )}
+
+                            {revenueData.monthlyData && revenueData.monthlyData.length > 0 && (
+                                <div className="revenue-chart">
+                                    <h3>Biểu đồ doanh thu theo tháng</h3>
+                                    <div className="chart-container">
+                                        {revenueData.monthlyData.map((month, index) => (
+                                            <div key={index} className="chart-bar">
+                                                <div 
+                                                    className="bar-fill"
+                                                    style={{ 
+                                                        height: `${Math.max(5, (month.total / Math.max(...revenueData.monthlyData.map(m => m.total))) * 100)}%` 
+                                                    }}
+                                                ></div>
+                                                <span className="bar-label">{formatCurrency(month.total)}</span>
+                                                <span className="bar-date">{getMonthName(month.month - 1)}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {!loading && !revenueData && (
+                        <div className="no-data">
+                            <div className="no-data-icon">📊</div>
+                            <p>Chưa có dữ liệu doanh thu. Vui lòng chọn khoảng thời gian và nhấn "Xem thống kê".</p>
+                        </div>
+                    )}
+
+                    <div className="invoice-section">
+                        <h2>Danh sách hóa đơn</h2>
+                        {invoiceLoading ? (
+                            <div className="loading-container">
+                                <div className="loading-spinner"></div>
+                                <p>Đang tải hóa đơn...</p>
+                            </div>
+                        ) : invoiceData && invoiceData.length > 0 ? (
+                            <div className="invoice-table-container">
+                                <table className="invoice-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã hóa đơn</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Phương thức</th>
+                                            <th>Mã giao dịch</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Ngày thanh toán</th>
+                                            <th>Thuế</th>
+                                            <th>Đơn vị</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {invoiceData.map((inv) => {
+                                            // Tính thuế thành tiền: totalAmount đã bao gồm thuế
+                                            // Thuế = Tổng tiền - (Tổng tiền / (1 + taxRate))
+                                            const taxAmount = inv.totalAmount - (inv.totalAmount / (1 + inv.taxRate));
+                                            return (
+                                                <tr key={inv.invoiceId}>
+                                                    <td>{inv.invoiceId}</td>
+                                                    <td>{formatCurrency(inv.totalAmount)}</td>
+                                                    <td>{inv.paymentMethod}</td>
+                                                    <td>{inv.transactionId}</td>
+                                                    <td>{inv.createdAt ? new Date(inv.createdAt).toLocaleString('vi-VN') : ''}</td>
+                                                    <td>{inv.paidAt ? new Date(inv.paidAt).toLocaleString('vi-VN') : ''}</td>
+                                                    <td>{formatCurrency(taxAmount)}</td>
+                                                    <td>{inv.unitPrice}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <div className="no-data">
+                                <div className="no-data-icon">🧾</div>
+                                <p>Không có hóa đơn nào cho bộ lọc này.</p>
                             </div>
                         )}
                     </div>
-                )}
-
-                {!loading && !revenueData && (
-                    <div className="no-data">
-                        <div className="no-data-icon">📊</div>
-                        <p>Chưa có dữ liệu doanh thu. Vui lòng chọn khoảng thời gian và nhấn "Xem thống kê".</p>
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 };

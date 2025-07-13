@@ -42,11 +42,11 @@ public class ManageUserController : ControllerBase
 
     [HttpGet]
     [Route("countPage")]
-    public async Task<IActionResult> GetCountPageAsync([FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? role = null)
+    public async Task<IActionResult> GetCountPageAsync([FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? role = null, [FromQuery] bool? isAvailable = null)
     {
         try
         {
-            var count = await _manageUserService.CountPage(pageSize, search, role);
+            var count = await _manageUserService.CountPage(pageSize, search, role, isAvailable);
             return Ok(new { success = true, count });
         }
         catch (Exception e)
@@ -57,11 +57,11 @@ public class ManageUserController : ControllerBase
 
     [HttpGet]
     [Route("loadUserPerPage/{page}/{pageSize}")]
-    public async Task<IActionResult> GetUsersPerPageAsync(int page, int pageSize, [FromQuery] string search = "", [FromQuery] string role = "")
+    public async Task<IActionResult> GetUsersPerPageAsync(int page, int pageSize, [FromQuery] string? search = null, [FromQuery] string? role = null, [FromQuery] bool? isAvailable = null)
     {
         try
         {
-            var users = await _manageUserService.GetUsersPerPageAsync(page, pageSize, search, role);
+            var users = await _manageUserService.GetUsersPerPageAsync(page, pageSize, search, role, isAvailable);
             return Ok(new { success = true, users });
         }
         catch (Exception e)

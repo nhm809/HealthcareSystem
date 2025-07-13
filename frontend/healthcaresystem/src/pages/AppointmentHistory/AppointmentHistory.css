@@ -58,7 +58,7 @@
 .appointment-pagination {
   display: flex;
   justify-content: center !important;
-  margin-top: 20px;
+  margin: 20px 0 !important;
 }
 
 .appointment-pagination .ant-pagination-item {
@@ -73,7 +73,7 @@
 }
 
 .appointment-pagination .ant-pagination-item-active {
-  background-color: #277DA1;
+  background-color: #43AA8B;
 }
 
 .appointment-pagination .ant-pagination-item-active a {

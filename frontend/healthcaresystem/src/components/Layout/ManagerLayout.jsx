@@ -24,6 +24,8 @@ import NotificationDropdown from '../NotificationDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import WeeklyOverrideScheduleManagement from '../../pages/Manager/WeeklyOverrideScheduleManagement';
+import Logos from '../../assets/imgs/Logos.png';
+import './ManagerLayout.css';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -154,15 +156,15 @@ const ManagerLayout = () => {
                label: 'Nhân viên'
           },
           {
-               key: 'my-profile',
-               icon: <UserOutlined />,
-               label: 'Cài đặt cá nhân',
-          },
-          {
                key: 'weekly-override-management',
                icon: <ProfileOutlined />,
                label: 'Đăng ký làm thêm/nghỉ',
           },
+          {
+               key: 'my-profile',
+               icon: <UserOutlined />,
+               label: 'Cài đặt cá nhân',
+          }
      ];
 
      const renderContent = () => {
@@ -186,26 +188,23 @@ const ManagerLayout = () => {
 
      return (
           <Layout style={{ minHeight: '100vh' }}>
-               <Sider
-                    collapsible
-                    style={{ background: '#001529', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                    width={300}
-               >
-                    <div>
-                         <div style={{
-                              height: 48,
-                              margin: 16,
-                              background: 'rgba(255,255,255,0.15)',
-                              borderRadius: 8,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: '#fff',
-                              fontWeight: 'bold',
-                              fontSize: 18
-                         }}>
-                              MANAGER
+               <Sider width={300} className="manager-sider">
+                    <div className="manager-sider-top">
+                         <div className="manager-logo">
+                              <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+                              <span className="manager-logo-text">MedSex</span>
                          </div>
+
+                         <div className="manager-avatar-container">
+                              <Avatar
+                                   size={80}
+                                   src={userInfo?.avatar || null}
+                                   icon={!userInfo?.avatar && <UserOutlined />}
+                              />
+                              <div className="manager-avatar-name">{userInfo?.fullName || "(MANAGER)"}</div>
+                         </div>
+                         
+
                          <Menu
                               theme="dark"
                               mode="inline"
@@ -215,57 +214,41 @@ const ManagerLayout = () => {
                                    setSelectedKey(key);
                                    localStorage.setItem('managerSelectedKey', key);
                               }}
-                              style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
+                              style={{ fontSize: 16 }}
                          />
                     </div>
-                    <div style={{ padding: 16 }}>
-                         <button
-                              onClick={() => {
-                                   Cookies.remove('email');
-                                   Cookies.remove('userid');
-                                   Cookies.remove('userId');
-                                   Cookies.remove('token');
-                                   Cookies.remove('refreshToken');
-                                   localStorage.removeItem('userInfo');
-                                   localStorage.removeItem('managerSelectedKey');
-                                   navigate('/');
-                                   window.location.reload();
-                              }}
-                              style={{
-                                   width: '100%',
-                                   background: 'none',
-                                   border: 'none',
-                                   color: '#fff',
-                                   fontWeight: 600,
-                                   fontSize: 16,
-                                   display: 'flex',
-                                   alignItems: 'center',
-                                   justifyContent: 'center',
-                                   gap: 10,
-                                   padding: '12px 0',
-                                   borderRadius: 8,
-                                   cursor: 'pointer',
-                                   transition: 'background 0.2s',
-                              }}
-                              onMouseOver={e => e.currentTarget.style.background = '#222b3a'}
-                              onMouseOut={e => e.currentTarget.style.background = 'none'}
-                         >
-                              <LogoutOutlined style={{ marginRight: 8 }} /> Đăng xuất
-                         </button>
+
+                    <div className="manager-logout-wrapper">
+                    <button onClick={() => {
+                         Cookies.remove('email');
+                         Cookies.remove('userid');
+                         Cookies.remove('userId');
+                         Cookies.remove('token');
+                         Cookies.remove('refreshToken');
+                         localStorage.removeItem('userInfo');
+                         localStorage.removeItem('managerSelectedKey');
+                         navigate('/');
+                         window.location.reload();
+                    }} className="manager-logout-button">
+                         <span className="manager-logout-icon">
+                         <LogoutOutlined />
+                         </span>
+                         <span className="manager-logout-text">Đăng xuất</span>
+                    </button>
                     </div>
                </Sider>
                <Layout>
-                    <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                         <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+                    <Header className="manager-header">
+                         <span className="manager-header-text">Manager Dashboard</span>
+                         <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
                               <Badge count={unreadCount}>
                                    <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
                               </Badge>
                          </Dropdown>
                     </Header>
-                    <Content style={{ margin: '24px' }}>
-                         <div>
-                              {renderContent()}
-                         </div>
+
+                    <Content className="manager-content">
+                         {renderContent()}
                     </Content>
                </Layout>
           </Layout>

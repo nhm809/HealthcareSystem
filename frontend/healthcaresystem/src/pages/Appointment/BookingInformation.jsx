@@ -189,17 +189,17 @@ function BookingConfirmation() {
                     <div className="separator" />
 
                     <div className="doctor-info1">
-                        <img
-                            src={defaultdoctoravatar}
-                            alt="doctor"
-                            className="doctor-avatar"
-                        />
+                    <img
+                        src={doctor?.avatar?.trim() ? doctor.avatar : defaultdoctoravatar}
+                        alt="doctor"
+                        className="doctor-avatar"
+                    />
                         <div className="doctor-details1">
                             <p className="service-title">
                                 Tư vấn trực tuyến với <strong>{doctor?.fullName}</strong>
                             </p>
                             <p className="clinic-name">Tên cơ sở y tế</p>
-                            <p className="doctor-specialties">Chuyên khoa: {doctor?.specialties?.map(s => s.name).join(', ')}</p>
+                            <p className="doctor-specialties">Chuyên khoa: {doctor?.specialties?.length ? doctor.specialties.map(s => s.name).join(', ') : 'Chưa cập nhật'}</p>
                             <p className="doctor-name">{doctor?.fullName}</p>
                         </div>
                         <div className="price">{service ? new Intl.NumberFormat('vi-VN').format(service.price) + ' đ' : '1XX.000 đ'}</div>
@@ -253,7 +253,10 @@ function BookingConfirmation() {
                         <Form.Item
                             label="Họ và tên"
                             name="fullName"
-                            rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+                            rules={[
+                                { required: true, message: 'Vui lòng nhập họ và tên' },
+                                { pattern: /^[\p{L}\s]+$/u, message: 'Họ và tên không hợp lệ' },
+                            ]}
                         >
                             <Input />
                         </Form.Item>
@@ -263,7 +266,11 @@ function BookingConfirmation() {
                             name="doB"
                             rules={[{ required: true, message: 'Vui lòng chọn ngày sinh' }]}
                         >
-                            <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
+                            <DatePicker 
+                                format="DD/MM/YYYY" 
+                                style={{ width: '100%' }} 
+                                disabledDate={(current) => current && current > dayjs().endOf('day')}
+                            />
                         </Form.Item>
 
                         <Form.Item
@@ -281,7 +288,10 @@ function BookingConfirmation() {
                         <Form.Item
                             label="Số điện thoại"
                             name="phoneNumber"
-                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+                            rules={[
+                                { required: true, message: 'Vui lòng nhập số điện thoại' },
+                                { pattern: /^0\d{9}$/, message: 'Số điện thoại không hợp lệ (VD: 0123456789)' },
+                            ]}
                         >
                             <Input />
                         </Form.Item>

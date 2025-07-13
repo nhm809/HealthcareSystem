@@ -28,7 +28,6 @@ function AppointmentHistory() {
                toast.warning('Đăng nhập để xem lịch sử đặt lịch');
                return;
           }
-
           fetchAppointments();
      }, [userId]);
 
@@ -177,16 +176,22 @@ function AppointmentHistory() {
                          );
                     }
                     if (status === 'da hoan thanh') {
-                         return (
-                              <Button
-                                   type="primary"
-                                   size="small"
-                                   onClick={() => openFeedbackModal(record)}
-                                   style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
-                              >
-                                   Đánh giá
-                              </Button>
-                         );
+                         const endTime = dayjs(record.startTime).add(record.duration || 30, 'minute'); // Giả sử mặc định 30 phút nếu không có
+                         const daysSince = dayjs().diff(endTime, 'day');
+                         if (daysSince <= 7) {
+                              return (
+                                   <Button
+                                        type="primary"
+                                        size="small"
+                                        onClick={() => openFeedbackModal(record)}
+                                        style={{ backgroundColor: '#faad14', borderColor: '#faad14' }}
+                                   >
+                                        Đánh giá
+                                   </Button>
+                              );
+                         } else {
+                              return <Tag color="red">Quá hạn</Tag>;
+                         }
                     }
                     return null;
                }

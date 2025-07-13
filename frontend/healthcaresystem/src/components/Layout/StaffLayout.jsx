@@ -6,6 +6,7 @@ import {
   TeamOutlined,
   MedicineBoxOutlined,
   BellOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import Dashboard from '../../pages/Staff/StaffDashboard';
 import StaffSchedule from '../../pages/Staff/StaffSchedule';
@@ -19,6 +20,8 @@ import { notiApi, authApi, getInfo } from '../../services/api';
 import dayjs from 'dayjs';
 import Schedule from '../Schedule/schedule';
 import NotificationDropdown from '../NotificationDropdown';
+import Logos from '../../assets/imgs/Logos.png';
+import './StaffLayout.css';
 
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
@@ -166,96 +169,63 @@ const StaffLayout = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        collapsible
-        style={{ background: '#001529', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-        width={300}
-      >
-        <div>
-          <div style={{
-            height: 48,
-            margin: 16,
-            background: 'rgba(255,255,255,0.15)',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontWeight: 'bold',
-            fontSize: 18
-          }}>
-            STAFF
+      <Sider width={300} className="staff-sider">
+        <div className="staff-sider-top">
+          <div className="staff-logo">
+            <img src={Logos} alt="MedSex Logo" style={{ width: 50 }} />
+            <span className="staff-logo-text">MedSex</span>
           </div>
-          <div style={{ textAlign: 'center', marginBottom: 16 }}>
-            <Avatar size={80} src={userInfo?.avatarPath || userInfo?.avatar} />
-            <div style={{ color: '#fff', fontWeight: 600, marginTop: 8, fontSize: 18 }}>
-              {userInfo?.fullName}
-            </div>
+
+          <div className="staff-avatar-container">
+            <Avatar
+              size={80}
+              src={userInfo?.avatar || null}
+              icon={!userInfo?.avatar && <UserOutlined />}
+            />
+            <div className="staff-avatar-name">{userInfo?.fullName || "(STAFF)"}</div>
           </div>
+          
+
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[selectedKey]}
             items={menuItems}
             onClick={({ key }) => setSelectedKey(key)}
-            style={{ borderRight: 0, fontSize: 16, background: 'transparent' }}
+            style={{ fontSize: 16 }}
           />
         </div>
-        <div style={{ padding: 16 }}>
-          <button
-            onClick={() => {
-              Cookies.remove('email');
-              Cookies.remove('userid');
-              Cookies.remove('userId');
-              Cookies.remove('token');
-              Cookies.remove('refreshToken');
-              localStorage.removeItem('userInfo');
-              navigate('/');
-              window.location.reload();
-            }}
-            style={{
-              width: '100%',
-              background: 'none',
-              border: 'none',
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: 16,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: '12px 0',
-              borderRadius: 8,
-              cursor: 'pointer',
-              transition: 'background 0.2s',
-            }}
-            onMouseOver={e => e.currentTarget.style.background = '#222b3a'}
-            onMouseOut={e => e.currentTarget.style.background = 'none'}
-          >
-            <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: 8 }} /> Đăng xuất
-          </button>
+
+        <div className="staff-logout-wrapper">
+        <button onClick={() => {
+          Cookies.remove('email');
+          Cookies.remove('userid');
+          Cookies.remove('userId');
+          Cookies.remove('token');
+          Cookies.remove('refreshToken');
+          localStorage.removeItem('userInfo');
+          navigate('/');
+          window.location.reload();
+        }} className="staff-logout-button">
+          <span className="staff-logout-icon">
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          </span>
+          <span className="staff-logout-text">Đăng xuất</span>
+        </button>
         </div>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Dropdown menu={{ items: notificationItems }} placement="bottomRight" trigger={['click']}>
+        <Header className="staff-header">
+          <span className="staff-header-text">Staff Dashboard</span>
+          <Dropdown menu={{ items: notificationItems }} trigger={['click']} placement="bottomRight">
             <Badge count={unreadCount}>
               <FontAwesomeIcon icon={faBell} style={{ fontSize: 24, cursor: 'pointer', color: '#1890ff' }} />
             </Badge>
           </Dropdown>
         </Header>
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: '#f5f5f5',
-              borderRadius: 8,
-              boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-            }}
-          >
-            {renderContent()}
-          </div>
+
+        <Content className="staff-content">
+          {renderContent()}
         </Content>
       </Layout>
     </Layout>

@@ -65,13 +65,13 @@ const MyQuestions = () => {
   }, [userId, navigate]);
 
   // Filter questions by status
-  const answered = questions.filter(q => q.status === 'Da dong');
-  const unanswered = questions.filter(q => q.status !== 'Da dong' && q.status !== 'Tu choi');
-  const rejected = questions.filter(q => q.status === 'Tu choi');
+  const rejected = questions.filter(q => q.status === 'Bị từ chối');
+  const answered = questions.filter(q => q.status === 'Da dong' && q.status !== 'Bị từ chối');
+  const unanswered = questions.filter(q => q.status !== 'Da dong' && q.status !== 'Bị từ chối');
 
   // Helper function to get status color and icon
   const getStatusInfo = (status) => {
-    if (status === 'Tu choi') {
+    if (status === 'Bị từ chối') {
       return {
         color: '#ff4d4f',
         icon: <CloseCircleOutlined />,
@@ -232,7 +232,6 @@ const MyQuestions = () => {
               padding: '60px 20px',
               color: '#888888'
             }}>
-              <ClockCircleOutlined style={{ fontSize: 48, marginBottom: 16 }} />
               <Text>Không có câu hỏi nào đang mở</Text>
             </div>
           ) : (
@@ -257,7 +256,6 @@ const MyQuestions = () => {
               padding: '60px 20px',
               color: '#888888'
             }}>
-              <CheckCircleOutlined style={{ fontSize: 48, marginBottom: 16 }} />
               <Text>Không có câu hỏi nào đã đóng</Text>
             </div>
           ) : (
@@ -282,7 +280,6 @@ const MyQuestions = () => {
               padding: '60px 20px',
               color: '#888888'
             }}>
-              <CloseCircleOutlined style={{ fontSize: 48, marginBottom: 16 }} />
               <Text>Không có câu hỏi nào bị từ chối</Text>
             </div>
           ) : (

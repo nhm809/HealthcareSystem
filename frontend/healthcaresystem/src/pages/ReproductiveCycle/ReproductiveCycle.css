@@ -309,6 +309,27 @@
   font-size: 14px;
 }
 
+.all-custom-cycle-table .ant-table {
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.all-custom-cycle-table .ant-table-thead > tr > th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+.all-custom-cycle-table .ant-table-thead > tr > th,
+.all-custom-cycle-table .ant-table-tbody > tr > td {
+  text-align: center;
+}
+
+.all-custom-cycle-table .ant-table-cell {
+  padding: 12px;
+  font-size: 14px;
+}
+
 .cycle-form-modal .ant-modal-content {
   border-radius: 16px;
   padding: 24px;
@@ -350,4 +371,62 @@
 .cycle-form-modal .ant-modal-footer {
   display: flex;
   justify-content: center;
+}
+
+.all-custom-cycle-table .ant-table-wrapper .ant-table-pagination-right {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0 0 !important;
+}
+
+.cycle-pagination .ant-pagination-item {
+  border: none;
+  background-color: #DBF1E8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.cycle-pagination .ant-pagination-item-active {
+  background-color: #44a383;
+}
+
+.cycle-pagination .ant-pagination-item-active a {
+  color: white;
+}
+
+.cycle-pagination .ant-pagination-item-active a:hover {
+  color: black;
+}
+
+.cycle-pagination .ant-pagination-prev .ant-pagination-item-link,
+.cycle-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #DBF1E8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  color: black;
+}
+
+.cycle-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  background-color: #b7e3d8;
+  border-radius: 50%;
+}
+
+.cycle-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.cycle-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background-color: #b7e3d8;
+  border-radius: 50%;
+  color: #008080;
+}
+
+.cycle-pagination .ant-pagination-disabled {
+  opacity: 0.5;
 }

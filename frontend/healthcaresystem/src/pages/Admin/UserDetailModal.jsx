@@ -59,7 +59,7 @@ const UserDetailModal = ({ open, userId, onClose }) => {
             <Avatar
               size={80}
               icon={<UserOutlined />}
-              style={{ backgroundColor: '#1890ff', marginBottom: 4 }}
+              style={{ backgroundColor: '#43AA8B', marginBottom: 4 }}
             />
             <h2 style={{ marginBottom: 4 }}>{user.fullName || '(Người dùng)'}</h2>
             <Tag color={user.isAvailable ? 'green' : 'red'} style={{ fontSize: 13 }}>
