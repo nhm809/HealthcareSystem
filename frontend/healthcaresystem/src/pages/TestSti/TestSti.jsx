@@ -221,7 +221,7 @@ function TestSti() {
                </div>
 
                <div className="test-register">
-                    <p>Gói xét nghiệm STIs toàn diện chỉ với 450,000đ</p>
+                    <p>Gói xét nghiệm STIs toàn diện chỉ với 1,000,000đ</p>
 
                     <Button type="primary" style={{ margin: '20px' }} className="book-test-btn" onClick={handleOpenModal}>
                          <CalendarOutlined />
