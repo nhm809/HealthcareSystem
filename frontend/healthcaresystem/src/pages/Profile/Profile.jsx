@@ -21,6 +21,7 @@ import './Profile.css';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ToastContext } from '../../contexts/ToastProvider';
+import PasswordInput from '../../components/FormInput/PasswordInput';
 
 function Profile() {
      const [user, setUser] = useState(null);
@@ -685,11 +686,12 @@ function Profile() {
                                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
                                              Mật khẩu hiện tại
                                         </label>
-                                        <Input.Password
+                                        <PasswordInput
+                                             label="Nhập mật khẩu hiện tại"
                                              value={currentPassword}
                                              onChange={(e) => setCurrentPassword(e.target.value)}
-                                             placeholder="Nhập mật khẩu hiện tại"
-                                             size="large"
+                                             showValidation={false}
+                                             error={null}
                                         />
                                    </div>
                                    <Button
@@ -758,22 +760,25 @@ function Profile() {
                                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
                                              Mật khẩu mới
                                         </label>
-                                        <Input.Password
+                                        <PasswordInput
+                                             label="Nhập mật khẩu mới"
                                              value={newPassword}
                                              onChange={(e) => setNewPassword(e.target.value)}
-                                             placeholder="Nhập mật khẩu mới"
-                                             size="large"
+                                             showValidation={true}
+                                             error={null}
                                         />
                                    </div>
                                    <div style={{ marginBottom: 24 }}>
                                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
                                              Xác nhận mật khẩu mới
                                         </label>
-                                        <Input.Password
+                                        <PasswordInput
+                                             label="Nhập lại mật khẩu mới"
                                              value={confirmNewPassword}
                                              onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                             placeholder="Nhập lại mật khẩu mới"
-                                             size="large"
+                                             showValidation={false}
+                                             confirmPassword={newPassword}
+                                             error={null}
                                         />
                                    </div>
                                    <Button
