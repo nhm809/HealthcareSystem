@@ -156,15 +156,15 @@ const ManagerLayout = () => {
                label: 'Nhân viên'
           },
           {
-               key: 'my-profile',
-               icon: <UserOutlined />,
-               label: 'Cài đặt cá nhân',
-          },
-          {
                key: 'weekly-override-management',
                icon: <ProfileOutlined />,
                label: 'Đăng ký làm thêm/nghỉ',
           },
+          {
+               key: 'my-profile',
+               icon: <UserOutlined />,
+               label: 'Cài đặt cá nhân',
+          }
      ];
 
      const renderContent = () => {
