@@ -118,7 +118,7 @@ public class ReproductiveReminderJob : BackgroundService
                 }
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
 
     }

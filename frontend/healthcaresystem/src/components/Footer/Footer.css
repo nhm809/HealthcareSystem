@@ -41,6 +41,13 @@
   padding: 8px;
 }
 
+.footer-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 .footer-title {
   font-size: 20px;
   font-weight: bold;

@@ -180,9 +180,21 @@ function Profile() {
                const userId = Cookies.get('userId');
                const response = await authApi.updateUserInfo(userId, filteredData);
 
-               setUser(response.data);
+               // Cập nhật user state với dữ liệu mới
+               const updatedUser = {
+                    ...user,
+                    ...response.data,
+                    dateOfBirth: response.data.doB || response.data.DoB,
+                    avatar: response.data.avatarPath || response.data.avatar,
+               };
+               setUser(updatedUser);
+               
+               // Cập nhật localStorage với thông tin mới
+               const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+               const updatedUserInfo = { ...userInfo, ...response.data };
+               localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+               
                toast.success('Cập nhật thông tin thành công!');
-               message.success('Cập nhật thông tin thành công!');
                setIsModalVisible(false);
                form.resetFields();
                setTimeout(() => {
