@@ -13,15 +13,15 @@ INSERT INTO dbo.[User] (Provider, GoogleId, FullName, PasswordHash, Email, Phone
 VALUES
 ('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'mexnguyen894@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
 ('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
-('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000002', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0900000004', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
 
-('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0900000002', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0900000004', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0900000006', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0900000007', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0900000008', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0900000009', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
 
 ('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0900000011', '1990-01-01', 'FEMALE', N'Tân Bình, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
 ('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0900000012', '1990-01-01', 'MALE', N'Gò Vấp, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),

@@ -35,7 +35,8 @@ namespace Infrastructure.Services
             using var rng = RandomNumberGenerator.Create();
             byte[] data = new byte[4];
             rng.GetBytes(data);
-            int code = BitConverter.ToInt32(data, 0) % 900000 + 100000;
+            int raw = Math.Abs(BitConverter.ToInt32(data, 0));
+            int code = raw % 900000 + 100000;
             var otpCode = Math.Abs(code).ToString();
 
             var otpEntity = new OtpRequest
