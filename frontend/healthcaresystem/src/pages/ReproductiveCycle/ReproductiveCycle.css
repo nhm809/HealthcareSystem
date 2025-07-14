@@ -145,11 +145,25 @@
   background-color: #d1f5d1;
   border-radius: 8px;
 }
-.cycle-cell-wrapper.predicted-menstruation,
-.cycle-cell-wrapper.predicted-fertile,
-.cycle-cell-wrapper.predicted-ovulation {
+.cycle-cell-wrapper.predicted-menstruation {
   font-weight: bold;
   background-color: #e0f0ff;
+  border-radius: 8px;
+}
+
+.cycle-cell-wrapper.menstruation.latest-cycle {
+  font-weight: bold;
+  background-color: #ff9aa2 !important;
+  border-radius: 8px;
+}
+.cycle-cell-wrapper.ovulation.latest-cycle {
+  font-weight: bold;
+  background-color: #ffe58f !important;
+  border-radius: 8px;
+}
+.cycle-cell-wrapper.fertile.latest-cycle {
+  font-weight: bold;
+  background-color: #86efac !important;
   border-radius: 8px;
 }
 

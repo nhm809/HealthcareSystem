@@ -99,9 +99,18 @@ function Question() {
                     setLikedQuestions(likedSet);
                 }
             } catch (error) {
-                message.error('Không thể tải dữ liệu câu hỏi');
-                console.error('Fetch error:', error);
-                navigate('/question'); // Redirect to base page on error
+                // Chỉ hiện thông báo lỗi khi thực sự có lỗi hệ thống, không phải khi không có data
+                if (error.response && error.response.status !== 404) {
+                    message.error('Không thể tải dữ liệu câu hỏi');
+                    console.error('Fetch error:', error);
+                    navigate('/question'); // Redirect to base page on error
+                } else {
+                    // Nếu là lỗi 404 hoặc không có data, set data rỗng
+                    setQuestions([]);
+                    if (questionId && error.response?.status === 404) {
+                        navigate('/question'); // Redirect nếu question không tồn tại
+                    }
+                }
             } finally {
                 setLoading(false);
             }
