@@ -190,7 +190,7 @@ function DoctorDetail() {
                     <div className="location-info">
                         <FontAwesomeIcon icon={faMapMarkerAlt} className="location-icon" />
                         <div>
-                            <p className="location-name">Tên cơ sở y tế</p>
+                            <p className="location-name">Q.9, TP Ho Chi Minh</p>
                             <p className="location-address">Địa chỉ</p>
                         </div>
                     </div>
