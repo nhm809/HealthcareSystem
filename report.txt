@@ -1,0 +1,4494 @@
+commit 9cd0c9af6193a91773aa7343ff55f5d9177d62a0
+Merge: bd19581 3c9e980
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 13 16:17:49 2025 +0700
+
+    Merge pull request #155 from nhm809/be/feature/SpecialtyService
+    
+    Fix specialty
+
+commit 3c9e9807ee039a9705a50e28f2384260753ab5ab
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 13 16:16:48 2025 +0700
+
+    Fix specialty
+
+ .../DTOs/SpecialtyDTO.cs                           |    1 +
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |    2 +
+ .../Migrations/20250712174558_database.Designer.cs | 1152 --------------------
+ .../Migrations/20250712174558_database.cs          |  714 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1149 -------------------
+ .../Services/SpecialtyService.cs                   |   26 +-
+ database/HealthcareSystemDb.sql                    |   18 +-
+ 7 files changed, 28 insertions(+), 3034 deletions(-)
+
+commit bd195810661c714c971bbdfa929b2cd6d3321756
+Merge: e97c2e1 1d4be69
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 13 15:32:36 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit e97c2e1a25058f4696403a53cc791b4f0673d6db
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 13 15:32:28 2025 +0700
+
+    Update DateTime
+
+ .../Services/AuthService.cs                        | 10 ++---
+ .../Services/FeedbackService.cs                    |  2 +-
+ .../Services/GoogleLoginService.cs                 |  6 +--
+ .../Services/OTPRequestService.cs                  | 10 ++---
+ .../Services/QuestionService.cs                    |  8 ++--
+ .../Services/QuestionThreadItemService.cs          | 12 +++---
+ database/HealthcareSystemDb.sql                    | 47 +++++++++++-----------
+ 7 files changed, 47 insertions(+), 48 deletions(-)
+
+commit 1d4be6956f5040d194c4c5107382c00b1b4cc069
+Merge: 3e81e64 fd92b0a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 14:08:26 2025 +0700
+
+    Merge pull request #154 from nhm809/fe/feature/manager-dashboard
+    
+    fix the icon avartar
+
+commit fd92b0a648ce58cde2af8626ca59d4b50e670c01
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 14:06:39 2025 +0700
+
+    fix the icon avartar
+
+ .../src/components/Layout/AdminLayout.jsx                | 16 ++++++++--------
+ .../src/components/Layout/ConsultantLayout.jsx           |  2 +-
+ .../src/components/Layout/ManagerLayout.jsx              |  2 +-
+ .../src/components/Layout/StaffLayout.jsx                |  2 +-
+ 4 files changed, 11 insertions(+), 11 deletions(-)
+
+commit 3e81e648336ecc9893138562ca211a2a242fb5db
+Merge: 6fcc189 7d8f290
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 14:03:18 2025 +0700
+
+    Merge pull request #153 from nhm809/fe/feature/manager-dashboard
+    
+    fix dashboard manager
+
+commit 7d8f290580bf2236c41818bd3c127ff217d6fd5a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 14:02:21 2025 +0700
+
+    fix dashboard manager
+
+ .../healthcaresystem/src/components/Layout/ManagerLayout.jsx   | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 6fcc189f45a2a2d6bc92c500c360fce57821e336
+Merge: 351d5cf dba618e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 14:00:34 2025 +0700
+
+    Merge pull request #152 from nhm809/fe/feature/manager-dashboard
+    
+    fix all style layout admin consultant staff
+
+commit dba618e656bd1df47cd434198de8a50a8e5f248e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 13:59:45 2025 +0700
+
+    fix all style layout admin consultant staff
+
+ .../src/components/Layout/AdminLayout.css          |   6 +-
+ .../src/components/Layout/ConsultantLayout.css     | 160 +++++++++++++++++++++
+ .../src/components/Layout/ConsultantLayout.jsx     | 106 ++++++--------
+ .../src/components/Layout/ManagerLayout.css        | 160 +++++++++++++++++++++
+ .../src/components/Layout/ManagerLayout.jsx        | 103 ++++++-------
+ .../src/components/Layout/StaffLayout.css          | 160 +++++++++++++++++++++
+ .../src/components/Layout/StaffLayout.jsx          | 114 ++++++---------
+ .../src/pages/Admin/AdminDashboard.css             |   4 +-
+ .../src/pages/Admin/PermissionModal.jsx            |   2 +-
+ .../src/pages/Admin/UserDetailModal.jsx            |   2 +-
+ .../src/pages/Admin/UserManagement.css             |   8 +-
+ .../AppointmentHistory/AppointmentHistory.css      |   2 +-
+ .../src/pages/Consultant/AppointmentManagement.css |  16 +--
+ .../src/pages/Consultant/BlogManagement.css        |  14 +-
+ .../src/pages/Consultant/QuestionManagement.css    |  24 ++--
+ frontend/healthcaresystem/src/pages/Home/Home.css  |  29 ++++
+ .../src/pages/Manager/ManagerDashboard.jsx         |  29 ++--
+ .../src/pages/Staff/StaffSchedule.css              |  34 ++---
+ .../src/pages/Staff/StaffSchedule.jsx              |  64 ++++-----
+ 19 files changed, 735 insertions(+), 302 deletions(-)
+
+commit 351d5cf178f68a4bd5b84fc4bd3dd0f4d2bcd9c7
+Merge: 6064b18 1547184
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 10:39:14 2025 +0700
+
+    Merge pull request #151 from nhm809/fe/feature/manager-dashboard
+    
+    fix code confirm test and fix code change password in profile
+
+commit 1547184410505c1db2c336d983855638392f8d5c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 10:37:42 2025 +0700
+
+    fix code confirm test and fix code change password in profile
+
+ .../healthcaresystem/src/pages/Profile/Profile.css | 17 ++++++++
+ .../healthcaresystem/src/pages/Profile/Profile.jsx | 23 ++++++----
+ .../src/pages/Staff/StaffSchedule.jsx              | 31 ++++++++++++-
+ .../src/pages/TestSti/ConfirmTestModal.jsx         | 51 ++++++++++++++++++++--
+ 4 files changed, 108 insertions(+), 14 deletions(-)
+
+commit 6064b18ef4d7b1ea566fca10c2753139f1e49484
+Merge: a42a41b 89620b6
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 10:01:15 2025 +0700
+
+    Merge pull request #150 from nhm809/fe/feature/manager-dashboard
+    
+    fix modal test register
+
+commit 89620b68546fc1408bed173e5af7a32e52de69cc
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 10:00:04 2025 +0700
+
+    fix modal test register
+
+ frontend/healthcaresystem/src/pages/TestSti/TestSti.jsx | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit a42a41b713e9b5f12580835418a9139cedfbd715
+Merge: af7d842 ff8ca13
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 09:52:35 2025 +0700
+
+    Merge pull request #149 from nhm809/fe/feature/manager-dashboard
+    
+    fix code homepage
+
+commit ff8ca13c5724040239eab4aaec652e1c2d766208
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 09:51:18 2025 +0700
+
+    fix code homepage
+
+ frontend/healthcaresystem/src/pages/Home/Home.jsx | 117 +++++-----------------
+ 1 file changed, 25 insertions(+), 92 deletions(-)
+
+commit af7d8421e8b9d51fe08c8210b59a0a3ee1e8e272
+Merge: e7683af 8171afd
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jul 13 09:25:34 2025 +0700
+
+    Merge pull request #148 from nhm809/be/feature/UpdateTaxRatePaypalService
+    
+    fix invoice and taxrate in paypalservice
+
+commit 8171afd1bde74bb408f5e617efbb668c89a732c2
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jul 13 09:22:42 2025 +0700
+
+    fix invoice and taxrate in paypalservice
+
+ .../Services/PaypalService.cs                      | 48 ++++++++++------------
+ 1 file changed, 22 insertions(+), 26 deletions(-)
+
+commit e7683af53bef9a0f6ab5ddd61350674eddfa615f
+Merge: 5febe01 add2c3e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 01:30:12 2025 +0700
+
+    Merge pull request #147 from nhm809/fe/feature/manager-dashboard
+    
+    fix frontend
+
+commit add2c3e8befb35f9c1086d4fdbbfa17c643ab40e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jul 13 01:25:43 2025 +0700
+
+    fix frontend
+
+ ...gner.cs => 20250712174558_database.Designer.cs} |   2 +-
+ ...3629_database.cs => 20250712174558_database.cs} |   0
+ frontend/healthcaresystem/package-lock.json        | 224 ++++++++++++---------
+ frontend/healthcaresystem/package.json             |   1 +
+ .../src/components/FormInput/PasswordInput.css     | 122 +++++++++++
+ .../src/components/FormInput/PasswordInput.jsx     | 121 +++++++++++
+ .../src/components/Header/AuthModal/AuthModal.jsx  | 140 +++++++++++--
+ frontend/healthcaresystem/src/utils/validate.jsx   |  24 ++-
+ 8 files changed, 519 insertions(+), 115 deletions(-)
+
+commit 5febe016006c9292d0aca59e14edee2f712ec43a
+Merge: e082639 ce126b4
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sun Jul 13 00:38:52 2025 +0700
+
+    Merge pull request #146 from nhm809/blog-page
+    
+    Blog page
+
+commit ce126b4e2ba2101f8fa0330af3b0159b12d751be
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sun Jul 13 00:37:15 2025 +0700
+
+    check and fix bug
+
+ .../pages/Appointment/AppointmentResultHandler.jsx | 12 +++++++---
+ .../pages/Appointment/ConfirmAppointmentModal.jsx  | 28 +++++++++++++++++-----
+ .../src/pages/PaymentErrorPage.jsx                 | 21 ++++++++++++++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |  4 ++++
+ 4 files changed, 56 insertions(+), 9 deletions(-)
+
+commit cbf8e5a6544b898d23b7518e8778495fcc21a0ee
+Merge: b860136 e082639
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 23:45:56 2025 +0700
+
+    Merge pull request #145 from nhm809/develop
+    
+    Develop
+
+commit e08263910369ccaa4c3e4a42b94ddb2fbf033993
+Merge: 641f247 6718d82
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sat Jul 12 23:44:34 2025 +0700
+
+    Merge pull request #144 from nhm809/be/feature/UpdatePaypalService
+    
+    fix TaxRate and time Invoice
+
+commit 641f2477bca9b9bff2c92f23ea343ee49b57619e
+Merge: 8411834 b860136
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 16:25:28 2025 +0700
+
+    Merge pull request #143 from nhm809/blog-page
+    
+    check and fix bug
+
+commit b8601363baadaa19e870e377c4a7b955634bb3ce
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 16:22:30 2025 +0700
+
+    check and fix bug
+
+ .../AppointmentHistory/AppointmentHistory.css      |  2 +-
+ .../AppointmentHistory/AppointmentHistory.jsx      | 26 +++++++++++++---------
+ .../pages/ReproductiveCycle/ReproductiveCycle.css  |  2 +-
+ .../pages/ReproductiveCycle/ReproductiveCycle.jsx  |  4 ++++
+ 4 files changed, 22 insertions(+), 12 deletions(-)
+
+commit 8411834387a8904aa9c706297f63a1cb9d68583f
+Merge: 57d1919 33c5c9f
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 15:21:16 2025 +0700
+
+    Merge pull request #142 from nhm809/blog-page
+    
+    Blog page
+
+commit 33c5c9fe0ba0ff0bdebf590d6759f43b363b1580
+Merge: d124155 72fbbc1
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 15:19:36 2025 +0700
+
+    Merge branch 'blog-page' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit d1241554f7c2b64dbcfab623cbb6a9697a78a928
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 15:19:09 2025 +0700
+
+    check and fix bug
+
+ .../Controllers/ManageUserController.cs            |   8 +-
+ .../Interfaces/IManageUserService.cs               |   4 +-
+ .../Services/ManageUserService.cs                  |  14 ++-
+ .../src/pages/Admin/UserManagement.css             |  10 ++
+ .../src/pages/Admin/UserManagement.jsx             |  31 +++++-
+ .../src/pages/Appointment/BookingInformation.css   |  19 ++--
+ .../src/pages/Appointment/BookingInformation.jsx   |  28 +++--
+ .../pages/Appointment/ConfirmAppointmentModal.jsx  |   2 +-
+ .../src/pages/Appointment/ConsultantDetail.jsx     |  36 ++++++-
+ .../src/pages/Appointment/ConsultantsList.jsx      |  48 ++++++---
+ .../AppointmentHistory/AppointmentHistory.jsx      |   1 -
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   |  12 +--
+ .../src/pages/Consultant/AppointmentManagement.jsx |   5 +-
+ .../pages/ReproductiveCycle/ReproductiveCycle.css  |  79 ++++++++++++++
+ .../pages/ReproductiveCycle/ReproductiveCycle.jsx  | 120 ++++++++++++++++-----
+ frontend/healthcaresystem/src/services/api.js      |   8 +-
+ 16 files changed, 331 insertions(+), 94 deletions(-)
+
+commit 72fbbc17552abb2d55b33d25e16d13de903d300e
+Merge: e9b4f96 57d1919
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sat Jul 12 15:18:33 2025 +0700
+
+    Merge pull request #141 from nhm809/develop
+    
+    Develop
+
+commit 6718d823ccf858294338afce2815a0bda4e8cf2e
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sat Jul 12 08:53:20 2025 +0700
+
+    fix TaxRate and time Invoice
+
+ .../Services/PaypalService.cs                      | 41 +++++++++++++---------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
+
+commit 57d19197dd7bbc35b0ce6031f9d40c50088f3560
+Merge: f3023f8 c393ab9
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 23:02:14 2025 +0700
+
+    Merge pull request #140 from nhm809/fe/feature/manager-dashboard
+    
+    add the feedback and total price to dashboard manager
+
+commit c393ab99dacf7d415ac7f4e817eae6ce279cf1b4
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 23:01:04 2025 +0700
+
+    add the feedback and total price to dashboard manager
+
+ .../src/pages/Manager/ManagerDashboard.css         | 298 +++++++++++++++++
+ .../src/pages/Manager/ManagerDashboard.jsx         | 363 +++++++++++++++++----
+ frontend/healthcaresystem/src/services/api.js      |  10 +
+ 3 files changed, 610 insertions(+), 61 deletions(-)
+
+commit f3023f806c25b1948e310f82a1f93ff7bd526112
+Merge: ca9bec2 b8ca002
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 22:40:38 2025 +0700
+
+    Merge pull request #139 from nhm809/be/feature/Manager-Feedback
+    
+    Be/feature/manager feedback
+
+commit ca9bec2179efa85c80346d9953dfe3896af5cd16
+Merge: c915ead a0749c0
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 21:10:15 2025 +0700
+
+    Merge pull request #138 from nhm809/fe/feature/manager-dashboard
+    
+    fix something
+
+commit a0749c06a550fa1cfe851640746d59f41bebdf4e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 21:08:44 2025 +0700
+
+    fix something
+
+ frontend/healthcaresystem/src/pages/Manager/EmployeeManagement.jsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c915ead275abce4a0291eb898df928f1279ca909
+Merge: 63d99e8 42e2ae2
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 16:59:09 2025 +0700
+
+    Merge pull request #137 from nhm809/fe/feature/manager-dashboard
+    
+    style blog, fix blog management page
+
+commit 42e2ae2d0dd6080cf68ef0dd148786807f962b4c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 16:58:17 2025 +0700
+
+    style blog, fix blog management page
+
+ .../healthcaresystem/src/pages/Blog/BlogDetail.css |  88 +++++-
+ .../healthcaresystem/src/pages/Blog/BlogDetail.jsx |  47 +++-
+ .../src/pages/Consultant/BlogManagement.css        | 296 +++++++++++++++++++++
+ .../src/pages/Consultant/BlogManagement.jsx        | 261 +++++++++---------
+ 4 files changed, 561 insertions(+), 131 deletions(-)
+
+commit 63d99e84e3db1158e5cb4942dd9cfaf9c677efcd
+Merge: ee7e982 7181bc2
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 15:46:20 2025 +0700
+
+    Merge pull request #136 from nhm809/fe/feature/manager-dashboard
+    
+    fix test, can pay again
+
+commit 7181bc23c98c7a2730092c2a3385b7bd93ab988f
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 15:45:06 2025 +0700
+
+    fix test, can pay again
+
+ .../src/assets/imgs/testbanner.jpg                 | Bin 0 -> 2194352 bytes
+ .../src/pages/Question/MyQuestions.jsx             |  11 +-
+ .../src/pages/Question/Question.jsx                |   2 +-
+ .../src/pages/Staff/StaffSchedule.jsx              | 275 +++++++++++----------
+ .../src/pages/TestHistory/TestHistory.jsx          |  48 +++-
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx | 219 ++++++++++++++--
+ 6 files changed, 380 insertions(+), 175 deletions(-)
+
+commit ee7e982c5e6e0ee0d19b177ba946fe2572adce77
+Merge: 1c65a95 acf2adb
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 11 14:10:09 2025 +0700
+
+    Fix phan quyen
+
+commit 1c65a954120a9bf1826ed6927286418f5848da89
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 11 14:09:23 2025 +0700
+
+    Fix phan quyen
+
+ .../20250708053926_newDatabase.Designer.cs         | 1146 -------------------
+ .../Migrations/20250708053926_newDatabase.cs       |   22 -
+ .../Migrations/20250709070326_db.Designer.cs       | 1148 -------------------
+ .../Migrations/20250709070326_db.cs                |   22 -
+ .../Migrations/20250709074532_addDB.Designer.cs    | 1148 -------------------
+ .../Migrations/20250709074532_addDB.cs             |   22 -
+ .../Migrations/20250710085334_newData.Designer.cs  | 1150 --------------------
+ .../Migrations/20250710085334_newData.cs           |  713 ------------
+ .../Migrations/20250710102934_database.Designer.cs | 1148 -------------------
+ .../Migrations/20250710102934_database.cs          |  712 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1147 -------------------
+ .../Services/QuestionService.cs                    |    2 +-
+ 12 files changed, 1 insertion(+), 8379 deletions(-)
+
+commit acf2adb97c00a8009374b264c73496713d454af5
+Merge: e03d58b 6140eaa
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 13:37:20 2025 +0700
+
+    Merge pull request #135 from nhm809/fe/feature/manager-dashboard
+    
+    fix the question history for member
+
+commit 6140eaa9ebf93f32a8438b4da7f1b8ea3de30f53
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 13:36:19 2025 +0700
+
+    fix the question history for member
+
+ .../src/pages/Question/MyQuestions.jsx             | 364 +++++++++++++++++----
+ .../src/pages/Question/Question.jsx                |  64 ++--
+ 2 files changed, 345 insertions(+), 83 deletions(-)
+
+commit b8ca00258f6dda406301f7b8f9b9456867c35a0d
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Fri Jul 11 00:49:18 2025 +0700
+
+    Cập nhật feedback service và cập nhật migration mới
+
+ .../DTOs/IndividualFeedbackDTO.cs                  |   13 +
+ .../DTOs/ServiceFeedbackDetailDTO.cs               |   12 +
+ .../DTOs/ServiceSummaryDTO.cs                      |   10 +
+ .../Interfaces/IFeedbackService.cs                 |    4 +
+ .../20250708053926_newDatabase.Designer.cs         | 1146 -------------------
+ .../Migrations/20250708053926_newDatabase.cs       |   22 -
+ .../Migrations/20250709070326_db.Designer.cs       | 1148 --------------------
+ .../Migrations/20250709070326_db.cs                |   22 -
+ .../Migrations/20250709074532_addDB.Designer.cs    | 1148 --------------------
+ .../Migrations/20250709074532_addDB.cs             |   22 -
+ .../Migrations/20250710102934_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250710102934_database.cs          |  712 ------------
+ ...gner.cs => 20250710173629_database.Designer.cs} |   12 +-
+ ...85334_newData.cs => 20250710173629_database.cs} |    9 +-
+ .../Services/FeedbackService.cs                    |   71 +-
+ 15 files changed, 121 insertions(+), 5378 deletions(-)
+
+commit 6ba27c868e03014c84f4003f627755932aca7fb1
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Fri Jul 11 00:47:34 2025 +0700
+
+    Re-add AppDbContextModelSnapshot after merge or restore
+
+ .../Controllers/ConsultantController.cs            |   10 +
+ .../Controllers/DashboardController.cs             |   18 +
+ .../Controllers/FeedbackController.cs              |   56 +-
+ .../Controllers/InvoiceController.cs               |   27 +
+ .../WeeklyOverrideScheduleController.cs            |   71 ++
+ backend/HealthcareSystem.API/Program.cs            |    2 +
+ .../DTOs/ConsultantWithSpecialtyDTO.cs             |    1 +
+ .../DTOs/CreateWeeklyOverrideScheduleDTO.cs        |   13 +
+ .../DTOs/DashboardComparisonRequestDTO.cs          |   20 +
+ .../DTOs/RevenueComparisonDTO.cs                   |   11 +
+ .../DTOs/UpdateOverrideStatusDTO.cs                |   10 +
+ .../DTOs/WeeklyOverrideScheduleDTO.cs              |    2 +
+ .../Interfaces/IConsultantService.cs               |    1 +
+ .../Interfaces/IDashboardService.cs                |    3 +
+ .../Interfaces/IInvoiceService.cs                  |   12 +
+ .../Interfaces/IWeeklyOverrideSchedule.cs          |    6 +-
+ .../Entities/Appointment.cs                        |    2 +-
+ .../BackgroundTasks/AppointmentCleanupJob.cs       |   88 ++
+ .../BackgroundTasks/ReproductiveReminderJob.cs     |    2 +-
+ .../20250708053926_newDatabase.Designer.cs         | 1146 +++++++++++++++++++
+ .../Migrations/20250708053926_newDatabase.cs       |   22 +
+ .../Migrations/20250709070326_db.Designer.cs       | 1148 +++++++++++++++++++
+ .../Migrations/20250709070326_db.cs                |   22 +
+ .../Migrations/20250709074532_addDB.Designer.cs    | 1148 +++++++++++++++++++
+ .../Migrations/20250709074532_addDB.cs             |   22 +
+ .../Migrations/20250710085334_newData.Designer.cs  | 1150 ++++++++++++++++++++
+ .../Migrations/20250710085334_newData.cs           |  713 ++++++++++++
+ .../Migrations/20250710102934_database.Designer.cs | 1148 +++++++++++++++++++
+ .../Migrations/20250710102934_database.cs          |  712 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        |    4 +-
+ .../Services/AppointmentService.cs                 |   10 +-
+ .../Services/ConsultantService.cs                  |   51 +-
+ .../Services/DashboardService.cs                   |  104 ++
+ .../Services/InvoiceService.cs                     |   55 +
+ .../Services/PaypalService.cs                      |    4 +-
+ .../Services/QuestionService.cs                    |    2 +-
+ .../Services/WeeklyOverrideScheduleService.cs      |  276 +++++
+ database/HealthcareSystemDb.sql                    |   30 +-
+ .../src/components/NotificationDropdown.jsx        |    2 +-
+ .../src/pages/Admin/PermissionModal.jsx            |    3 +
+ .../src/pages/Appointment/ConsultantDetail.jsx     |   32 +-
+ .../src/pages/Appointment/ConsultantsList.css      |   71 +-
+ .../src/pages/Appointment/ConsultantsList.jsx      |  130 ++-
+ .../AppointmentHistory/AppointmentHistory.jsx      |  119 +-
+ 44 files changed, 8366 insertions(+), 113 deletions(-)
+
+commit e03d58b435b6c8523fd66f058051544f834835a6
+Merge: d1ed0d4 c720684
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 00:06:52 2025 +0700
+
+    Merge pull request #134 from nhm809/fe/feature/manager-dashboard
+    
+    add the schedule of staff and consultant, manager manage the schedule…
+
+commit c72068477ab6d5a54cf5f433f3fe658c2c668ddd
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 11 00:05:56 2025 +0700
+
+    add the schedule of staff and consultant, manager manage the schedule of employee
+
+ .../20250708053926_newDatabase.Designer.cs         | 1146 -------------------
+ .../Migrations/20250708053926_newDatabase.cs       |   22 -
+ .../Migrations/20250709070326_db.Designer.cs       | 1148 --------------------
+ .../Migrations/20250709070326_db.cs                |   22 -
+ .../Migrations/20250709074532_addDB.Designer.cs    | 1148 --------------------
+ .../Migrations/20250709074532_addDB.cs             |   22 -
+ .../Migrations/20250710102934_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250710102934_database.cs          |  712 ------------
+ ...gner.cs => 20250710135150_database.Designer.cs} |   12 +-
+ ...85334_newData.cs => 20250710135150_database.cs} |    9 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |    8 +-
+ .../src/components/Layout/ManagerLayout.jsx        |    8 +
+ .../src/components/Schedule/schedule.jsx           |  288 ++++-
+ .../src/pages/Consultant/QuestionManagement.css    |  144 ++-
+ .../src/pages/Consultant/QuestionManagement.jsx    |  105 +-
+ .../Manager/WeeklyOverrideScheduleManagement.jsx   |  204 ++++
+ .../src/pages/Question/Question.jsx                |  176 ++-
+ frontend/healthcaresystem/src/services/api.js      |   10 +-
+ 18 files changed, 805 insertions(+), 5527 deletions(-)
+
+commit d1ed0d43c5ee4f78278ee11011487d906123f7cd
+Merge: 5b5fcfd fb512b1
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 22:11:55 2025 +0700
+
+    Met purge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit 5b5fcfdde40e51bd6f8c5f669cfe2f1bfaf38218
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 22:11:40 2025 +0700
+
+    Fix question service
+
+ .../HealthcareSystem.Infrastructure/Services/QuestionService.cs    | 2 +-
+ database/HealthcareSystemDb.sql                                    | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+commit fb512b11ce9b60455a41815b73770c4ab467b699
+Merge: 834077d e9b4f96
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 21:33:46 2025 +0700
+
+    Merge pull request #133 from nhm809/blog-page
+    
+    Blog page
+
+commit e9b4f967dbe16c49155bafb258db40b2c8b6fd95
+Merge: c9cbb26 eb8a9c5
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 21:32:26 2025 +0700
+
+    Merge branch 'blog-page' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit c9cbb26a05d8d08599e4ad25e14f9429d54dd227
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 21:32:06 2025 +0700
+
+    add feature get available consultants by date
+
+ .../Controllers/ConsultantController.cs            |  10 ++
+ .../DTOs/ConsultantWithSpecialtyDTO.cs             |   1 +
+ .../Interfaces/IConsultantService.cs               |   1 +
+ .../Services/ConsultantService.cs                  |  51 ++++++--
+ .../src/pages/Appointment/ConsultantDetail.jsx     |  30 ++++-
+ .../src/pages/Appointment/ConsultantsList.css      |   9 +-
+ .../src/pages/Appointment/ConsultantsList.jsx      | 128 +++++++++++++++------
+ 7 files changed, 180 insertions(+), 50 deletions(-)
+
+commit eb8a9c5df0f1530b009fef7d8074bbfcb84ccde0
+Merge: 2ca0d1c 834077d
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 21:30:33 2025 +0700
+
+    Merge pull request #132 from nhm809/develop
+    
+    Develop
+
+commit 834077dfe7c6b096c93a679486f3814d5a0a333a
+Merge: 22eaaaf dbe14f8
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 20:48:02 2025 +0700
+
+    Merge pull request #131 from nhm809/be/feature/Dashboard-Manager
+    
+    Be/feature/dashboard manager
+
+commit 22eaaaf1363dd265db4953e9adc90bace88322c7
+Merge: 2705f1b 6e04056
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jul 10 20:43:09 2025 +0700
+
+    Merge pull request #130 from nhm809/be/feature/Invoice
+    
+    GetInvoicesByDateRange
+
+commit 6e04056faa3704f4290f474eeaca4b190f674e96
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jul 10 20:40:24 2025 +0700
+
+    GetInvoicesByDateRange
+
+ .../Controllers/InvoiceController.cs               | 27 +++++++++++
+ backend/HealthcareSystem.API/Program.cs            |  1 +
+ .../Interfaces/IInvoiceService.cs                  | 12 +++++
+ .../Services/InvoiceService.cs                     | 55 ++++++++++++++++++++++
+ .../Services/WeeklyOverrideScheduleService.cs      | 37 ++++++++++++++-
+ 5 files changed, 131 insertions(+), 1 deletion(-)
+
+commit 2705f1ba42c40303366188a06f20a3787fed2348
+Merge: cc91afd bbdec04
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jul 10 20:12:27 2025 +0700
+
+    Merge pull request #129 from nhm809/be/feature/managerWeeklyOverrideSchedules
+    
+    Manager WeeklyOverrideSchedule
+
+commit bbdec0414bf419cd1240e76d6676c0fdc088c582
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jul 10 20:08:33 2025 +0700
+
+    Manager WeeklyOverrideSchedule
+
+ .../WeeklyOverrideScheduleController.cs            |   71 ++
+ backend/HealthcareSystem.API/Program.cs            |    1 +
+ .../DTOs/CreateWeeklyOverrideScheduleDTO.cs        |   13 +
+ .../DTOs/UpdateOverrideStatusDTO.cs                |   10 +
+ .../DTOs/WeeklyOverrideScheduleDTO.cs              |    2 +
+ .../Interfaces/IWeeklyOverrideSchedule.cs          |    6 +-
+ .../20250708053926_newDatabase.Designer.cs         | 1146 +++++++++++++++++++
+ .../Migrations/20250708053926_newDatabase.cs       |   22 +
+ .../Migrations/20250709070326_db.Designer.cs       | 1148 +++++++++++++++++++
+ .../Migrations/20250709070326_db.cs                |   22 +
+ .../Migrations/20250709074532_addDB.Designer.cs    | 1148 +++++++++++++++++++
+ .../Migrations/20250709074532_addDB.cs             |   22 +
+ .../Migrations/20250710085334_newData.Designer.cs  | 1150 ++++++++++++++++++++
+ .../Migrations/20250710085334_newData.cs           |  713 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1147 +++++++++++++++++++
+ .../Services/WeeklyOverrideScheduleService.cs      |  241 ++++
+ 16 files changed, 6861 insertions(+), 1 deletion(-)
+
+commit dbe14f86bf7a61710fefcfc47e554abbf90fa4c3
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Thu Jul 10 19:37:54 2025 +0700
+
+    cập nhật lại chức năng một xíu
+
+ .../DTOs/DashboardComparisonRequestDTO.cs          |  20 ++++
+ .../DTOs/RevenueComparisonDTO.cs                   |  11 +++
+ .../Interfaces/IDashboardService.cs                |   3 +
+ ...gner.cs => 20250710102934_database.Designer.cs} |   2 +-
+ ...1413_database.cs => 20250710102934_database.cs} |   0
+ .../Services/DashboardService.cs                   | 104 +++++++++++++++++++++
+ 6 files changed, 139 insertions(+), 1 deletion(-)
+
+commit ab1599f5d8e6cf59540ccc8f04b39f504a28b841
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Thu Jul 10 19:22:37 2025 +0700
+
+    them phan thong keu tang giam so voi truoc
+
+ .../Controllers/DashboardController.cs                 | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+commit cc91afd91e3d6f100897d9befe398c8b9cb92190
+Merge: 606bf07 2ca0d1c
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 18:03:18 2025 +0700
+
+    Merge pull request #128 from nhm809/blog-page
+    
+    Blog page
+
+commit 2ca0d1cda606e184e5ae4d92a9b64c61d376e2ea
+Merge: 191fd4b ee566ae
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 18:02:07 2025 +0700
+
+    Merge branch 'blog-page' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit 191fd4b2edaa97743e976a271d30af10d5591c52
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 18:01:33 2025 +0700
+
+    check and fix bug
+
+ .../Entities/Appointment.cs                        |   2 +-
+ .../BackgroundTasks/AppointmentCleanupJob.cs       |  88 +++++++++++++++
+ .../BackgroundTasks/ReproductiveReminderJob.cs     |   2 +-
+ .../Services/AppointmentService.cs                 |  10 +-
+ .../Services/PaypalService.cs                      |   4 +-
+ .../src/components/NotificationDropdown.jsx        |   2 +-
+ .../src/pages/Admin/PermissionModal.jsx            |   3 +
+ .../src/pages/Appointment/ConsultantDetail.jsx     |   2 +-
+ .../src/pages/Appointment/ConsultantsList.css      |  78 ++++++++++++--
+ .../src/pages/Appointment/ConsultantsList.jsx      |   2 +
+ .../AppointmentHistory/AppointmentHistory.jsx      | 119 +++++++++++++++------
+ 11 files changed, 259 insertions(+), 53 deletions(-)
+
+commit ee566aedf2517c729ce24425726df2e8d414ed45
+Merge: 04f66f2 606bf07
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jul 10 18:00:32 2025 +0700
+
+    Merge pull request #127 from nhm809/develop
+    
+    Develop
+
+commit 606bf0720f9e1af145e6e3ed47f5cdc60530facd
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 17:24:49 2025 +0700
+
+    Add db
+
+ database/HealthcareSystemDb.sql | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
+
+commit 6e0565ce68c366ee14eb46a47131b3f3b202bc78
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Thu Jul 10 17:17:02 2025 +0700
+
+    Save migration snapshot before switching branch
+
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1147 ++++++++++++++++++++
+ 1 file changed, 1147 insertions(+)
+
+commit dc7dbf17059ce5c3184b6d30eeb2d63338176eaf
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 16:09:05 2025 +0700
+
+    update question service
+
+ .../Controllers/QuestionController.cs              |  6 +++---
+ .../DTOs/QuestionDTO.cs                            |  2 +-
+ .../Interfaces/IQuestionService.cs                 |  2 +-
+ .../HealthcareSystem.Domain/Entities/Question.cs   |  2 +-
+ .../Services/QuestionService.cs                    | 22 +++++++++++++++-------
+ 5 files changed, 21 insertions(+), 13 deletions(-)
+
+commit 640e8ebd0cac89df3a2e359b4572bab50fc6b2bf
+Merge: 22cbfc5 042108d
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 15:17:25 2025 +0700
+
+    Merge pull request #126 from nhm809/fe/feature/manager-dashboard
+    
+    fix question add status Tu choi
+
+commit 042108d2bd028741d99343b38cc4a50e7ce24904
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 15:16:32 2025 +0700
+
+    fix question add status Tu choi
+
+ .../src/pages/Consultant/QuestionManagement.jsx    | 131 +++++++++++++++++-
+ .../src/pages/Question/Question.jsx                | 150 ++++++++++++++-------
+ 2 files changed, 226 insertions(+), 55 deletions(-)
+
+commit 22cbfc516438ec25fce03ef9f72cf1bee2dcdb32
+Merge: 469a7c1 a444450
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 14:03:24 2025 +0700
+
+    Merge pull request #125 from nhm809/fe/feature/manager-dashboard
+    
+    fix question for close or open
+
+commit a444450483eae0885bfe3617cbb912a1c59b9720
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 14:02:30 2025 +0700
+
+    fix question for close or open
+
+ .../src/pages/Consultant/QuestionManagement.jsx    | 64 ++++++++++++++++------
+ .../src/pages/Question/Question.jsx                | 60 ++++++++++++--------
+ 2 files changed, 85 insertions(+), 39 deletions(-)
+
+commit 469a7c180bdca11c3ae397e470ffcfb741d26aee
+Merge: e80f056 e955bfe
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 13:11:40 2025 +0700
+
+    Merge pull request #124 from nhm809/fe/feature/manager-dashboard
+    
+    Fe/feature/manager dashboard
+
+commit e955bfe76b29b3e2bbfd1ac065132f43b45627f0
+Merge: 5662bba e80f056
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 13:10:17 2025 +0700
+
+    fix done
+
+commit 5662bba0f22619cfff64baa53921cf0752334d57
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 13:01:05 2025 +0700
+
+    fix db for snapshot.cs
+
+ .../Migrations/AppDbContextModelSnapshot.cs                             | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d7068e3505f6752f8c42c6483e4daf3fff0d5364
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 12:57:23 2025 +0700
+
+    fix question and add the total price for manager dashboard
+
+ .../Migrations/20250709151413_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250709151413_database.cs          |  712 ------------
+ ...gner.cs => 20250709171803_database.Designer.cs} |    6 +-
+ ...0704_database.cs => 20250709171803_database.cs} |    5 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |    4 +-
+ .../Services/QuestionThreadItemService.cs          |    2 +-
+ .../src/pages/Manager/ManagerDashboard.css         |  424 ++++++++
+ .../src/pages/Manager/ManagerDashboard.jsx         |  252 ++++-
+ .../src/pages/Question/Question.jsx                |  546 ++++++++--
+ .../src/pages/Question/SubQuestionList.jsx         |  155 +--
+ frontend/healthcaresystem/src/services/api.js      |    8 +
+ 11 files changed, 1229 insertions(+), 2033 deletions(-)
+
+commit e80f0563b7a6c5a61cbcd5d0f2567154f321b18f
+Merge: a3a2263 e2f9e1c
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 12:15:51 2025 +0700
+
+    Merge pull request #121 from nhm809/be/feature/SpecialtyService
+    
+    Fixed Create specialty
+
+commit e2f9e1cb9172adc1e35ce92e5c71b019f45947e9
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 12:14:50 2025 +0700
+
+    Fixed Create specialty
+
+ .../Controllers/SpecialtyController.cs             |   16 +-
+ .../Migrations/20250709151413_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250709151413_database.cs          |  712 ------------
+ .../Migrations/20250710014415_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250710014415_database.cs          |  712 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1145 -------------------
+ .../Services/SpecialtyService.cs                   |   12 +-
+ 7 files changed, 23 insertions(+), 4870 deletions(-)
+
+commit a3a2263cd834c90419d10813f161f4b36ebb5e66
+Merge: c90fefe 0f8de1c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 08:47:40 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit c90fefea3ee6bb91cb58e409342fbfb8365d7d56
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 10 08:47:22 2025 +0700
+
+    Add Data
+
+ ...gner.cs => 20250710014415_database.Designer.cs} |   2 +-
+ ...0704_database.cs => 20250710014415_database.cs} |   0
+ database/DbNote.txt                                |  15 +
+ database/HealthcareSystemDb.sql                    | 487 ++++++++++++++-------
+ 4 files changed, 337 insertions(+), 167 deletions(-)
+
+commit 0f8de1caa3f3c7f88a4160de86c245b21899f6ba
+Merge: 8f762ef fb8b47f
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 10 00:05:13 2025 +0700
+
+    Merge pull request #120 from nhm809/be/feature/Dashboard-Manager
+    
+    xem bao cao tong tien theo yeu cau
+
+commit fb8b47f8310e2e29eb6a860119d5a420a11c8fce
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Wed Jul 9 22:26:13 2025 +0700
+
+    xem bao cao tong tien theo yeu cau
+
+ .../Controllers/DashboardController.cs             |   46 +
+ backend/HealthcareSystem.API/Program.cs            |    2 +-
+ .../DTOs/DailyDataPointDTO.cs                      |   20 +
+ .../DTOs/DashboardDataDTO.cs                       |   14 +
+ .../DTOs/DashboardSummaryDTO.cs                    |   28 +
+ .../DTOs/DateRangeRequestDTO.cs                    |   18 +
+ .../DTOs/TotalRevenueResponseDTO.cs                |   11 +
+ .../Interfaces/IDashboardService.cs                |   15 +
+ .../Migrations/20250709151413_database.Designer.cs | 1148 ++++++++++++++++++++
+ .../Migrations/20250709151413_database.cs          |  712 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1145 +++++++++++++++++++
+ .../Services/DashboardService.cs                   |  254 +++++
+ 12 files changed, 3412 insertions(+), 1 deletion(-)
+
+commit 8f762efcd19ff8c34c33922efc893ea920dbb8c3
+Merge: 078d8cf 04f66f2
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 9 17:23:43 2025 +0700
+
+    Merge pull request #119 from nhm809/blog-page
+    
+    Blog page
+
+commit 04f66f218847cf9987b3e3a85d7f230a54c81c00
+Merge: 10c4f92 7ccbbea
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 9 17:20:26 2025 +0700
+
+    Merge branch 'blog-page' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit 10c4f924b9f78b5a2127691d1298d0661d674b90
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 9 17:20:00 2025 +0700
+
+    check bug and fix
+
+ backend/HealthcareSystem.API/Program.cs            |   1 +
+ .../DTOs/ConsultantWithSpecialtyDTO.cs             |   1 +
+ .../DTOs/ReproductiveCycleDTO.cs                   |   2 +-
+ .../Entities/ReproductiveCycle.cs                  |   2 +-
+ .../BackgroundTasks/ReproductiveReminderJob.cs     | 131 +++++++++++++++++++++
+ .../Services/ConsultantService.cs                  |  54 +++++++--
+ .../Services/PaypalService.cs                      |   2 +-
+ .../Services/ReproductiveCycleService.cs           |  12 +-
+ .../src/components/Header/Header.jsx               |   6 +-
+ .../src/components/Layout/AdminLayout.css          |   2 +-
+ .../src/pages/Admin/AdminDashboard.jsx             |   4 +-
+ .../src/pages/Admin/UserDetailModal.jsx            |  37 ++++--
+ .../src/pages/Admin/UserManagement.jsx             |   4 +-
+ .../src/pages/Appointment/BookingInformation.jsx   |   5 +-
+ .../pages/Appointment/ConfirmAppointmentModal.jsx  |   4 +-
+ .../src/pages/Appointment/ConsultantDetail.jsx     |  24 +++-
+ .../src/pages/Appointment/ConsultantsList.css      |   6 +
+ .../src/pages/Appointment/ConsultantsList.jsx      |  66 ++++++-----
+ .../AppointmentHistory/AppointmentHistory.css      |  59 +++++++++-
+ .../AppointmentHistory/AppointmentHistory.jsx      | 101 ++++++++++++++--
+ .../pages/Consultant/AppointmentDetailModal.jsx    |  28 +----
+ .../src/pages/Consultant/AppointmentManagement.css |  59 +++++++++-
+ .../src/pages/Consultant/AppointmentManagement.jsx |  65 +++++++---
+ 23 files changed, 556 insertions(+), 119 deletions(-)
+
+commit 7ccbbeaebb23a58736987e34fe66fb446f1b8136
+Merge: b116933 078d8cf
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 9 17:18:16 2025 +0700
+
+    Merge pull request #118 from nhm809/develop
+    
+    Develop
+
+commit 078d8cf8894240a251afc766e479b39986935e8c
+Merge: a7b7d97 0ecf8e0
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 9 16:33:51 2025 +0700
+
+    Merge pull request #117 from nhm809/fe/feature/manager-dashboard
+    
+    fix notification, fix the schedule of employee
+
+commit 0ecf8e0695385fd91db968d7ea6260ac77e25ea9
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 9 16:32:26 2025 +0700
+
+    fix notification, fix the schedule of employee
+
+ .../Services/WeeklyScheduleService.cs              |   8 +-
+ .../src/components/Header/Header.jsx               | 142 +---
+ .../src/components/Layout/AdminLayout.jsx          |  53 +-
+ .../src/components/Layout/ConsultantLayout.jsx     |  79 +-
+ .../src/components/Layout/ManagerLayout.jsx        |  67 +-
+ .../src/components/Layout/StaffLayout.jsx          |  82 +-
+ .../src/components/NotificationDropdown.jsx        |  95 +++
+ .../src/components/Schedule/schedule.jsx           | 142 ++++
+ .../src/pages/Manager/EmployeeManagement.jsx       | 922 ++++++++++++++++++---
+ .../healthcaresystem/src/pages/Profile/Profile.css | 480 ++++++++++-
+ .../healthcaresystem/src/pages/Profile/Profile.jsx | 561 +++++++++++--
+ .../src/pages/TestHistory/TestHistory.jsx          |  53 +-
+ frontend/healthcaresystem/src/services/api.js      |  10 +-
+ 13 files changed, 2114 insertions(+), 580 deletions(-)
+
+commit a7b7d97d0f180c1597e0820145c7c5c2a1808a36
+Merge: 509a6f8 61ae8bc
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jul 8 23:00:55 2025 +0700
+
+    Merge pull request #116 from nhm809/fe/feature/manager-dashboard
+    
+    fix OTP register
+
+commit 61ae8bce9229cecd2007e8c3f9235b1ad23a6e7e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jul 8 22:59:03 2025 +0700
+
+    fix OTP register
+
+ .../src/components/Header/AuthModal/AuthModal.jsx  | 127 ++++++++-
+ .../src/components/Layout/ManagerLayout.jsx        |   8 +
+ .../src/pages/Manager/EmployeeManagement.jsx       | 316 ++++++++++++++++++++-
+ .../src/pages/Manager/ServiceManagement.jsx        |  73 ++++-
+ .../src/pages/Manager/SpecialtyManagement.jsx      | 276 ++++++++++++++++++
+ frontend/healthcaresystem/src/services/api.js      |  11 +
+ 6 files changed, 795 insertions(+), 16 deletions(-)
+
+commit 509a6f8865704e2065727c8c0e194db6d2dcbf5a
+Merge: 686693f 6bc505b
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 22:47:23 2025 +0700
+
+    Merge pull request #114 from nhm809/be/feature/SpecialtyService
+    
+    update Specialty Service
+
+commit 6bc505baabfce11571e1eb65668cdebe641a4423
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 22:43:59 2025 +0700
+
+    update Specialty Service
+
+ .../Controllers/SpecialtyController.cs             | 19 +++++++++
+ .../Interfaces/ISpecialtyService.cs                |  3 +-
+ .../Services/SpecialtyService.cs                   | 45 ++++++++++++++++------
+ 3 files changed, 55 insertions(+), 12 deletions(-)
+
+commit 686693f42c2c13ea1a13c1280a05b526efd4aa75
+Merge: e6959d2 8eab48b
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 22:24:31 2025 +0700
+
+    Merge pull request #112 from nhm809/be/feature/sendOTP
+    
+    Fix Registration
+
+commit 8eab48b16a55a01e7b0ccf6510e99a7e1b733551
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 22:22:49 2025 +0700
+
+    Fix Registration
+
+ .../Services/AuthService.cs                        | 35 ++++++++++++++++++----
+ .../Services/OTPRequestService.cs                  | 23 +++++++++-----
+ 2 files changed, 46 insertions(+), 12 deletions(-)
+
+commit e6959d261d7138ddbd4730a83b604b24f0c2a32b
+Merge: 02f6a14 8ff4166
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 17:16:48 2025 +0700
+
+    Merge pull request #111 from nhm809/be/feature/sendOTP
+    
+    Update Register send otp
+
+commit 8ff4166993614e5f9a7ed4a72a6a17cffc92aac3
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 17:15:12 2025 +0700
+
+    Update Register send otp
+
+ .../Controllers/RegisterController.cs              | 23 ++++++++++++----------
+ .../Interfaces/IAuthService.cs                     |  2 +-
+ .../Services/AuthService.cs                        | 16 ++++++++++++---
+ 3 files changed, 27 insertions(+), 14 deletions(-)
+
+commit 02f6a141f662fc4248701356b6db09ff1df996af
+Merge: 652bfb9 e2bbad5
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 16:41:06 2025 +0700
+
+    Merge pull request #110 from nhm809/be/feature/sendOTP
+    
+    Update Send OTP Service
+
+commit e2bbad560f1a8d79e34c3032ff9c5c3383cbbadb
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 16:40:29 2025 +0700
+
+    Update Send OTP Service
+
+ .../Controllers/OTPRequestController.cs            |  29 ++++--
+ .../DTOs/VerifyOtpDTO.cs                           |   3 +-
+ .../Interfaces/IOTPRequestService.cs               |   5 +-
+ .../Services/OTPRequestService.cs                  | 103 +++++++++++++++++++--
+ 4 files changed, 125 insertions(+), 15 deletions(-)
+
+commit 652bfb9dcc04815a9455e1c2cb8a553f024c9aab
+Merge: dc34c14 07afc2b
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 16:26:35 2025 +0700
+
+    Merge pull request #109 from nhm809/be/feature/ManageUserService
+    
+    Update Manage User Service
+
+commit 07afc2b42a2651fa7bed20c7b93dda7eb918f2ca
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jul 8 16:26:00 2025 +0700
+
+    Update Manage User Service
+
+ .../Controllers/ManageUserController.cs            | 45 ++++++++++++++++++++++
+ .../DTOs/ManageSpecialtyDTO.cs                     |  8 ++++
+ .../DTOs/ManageUserDTO.cs                          |  1 +
+ .../Interfaces/IManageUserService.cs               |  2 +
+ .../Services/ManageUserService.cs                  | 44 +++++++++++++++++++++
+ 5 files changed, 100 insertions(+)
+
+commit dc34c14a57e05982a996bbdecafaf2ac7be784da
+Merge: 2251aee bf7ca0e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jul 8 15:12:58 2025 +0700
+
+    Merge pull request #108 from nhm809/fe/feature/manager-dashboard
+    
+    Fe/feature/manager dashboard
+
+commit bf7ca0e35e156488c0b09770fe04b2163101e88a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jul 8 15:09:38 2025 +0700
+
+    fix detail profile of employee
+
+ .../src/assets/styles/_global.module.scss          |  56 +++
+ .../src/components/Layout/ManagerLayout.jsx        |  11 +-
+ .../src/pages/Manager/EmployeeManagement.jsx       | 415 ++++++++++++++-------
+ 3 files changed, 345 insertions(+), 137 deletions(-)
+
+commit 821abbc70237559db03df32b40c3121d78701a08
+Merge: 1899d86 2251aee
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jul 8 15:09:15 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into fe/feature/manager-dashboard
+
+commit 2251aeea8c3755cabc674249f471091930822a6b
+Merge: d33cd23 b0321c1
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jul 8 12:37:57 2025 +0700
+
+    Merge pull request #106 from nhm809/database/insertDB
+    
+    add new customer/staff/consultant , edit anothers related tables 4 tables left not updated : Appointment , Feedback , Question, Message
+
+commit b0321c1dfe0fbf919d7e1d82c0fda574381247d5
+Merge: 0f0a376 d33cd23
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jul 8 12:37:28 2025 +0700
+
+    Merge branch 'develop' into database/insertDB
+
+commit 0f0a37608613da359eff824e599c1c6eae8eb2ee
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jul 8 12:33:20 2025 +0700
+
+    add new customer/staff/consultant , edit anothers related tables (3 tables left not updated)
+
+ database/HealthcareSystemDb.sql | 251 +++++++++++++++++++++-------------------
+ 1 file changed, 133 insertions(+), 118 deletions(-)
+
+commit d33cd238d8e5d45fa0d1f1cc74c228432fd78491
+Merge: 57fb1f9 b116933
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Tue Jul 8 07:29:59 2025 +0700
+
+    Merge pull request #105 from nhm809/blog-page
+    
+    Blog page
+
+commit b11693338658e834b873bf919180516c4f3c3270
+Merge: 1674e8b caf2365
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Tue Jul 8 07:25:53 2025 +0700
+
+    Merge branch 'blog-page' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit 1674e8bb6fc3cc7def3b09e310676c4efa4015a3
+Merge: 5076772 c09a7d5
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Tue Jul 8 07:25:27 2025 +0700
+
+    Add admin dashboard
+
+commit caf23652ae5a2677691fa19405580685c7118c51
+Merge: c09a7d5 57fb1f9
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Tue Jul 8 07:23:38 2025 +0700
+
+    Merge pull request #104 from nhm809/develop
+    
+    Develop
+
+commit 1899d86c286588be780bf87af453150a25a418f8
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jul 7 16:05:23 2025 +0700
+
+    add function delete account to manager dashboard
+
+ ...gner.cs => 20250707080704_database.Designer.cs} |    5 +-
+ ...4531_database.cs => 20250707080704_database.cs} |    1 -
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1145 ++++++++++++++++++++
+ .../src/pages/Manager/EmployeeManagement.jsx       |  148 ++-
+ frontend/healthcaresystem/src/services/api.js      |    2 +
+ 5 files changed, 1270 insertions(+), 31 deletions(-)
+
+commit 7d13bd6cacb7dd3888b7e74e3139469e8b53ef84
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jul 7 15:03:06 2025 +0700
+
+    fix manager dashboard
+
+ .../Migrations/20250704144531_database.Designer.cs | 1151 ++++++++++++++++++++
+ .../Migrations/20250704144531_database.cs          |  713 ++++++++++++
+ .../src/pages/Manager/EmployeeManagement.jsx       |  400 ++++++-
+ frontend/healthcaresystem/src/services/api.js      |    7 +
+ 4 files changed, 2267 insertions(+), 4 deletions(-)
+
+commit 57fb1f94e9409f5c14f5e42dc7a33ce9803757fa
+Merge: 2e6b77a 83aca4e
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jul 6 17:55:41 2025 +0700
+
+    Merge pull request #101 from nhm809/be/feature/ManagerWeeklyScheduleStaffAndConsultant
+    
+    CRUD weeklySchedule and Read Schedule normal except DayOf
+
+commit 83aca4ea9c029d1c56661cb786cca1727a9d9a35
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jul 6 17:53:11 2025 +0700
+
+    CRUD weeklySchedule and Read Schedule normal except DayOf
+
+ .../Controllers/PaymentController.cs               |   2 +-
+ .../Controllers/ScheduleController.cs              |  24 ++
+ .../Controllers/TestServiceRecordController.cs     |  14 +-
+ .../Controllers/WeeklyScheduleController.cs        | 133 +++++++++
+ backend/HealthcareSystem.API/Program.cs            |   2 +
+ .../DTOs/DayScheduleDTO.cs                         |  18 ++
+ .../DTOs/UpdateWeeklyScheduleDTO.cs                |   9 +
+ .../DTOs/WeeklyScheduleDTO.cs                      |  11 +-
+ .../Interfaces/IScheduleService.cs                 |  12 +
+ .../Interfaces/IWeeklyOverrideSchedule.cs          |  13 +
+ .../Interfaces/IWeeklyScheduleService.cs           |  14 +
+ .../Services/ScheduleService.cs                    | 109 ++++++++
+ .../Services/WeeklyScheduleService.cs              | 309 +++++++++++++++++++++
+ database/HealthcareSystemDb.sql                    |   2 +
+ 14 files changed, 663 insertions(+), 9 deletions(-)
+
+commit c09a7d59a802438758d72655a752e011798816b1
+Merge: d4b7bd0 2e6b77a
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sun Jul 6 14:44:55 2025 +0700
+
+    Merge pull request #100 from nhm809/develop
+    
+    Develop
+
+commit 50767727dc677157746433b813faed5b787e0c1d
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Sun Jul 6 14:44:04 2025 +0700
+
+    Update notification for appointment
+
+ .../Services/AppointmentService.cs                 |  71 ++++++-
+ .../Services/PaypalService.cs                      |  42 +++--
+ frontend/healthcaresystem/src/App.jsx              |  17 +-
+ .../src/components/Header/AuthModal/AuthModal.jsx  |   2 +
+ .../src/components/Header/Header.jsx               |   9 +-
+ .../src/components/Layout/AdminLayout.css          |  42 +++++
+ .../src/components/Layout/AdminLayout.jsx          | 207 +++++++++++++++++++++
+ .../pages/Appointment/AppointmentResultHandler.jsx |  36 ++--
+ .../AppointmentHistory/AppointmentHistory.css      |   4 +
+ .../pages/Consultant/AppointmentDetailModal.jsx    |   9 +-
+ .../src/pages/Consultant/AppointmentManagement.css |   4 +
+ frontend/healthcaresystem/src/routers/routers.jsx  |  21 ++-
+ 12 files changed, 397 insertions(+), 67 deletions(-)
+
+commit 5d9e3ddb7e6c6cca9efc3866dae4f972c6e904ce
+Merge: 4e3fcdf d3b8ab0
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 2 22:27:41 2025 +0700
+
+    Pull, merge develop
+
+commit 2e6b77a7ab80a811019bd688e91b778473c67296
+Merge: c80c502 e0d6c7c
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 6 12:11:30 2025 +0700
+
+    Merge pull request #98 from nhm809/be/feature/ManageUserService
+    
+    Update Manage User Service
+
+commit e0d6c7c64beb1ced6b0c9f038140a4a5a8cefdb0
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jul 6 12:10:33 2025 +0700
+
+    Update Manage User Service
+
+ .../Controllers/ManageUserController.cs            | 22 ++++++++++++++++++++++
+ .../Interfaces/IManageUserService.cs               |  2 +-
+ .../Services/ManageUserService.cs                  | 14 ++++++++++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
+
+commit c80c50233ebd8576f781019cad151b4f0347d369
+Merge: 27ec2c3 b292a3d
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jul 5 08:09:27 2025 +0700
+
+    Merge pull request #97 from nhm809/be/feature/ManageUserService
+    
+    Update Manage
+
+commit b292a3dfc7e2a03900236cd5aa4f23803ef7568d
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jul 5 08:07:20 2025 +0700
+
+    Update Manage
+
+ backend/HealthcareSystem.Infrastructure/Services/OTPRequestService.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 27ec2c36cc71ca8c15e6de3ecc44740e168452d1
+Merge: 057188d 3f3cb96
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jul 5 07:09:59 2025 +0700
+
+    Merge pull request #96 from nhm809/be/feature/ManageUserService
+    
+    Update manage user
+
+commit 3f3cb96b9bf39d684bba5d8a405def755bb5798c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jul 5 07:06:09 2025 +0700
+
+    Update manage user
+
+ .../Controllers/ManageUserController.cs              |  2 +-
+ .../Services/ManageUserService.cs                    |  1 +
+ database/HealthcareSystemDb.sql                      | 20 ++++++++++----------
+ 3 files changed, 12 insertions(+), 11 deletions(-)
+
+commit 057188d47af65875e959a9682c3ba7c07f0c2e37
+Merge: c3e74d3 4268b85
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jul 4 22:41:20 2025 +0700
+
+    Merge pull request #95 from nhm809/be/feature/FixTestServiceRecordAndPaypalService
+    
+    add Description,StaffID for TestServiceRecord , Status For PaypalSerivce
+
+commit 4268b857202bc2e68f17f3bf21a50761f37b3d81
+Merge: 6a78398 c3e74d3
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jul 4 22:41:10 2025 +0700
+
+    Merge branch 'develop' into be/feature/FixTestServiceRecordAndPaypalService
+
+commit 6a7839842efb19603fb8b44eb07591e439bdc7f1
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jul 4 22:37:40 2025 +0700
+
+    add Description,StaffID for TestServiceRecord , Status For PaypalSerivce
+
+ .../Controllers/TestServiceRecordController.cs     |   4 +-
+ backend/HealthcareSystem.API/Program.cs            |   2 -
+ .../DTOs/TestServiceRecordDTO.cs                   |   2 +
+ .../Interfaces/ITestServiceRecord.cs               |   2 +-
+ .../BackgroundServices/StaffAssignmentService.cs   | 173 ---------------------
+ .../Services/PaypalService.cs                      |   2 +-
+ .../Services/ServiceService.cs                     |   3 +-
+ .../Services/TestServiceRecordService.cs           |  32 +---
+ database/HealthcareSystemDb.sql                    |  10 +-
+ 9 files changed, 19 insertions(+), 211 deletions(-)
+
+commit c3e74d3b02ee1807f0925bf726b685d170459add
+Merge: e6e5edd 0061426
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 4 17:55:13 2025 +0700
+
+    Merge pull request #94 from nhm809/be/feature/ManageUserService
+    
+    Update Manage User
+
+commit 006142601b08065759244d1ced640995af1a9eb9
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 4 17:54:19 2025 +0700
+
+    Update Manage User
+
+ .../Controllers/ManageUserController.cs            |  30 ++++
+ backend/HealthcareSystem.API/Program.cs            |   3 -
+ .../DTOs/ManageUserDTO.cs                          |   2 +-
+ .../Interfaces/IManageUserService.cs               |   3 +
+ backend/HealthcareSystem.Domain/Entities/User.cs   |   2 -
+ .../BackgroundServices/StaffAssignmentService.cs   | 173 ---------------------
+ .../Services/ManageUserService.cs                  |  61 ++++++--
+ .../Services/UserService.cs                        |   1 -
+ 8 files changed, 85 insertions(+), 190 deletions(-)
+
+commit e6e5edd6c220451a9221efd8c21f3bfe32ddaebc
+Merge: 52b3c8f 39450d1
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 4 16:15:00 2025 +0700
+
+    Merge pull request #93 from nhm809/fe/feature/question-fix
+    
+    Dashboard manager
+
+commit 39450d1cc2b381644480f05467d9a805e15a2cb2
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jul 4 16:14:02 2025 +0700
+
+    Dashboard manager
+
+ .../Services/ServiceService.cs                     |   3 +-
+ frontend/healthcaresystem/src/App.jsx              |   3 +
+ .../src/components/Banner/Banner.jsx               |   6 +-
+ .../src/components/Header/AuthModal/AuthModal.jsx  |   2 +-
+ .../src/components/Layout/ManagerLayout.jsx        | 281 +++++++++++++++++++++
+ .../src/pages/Manager/EmployeeManagement.jsx       |   7 +
+ .../src/pages/Manager/ManagerDashboard.jsx         |  12 +
+ .../src/pages/Manager/ServiceManagement.jsx        | 152 +++++++++++
+ .../src/pages/TestHistory/TestHistory.jsx          | 109 +++++++-
+ frontend/healthcaresystem/src/routers/routers.jsx  |  40 +--
+ 10 files changed, 589 insertions(+), 26 deletions(-)
+
+commit 52b3c8fcdb0b41c3dcbb9d3d6d13aada0b2e509b
+Merge: e6e6a6c cfede8c
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 4 15:46:14 2025 +0700
+
+    Merge pull request #92 from nhm809/be/feature/sendOTP
+    
+    Update send OTP email
+
+commit cfede8cba2d070022c3a36a0b5aeab244c44bd2c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jul 4 15:45:04 2025 +0700
+
+    Update send OTP email
+
+ .../Controllers/ManageUserController.cs            |   30 +-
+ .../Controllers/OTPRequestController.cs            |    8 +-
+ .../DTOs/UserInfoDTO.cs                            |    8 +-
+ .../Interfaces/IManageUserService.cs               |    1 +
+ .../Interfaces/IOTPRequestService.cs               |    2 +-
+ .../Interfaces/IUserService.cs                     |    3 +-
+ .../Migrations/20250703055142_database.Designer.cs | 1151 --------------------
+ .../Migrations/20250703055142_database.cs          |  713 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1148 -------------------
+ .../Services/ManageUserService.cs                  |   25 +
+ .../Services/OTPRequestService.cs                  |   66 +-
+ .../Services/UserService.cs                        |    7 +-
+ 12 files changed, 130 insertions(+), 3032 deletions(-)
+
+commit e6e6a6c998417a7a871d4180dc29bd5b9a6132a7
+Merge: ccb8222 0b92917
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 3 13:18:17 2025 +0700
+
+    Merge pull request #91 from nhm809/fe/feature/question-fix
+    
+    fix
+
+commit 0b92917abb9c7f2d5e6b004202c7f3f70bc6da62
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jul 3 13:17:02 2025 +0700
+
+    fix
+
+ frontend/healthcaresystem/src/components/Header/Header.css | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit ccb8222cb4b876a156401c4264a62aa380033162
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jul 3 12:52:45 2025 +0700
+
+    Upgrade version
+
+ .../Controllers/QuestionController.cs              |   11 +
+ .../Controllers/QuestionThreadItemController.cs    |    2 +-
+ .../DTOs/QuestionDTO.cs                            |    2 +-
+ .../Interfaces/IQuestionService.cs                 |    1 +
+ .../HealthcareSystem.Domain/Entities/Question.cs   |    2 +-
+ .../Migrations/20250703055142_database.Designer.cs | 1151 ++++++++++++++++++++
+ .../Migrations/20250703055142_database.cs          |  713 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1148 +++++++++++++++++++
+ .../Services/QuestionService.cs                    |   18 +-
+ .../Services/QuestionThreadItemService.cs          |    6 +
+ database/HealthcareSystemDb.sql                    |    2 +-
+ 11 files changed, 3047 insertions(+), 9 deletions(-)
+
+commit f6d1cb5274f9e03c381706f7b4092a32b892634d
+Merge: 310f655 138561e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 23:25:28 2025 +0700
+
+    Merge pull request #90 from nhm809/fe/feature/question-fix
+    
+    fix consultant dashboard
+
+commit 138561e190a74b2742eb37395c4231992a2eeaa4
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 23:24:15 2025 +0700
+
+    fix consultant dashboard
+
+ .../healthcaresystem/src/pages/Consultant/AppointmentDetailModal.jsx     | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 310f655b7309d076fc6dcce2e949e0a8e7d2473c
+Merge: c85bbd6 9074013
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 22:56:17 2025 +0700
+
+    Merge pull request #89 from nhm809/fe/feature/question-fix
+    
+    fix endtime
+
+commit 9074013159c3b351a889ff340356820eaf0f0f10
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 22:55:12 2025 +0700
+
+    fix endtime
+
+ .../Services/ConsultantService.cs                  | 48 +++++++++++-----------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+commit c85bbd60d9e6a132a3f2c3609796bd34618c6a44
+Merge: b619128 d4b7bd0
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 2 22:54:10 2025 +0700
+
+    Merge pull request #88 from nhm809/blog-page
+    
+    Blog page
+
+commit d4b7bd0b8deb34b6ab85a72e97c23f47543cd80c
+Merge: 4e3fcdf d3b8ab0
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Wed Jul 2 22:27:41 2025 +0700
+
+    Pull, merge develop
+
+commit 4e3fcdfebac796f695a6cd65ce03ef8c3bc61915
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Wed Jul 2 22:24:11 2025 +0700
+
+    Appointment management
+
+ .../Controllers/AppointmentController.cs           |    4 +-
+ .../DTOs/AppointmentDetailDTO.cs                   |    1 +
+ .../DTOs/AppointmentListItemDTO.cs                 |    2 +
+ .../Interfaces/IAppointmentService.cs              |   10 +-
+ .../Migrations/20250701063150_database.Designer.cs | 1151 --------------------
+ .../Migrations/20250701063150_database.cs          |  713 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1148 -------------------
+ .../Services/AppointmentService.cs                 |   35 +-
+ .../Services/ConsultantService.cs                  |   48 +-
+ .../src/components/Layout/ConsultantLayout.jsx     |   18 +-
+ .../pages/Appointment/AppointmentResultHandler.jsx |   90 +-
+ .../src/pages/Appointment/BookingInformation.css   |    8 +-
+ .../src/pages/Appointment/BookingInformation.jsx   |   66 +-
+ .../pages/Appointment/ConfirmAppointmentModal.jsx  |    8 +-
+ .../src/pages/Appointment/ConsultantsList.jsx      |    7 +-
+ .../AppointmentHistory/AppointmentHistory.css      |   12 +-
+ .../AppointmentHistory/AppointmentHistory.jsx      |  109 +-
+ .../pages/Consultant/AppointmentDetailModal.jsx    |  149 +++
+ .../src/pages/Consultant/AppointmentManagement.css |   40 +
+ .../src/pages/Consultant/AppointmentManagement.jsx |  253 +++++
+ .../src/pages/Consultant/ConsultantDashboard.jsx   |  116 --
+ frontend/healthcaresystem/src/services/api.js      |    1 -
+ 22 files changed, 647 insertions(+), 3342 deletions(-)
+
+commit d3b8ab05474dba2ea4277b6d7b5702148ca43456
+Merge: 007776d b619128
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Wed Jul 2 22:11:53 2025 +0700
+
+    Merge pull request #87 from nhm809/develop
+    
+    Develop
+
+commit b6191289ccb2f6ce00b2dbf87483b68170f777b0
+Merge: fc6087b 5fc56f1
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 22:05:11 2025 +0700
+
+    Merge pull request #86 from nhm809/fe/feature/question-fix
+    
+    fix question add avartar for consultant
+
+commit 5fc56f1bd6609b3933909794b19e69d031ca24d6
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 22:03:55 2025 +0700
+
+    fix question add avartar for consultant
+
+ .../Migrations/20250630143042_database.Designer.cs | 1148 --------------------
+ .../Migrations/20250630143042_database.cs          |  712 ------------
+ ...gner.cs => 20250702060108_database.Designer.cs} |    2 +-
+ ...3150_database.cs => 20250702060108_database.cs} |    0
+ .../Migrations/AppDbContextModelSnapshot.cs        |    3 +
+ .../Services/QuestionService.cs                    |    2 +-
+ .../src/components/Question/SubQuestionList.jsx    |  187 ----
+ .../src/pages/Consultant/QuestionManagement.jsx    |  263 +++--
+ .../src/pages/Question/Question.jsx                |   56 +-
+ .../src/pages/Question/SubQuestionList.jsx         |  111 +-
+ frontend/healthcaresystem/src/services/api.js      |   62 +-
+ 11 files changed, 321 insertions(+), 2225 deletions(-)
+
+commit fc6087b7152304053364a91658abfd82b70bca76
+Merge: 4ff74a3 50181fa
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 12:41:58 2025 +0700
+
+    Merge pull request #85 from nhm809/fe/feature/blog-post
+    
+    fix something
+
+commit 50181fa4b022505365c0030a9f3c774f1c02ac13
+Merge: 2f7ba3d 4ff74a3
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 12:41:50 2025 +0700
+
+    Merge branch 'develop' into fe/feature/blog-post
+
+commit 2f7ba3d47ee983243dea7db70548ef9c0ef5ebdc
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jul 2 12:38:48 2025 +0700
+
+    fix something
+
+ .../Migrations/20250630143042_database.Designer.cs | 1148 ++++++++++++++++++++
+ .../Migrations/20250630143042_database.cs          |  712 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1145 +++++++++++++++++++
+ 3 files changed, 3005 insertions(+)
+
+commit 007776d054f331fdaad65e7fe6947fc76b081006
+Merge: c859a42 4ff74a3
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Tue Jul 1 16:07:35 2025 +0700
+
+    Merge pull request #84 from nhm809/develop
+    
+    Develop
+
+commit 4ff74a31d33dc68b308a71ecfad9c5b3cdab941a
+Merge: bb32c55 daf7c7b
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Tue Jul 1 13:43:29 2025 +0700
+
+    cap nhap appointment
+
+commit bb32c55bab01129166b3dec191669fde57b21fa0
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Tue Jul 1 13:41:28 2025 +0700
+
+    cap nhap appointment voi cac chuc nang moi
+
+ .../Controllers/AppointmentController.cs           |  101 +-
+ .../DTOs/AppointmentCreateDTO.cs                   |    1 +
+ .../Interfaces/IAppointmentService.cs              |   71 +-
+ .../Entities/Appointment.cs                        |    2 +
+ .../Migrations/20250701063150_database.Designer.cs | 1151 ++++++++++++++++++++
+ .../Migrations/20250701063150_database.cs          |  713 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1148 +++++++++++++++++++
+ .../Services/AppointmentService.cs                 |   57 +-
+ 8 files changed, 3211 insertions(+), 33 deletions(-)
+
+commit daf7c7b303fb74f57dbd659825ec7c8987e5424f
+Merge: 09599b9 672b770
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 30 21:14:31 2025 +0700
+
+    Merge pull request #83 from nhm809/fe/feature/blog-post
+    
+    fix code question for love
+
+commit 672b770090408c740a9d56c6e7dc2ec0e77208b7
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 30 21:12:30 2025 +0700
+
+    fix code question for love
+
+ .../src/components/Question/SubQuestionList.jsx    |  17 +-
+ .../src/pages/Consultant/QuestionManagement.css    |  42 ++++
+ .../src/pages/Consultant/QuestionManagement.jsx    | 227 +++++++++++++++++----
+ .../src/pages/Question/SubQuestionList.jsx         |  17 +-
+ .../src/pages/TestSti/ConfirmTestModal.jsx         |   2 +-
+ frontend/healthcaresystem/src/services/api.js      |   1 +
+ 6 files changed, 252 insertions(+), 54 deletions(-)
+
+commit 09599b9b331f53c56d0c328b5d8e3740ad82a929
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 30 21:03:18 2025 +0700
+
+    Fixed bug
+
+ .../Controllers/QuestionController.cs                    |  4 ++--
+ .../Interfaces/IQuestionService.cs                       |  2 +-
+ .../Services/QuestionService.cs                          | 16 ++++++++--------
+ database/HealthcareSystemDb.sql                          |  3 ---
+ 4 files changed, 11 insertions(+), 14 deletions(-)
+
+commit 766a30d8e38bee26aba4ce84030b2a5248b3b93d
+Merge: b8c2bd4 a54626e
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 30 15:38:20 2025 +0700
+
+    Update QuestionThreadItem
+
+commit b8c2bd4cc3fb87404a883f64b32301329d0cd7da
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 30 15:37:14 2025 +0700
+
+    Update QuestionThreadItem
+
+ .../Controllers/QuestionThreadItemController.cs    |   15 +
+ .../DTOs/QuestionThreadItemDTO.cs                  |    1 +
+ .../Interfaces/IQuestionThreadItemService.cs       |    2 +
+ .../Entities/QuestionThreadItem.cs                 |    2 +
+ ...gner.cs => 20250630082511_database.Designer.cs} |    7 +-
+ ...028_dataabase.cs => 20250630082511_database.cs} |    3 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1146 ++++++++++++++++++++
+ .../Services/QuestionThreadItemService.cs          |   17 +-
+ .../data/AppDbContext.cs                           |    1 +
+ 9 files changed, 1190 insertions(+), 4 deletions(-)
+
+commit a54626efee7f28556c8259b0b65029517f44ae6e
+Merge: 5c07dec c859a42
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Mon Jun 30 11:26:39 2025 +0700
+
+    Merge pull request #82 from nhm809/blog-page
+    
+    Blog page
+
+commit c859a420c0aaebd40b181f89652e03b38c0e34f6
+Merge: c48f956 6114669
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 30 11:22:26 2025 +0700
+
+    pull code
+
+commit 61146697d621656191aa2c6094187c88119778d2
+Merge: ae402c5 5c07dec
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Mon Jun 30 11:17:50 2025 +0700
+
+    Merge pull request #81 from nhm809/develop
+    
+    Develop
+
+commit 5c07deccd444982f4e2a9b10802e0aa61f3e65cd
+Merge: 5c8d899 ae402c5
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Mon Jun 30 11:17:23 2025 +0700
+
+    Merge branch 'blog-page' into develop
+
+commit c48f9561d7a9dd05550936d8009be209edf4f28a
+Merge: 5f4a071 5c8d899
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 30 11:10:27 2025 +0700
+
+    merge to branch develop
+
+commit 5f4a07128849d5400943c10ce4d137af66854c9c
+Merge: 7c1ae49 e32af3b
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 30 10:58:59 2025 +0700
+
+    update booking appointment
+
+commit 5c8d899916d2d448c52f7a995a5eadcc0bd308e5
+Merge: e32af3b caeaa84
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 30 08:28:40 2025 +0700
+
+    Merge pull request #80 from nhm809/fe/feature/blog-post
+    
+    fix question test
+
+commit caeaa847a033362192aeaaf3aa43d10bb6a7131a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 30 08:27:53 2025 +0700
+
+    fix question test
+
+ ...gner.cs => 20250629075032_database.Designer.cs} |    2 +-
+ ...5119_database.cs => 20250629075032_database.cs} |    0
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1143 ++++++++++++++++++++
+ .../src/components/Header/Header.jsx               |    2 +-
+ .../src/components/Layout/StaffLayout.jsx          |  169 ++-
+ .../src/components/Question/SubQuestionList.jsx    |   28 +-
+ .../src/pages/Consultant/QuestionManagement.jsx    |    1 -
+ .../src/pages/Question/MyQuestions.jsx             |  114 ++
+ .../src/pages/Question/Question.jsx                |  101 +-
+ .../src/pages/Question/SubQuestionList.jsx         |   31 +-
+ .../src/pages/Staff/Appointments.jsx               |  190 ----
+ .../healthcaresystem/src/pages/Staff/Patients.jsx  |  179 ---
+ .../src/pages/Staff/StaffSchedule.css              |  178 +++
+ .../src/pages/Staff/StaffSchedule.jsx              |  604 +++++++++--
+ .../src/pages/TestHistory/TestHistory.jsx          |    4 +-
+ .../src/pages/TestSti/ConfirmTestModal.jsx         |    2 +-
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |   29 +-
+ frontend/healthcaresystem/src/routers/routers.jsx  |    4 +
+ frontend/healthcaresystem/src/services/api.js      |    1 +
+ 19 files changed, 2190 insertions(+), 592 deletions(-)
+
+commit 7c1ae4910e22e3eb2576e51a799be9dd4eb6266a
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 30 05:16:58 2025 +0700
+
+    Create notification for Apointment
+
+ .../Controllers/PaymentController.cs               | 47 +++++++++++--
+ .../Services/NotiService.cs                        |  2 +-
+ .../Services/PaypalService.cs                      | 28 ++++----
+ .../pages/Appointment/AppointmentResultHandler.jsx | 50 ++++++++++++++
+ .../src/pages/Appointment/BookingInformation.css   | 28 ++++++--
+ .../src/pages/Appointment/BookingInformation.jsx   | 77 +++++++++++++++++++---
+ frontend/healthcaresystem/src/routers/routers.jsx  | 14 ++--
+ frontend/healthcaresystem/src/services/api.js      |  6 +-
+ 8 files changed, 214 insertions(+), 38 deletions(-)
+
+commit e32af3b4ab1cc5199a003a60488142e241cea00e
+Merge: 5a9d7a4 a5ce1bf
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jun 27 13:26:20 2025 +0700
+
+    Merge pull request #79 from nhm809/be/feature/AssignTestServiceForStaff
+    
+    fix testService assignment by RoleStaff
+
+commit a5ce1bfc4cdd2f3c44139565e915e3356a041717
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jun 27 13:24:18 2025 +0700
+
+    fix testService assignment by RoleStaff
+
+ .../HealthcareSystem.Application/DTOs/ConsultantDetailDTO.cs |  2 ++
+ .../DTOs/WeeklyOverrideScheduleDTO.cs                        | 12 +++++++-----
+ .../HealthcareSystem.Application/DTOs/WeeklyScheduleDTO.cs   |  4 +++-
+ .../Services/ConsultantService.cs                            |  2 +-
+ .../Services/TestServiceRecordService.cs                     |  6 ++++--
+ database/HealthcareSystemDb.sql                              |  6 +++++-
+ 6 files changed, 22 insertions(+), 10 deletions(-)
+
+commit 5a9d7a4c03b87618ca0c377c7543210442092d00
+Merge: 799f7fc 32e4656
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 27 13:11:46 2025 +0700
+
+    Merge pull request #78 from nhm809/fe/feature/blog-post
+    
+    fix staff dashboard
+
+commit 32e4656c28377fbca5abc17a1e681665667ad27a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 27 13:10:31 2025 +0700
+
+    fix staff dashboard
+
+ ...gner.cs => 20250627045119_database.Designer.cs} |   4 +-
+ ...028_dataabase.cs => 20250627045119_database.cs} |   2 +-
+ .../src/components/Header/Header.jsx               | 206 ++++++++++++++++-----
+ .../AppointmentHistory/AppointmentHistory.css      |  26 +++
+ .../AppointmentHistory/AppointmentHistory.jsx      |  17 ++
+ .../src/pages/TestHistory/TestHistory.jsx          |  78 +++++++-
+ .../src/pages/TestSti/ConfirmTestModal.jsx         |  52 ++++--
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |  54 +++++-
+ frontend/healthcaresystem/src/routers/routers.jsx  |   4 +
+ 9 files changed, 370 insertions(+), 73 deletions(-)
+
+commit 799f7fc160ae84489da567c40f95a4d0ee8bbef0
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 27 11:50:54 2025 +0700
+
+    Upgrade QuestionService1
+
+ .../Controllers/QuestionController.cs              | 30 ++++++++++++++
+ .../Interfaces/IQuestionService.cs                 |  2 +
+ .../Services/QuestionService.cs                    | 47 ++++++++++++++++++++++
+ 3 files changed, 79 insertions(+)
+
+commit fc563d36e5bc8a01b820495dd6618d4151702874
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 27 11:46:38 2025 +0700
+
+    Upgrade QuestionService
+
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1143 --------------------
+ .../Services/QuestionService.cs                    |    3 +-
+ 2 files changed, 2 insertions(+), 1144 deletions(-)
+
+commit 2bb76cdb20961e96b30ec4f716c9a4f34b368d07
+Merge: 86a27ef 56f9172
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 27 00:12:35 2025 +0700
+
+    Merge pull request #77 from nhm809/fe/feature/blog-post
+    
+    code test history
+
+commit 56f91728c80b2736452af7ae4e7d9917c352e4f8
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 27 00:11:35 2025 +0700
+
+    code test history
+
+ .../Migrations/20250626055748_database.Designer.cs | 1146 --------------------
+ .../Migrations/20250626081535_database.cs          |  711 ------------
+ ...ner.cs => 20250626083028_dataabase.Designer.cs} |    4 +-
+ ...748_database.cs => 20250626083028_dataabase.cs} |    2 +-
+ .../src/components/Question/SubQuestionList.jsx    |    3 +-
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |  102 --
+ .../src/pages/TestHistory/TestHistory.css          |   10 +-
+ .../src/pages/TestHistory/TestHistory.jsx          |  245 +++--
+ frontend/healthcaresystem/src/services/api.js      |    7 +
+ 9 files changed, 185 insertions(+), 2045 deletions(-)
+
+commit 86a27ef63769602baaa0105f06ca3e4ea0cd1c4d
+Merge: ce3599c bccdb3b
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 15:24:59 2025 +0700
+
+    Merge pull request #76 from nhm809/be/feature/sendOTP
+    
+    OTP Done
+
+commit bccdb3bcacaa5b6a5a7ab3207985a72602997bb3
+Merge: 9e8eacb ce3599c
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 15:24:51 2025 +0700
+
+    Merge branch 'develop' into be/feature/sendOTP
+
+commit 9e8eacba99278c0bb5c759ddfdbb714d1f92f8e3
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 15:23:23 2025 +0700
+
+    OTP Done
+
+ .../Controllers/OTPRequestController.cs            |   49 +
+ .../Controllers/QuestionThreadItemController.cs    |   16 +
+ .../HealthcareSystem.API.csproj                    |    1 +
+ backend/HealthcareSystem.API/Program.cs            |    1 +
+ backend/HealthcareSystem.API/appsettings.json      |    8 +
+ .../DTOs/OTPRequestDTO.cs                          |   23 +
+ .../DTOs/TestServiceRecordDetailDTO.cs             |    2 +-
+ .../DTOs/VerifyOtpDTO.cs                           |    9 +
+ .../Interfaces/IOTPRequestService.cs               |    9 +
+ .../Interfaces/IQuestionThreadItemService.cs       |    2 +-
+ .../HealthcareSystem.Domain/Entities/Otprequest.cs |    4 +-
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    2 +-
+ .../HealthcareSystem.Infrastructure.csproj         |    1 +
+ .../Migrations/20250625144505_database.Designer.cs | 1157 --------------------
+ .../Migrations/20250625144505_database.cs          |  713 ------------
+ ...eAndEndTimeInWeeklyOverrideSchedule.Designer.cs | 1148 -------------------
+ ...eStartTimeAndEndTimeInWeeklyOverrideSchedule.cs |   39 -
+ ...gner.cs => 20250626081535_database.Designer.cs} |   27 +-
+ ...InitialCreate.cs => 20250626081535_database.cs} |    4 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |   14 +-
+ .../Services/ConsultantService.cs                  |   48 +-
+ .../Services/OTPRequestService.cs                  |   78 ++
+ .../Services/QuestionThreadItemService.cs          |   26 +
+ .../data/AppDbContext.cs                           |   10 +-
+ database/Email.txt                                 |    3 +
+ database/HealthcareSystemDb.sql                    |    2 +-
+ 26 files changed, 275 insertions(+), 3121 deletions(-)
+
+commit ae402c5d5c14c515334bc9c320d32f730e9111f5
+Merge: e3d5c5f 66623b0
+Author: danghai-07 <pndanghai@gmail.com>
+Date:   Thu Jun 26 14:46:12 2025 +0700
+
+    Merge branch 'main' into blog-page
+
+commit e3d5c5f7d56de69aef7ec5a6dfd598ef22ee1f9f
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 26 14:40:00 2025 +0700
+
+    Fix booking appointment
+
+ .../20250625125157_InitialCreate.Designer.cs       | 1157 --------------------
+ .../Migrations/20250625125157_InitialCreate.cs     |  713 ------------
+ .../Migrations/20250625144505_database.Designer.cs | 1157 --------------------
+ .../Migrations/20250625144505_database.cs          |  713 ------------
+ ...eAndEndTimeInWeeklyOverrideSchedule.Designer.cs | 1148 -------------------
+ ...eStartTimeAndEndTimeInWeeklyOverrideSchedule.cs |   39 -
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1143 -------------------
+ .../Services/ConsultantService.cs                  |   48 +-
+ database/HealthcareSystemDb.sql                    |    2 +-
+ .../pages/Appointment/ConfirmAppointmentModal.jsx  |    4 +-
+ .../src/pages/Appointment/ConsultantsList.jsx      |    2 +-
+ 11 files changed, 28 insertions(+), 6098 deletions(-)
+
+commit ce3599ce36ded22731bc759fd8d91c4a4324abbc
+Merge: a64f4db 7011878
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 26 14:36:41 2025 +0700
+
+    Merge pull request #74 from nhm809/fe/feature/blog-post
+    
+    fix blog, fix quesition
+
+commit 70118787ccebeede981e4955729174e0d8c39a2a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 26 14:35:41 2025 +0700
+
+    fix blog, fix quesition
+
+ .../Migrations/20250625144505_database.Designer.cs | 1157 --------------------
+ .../Migrations/20250625144505_database.cs          |  713 ------------
+ ...eAndEndTimeInWeeklyOverrideSchedule.Designer.cs | 1148 -------------------
+ ...eStartTimeAndEndTimeInWeeklyOverrideSchedule.cs |   39 -
+ ...gner.cs => 20250626055748_database.Designer.cs} |   13 +-
+ ...InitialCreate.cs => 20250626055748_database.cs} |    4 +-
+ .../Services/BlogManageService.cs                  |    3 +-
+ .../Services/ConsultantService.cs                  |   48 +-
+ database/HealthcareSystemDb.sql                    |    2 +-
+ .../src/components/Question/SubQuestionList.jsx    |  179 +++
+ .../healthcaresystem/src/pages/Blog/BlogDetail.jsx |    2 +-
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   |    6 +-
+ .../src/pages/Consultant/QuestionManagement.jsx    |  102 +-
+ .../src/pages/Question/Question.jsx                |  206 +---
+ .../src/pages/Question/SubQuestionList.jsx         |  180 +++
+ 15 files changed, 418 insertions(+), 3384 deletions(-)
+
+commit 7d78a512b4c78adc85784712dcd766948bc5201f
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 26 13:48:08 2025 +0700
+
+    pull new code
+
+ .../Services/ConsultantService.cs                  | 48 +++++++++++-----------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+commit a64f4dbf893c71b8efd2b28f861e5bf47a0d359c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 08:15:36 2025 +0700
+
+    Change to VietNamese
+
+ .../HealthcareSystem.Infrastructure/Services/QuestionService.cs   | 8 ++++----
+ .../Services/QuestionThreadItemService.cs                         | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 602ebdb242a15498c27415214411cad4019c764a
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 05:50:56 2025 +0700
+
+    edit database
+
+ database/CreateDatabaseAndInsert.sql | 558 -----------------------------------
+ database/DbText.txt                  |   2 +-
+ database/ERD_DBdiagram.sql           | 315 --------------------
+ 3 files changed, 1 insertion(+), 874 deletions(-)
+
+commit 0456b59547cdc2ad5e34b5f307aa23ef002b4454
+Merge: 02616a4 08c22ed
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 05:46:44 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit 02616a46b8b85a39f8e84998ccda0317f4044b52
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 26 05:46:30 2025 +0700
+
+    Fix Subquestion
+
+ .../Controllers/QuestionThreadItemController.cs    |  4 +--
+ .../DTOs/QuestionThreadItemDTO.cs                  |  1 +
+ .../Services/QuestionThreadItemService.cs          | 31 +++++++++++++++++++---
+ 3 files changed, 30 insertions(+), 6 deletions(-)
+
+commit 08c22edf9a5f2ea8b58b7d5d96645bc73869ed1d
+Merge: 20ec1ca 15537e7
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 26 04:25:47 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit 20ec1ca5b07a807d268717074d2f36bd16b8f839
+Merge: e5c7532 0803401
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 26 04:20:24 2025 +0700
+
+    Develop feature booking apointment
+
+commit 15537e7ab94669385301124d01dd351cc507dffe
+Merge: 32f213d 4672074
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jun 26 00:57:09 2025 +0700
+
+    Merge pull request #73 from nhm809/be/feature/autoAssignmentTestServiceForStaff
+    
+    add API TestServiceRecord Detail
+
+commit 4672074dadb06bc0549d68a825b2870a2a8e6472
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jun 26 00:54:09 2025 +0700
+
+    add API TestServiceRecord Detail
+
+ .../DTOs/TestServiceRecordDetailDTO.cs                            | 6 ++++++
+ .../Services/TestServiceRecordService.cs                          | 8 ++++++++
+ 2 files changed, 14 insertions(+)
+
+commit 32f213d5a6cbfd21d8902a3d00212f24ae2bc1a6
+Merge: 73e2dcf bba603e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 26 00:27:09 2025 +0700
+
+    Merge pull request #70 from nhm809/fe/feature/question
+    
+    fix test service and blog
+
+commit bba603ed2806c1016c8dfc6554eac8bd8728bbcd
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 26 00:22:17 2025 +0700
+
+    fix test service and blog
+
+ .../Controllers/ConsultantBlogController.cs        |   14 +-
+ .../Interfaces/IBlogManageService.cs               |    3 +-
+ .../Migrations/20250624073146_database.Designer.cs | 1147 --------------------
+ .../Migrations/20250624073146_database.cs          |  718 ------------
+ ...gner.cs => 20250625144505_database.Designer.cs} |    2 +-
+ ...2853_database.cs => 20250625144505_database.cs} |    0
+ .../Services/BlogManageService.cs                  |   42 +-
+ .../Services/BlogService.cs                        |   70 +-
+ .../src/components/Header/Header.jsx               |   22 +
+ .../src/components/Layout/ConsultantLayout.jsx     |   20 +-
+ .../src/pages/Consultant/BlogManagement.jsx        |  197 +++-
+ .../src/pages/TestHistory/TestHistory.css          |  119 ++
+ .../src/pages/TestHistory/TestHistory.jsx          |  272 +++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |    4 +
+ frontend/healthcaresystem/src/services/api.js      |    6 +
+ 15 files changed, 669 insertions(+), 1967 deletions(-)
+
+commit 73e2dcfa5811e3298730650c4eb1567ae51eb771
+Merge: 60dce8d a5701a5
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jun 26 00:02:48 2025 +0700
+
+    Merge pull request #69 from nhm809/be/feature/autoAssignmentTestServiceForStaff
+    
+    Assignment testService  for Staff
+
+commit a5701a5f1e31b600b391649c5acc7b177860bb20
+Merge: bb79080 60dce8d
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Thu Jun 26 00:02:39 2025 +0700
+
+    Merge branch 'develop' into be/feature/autoAssignmentTestServiceForStaff
+
+commit bb7908014c703cb89ab9f4f8eef0e7144c279d8b
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Wed Jun 25 23:58:04 2025 +0700
+
+    Assignment testService  for Staff
+
+ .../Controllers/TestServiceRecordController.cs     |    6 +-
+ .../DTOs/WeeklyOverrideScheduleDTO.cs              |    2 -
+ .../Interfaces/ITestServiceRecord.cs               |    3 +-
+ .../Entities/WeeklyOverrideSchedule.cs             |    4 -
+ ...eAndEndTimeInWeeklyOverrideSchedule.Designer.cs | 1148 ++++++++++++++++++++
+ ...eStartTimeAndEndTimeInWeeklyOverrideSchedule.cs |   39 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    6 -
+ .../Services/ConsultantService.cs                  |    3 +-
+ .../Services/PaypalService.cs                      |    9 +-
+ .../Services/TestServiceRecordService.cs           |  274 +++--
+ database/CreateDatabaseAndInsert.sql               |   51 +-
+ database/HealthcareSystemDb.sql                    |   69 +-
+ 12 files changed, 1420 insertions(+), 194 deletions(-)
+
+commit 60dce8d0476086950e9f8c42f23aa77c50155b64
+Merge: 0803401 a8b8c19
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 25 21:37:07 2025 +0700
+
+    Merge pull request #68 from nhm809/fe/feature/question
+    
+    fix question and blog function
+
+commit a8b8c195a43d18fe9d50e646e070bce40b1202be
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 25 21:34:05 2025 +0700
+
+    fix question and blog function
+
+ .../Migrations/20250624073146_database.Designer.cs | 1147 ++++++++++++++++++++
+ .../Migrations/20250624073146_database.cs          |  718 ++++++++++++
+ .../src/components/Layout/ConsultantLayout.jsx     |    4 +-
+ .../healthcaresystem/src/pages/Blog/BlogDetail.jsx |    3 +-
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   |    8 +-
+ .../src/pages/Consultant/BlogManagement.jsx        |  502 +++++++++
+ frontend/healthcaresystem/src/services/api.js      |    7 +
+ 7 files changed, 2382 insertions(+), 7 deletions(-)
+
+commit e5c753294ecf068fd29596b1fad05f458444d059
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Wed Jun 25 19:24:19 2025 +0700
+
+    get new api
+
+ .../20250617064531_TimeSlotColumn.Designer.cs      | 1077 -------------------
+ .../Migrations/20250617064531_TimeSlotColumn.cs    |   29 -
+ .../20250617085719_IsAvailableColumn.Designer.cs   | 1080 --------------------
+ .../Migrations/20250617085719_IsAvailableColumn.cs |   29 -
+ ...gner.cs => 20250623070005_database.Designer.cs} |   10 +-
+ ...3704_database.cs => 20250623070005_database.cs} |    4 +-
+ .../src/pages/Appointment/BookingConfirmation.jsx  |  162 ++-
+ .../src/pages/Appointment/ConsultantDetail.css     |    6 +
+ .../src/pages/Appointment/ConsultantDetail.jsx     |   64 +-
+ .../src/pages/Appointment/ConsultantsList.jsx      |   31 +-
+ .../pages/ReproductiveCycle/ReproductiveCycle.jsx  |    3 -
+ frontend/healthcaresystem/src/routers/routers.jsx  |    2 +-
+ 12 files changed, 202 insertions(+), 2295 deletions(-)
+
+commit 0803401b9e62c854978bbefa5eeb14eb8b9ababd
+Merge: a85eac7 63bc315
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 25 18:51:42 2025 +0700
+
+    Merge pull request #67 from nhm809/be/feature/SubQuestion
+    
+    Update SubQuestion
+
+commit 63bc315b64c809707847104f115f75502991e0c8
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 25 18:50:02 2025 +0700
+
+    Update SubQuestion
+
+ .../Controllers/MessageController.cs               |  50 -----
+ .../Controllers/QuestionThreadItemController.cs    |  48 +++++
+ .../Controllers/ReproductiveCycleController.cs     |   2 +-
+ backend/HealthcareSystem.API/Program.cs            |   2 +-
+ .../DTOs/MessageDTO.cs                             |  13 --
+ .../DTOs/QuestionThreadItemDTO.cs                  |  16 ++
+ ...ageService.cs => IQuestionThreadItemService.cs} |   6 +-
+ .../HealthcareSystem.Domain/Entities/Message.cs    |  22 ---
+ .../HealthcareSystem.Domain/Entities/Question.cs   |   2 +-
+ .../Entities/QuestionThreadItem.cs                 |  24 +++
+ backend/HealthcareSystem.Domain/Entities/User.cs   |   2 -
+ ...gner.cs => 20250625112853_database.Designer.cs} | 103 +++++------
+ ...1818_database.cs => 20250625112853_database.cs} |  42 ++---
+ .../Migrations/AppDbContextModelSnapshot.cs        | 101 +++++-----
+ .../Services/MessageService.cs                     |  54 ------
+ .../Services/QuestionService.cs                    |  56 ++++--
+ .../Services/QuestionThreadItemService.cs          |  56 ++++++
+ .../data/AppDbContext.cs                           |  25 +--
+ database/HealthcareSystemDb.sql                    | 204 +++++++++++----------
+ 19 files changed, 425 insertions(+), 403 deletions(-)
+
+commit a85eac772063600d2d185f65a3d9bba420ecaf91
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Wed Jun 25 15:46:49 2025 +0700
+
+    hien lich cua consultant
+
+ .../Controllers/ConsultantController.cs            | 17 +++++++
+ .../DTOs/FreeSlotDTO.cs                            | 11 +++++
+ .../Interfaces/IConsultantService.cs               |  2 +
+ .../Services/ConsultantService.cs                  | 53 ++++++++++++++++++++++
+ 4 files changed, 83 insertions(+)
+
+commit 4e619013a8406fbe0812e37951fd540551271b78
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Tue Jun 24 23:33:50 2025 +0700
+
+    Thêm mô tả blog vào API chi tiết và cập nhật DTO
+
+ .../Controllers/BlogController.cs                  |    4 +-
+ .../DTOs/BlogContentDTO.cs                         |    3 +-
+ .../Interfaces/IBlogService.cs                     |    4 +-
+ backend/HealthcareSystem.Domain/Entities/Blog.cs   |    3 +
+ .../Migrations/20250622145136_database.Designer.cs | 1105 -------------------
+ ...0623065231_UpdateStatusToNvarchar50.Designer.cs | 1080 ------------------
+ .../20250623065231_UpdateStatusToNvarchar50.cs     |   44 -
+ ...59_WeeklyScheduleAndOverideSchedule.Designer.cs | 1080 ------------------
+ ...50623164459_WeeklyScheduleAndOverideSchedule.cs |   22 -
+ ...ddWeeklyScheduleAndOverrideSchedule.Designer.cs | 1165 --------------------
+ ...3165134_AddWeeklyScheduleAndOverrideSchedule.cs |  202 ----
+ ...veWorkScheduleAndAddWeeklySchedules.Designer.cs | 1125 -------------------
+ ...5339_RemoveWorkScheduleAndAddWeeklySchedules.cs |   50 -
+ ...20250624072030_updateWeeklySchedule.Designer.cs | 1122 -------------------
+ .../20250624072030_updateWeeklySchedule.cs         |   38 -
+ ...pePropertyForWeeklyOverrideSchedule.Designer.cs | 1150 -------------------
+ ...1_ShiftTypePropertyForWeeklyOverrideSchedule.cs |   29 -
+ .../Migrations/20250624142216_AddStatusColumn.cs   |   47 -
+ ...gner.cs => 20250624161818_database.Designer.cs} |    7 +-
+ ...5136_database.cs => 20250624161818_database.cs} |   72 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |    3 +
+ .../Services/BlogService.cs                        |   10 +-
+ database/CreateDatabaseAndInsert.sql               |   12 +-
+ 23 files changed, 83 insertions(+), 8294 deletions(-)
+
+commit 9c17a20e8a9fe3f93d6718b3a613efaf3c7038be
+Merge: bd26d66 3cd7936
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 21:31:35 2025 +0700
+
+    Merge pull request #66 from nhm809/be/feature/configDatabase
+    
+    add Status column for WeeklyOverrideSchedule table
+
+commit 3cd7936d73eb2c233a79f237f25a9ab6e9ae8efd
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 21:28:23 2025 +0700
+
+    add Status column for WeeklyOverrideSchedule table
+
+ .../Controllers/TestServiceRecordController.cs     |   35 +
+ .../DTOs/WeeklyOverrideScheduleDTO.cs              |    2 +
+ .../DTOs/WeeklyScheduleDTO.cs                      |    2 +-
+ .../DTOs/WorkShiftDTO.cs                           |    8 +-
+ .../Interfaces/ITestServiceRecord.cs               |    1 +
+ .../Entities/WeeklyOverrideSchedule.cs             |    4 +
+ ...pePropertyForWeeklyOverrideSchedule.Designer.cs | 1150 +++++++++++++++++++
+ ...1_ShiftTypePropertyForWeeklyOverrideSchedule.cs |   29 +
+ .../20250624142216_AddStatusColumn.Designer.cs     | 1154 ++++++++++++++++++++
+ .../Migrations/20250624142216_AddStatusColumn.cs   |   47 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    7 +
+ .../Services/TestServiceRecordService.cs           |  258 +++--
+ database/CreateDatabaseAndInsert.sql               |    6 +-
+ 13 files changed, 2608 insertions(+), 95 deletions(-)
+
+commit bd26d6675d032cd73fb65295e2a1e07a73647efd
+Merge: cab8b82 a0ba817
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 14:28:30 2025 +0700
+
+    Merge pull request #65 from nhm809/be/feature/addTwoScheduleTable
+    
+    insert database
+
+commit a0ba8170946be9c3af10777c802743d5e5ed6039
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 14:24:46 2025 +0700
+
+    insert database
+
+ .../DTOs/WeeklyScheduleDTO.cs                      |    1 +
+ .../Entities/WeeklySchedule.cs                     |    3 +-
+ ...20250624072030_updateWeeklySchedule.Designer.cs | 1122 ++++++++++++++++++++
+ .../20250624072030_updateWeeklySchedule.cs         |   38 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    5 +-
+ .../Services/TestServiceRecordService.cs           |   57 +-
+ database/CreateDatabaseAndInsert.sql               |   69 +-
+ 7 files changed, 1263 insertions(+), 32 deletions(-)
+
+commit cab8b822a180e4b63f7ae17142271d48b02675da
+Merge: 3e4fd86 fcd3b64
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 13:59:47 2025 +0700
+
+    Merge pull request #64 from nhm809/be/feature/addTwoScheduleTable
+    
+    Delete WorkSchedule and Add WeeklySchedulenavigation to User
+
+commit fcd3b644a15f333d0c1c70ac6edffcf897ca1219
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 13:57:52 2025 +0700
+
+    Delete WorkSchedule and Add WeeklySchedulenavigation to User
+
+ .../Controllers/ConsultantController.cs            |    2 +-
+ .../DTOs/ConsultantDetailDTO.cs                    |    3 +-
+ .../DTOs/WeeklyOverrideScheduleDTO.cs              |   13 +
+ .../DTOs/WeeklyScheduleDTO.cs                      |   12 +
+ .../DTOs/WorkScheduleDTO.cs                        |   11 -
+ .../Interfaces/IConsultantService.cs               |    2 +-
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    6 +-
+ .../Entities/WorkSchedule.cs                       |   25 -
+ ...veWorkScheduleAndAddWeeklySchedules.Designer.cs | 1125 ++++++++++++++++++++
+ ...5339_RemoveWorkScheduleAndAddWeeklySchedules.cs |   50 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |   50 +-
+ .../Services/ConsultantService.cs                  |   25 +-
+ .../data/AppDbContext.cs                           |    2 +-
+ 13 files changed, 1233 insertions(+), 93 deletions(-)
+
+commit 3e4fd867109fa56b0739e6bddca10740ebafecd3
+Merge: ff11a17 ce23aa9
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 24 13:35:54 2025 +0700
+
+    Merge pull request #63 from nhm809/fe/feature/question
+    
+    fix consultant dashboard
+
+commit ce23aa920d681e98e3774c7e384bb6d6ee9ad324
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 24 13:34:14 2025 +0700
+
+    fix consultant dashboard
+
+ .../20250617064531_TimeSlotColumn.Designer.cs      | 1077 -------------------
+ .../Migrations/20250617064531_TimeSlotColumn.cs    |   29 -
+ .../20250617085719_IsAvailableColumn.Designer.cs   | 1080 --------------------
+ .../Migrations/20250617085719_IsAvailableColumn.cs |   29 -
+ ...gner.cs => 20250622145136_database.Designer.cs} |   10 +-
+ ...3704_database.cs => 20250622145136_database.cs} |    4 +-
+ database/HealthcareSystemDb.sql                    |   18 +-
+ frontend/healthcaresystem/src/assets/imgs/logo.png |  Bin 0 -> 668861 bytes
+ .../src/components/Header/Header.css               |    5 +-
+ .../src/components/Header/Header.jsx               |    5 +-
+ .../src/components/Layout/StaffLayout.jsx          |   19 +-
+ frontend/healthcaresystem/src/pages/Home/Home.jsx  |    6 +-
+ .../healthcaresystem/src/pages/Profile/Profile.css |   69 ++
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |  126 ++-
+ .../src/pages/Staff/StaffSchedule.jsx              |   14 +-
+ .../src/pages/TestSti/ConfirmTestModal.jsx         |   18 +-
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |   73 +-
+ frontend/healthcaresystem/src/services/api.js      |    9 +-
+ 18 files changed, 321 insertions(+), 2270 deletions(-)
+
+commit ff11a171fff38653d7d40ca628b8b429725f09af
+Merge: 81a92a7 5ca6e92
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 00:01:57 2025 +0700
+
+    Merge pull request #62 from nhm809/be/feature/addTwoScheduleTable
+    
+    add new table WeeklySchedule and WeeklyOverrideSchedule
+
+commit 5ca6e92710310f3b66d9a111714a8c0a2481e385
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 24 00:00:05 2025 +0700
+
+    add new table WeeklySchedule and WeeklyOverrideSchedule
+
+ .../DTOs/BookTestServiceRecordDTO.cs               |    2 +-
+ .../Entities/TestServiceRecord.cs                  |    1 +
+ .../Entities/WeeklyOverrideSchedule.cs             |   19 +
+ .../Entities/WeeklySchedule.cs                     |   20 +
+ .../Entities/WorkSchedule.cs                       |    2 +-
+ ...0623065231_UpdateStatusToNvarchar50.Designer.cs | 1080 ++++++++++++++++++
+ .../20250623065231_UpdateStatusToNvarchar50.cs     |   44 +
+ ...59_WeeklyScheduleAndOverideSchedule.Designer.cs | 1080 ++++++++++++++++++
+ ...50623164459_WeeklyScheduleAndOverideSchedule.cs |   22 +
+ ...ddWeeklyScheduleAndOverrideSchedule.Designer.cs | 1165 ++++++++++++++++++++
+ ...3165134_AddWeeklyScheduleAndOverrideSchedule.cs |  202 ++++
+ .../Migrations/AppDbContextModelSnapshot.cs        |  113 +-
+ .../Services/TestServiceRecordService.cs           |   73 +-
+ .../data/AppDbContext.cs                           |   28 +-
+ 14 files changed, 3779 insertions(+), 72 deletions(-)
+
+commit 84d4d6ddfb73f09b78493a0151764278f486a16c
+Merge: fa9e316 81a92a7
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 23 13:53:40 2025 +0700
+
+    Merge branch 'main' of https://github.com/nhm809/HealthcareSystem into blog-page
+
+commit fa9e3165a19d866d27f95c7010af9a428da2dec7
+Merge: 00695ff 7a5ce60
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 23 13:50:54 2025 +0700
+
+    Develop feature ReproductiveCycle and Appointment
+
+commit 81a92a75cb36aabcb5fb7c2dcddb3312b63ba9cd
+Merge: 3075548 4eb4edf
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 22 15:36:06 2025 +0700
+
+    Merge pull request #61 from nhm809/fe/feature/question
+    
+    Consultant can answer the question, fix display the count of message …
+
+commit 4eb4edf011acb26549cab7c8ed6fa7bdc5f2f8f6
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 22 15:35:18 2025 +0700
+
+    Consultant can answer the question, fix display the count of message and heart
+
+ .../Services/QuestionService.cs                    |   4 +-
+ frontend/healthcaresystem/package-lock.json        |   1 +
+ frontend/healthcaresystem/package.json             |   1 +
+ .../src/pages/Consultant/QuestionManagement.jsx    | 233 ++++++++++++++-
+ .../src/pages/Question/Question.jsx                | 311 ++++++++++++++++-----
+ frontend/healthcaresystem/src/routers/routers.jsx  |   2 +-
+ frontend/healthcaresystem/src/services/api.js      |   1 +
+ 7 files changed, 464 insertions(+), 89 deletions(-)
+
+commit 307554896daddb57a723bc25bc08299a9e70a0f6
+Merge: 65f7fde 5c06fa8
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 22 12:21:12 2025 +0700
+
+    Merge pull request #60 from nhm809/be/feature/assignmentTestServiceRecordForStaff
+    
+    assignment testservice for Staff ver 1
+
+commit 5c06fa82800f207b3c7c3fe2bb73037ff4b17f7d
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 22 12:19:29 2025 +0700
+
+    assignment testservice for Staff ver 1
+
+ .../Controllers/TestServiceRecordController.cs     |   85 +-
+ .../HealthcareSystem.API.csproj                    |    8 +-
+ backend/HealthcareSystem.API/Program.cs            |    3 +
+ .../DTOs/BookTestServiceRecordDTO.cs               |    9 +-
+ .../DTOs/WorkShiftDTO.cs                           |   14 +
+ .../HealthcareSystem.Application.csproj            |    1 +
+ .../Interfaces/ITestServiceRecord.cs               |    9 +-
+ .../Entities/TestServiceRecord.cs                  |    4 +
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    2 +
+ .../HealthcareSystem.Domain.csproj                 |    4 +
+ .../BackgroundServices/StaffAssignmentService.cs   |  173 ++++
+ .../HealthcareSystem.Infrastructure.csproj         |   21 +-
+ .../20250617064531_TimeSlotColumn.Designer.cs      | 1077 +++++++++++++++++++
+ .../Migrations/20250617064531_TimeSlotColumn.cs    |   29 +
+ .../20250617085719_IsAvailableColumn.Designer.cs   | 1080 ++++++++++++++++++++
+ .../Migrations/20250617085719_IsAvailableColumn.cs |   29 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    8 +-
+ .../Services/TestServiceRecordService.cs           |  177 +++-
+ database/CreateDatabaseAndInsert.sql               |   17 +-
+ 19 files changed, 2655 insertions(+), 95 deletions(-)
+
+commit 66623b0620d2d33ed2c6e8a289729ee16eda590f
+Merge: f44395e bb6739f
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 20 19:26:09 2025 +0700
+
+    Merge pull request #59 from nhm809/be/feature/QuesAndNoti
+    
+    Be/feature/ques and noti
+
+commit bb6739f5953a4301693661a6295003b297ebcae7
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 20 19:19:32 2025 +0700
+
+    Update Question and Noti
+
+ .../Controllers/QuestionController.cs              |   38 +-
+ .../DTOs/QuestionDTO.cs                            |    2 +-
+ .../Interfaces/IQuestionService.cs                 |    4 +-
+ .../HealthcareSystem.Domain/Entities/Question.cs   |    2 +-
+ .../Migrations/20250620121405_database.Designer.cs | 1098 ++++++++++++++++++++
+ .../Migrations/20250620121405_database.cs          |  683 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1095 +++++++++++++++++++
+ .../Services/QuestionService.cs                    |   76 +-
+ .../data/AppDbContext.cs                           |    2 +-
+ database/HealthcareSystemDb.sql                    |    4 +-
+ 10 files changed, 2988 insertions(+), 16 deletions(-)
+
+commit 65f7fde9259fe5f7609dd139fcd96b061118a157
+Merge: d8a718c 76a2d7c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 20 18:42:11 2025 +0700
+
+    Merge pull request #58 from nhm809/fe/feature/question
+    
+    fix show image for question, fix send question with specility, fix da…
+
+commit 76a2d7c87d13828e62d89f21d121e2e84dcaa14e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 20 18:41:23 2025 +0700
+
+    fix show image for question, fix send question with specility, fix dashboard consultant
+
+ .../Migrations/20250620093704_database.Designer.cs | 1099 ++++++++++++++++++++
+ .../Migrations/20250620093704_database.cs          |  683 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1096 +++++++++++++++++++
+ .../src/components/Layout/ConsultantLayout.jsx     |  133 ++-
+ .../src/pages/Consultant/QuestionManagement.jsx    |  233 +++++
+ .../src/pages/Question/Question.jsx                |   97 +-
+ frontend/healthcaresystem/src/services/api.js      |    4 +
+ 7 files changed, 3297 insertions(+), 48 deletions(-)
+
+commit d8a718c72880224b20aaf023c963fb840ed1e7da
+Merge: a013888 10891e5
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 19 23:35:35 2025 +0700
+
+    Change Question DB
+
+commit a0138882c265b32a5fa6fc5e0a7ac058a7a82cc6
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 19 23:33:10 2025 +0700
+
+    Change Question DB
+
+ .../Controllers/SpecialtyController.cs             | 120 +++++++++++++++++++++
+ backend/HealthcareSystem.API/Program.cs            |   1 +
+ .../DTOs/QuestionDTO.cs                            |   2 +-
+ .../DTOs/SpecialtyDTO.cs                           |   5 +-
+ .../Interfaces/ISpecialtyService.cs                |  16 +++
+ .../HealthcareSystem.Domain/Entities/Question.cs   |   4 +-
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |   2 +
+ ...gner.cs => 20250619162955_database.Designer.cs} |  21 +++-
+ ...3559_database.cs => 20250619162955_database.cs} |  16 ++-
+ .../Migrations/AppDbContextModelSnapshot.cs        |  19 +++-
+ .../Services/QuestionService.cs                    |  16 +--
+ .../Services/SpecialtyService.cs                   |  77 +++++++++++++
+ .../data/AppDbContext.cs                           |   2 +-
+ database/HealthcareSystemDb.sql                    |   4 +-
+ 14 files changed, 280 insertions(+), 25 deletions(-)
+
+commit 10891e5419f3aeb405b31ff6f2a61494dedbc887
+Merge: 3ca5c60 6eb3884
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 19 17:15:47 2025 +0700
+
+    Merge pull request #57 from nhm809/fe/feature/question
+    
+    Member can answer consultant
+
+commit 6eb388495a46ef00fbe85f5edabd04136224828e
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 19 17:14:42 2025 +0700
+
+    Member can answer consultant
+
+ ...gner.cs => 20250619084724_database.Designer.cs} |   2 +-
+ ...3559_database.cs => 20250619084724_database.cs} |   0
+ .../src/pages/Question/Question.jsx                | 238 +++++++++++++++++++--
+ frontend/healthcaresystem/src/services/api.js      |   6 +
+ 4 files changed, 223 insertions(+), 23 deletions(-)
+
+commit 3ca5c60a626864a443f991f2383fae8a8e2d41d5
+Merge: 59ecdff f57648a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 18 16:26:42 2025 +0700
+
+    Merge pull request #56 from nhm809/fe/feature/question
+    
+    Fe/feature/question
+
+commit f57648a45fc1ce0fee349cb565f5bfb55fccf884
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 18 16:25:11 2025 +0700
+
+    fix question
+
+ .../src/pages/Question/Question.jsx                | 148 +++++++++++++++------
+ 1 file changed, 108 insertions(+), 40 deletions(-)
+
+commit 59ecdff3abe6b5937f4feb2b121570ef2db633a3
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 18 08:41:05 2025 +0700
+
+    Update Question and Message
+
+ .../Controllers/QuestionController.cs              | 30 ++++++++++++++
+ .../DTOs/QuestionDTO.cs                            |  6 +++
+ .../Interfaces/IQuestionService.cs                 |  2 +
+ .../HealthcareSystem.Domain/Entities/Question.cs   |  4 ++
+ ...gner.cs => 20250617113559_database.Designer.cs} |  8 +++-
+ ...3759_database.cs => 20250617113559_database.cs} |  4 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |  6 +++
+ .../Services/MessageService.cs                     |  6 +++
+ .../Services/QuestionService.cs                    | 48 ++++++++++++++++++++--
+ database/HealthcareSystemDb.sql                    |  6 ++-
+ 10 files changed, 113 insertions(+), 7 deletions(-)
+
+commit 55684b69a4908e4d087b0f649bec08fff3175c44
+Merge: 1b81241 eed0278
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 17 16:02:45 2025 +0700
+
+    Merge pull request #55 from nhm809/fe/feature/book-test-service
+    
+    fix code for question
+
+commit eed0278d84934f0abe2fdc88ba023e83e117b058
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 17 16:01:41 2025 +0700
+
+    fix code for question
+
+ .../DTOs/QuestionDTO.cs                            |   3 +-
+ .../HealthcareSystem.Domain/Entities/Question.cs   |   4 +
+ ...gner.cs => 20250617083759_database.Designer.cs} |   8 +-
+ ...5543_database.cs => 20250617083759_database.cs} |   4 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |   6 +
+ .../Services/QuestionService.cs                    |   9 +-
+ database/HealthcareSystemDb.sql                    |   6 +-
+ frontend/healthcaresystem/src/App.jsx              |   6 +-
+ .../src/components/Header/AuthModal/AuthModal.jsx  |   4 +-
+ .../src/components/Header/Header.jsx               |   6 +-
+ .../src/components/Layout/ConsultantLayout.jsx     | 162 ++++++++++++
+ .../src/components/Layout/StaffLayout.jsx          | 161 ++++++++++++
+ .../healthcaresystem/src/layouts/StaffLayout.jsx   | 123 ---------
+ .../src/pages/Consultant/ConsultantDashboard.jsx   | 116 +++++++++
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |   9 +-
+ .../src/pages/Question/Question.jsx                | 275 ++++++++++-----------
+ .../src/pages/Staff/StaffDashboard.jsx             | 159 ++++++------
+ .../src/pages/Staff/StaffSchedule.jsx              |   4 +-
+ .../healthcaresystem/src/pages/Staff/TestDone.jsx  | 261 +++++++++++++++++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |   8 +-
+ frontend/healthcaresystem/src/services/api.js      |   4 +
+ 21 files changed, 974 insertions(+), 364 deletions(-)
+
+commit 1b81241a51af3d130522f1c8ebf9a36a6832422f
+Merge: fc3c186 df04a4b
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 15 23:31:38 2025 +0700
+
+    Merge pull request #54 from nhm809/fe/feature/book-test-service
+    
+    Fe/feature/book test service
+
+commit df04a4bd2c0e9894e9e20dc62d2ea42a8e47c91f
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 15 23:30:22 2025 +0700
+
+    fix book test service
+
+ ...gner.cs => 20250615085543_database.Designer.cs} |   2 +-
+ ...5647_database.cs => 20250615085543_database.cs} |   0
+ frontend/healthcaresystem/src/App.jsx              |  40 ++--
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  13 +
+ .../components/ProtectedRoute/ProtectedRoute.jsx   |  18 ++
+ .../healthcaresystem/src/layouts/StaffLayout.jsx   | 123 ++++++++++
+ .../src/pages/Staff/Appointments.jsx               | 190 +++++++++++++++
+ .../healthcaresystem/src/pages/Staff/Patients.jsx  | 179 ++++++++++++++
+ .../healthcaresystem/src/pages/Staff/Services.jsx  | 187 +++++++++++++++
+ .../src/pages/Staff/StaffDashboard.jsx             | 206 ++++++++++++++++
+ .../src/pages/Staff/StaffSchedule.jsx              | 261 +++++++++++++++++++++
+ .../src/pages/TestSti/ConfirmTestModal.jsx         |  43 +++-
+ .../src/pages/TestSti/PaypalCallback.jsx           |  13 +-
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |  70 +++++-
+ frontend/healthcaresystem/src/routers/routers.jsx  |   6 +
+ frontend/healthcaresystem/src/services/api.js      |  44 +++-
+ frontend/healthcaresystem/vite.config.js           |  11 +-
+ 17 files changed, 1367 insertions(+), 39 deletions(-)
+
+commit fc3c186ca29dd49794263af6d29b7669a61214c7
+Merge: 04f2910 efbabf9
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 18:59:52 2025 +0700
+
+    Merge pull request #53 from nhm809/be/feature/updateTestServiceRecord
+    
+    Add Get TestServiceRecord by status and by StaffId
+
+commit efbabf9e7474174ead21f5045b5d00d0a220b21b
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 18:58:17 2025 +0700
+
+    Add Get TestServiceRecord by status and by StaffId
+
+ .../Controllers/TestServiceRecordController.cs     | 36 ++++++++++++++++++
+ .../DTOs/TestServiceRecordDTO.cs                   | 29 +++++++++++++++
+ .../Interfaces/ITestServiceRecord.cs               |  6 ++-
+ .../Services/TestServiceRecordService.cs           | 43 ++++++++++++++++++++++
+ 4 files changed, 112 insertions(+), 2 deletions(-)
+
+commit 04f2910cfe0858405ec6b27c24406c14e88792ce
+Merge: 53095f8 a47b92a
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 17:55:07 2025 +0700
+
+    Merge pull request #51 from nhm809/be/feature/updateTestServiceRecord
+    
+    Be/feature/update test service record
+
+commit a47b92a549aefe1969c1f20cde1e68e66bbac0d8
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 17:52:22 2025 +0700
+
+    Add notification from TestServiceRecord Status
+
+ .../Controllers/TestServiceRecordController.cs     |  4 +-
+ .../Services/PaypalService.cs                      | 17 ++++----
+ .../Services/TestServiceRecordService.cs           | 49 ++++++++++------------
+ 3 files changed, 33 insertions(+), 37 deletions(-)
+
+commit 53095f8cfa7390e6399051719fccc20e80e20394
+Merge: 7a5ce60 ce7c358
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 01:30:54 2025 +0700
+
+    Merge pull request #52 from nhm809/be/feature/updateTestServiceRecord
+    
+    Fix PaypalService and Add new API for TestServiceRecord
+
+commit ce7c3585f1e4cc0b7e4027dfb88de9f18f86c1f4
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 15 01:29:30 2025 +0700
+
+    Fix PaypalService and Add new API for TestServiceRecord
+
+ .../Controllers/TestServiceRecordController.cs     |  72 +++++++-
+ .../DTOs/BookTestServiceRecordDTO.cs               |   3 +-
+ .../DTOs/UpdateTestResultDTO.cs                    |  10 ++
+ .../DTOs/UpdateTestServiceRecordDTO.cs             |   8 +
+ .../Interfaces/ITestServiceRecord.cs               |  21 ++-
+ .../Services/AppointmentService.cs                 |   3 +-
+ .../Services/PaypalService.cs                      |  44 ++++-
+ .../Services/TestServiceRecordService.cs           | 197 ++++++++++++++++++++-
+ 8 files changed, 332 insertions(+), 26 deletions(-)
+
+commit 00695ff1123aea2d8348c980b72bad5e4790dff3
+Merge: 4584747 b7c1108
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Sat Jun 14 23:10:23 2025 +0700
+
+    Pull new code
+
+commit 7a5ce603b4a8e3947bd0e91a49f00b311bc2cc1c
+Merge: cbd9e10 2e82c97
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 13 22:38:17 2025 +0700
+
+    Merge pull request #50 from nhm809/fe/feature/book-test-service
+    
+    Fe/feature/book test service
+
+commit 2e82c97e5ef0964720d1e693f498234ae1221e3c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Fri Jun 13 22:36:56 2025 +0700
+
+    add confirm information before register test service paymen
+
+ .../src/pages/TestSti/ConfirmTestModal.jsx         | 80 ++++++++++++++++++++++
+ .../src/pages/TestSti/PaypalCallback.jsx           |  8 +--
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx | 57 ++++-----------
+ 3 files changed, 96 insertions(+), 49 deletions(-)
+
+commit cbd9e10b4047e1d924760881eee8e590f569f33d
+Merge: 2822aa4 314602a
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jun 13 16:04:35 2025 +0700
+
+    Merge pull request #49 from nhm809/be/feature/testServiceRecord-2-new
+    
+    add TestDate column in TestServiceRecord
+
+commit 314602a503305258f3515319555c30fe3b36ca3f
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Fri Jun 13 15:49:08 2025 +0700
+
+    add TestDate column in TestServiceRecord
+
+ .../DTOs/BookTestServiceRecordDTO.cs               |    3 +-
+ .../Entities/TestServiceRecord.cs                  |    2 +
+ .../20250610135715_UpdateNoti.Designer.cs          | 1071 --------------------
+ .../Migrations/20250610135810_database.cs          |   22 -
+ ...gner.cs => 20250613075647_database.Designer.cs} |    5 +-
+ ...15_UpdateNoti.cs => 20250613075647_database.cs} |    3 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |    3 +
+ .../Services/TestServiceRecordService.cs           |   11 +-
+ 8 files changed, 21 insertions(+), 1099 deletions(-)
+
+commit 2822aa4facf3c3baff61272896ced5f51743eae5
+Merge: 6454b98 b5fdb48
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 12 16:09:06 2025 +0700
+
+    Merge pull request #48 from nhm809/fe/feature/book-test-service
+    
+    done payment for test service
+
+commit b5fdb489a0ea952b027fae89a8ab8bc441c4f7d5
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Thu Jun 12 16:08:10 2025 +0700
+
+    done payment for test service
+
+ .../Controllers/PaymentController.cs               |  6 ++-
+ .../src/components/Header/AuthModal/AuthModal.jsx  | 36 +++++++------
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |  6 +--
+ .../src/pages/TestSti/PaypalCallback.jsx           | 40 ++++++++++++++
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx | 61 ++++++++++++++++++----
+ frontend/healthcaresystem/src/routers/routers.jsx  |  6 ++-
+ frontend/healthcaresystem/src/services/api.js      | 18 ++++---
+ 7 files changed, 135 insertions(+), 38 deletions(-)
+
+commit 6454b98df5ca72b6dc14eba2e3c3d1c546742932
+Merge: 203476f b7c1108
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 12 13:06:55 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit 203476fef94819f5b3dadfc7853f0d1714439725
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 12 13:06:43 2025 +0700
+
+    Update changePassword
+
+ backend/HealthcareSystem.API/Controllers/UserController.cs       | 6 +++---
+ .../DTOs/ChangePasswordRequestDTO.cs                             | 9 +++++++++
+ backend/HealthcareSystem.Application/Interfaces/IUserService.cs  | 2 +-
+ backend/HealthcareSystem.Infrastructure/Services/UserService.cs  | 6 +++---
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
+commit 45847476aa0ea7cdde25b5e4ca0f8c91515dc88f
+Merge: 9c5a686 95174ed
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Wed Jun 11 22:11:20 2025 +0700
+
+    Develop feature appoinment
+
+commit b7c11082175ac7bc0568b088f4fb09656bb33888
+Merge: b829e92 5bc4408
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 10 22:33:46 2025 +0700
+
+    Merge pull request #47 from nhm809/be/feature/manageService
+    
+    CRUD service-Dashboard Manager
+
+commit 5bc44089a8e6f0b2793faf5ad76c7e2452a65e3e
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 10 22:30:53 2025 +0700
+
+    CRUD service-Dashboard Manager
+
+ .../Controllers/ServiceController.cs               | 39 ++++++++++++++
+ .../DTOs/ServiceDTO.cs                             | 14 +++++
+ .../Interfaces/IService.cs                         | 10 +++-
+ .../Services/ServiceService.cs                     | 60 ++++++++++++++++++++--
+ 4 files changed, 118 insertions(+), 5 deletions(-)
+
+commit b829e92ee698bf83b656553aed638c718c54fcc5
+Merge: bf2f7ab ad4734b
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 21:27:56 2025 +0700
+
+    Merge pull request #46 from nhm809/fe/feature/book-test-service
+    
+    completed nofification function
+
+commit ad4734b534a0279f7dfec92ba89488fb872c322d
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 21:26:46 2025 +0700
+
+    completed nofification function
+
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  18 +++
+ .../src/components/Header/Header.css               |  17 ++
+ .../src/components/Header/Header.jsx               | 179 ++++++++++++++++++++-
+ .../src/pages/Question/Question.jsx                | 166 +++++++++++++++++--
+ frontend/healthcaresystem/src/services/api.js      |  13 ++
+ 5 files changed, 372 insertions(+), 21 deletions(-)
+
+commit bf2f7abad44219d3ec2b68ca2d0b9154a45382e5
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jun 10 20:59:26 2025 +0700
+
+    Update Noti
+
+ .../Controllers/UserController.cs                  |    2 +-
+ .../20250610135715_UpdateNoti.Designer.cs          | 1071 ++++++++++++++++++++
+ .../Migrations/20250610135715_UpdateNoti.cs        |  668 ++++++++++++
+ .../Migrations/20250610135810_database.Designer.cs | 1071 ++++++++++++++++++++
+ .../Migrations/20250610135810_database.cs          |   22 +
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1068 +++++++++++++++++++
+ .../data/AppDbContext.cs                           |    2 +-
+ 7 files changed, 3902 insertions(+), 2 deletions(-)
+
+commit b1800f2a173268a449067842c29d7ef6705c8899
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jun 10 17:24:52 2025 +0700
+
+    Upgrade GoogleLoginService
+
+ .../Controllers/GoogleLoginController.cs           | 34 ++------------------
+ .../DTOs/GoolgeLoginDTO.cs                         |  4 +++
+ .../Services/GoogleLoginService.cs                 | 36 ++++++++++++++++++++--
+ 3 files changed, 40 insertions(+), 34 deletions(-)
+
+commit f3bf934c76e88a61f3aa6fb2344c18df66130bd3
+Merge: 57c6691 79b0dee
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 15:23:30 2025 +0700
+
+    Merge pull request #45 from nhm809/fe/feature/book-test-service
+    
+    fix if no account can not book test service
+
+commit 79b0dee778fea4b8b7662d8b87b7fbb26a2a79ba
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 15:21:55 2025 +0700
+
+    fix if no account can not book test service
+
+ frontend/healthcaresystem/src/components/Header/Header.jsx |  2 ++
+ frontend/healthcaresystem/src/pages/TestSti/TestSti.jsx    | 14 +++++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+commit 57c6691f7e767330006af9f7f2d9a1d69855909d
+Merge: de9b7fc 5aa47b2
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 15:12:40 2025 +0700
+
+    Merge pull request #44 from nhm809/fe/feature/book-test-service
+    
+    add book test service
+
+commit 5aa47b28a281aae786e02686edc3f032e740897c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 15:10:02 2025 +0700
+
+    add book test service
+
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |  5 +---
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx | 35 ++++++++++++----------
+ frontend/healthcaresystem/src/services/api.js      | 14 +++++++++
+ 3 files changed, 35 insertions(+), 19 deletions(-)
+
+commit de9b7fc7cdf35445e41d3156eddde5eed2bbde9f
+Merge: 467323d bb44ebb
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 13:08:50 2025 +0700
+
+    Merge pull request #43 from nhm809/fe/feature/user-profile
+    
+    fix the upload picture for avartar
+
+commit bb44ebb0abef0e8eca6ddc4a5e46c35331c88417
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 10 13:07:54 2025 +0700
+
+    fix the upload picture for avartar
+
+ .../Services/UserService.cs                        |  4 ++
+ .../src/components/Header/Header.jsx               | 15 ++++++-
+ .../src/contexts/ToastProvider.jsx                 |  6 +--
+ .../healthcaresystem/src/pages/Profile/Profile.jsx | 51 +++++++++++++++++-----
+ 4 files changed, 60 insertions(+), 16 deletions(-)
+
+commit 467323dfeb0bfb48761f7599462ec6bcca5cabcc
+Merge: 54e5b4e b123f64
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 10 00:21:15 2025 +0700
+
+    Merge pull request #42 from nhm809/be/feature/payment-appointment
+    
+    add appointment for payment
+
+commit b123f647a2d6a7db148b3162e2318ed27306b4da
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Tue Jun 10 00:19:00 2025 +0700
+
+    add appointment for payment
+
+ .../Controllers/PaymentController.cs               |   15 +-
+ backend/HealthcareSystem.API/Program.cs            |    2 +-
+ .../Interfaces/IPayPalService.cs                   |    4 +-
+ .../Migrations/20250609062904_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609062904_database.cs          |  668 ------------
+ .../Migrations/20250609063811_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609063811_database.cs          |  668 ------------
+ .../Migrations/20250609071504_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609071504_database.cs          |  668 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1068 -------------------
+ .../Services/AppointmentService.cs                 |    2 +-
+ .../Services/PaypalService.cs                      |  221 ++--
+ .../Services/TestServiceRecordService.cs           |    2 +-
+ 13 files changed, 151 insertions(+), 6380 deletions(-)
+
+commit 54e5b4e7585a2ddf519578126d7d8e28aeb120f5
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 22:49:07 2025 +0700
+
+    fix scope in Program.cs
+
+ backend/HealthcareSystem.API/Program.cs            |    2 +-
+ .../Migrations/20250609062904_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609062904_database.cs          |  668 ------------
+ .../Migrations/20250609063811_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609063811_database.cs          |  668 ------------
+ .../Migrations/20250609071504_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250609071504_database.cs          |  668 ------------
+ 7 files changed, 1 insertion(+), 5218 deletions(-)
+
+commit 924039f62687952242fcd811925de0285dd05fb6
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 22:46:32 2025 +0700
+
+    Update HealthcareSystemDb.sql
+
+ database/HealthcareSystemDb.sql | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit eee351aa2a0f3b43d81059b6da39c40ff092989d
+Merge: 700adba 3014602
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 22:44:28 2025 +0700
+
+    Merge pull request #41 from nhm809/be/feature/ReproductiveCycleService
+    
+    Complete ReproductiveCycleService
+
+commit 3014602d79a14a44635d31993accea7ecf117e65
+Merge: 25e622b 700adba
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 22:44:20 2025 +0700
+
+    Merge branch 'develop' into be/feature/ReproductiveCycleService
+
+commit 25e622befb00e0f3c5b3265235ed3b0ee2c2dde3
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 22:42:37 2025 +0700
+
+    Complete ReproductiveCycleService
+
+ .../Controllers/ReproductiveCycleController.cs     |   78 ++
+ backend/HealthcareSystem.API/Program.cs            |    1 +
+ .../DTOs/ReproductiveCycleDTO.cs                   |   12 +-
+ .../Interfaces/IReproductiveCycleService.cs        |   17 +
+ .../Migrations/20250608120439_database.Designer.cs | 1071 --------------------
+ .../Migrations/20250608120439_database.cs          |  668 ------------
+ .../Migrations/20250608123120_database.Designer.cs | 1068 -------------------
+ .../Migrations/20250608123120_database.cs          |  667 ------------
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1068 -------------------
+ .../Services/ReproductiveCycleService.cs           |  169 +++
+ 10 files changed, 271 insertions(+), 4548 deletions(-)
+
+commit f44395e560c0f849861b26a818ec2df0ec32f127
+Merge: 105336e 04cd121
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 20:12:52 2025 +0700
+
+    Merge pull request #39 from nhm809/be/feature/testServiceRecord-2
+    
+    Be/feature/test service record 2
+
+commit 700adba489c27772018fe05518d35d0bbeeb585e
+Merge: 3e507af 04cd121
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Mon Jun 9 17:18:51 2025 +0700
+
+    Merge pull request #40 from nhm809/be/feature/testServiceRecord-2
+    
+    testServiceRecord and Payment - fix
+
+commit 04cd121d149723ffe91e42714a23ded8eec61447
+Merge: e611d11 3e507af
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Mon Jun 9 17:18:26 2025 +0700
+
+    Merge branch 'develop' into be/feature/testServiceRecord-2
+
+commit e611d115057dd1bc35d946f16d82114b83d5b23e
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Mon Jun 9 17:15:34 2025 +0700
+
+    testServiceRecord and Payment - fix
+
+ .../Controllers/PaymentController.cs               |   47 +
+ .../Controllers/TestServiceRecordController.cs     |   81 +-
+ backend/HealthcareSystem.API/Program.cs            |   15 +-
+ backend/HealthcareSystem.API/appsettings.json      |    6 +
+ .../DTOs/BookTestServiceRecordDTO.cs               |   13 +
+ .../HealthcareSystem.Application/DTOs/PaypalDTO.cs |   64 ++
+ .../DTOs/TestServiceRecordDTO.cs                   |   20 +
+ .../DTOs/TestServiceRecordDetailDTO.cs             |   30 +-
+ .../Interfaces/IPayPalService.cs                   |   11 +
+ .../Interfaces/ITestServiceRecord.cs               |   14 +
+ .../Interfaces/ITestServiceRecordService.cs        |    8 -
+ .../HealthcareSystem.Infrastructure.csproj         |    1 +
+ .../Migrations/20250608123120_database.Designer.cs | 1068 --------------------
+ .../Migrations/20250608123120_database.cs          |  667 ------------
+ ...gner.cs => 20250609062904_database.Designer.cs} |    2 +-
+ ...0439_database.cs => 20250609062904_database.cs} |    0
+ .../Services/PaypalService.cs                      |  206 ++++
+ .../Services/TestServiceRecordService.cs           |  126 ++-
+ database/CreateDatabaseAndInsert.sql               |  160 ++-
+ 19 files changed, 649 insertions(+), 1890 deletions(-)
+
+commit 3e507af581b141044b5ab58aadb8e81ee4969d32
+Merge: 8da64eb 1f93a2f
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 16:50:26 2025 +0700
+
+    Merge pull request #38 from nhm809/be/feature/consultant
+    
+    lấy tất cả consultant (có cả chuyên môn) với chi tiết consultant (có …
+
+commit 8da64ebc5d0f30f4fe09f657daebdba775f55046
+Merge: a2f82a9 5f8a830
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 15:59:07 2025 +0700
+
+    Merge pull request #37 from nhm809/feature/user-profile
+    
+    add all need feild
+
+commit 5f8a8306f243e863ab42b0017b2cbcfc661620d2
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 15:57:35 2025 +0700
+
+    add all need feild
+
+ .../healthcaresystem/src/pages/Profile/Profile.css |  42 ++++
+ .../healthcaresystem/src/pages/Profile/Profile.jsx | 236 +++++++++++++++++----
+ frontend/healthcaresystem/src/services/api.js      |   4 +-
+ 3 files changed, 240 insertions(+), 42 deletions(-)
+
+commit 1f93a2fc7cbbe077512845ab030e087a52a02f73
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Mon Jun 9 14:50:44 2025 +0700
+
+    lấy tất cả consultant (có cả chuyên môn) với chi tiết consultant (có workschedule)
+
+ .../Controllers/AppointmentController.cs           |    1 +
+ .../Controllers/ConsultantController.cs            |   35 +
+ backend/HealthcareSystem.API/Program.cs            |    2 +-
+ .../DTOs/ConsultantDetailDTO.cs                    |    7 +
+ .../DTOs/ConsultantWithSpecialtyDTO.cs             |   10 +
+ .../DTOs/SpecialtyDTO.cs                           |    8 +
+ .../DTOs/WorkScheduleDTO.cs                        |   11 +
+ .../Interfaces/IConsultantService.cs               |   11 +
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    1 +
+ .../Migrations/20250608123120_database.Designer.cs | 1068 --------------------
+ .../Migrations/20250608123120_database.cs          |  667 ------------
+ ...gner.cs => 20250609071504_database.Designer.cs} |    2 +-
+ ...0439_database.cs => 20250609071504_database.cs} |    0
+ .../Services/ConsultantService.cs                  |   97 ++
+ 14 files changed, 183 insertions(+), 1737 deletions(-)
+
+commit a2f82a9e6fc370a8b5af683abbcce84ae3d2c1e0
+Merge: 0a6447c 6f3bac1
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 13:52:19 2025 +0700
+
+    Merge pull request #36 from nhm809/fe/feature/home-page
+    
+    update google login fix
+
+commit 6f3bac19bc7315bc734703c609272d9293bd488a
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 13:51:24 2025 +0700
+
+    update google login fix
+
+ .../Controllers/GoogleLoginController.cs           |   55 +-
+ .../Migrations/20250608123120_database.Designer.cs | 1068 --------------------
+ .../Migrations/20250608123120_database.cs          |  667 ------------
+ ...gner.cs => 20250609063811_database.Designer.cs} |    2 +-
+ ...0439_database.cs => 20250609063811_database.cs} |    0
+ 5 files changed, 49 insertions(+), 1743 deletions(-)
+
+commit 0a6447c6a1e80f540b6c76bad49dbd79ab9ed59a
+Merge: 292506b e0a383f
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 12:49:48 2025 +0700
+
+    Merge pull request #35 from nhm809/feature/home-page
+    
+    update homepage
+
+commit e0a383f4ed3e883364bd69b319dd590437bce375
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 9 12:45:48 2025 +0700
+
+    update homepage
+
+ .../Migrations/20250604064921_database.Designer.cs | 1068 --------------------
+ .../Migrations/20250604064921_database.cs          |  667 ------------
+ .../src/assets/imgs/loginBanner.png                |  Bin 0 -> 1760835 bytes
+ .../src/components/Header/AuthModal/AuthModal.css  |   59 +-
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  401 +++++---
+ .../src/components/Header/Header.jsx               |    1 -
+ 6 files changed, 318 insertions(+), 1878 deletions(-)
+
+commit 292506bfef1613b26ce1f5535c6b9fc49f3a94e4
+Merge: d73a776 142e952
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 00:21:28 2025 +0700
+
+    Merge pull request #34 from nhm809/be/feature/TestStaff
+    
+    List and Detail TestService for Dashbroad Staff
+
+commit 142e952dbc71ca2d63715b67fed89529c6499e7e
+Merge: 67bff32 d73a776
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 9 00:21:20 2025 +0700
+
+    Merge branch 'develop' into be/feature/TestStaff
+
+commit 67bff3270afe74e6eb9b9a3450d0681f9d699f68
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Sun Jun 8 23:40:05 2025 +0700
+
+    List and Detail TestService for Dashbroad Staff
+
+ .../Controllers/TestServiceRecordController.cs     | 37 +++++++++++++
+ backend/HealthcareSystem.API/Program.cs            |  2 +-
+ .../DTOs/TestServiceRecordDetailDTO.cs             | 27 ++++++++++
+ .../DTOs/TestServiceRecordListDTO.cs               | 11 ++++
+ .../Interfaces/ITestServiceRecordService.cs        |  8 +++
+ .../Services/TestServiceRecordService.cs           | 62 ++++++++++++++++++++++
+ 6 files changed, 146 insertions(+), 1 deletion(-)
+
+commit d73a7764f1276cd5f7b8f5ae23a3719b0a7950d9
+Merge: 26fb34c 9d2da98
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 23:27:49 2025 +0700
+
+    t Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit 26fb34c36c526ead231126b47be3c622dbb28546
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 23:27:33 2025 +0700
+
+    Update Google Login
+
+ .../DTOs/GoolgeLoginDTO.cs                           | 13 +++++++------
+ .../DTOs/ReproductiveCycleDTO.cs                     | 20 ++++++++++++++++++++
+ .../Services/GoogleLoginService.cs                   | 11 +++++++----
+ 3 files changed, 34 insertions(+), 10 deletions(-)
+
+commit 9d2da980024c6919c36e3d6687be8b9656b349e6
+Merge: 988eef9 31ffb06
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 22:54:38 2025 +0700
+
+    Merge pull request #33 from nhm809/be/feature/BlogManagement
+    
+    Create,update,delete Blog for consultant
+
+commit 31ffb063cee1f21ff08dc865b1c40bf1fa2885fe
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Sun Jun 8 22:45:43 2025 +0700
+
+    Create,update,delete Blog for consultant
+
+ .../Controllers/ConsultantBlogController.cs        |   55 +
+ backend/HealthcareSystem.API/Program.cs            |   15 +-
+ .../DTOs/CreateBlogDTO.cs                          |   14 +
+ .../DTOs/DeleteBlogDTO.cs                          |   13 +
+ .../DTOs/GetBlogDTO.cs                             |    1 +
+ .../DTOs/UpdateBlogDTO.cs                          |   21 +
+ .../Interfaces/IBlogManageService.cs               |   12 +
+ .../Migrations/20250602152031_Database.Designer.cs | 1119 --------------------
+ .../Migrations/20250602152031_Database.cs          |  696 ------------
+ .../20250604061543_AllowPWNull.Designer.cs         | 1068 -------------------
+ .../Migrations/20250604061543_AllowPWNull.cs       |   44 -
+ .../Migrations/20250604064921_database.Designer.cs | 1068 -------------------
+ ...604171104_ChangeStatusToIsAnsweredInQuestion.cs |   39 -
+ ...gner.cs => 20250608123120_database.Designer.cs} |    4 +-
+ ...4921_database.cs => 20250608123120_database.cs} |    2 +-
+ .../Services/BlogManageService.cs                  |  144 +++
+ 16 files changed, 276 insertions(+), 4039 deletions(-)
+
+commit 988eef90722cf2e9b6978620109e670821ab7478
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 19:05:57 2025 +0700
+
+    Fix
+
+ .../Controllers/PaymentController.cs               |   47 -
+ .../Controllers/TestServiceRecordController.cs     |   80 --
+ backend/HealthcareSystem.API/Controllers/test.txt  |    0
+ .../HealthcareSystem.API.csproj                    |    1 -
+ backend/HealthcareSystem.API/Program.cs            |   20 +-
+ backend/HealthcareSystem.API/appsettings.json      |   20 +-
+ .../DTOs/BookTestServiceRecordDTO.cs               |   13 -
+ .../DTOs/InvoiceDTO.cs                             |   19 -
+ .../DTOs/PayPalDTOs.cs                             |   64 --
+ .../DTOs/ReproductiveCycleDTO.cs                   |   21 -
+ .../HealthcareSystem.Application/DTOs/StaffDTO.cs  |   12 -
+ .../DTOs/TestServiceRecordDTO.cs                   |   18 -
+ .../DTOs/TestServiceRecordDetailDTO.cs             |   21 -
+ .../HealthcareSystem.Application.csproj            |    4 -
+ .../Interfaces/IPayPalService.cs                   |   12 -
+ .../Interfaces/IService.cs                         |    2 +-
+ .../Interfaces/ITestServiceRecord.cs               |   15 -
+ .../HealthcareSystem.Domain/Entities/Invoice.cs    |    3 +-
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |    5 +-
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    6 +-
+ .../Entities/UserSpecialty.cs                      |   19 -
+ .../HealthcareSystem.Domain.csproj                 |    2 +-
+ .../HealthcareSystem.Infrastructure.csproj         |   65 +-
+ .../Migrations/20250604064921_database.Designer.cs | 1068 -------------------
+ .../Migrations/20250604064921_database.cs          |  667 ------------
+ ...50604085539_Fix_UserSpecialty_Table.Designer.cs | 1107 --------------------
+ .../20250604085539_Fix_UserSpecialty_Table.cs      |  144 ---
+ ...04090608_Remove_SpecialtyUser_Table.Designer.cs | 1107 --------------------
+ .../20250604090608_Remove_SpecialtyUser_Table.cs   |   22 -
+ ...gner.cs => 20250608120439_database.Designer.cs} |    2 +-
+ ...1413_database.cs => 20250608120439_database.cs} |    0
+ .../Migrations/AppDbContextModelSnapshot.cs        |   66 +-
+ .../Services/PayPalService.cs                      |  265 -----
+ .../Services/TestServiceRecordService.cs           |  131 ---
+ .../data/AppDbContext.cs                           |   60 +-
+ 35 files changed, 87 insertions(+), 5021 deletions(-)
+
+commit 9c160ed3a479c3fd382d3ae8d42636dbb5322a63
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 18:20:42 2025 +0700
+
+    fix
+
+ .../DTOs/ReproductiveCycleDTO.cs                    | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+commit cbe7d10efd78a2d71b864832f744caf4d5b3e684
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 8 18:18:30 2025 +0700
+
+    Revert "Merge pull request #32 from nhm809/be/feature/testServiceRecord-payment"
+    
+    This reverts commit 312e239b278a989bb40650a56fdc40c2a9b3e584, reversing
+    changes made to e5660d04f62f929efdc03ab637edd0531b5df26c.
+
+ backend/HealthcareSystem.API/Program.cs            | 14 +------
+ backend/HealthcareSystem.API/appsettings.json      |  4 +-
+ .../DTOs/BookTestServiceRecordDTO.cs               |  4 +-
+ .../Migrations/20250607091413_database.Designer.cs |  3 +-
+ ...InitialSchema.cs => 20250607091413_database.cs} |  6 ++-
+ .../Services/PayPalService.cs                      |  2 +-
+ .../Services/TestServiceRecordService.cs           | 45 ++++++++++------------
+ 7 files changed, 32 insertions(+), 46 deletions(-)
+
+commit 312e239b278a989bb40650a56fdc40c2a9b3e584
+Merge: e5660d0 b7607aa
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 8 17:00:03 2025 +0700
+
+    Merge pull request #32 from nhm809/be/feature/testServiceRecord-payment
+    
+    fix testServiceRecord and Book testService
+
+commit b7607aa2e44abe7476769be1fe8021215b8c2155
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 8 16:57:18 2025 +0700
+
+    fix testServiceRecord and Book testService
+
+ backend/HealthcareSystem.API/Program.cs            | 14 ++++++-
+ backend/HealthcareSystem.API/appsettings.json      |  4 +-
+ .../DTOs/BookTestServiceRecordDTO.cs               |  4 +-
+ ...abase.cs => 20250607091413_AddInitialSchema.cs} |  6 +--
+ .../Migrations/20250607091413_database.Designer.cs |  3 +-
+ .../Services/PayPalService.cs                      |  2 +-
+ .../Services/TestServiceRecordService.cs           | 45 ++++++++++++----------
+ 7 files changed, 46 insertions(+), 32 deletions(-)
+
+commit e5660d04f62f929efdc03ab637edd0531b5df26c
+Merge: 4868586 ab82b71
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 8 15:00:02 2025 +0700
+
+    Merge pull request #31 from nhm809/feature/home-page
+    
+    update google login function and profile
+
+commit ab82b71315ffe1409d1a0942f22919cec4794b54
+Merge: e3610de 4868586
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 8 14:59:21 2025 +0700
+
+    Merge branch 'develop' into feature/home-page
+
+commit e3610de156db60a6429034ba923403ecafa1cb4c
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 8 14:53:34 2025 +0700
+
+    update google login function and profile
+
+ backend/HealthcareSystem.API/Program.cs            |   16 +-
+ .../Properties/launchSettings.json                 |    4 +-
+ backend/HealthcareSystem.API/appsettings.json      |   12 +-
+ .../Migrations/20250602152031_Database.Designer.cs | 1119 --------------------
+ .../Migrations/20250602152031_Database.cs          |  696 ------------
+ ...8_RemovePaymentAndAddInvoiceColumns.Designer.cs | 1069 -------------------
+ ...0603162018_RemovePaymentAndAddInvoiceColumns.cs |  667 ------------
+ ...21943_ChangeAttributeOfNotification.Designer.cs | 1069 -------------------
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 -
+ .../20250604061543_AllowPWNull.Designer.cs         | 1068 -------------------
+ .../Migrations/20250604061543_AllowPWNull.cs       |   44 -
+ ..._ChangeStatusToIsAnsweredInQuestion.Designer.cs | 1068 -------------------
+ ...604171104_ChangeStatusToIsAnsweredInQuestion.cs |   39 -
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |   26 +-
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |    1 +
+ frontend/healthcaresystem/src/services/api.js      |   10 +-
+ 16 files changed, 37 insertions(+), 6920 deletions(-)
+
+commit 48685865f91b136f6e3431ed70744111a6207934
+Merge: 95174ed 72c23ad
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 8 14:42:18 2025 +0700
+
+    Merge pull request #30 from nhm809/be/feature/payment
+    
+    Be/feature/payment
+
+commit 72c23ad9dc7de89db65daad586006c87414317e9
+Merge: 05fd14a 95174ed
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 8 14:41:03 2025 +0700
+
+    Merge branch 'develop' into be/feature/payment
+
+commit 9c5a6860fbae9a0682962e801412cefde82e2951
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Sun Jun 8 14:31:45 2025 +0700
+
+    mPull new code
+
+ backend/HealthcareSystem.API/Program.cs            |    2 +-
+ .../Migrations/20250602152031_Database.Designer.cs | 1119 --------------------
+ .../Migrations/20250602152031_Database.cs          |  696 ------------
+ ...8_RemovePaymentAndAddInvoiceColumns.Designer.cs | 1069 -------------------
+ ...21943_ChangeAttributeOfNotification.Designer.cs | 1069 -------------------
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 -
+ .../Migrations/20250604061543_AllowPWNull.cs       |   44 -
+ ...gner.cs => 20250608060927_Database.Designer.cs} |    4 +-
+ ...nvoiceColumns.cs => 20250608060927_Database.cs} |    8 +-
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   |    6 +-
+ 10 files changed, 10 insertions(+), 4056 deletions(-)
+
+commit 05fd14acd3df4baeda9d01e754af463d7002d1d6
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sat Jun 7 23:55:50 2025 +0700
+
+    Add Payment And Book TestService
+
+ .../Controllers/PaymentController.cs               |   47 +
+ .../Controllers/TestServiceRecordController.cs     |   61 +-
+ backend/HealthcareSystem.API/Controllers/test.txt  |    0
+ .../HealthcareSystem.API.csproj                    |    1 +
+ .../HealthcareSystem.API/HealthcareSystem.API.sln  |   25 -
+ backend/HealthcareSystem.API/Program.cs            |   45 +-
+ backend/HealthcareSystem.API/appsettings.json      |   12 +-
+ .../DTOs/BookTestServiceRecordDTO.cs               |   13 +
+ .../DTOs/InvoiceDTO.cs                             |   19 +
+ .../DTOs/PayPalDTOs.cs                             |   64 ++
+ .../HealthcareSystem.Application.csproj            |    1 +
+ .../Interfaces/IPayPalService.cs                   |   12 +
+ .../Interfaces/ITestServiceRecord.cs               |    3 +
+ .../HealthcareSystem.Domain/Entities/Invoice.cs    |    3 +-
+ .../Entities/Notification.cs                       |    4 +-
+ .../HealthcareSystem.Infrastructure.csproj         |    2 +
+ ...21943_ChangeAttributeOfNotification.Designer.cs | 1069 ++++++++++++++++++++
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |   10 +-
+ .../Services/GoogleLoginService.cs                 |   13 +-
+ .../Services/PayPalService.cs                      |  265 +++++
+ .../Services/TestServiceRecordService.cs           |   51 +
+ .../data/AppDbContext.cs                           |    8 +-
+ database/Sandbox Paypal.txt                        |    6 +
+ frontend/healthcaresystem/package-lock.json        |   16 +
+ frontend/healthcaresystem/package.json             |    1 +
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  116 ++-
+ .../src/components/Header/Header.css               |   42 +-
+ .../src/components/Header/Header.jsx               |   80 +-
+ .../healthcaresystem/src/pages/Profile/Profile.jsx |  222 ++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |    4 +
+ frontend/healthcaresystem/src/services/api.js      |   10 +-
+ 32 files changed, 2141 insertions(+), 133 deletions(-)
+
+commit 95174ed8a2dcef4e5a51fdf6d2ee6e47ae35aa48
+Merge: 242428c 5758c0a
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 23:38:09 2025 +0700
+
+    Merge pull request #29 from nhm809/be/feature/ManageUserService
+    
+    Complete ManageUserService
+
+commit 5758c0ab20fcaced08b404ed6ae3378d88106253
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 23:37:01 2025 +0700
+
+    Complete ManageUserService
+
+ .../Controllers/ManageUserController.cs            |   95 ++
+ .../Controllers/UserController.cs                  |   14 -
+ backend/HealthcareSystem.API/Program.cs            |    1 +
+ .../DTOs/ManageUserDTO.cs                          |   12 +
+ .../Interfaces/IManageUserService.cs               |   16 +
+ .../Interfaces/IUserService.cs                     |    2 -
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    2 +
+ .../Migrations/20250602152031_Database.Designer.cs | 1119 --------------------
+ .../Migrations/20250602152031_Database.cs          |  696 ------------
+ ...8_RemovePaymentAndAddInvoiceColumns.Designer.cs | 1069 -------------------
+ ...21943_ChangeAttributeOfNotification.Designer.cs | 1069 -------------------
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 -
+ .../20250604061543_AllowPWNull.Designer.cs         | 1068 -------------------
+ .../Migrations/20250604061543_AllowPWNull.cs       |   44 -
+ ...604171104_ChangeStatusToIsAnsweredInQuestion.cs |   39 -
+ ...gner.cs => 20250607091413_database.Designer.cs} |    7 +-
+ ...nvoiceColumns.cs => 20250607091413_database.cs} |   13 +-
+ .../Migrations/AppDbContextModelSnapshot.cs        |    3 +
+ .../Services/ManageUserService.cs                  |   90 ++
+ .../Services/QuestionService.cs                    |    4 +
+ .../Services/UserService.cs                        |   16 -
+ database/HealthcareSystemDb.sql                    |   12 +-
+ 22 files changed, 241 insertions(+), 5199 deletions(-)
+
+commit 242428c7a6bcc9d672574f4b4341a1c87a86fa80
+Merge: 9374f7b 17d8371
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 15:46:16 2025 +0700
+
+    Merge pull request #28 from nhm809/appointment
+    
+    Appointment
+
+commit 17d83713c243f828535d5e21ed22ee8ee4e11fb3
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Sat Jun 7 15:44:57 2025 +0700
+
+    delete .editorcongif
+
+ .editorconfig | 245 ----------------------------------------------------------
+ 1 file changed, 245 deletions(-)
+
+commit 546ae28bcea7459595608ed4ec787035d8929381
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Sat Jun 7 14:56:06 2025 +0700
+
+    appointment
+
+ .editorconfig                                      |  245 +++++
+ .../Controllers/AppointmentController.cs           |  169 ++++
+ .../Controllers/BlogController.cs                  |   26 +
+ backend/HealthcareSystem.API/Program.cs            |    3 +
+ .../DTOs/AppointmentCreateDTO.cs                   |   19 +
+ .../DTOs/AppointmentDetailDTO.cs                   |   23 +
+ .../DTOs/AppointmentListItemDTO.cs                 |   16 +
+ .../HealthcareSystem.Application.csproj            |    4 +-
+ .../Interfaces/IAppointmentService.cs              |   35 +
+ .../Interfaces/IBlogService.cs                     |    5 +
+ .../Interfaces/IService.cs                         |    1 +
+ .../HealthcareSystem.Domain/Entities/Service.cs    |    1 +
+ ...8_RemovePaymentAndAddInvoiceColumns.Designer.cs | 1069 --------------------
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 -
+ ...gner.cs => 20250604064921_database.Designer.cs} |    5 +-
+ ...nvoiceColumns.cs => 20250604064921_database.cs} |    8 +-
+ .../Services/AppointmentService.cs                 |   99 ++
+ .../Services/BlogService.cs                        |   37 +
+ 18 files changed, 688 insertions(+), 1126 deletions(-)
+
+commit 9374f7b4cb8d297d6378bf5681503d1f437f6a3c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 13:54:50 2025 +0700
+
+    Update Database
+
+ database/HealthcareSystemDb.sql | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 72a0473ab436ac4118fb1821fd98bb287270ff2b
+Merge: dcebdfa 2edb298
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 12:57:28 2025 +0700
+
+    Merge pull request #27 from nhm809/feature/home-page
+    
+    Feature/home page
+
+commit 2edb298bae69795aec435242bcb55183158fa349
+Merge: ad338d9 dcebdfa
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 12:57:19 2025 +0700
+
+    Merge branch 'develop' into feature/home-page
+
+commit ad338d926e338af29c25ba61f4671075eabffb31
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sat Jun 7 12:53:56 2025 +0700
+
+    new update from Tai Nha Que
+
+ frontend/healthcaresystem/package-lock.json        |  71 ++++++
+ frontend/healthcaresystem/package.json             |   2 +
+ .../src/assets/imgs/malefemaledoctor.png           | Bin 0 -> 68669 bytes
+ .../src/assets/imgs/menstrual1.png                 | Bin 0 -> 284031 bytes
+ .../src/assets/imgs/menstrual2.png                 | Bin 0 -> 148676 bytes
+ .../src/assets/imgs/menstrual3.png                 | Bin 0 -> 108970 bytes
+ .../src/assets/imgs/menstrual4.png                 | Bin 0 -> 102907 bytes
+ .../src/assets/imgs/testprocess1.png               | Bin 0 -> 134875 bytes
+ .../src/assets/imgs/testprocess2.png               | Bin 0 -> 81645 bytes
+ .../src/assets/imgs/testprocess3.png               | Bin 0 -> 63582 bytes
+ .../src/assets/imgs/testprocess4.png               | Bin 0 -> 120867 bytes
+ .../src/components/Button/Button.jsx               |   2 +-
+ .../src/components/Footer/Footer.css               |  93 ++++++++
+ .../src/components/Footer/Footer.jsx               |  36 ++-
+ .../src/components/Header/Header.jsx               |   2 +-
+ frontend/healthcaresystem/src/pages/Home/Home.css  | 254 ++++++++++++++++++--
+ frontend/healthcaresystem/src/pages/Home/Home.jsx  | 264 +++++++++++++++++----
+ .../src/pages/Question/Question.jsx                |  24 ++
+ .../healthcaresystem/src/pages/TestSti/TestSti.css | 181 ++++++++++++++
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx | 201 +++++++++++++++-
+ frontend/healthcaresystem/src/routers/routers.jsx  |   4 +
+ 21 files changed, 1048 insertions(+), 86 deletions(-)
+
+commit dcebdfacfa09622c13b5433c99c927631a0f389a
+Merge: 942672d 5657eb7
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 10:31:26 2025 +0700
+
+    Merge pull request #26 from nhm809/be/feature/UserService
+    
+    Complete UserService
+
+commit 105336e35db78cd308989e7aa8fe569ea95cca8c
+Merge: 6d3bd1e 5657eb7
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 10:29:39 2025 +0700
+
+    Merge pull request #25 from nhm809/be/feature/UserService
+    
+    Be/feature/user service
+
+commit 5657eb7ffd4ad41af26ab2343f7771b2f35f7e41
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 10:29:01 2025 +0700
+
+    Complete UserService
+
+ .../Controllers/GetUserInfoController.cs           | 34 ----------
+ .../Controllers/UserController.cs                  | 79 ++++++++++++++++++++++
+ .../Interfaces/IUserService.cs                     |  4 ++
+ .../Services/UserService.cs                        | 72 ++++++++++++++++++++
+ 4 files changed, 155 insertions(+), 34 deletions(-)
+
+commit 942672d687e201e97e7625baa5f51c8250c5a930
+Merge: c04d9c3 28b7cfb
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 00:38:55 2025 +0700
+
+    Merge pull request #24 from nhm809/be/feature/FeedbackService
+    
+    Complete Feedback Service
+
+commit 28b7cfb6d44cf3f8826bcc6a3645a6f674e781c7
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sat Jun 7 00:37:11 2025 +0700
+
+    Complete Feedback Service
+
+ .../Controllers/FeedbackController.cs              | 64 +++++++++++++++++
+ backend/HealthcareSystem.API/Program.cs            |  1 +
+ .../DTOs/FeedbackDTO.cs                            | 14 ++++
+ .../Interfaces/IFeedbackService.cs                 | 15 ++++
+ .../Services/FeedbackService.cs                    | 84 ++++++++++++++++++++++
+ 5 files changed, 178 insertions(+)
+
+commit c04d9c363dfe03547eb723da56e575a83db6f5c8
+Merge: 7bee071 e6bcefa
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 6 23:01:23 2025 +0700
+
+    Merge pull request #23 from nhm809/be/feature/QuestionAndMessage
+    
+    Complete Question And Message Feature
+
+commit e6bcefa6c50045aa7a075e7f76241388f088c0b8
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Fri Jun 6 22:59:41 2025 +0700
+
+    Complete Question And Message Feature
+
+ .../Controllers/MessageController.cs               |   50 +
+ .../Controllers/NotiController.cs                  |    4 +-
+ .../Controllers/QuestionController.cs              |   76 ++
+ backend/HealthcareSystem.API/Program.cs            |    2 +
+ .../DTOs/MessageDTO.cs                             |   13 +
+ .../DTOs/QuestionDTO.cs                            |   27 +
+ .../Interfaces/IMessageService.cs                  |   13 +
+ .../Interfaces/IQuestionService.cs                 |   16 +
+ .../HealthcareSystem.Domain/Entities/Question.cs   |    2 +-
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |    1 +
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    1 +
+ ..._ChangeStatusToIsAnsweredInQuestion.Designer.cs | 1068 ++++++++++++++++++++
+ ...604171104_ChangeStatusToIsAnsweredInQuestion.cs |   39 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    8 +-
+ .../Services/MessageService.cs                     |   48 +
+ .../Services/QuestionService.cs                    |   98 ++
+ .../data/AppDbContext.cs                           |    2 +-
+ 17 files changed, 1460 insertions(+), 8 deletions(-)
+
+commit 7bee071925db54d879cae1d59bb5223818a93ec7
+Merge: dcaf718 4969bb8
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 5 16:06:18 2025 +0700
+
+    Merge pull request #22 from nhm809/be/feature/QuestionAndMessage
+    
+    Add Database file for inserting.
+
+commit 4969bb84428aa1a6994b6007a7a17471ba1d5492
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 5 16:04:26 2025 +0700
+
+    Add Database file for inserting.
+
+ database/HealthcareSystemDb.sql | 220 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 220 insertions(+)
+
+commit dcaf71893a33e1cfdd55a27ad234f2cc27b6daa4
+Merge: c2c7308 095add1
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Thu Jun 5 15:42:04 2025 +0700
+
+    Merge pull request #21 from nhm809/fe/feature/blog-page
+    
+    Fe/feature/blog page
+
+commit 095add1ec07593a86ac013bfbcd3d59ecd91f5ac
+Merge: 5aacf12 c2c7308
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 5 10:28:45 2025 +0700
+
+    Solve conflict and Update feature blog
+
+commit 5aacf12ed89489beb835a4b878e6487eaefb1155
+Merge: b0e5142 68aef45
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Thu Jun 5 10:17:16 2025 +0700
+
+    Merge remote-tracking branch 'origin/fe/feature/blog-page'
+
+commit c2c730803cacc566f5761fa1978ac86c3d678950
+Merge: 1981bc8 5e8fdb9
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 23:03:19 2025 +0700
+
+    Merge pull request #20 from nhm809/be/feature/GetNoti
+    
+    Be/feature/get noti
+
+commit 5e8fdb9525f7b5fe48d040da2b9081619af29ede
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 23:02:02 2025 +0700
+
+    FeatureOfNotifications
+
+ .../Controllers/NotiController.cs                  | 70 ++++++++++++++++++++++
+ backend/HealthcareSystem.API/Program.cs            |  1 +
+ .../DTOs/CreateNotiDTO.cs                          | 15 +++++
+ .../DTOs/{GetAllNotiDTO.cs => NotiDTO.cs}          |  2 +-
+ .../Interfaces/INotiService.cs                     |  6 +-
+ .../Services/NotiService.cs                        | 49 ++++++++++++++-
+ database/CreateDatabaseAndInsert.sql               | 12 +++-
+ 7 files changed, 148 insertions(+), 7 deletions(-)
+
+commit f0767998e89c07410b4539dd642cf919cb8db6d7
+Merge: 5930274 1981bc8
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 4 21:43:26 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into feature/home-page
+
+commit 1981bc8340d4f2365fa071f673d103a109f1505c
+Merge: 011dd5d 4e0414b
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 4 21:41:59 2025 +0700
+
+    Merge pull request #19 from nhm809/feature/home-page
+    
+    Feature/home page
+
+commit 4e0414b758c024fb942294abe15a337ac2802925
+Merge: 4eaeb97 011dd5d
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 4 21:40:19 2025 +0700
+
+    Merge branch 'develop' into feature/home-page
+
+commit 59302746414a118e6aa0a72350761724a3465826
+Merge: 4eaeb97 011dd5d
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 4 21:37:28 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into feature/home-page
+
+commit 4eaeb97800524cb07b1b6ecca1f8f18149b4329d
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Wed Jun 4 21:34:37 2025 +0700
+
+    Home page add component
+
+ .../healthcaresystem/src/assets/imgs/isha1.png     | Bin 0 -> 96827 bytes
+ .../healthcaresystem/src/assets/imgs/secury.png    | Bin 0 -> 22099 bytes
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  19 +-
+ .../src/components/Header/Header.jsx               |   4 +-
+ .../src/components/Layout/styles.module.scss       |   4 +-
+ .../src/pages/Appointment/Appointment.jsx          |  24 +++
+ frontend/healthcaresystem/src/pages/Home/Home.css  | 169 +++++++++++++--
+ frontend/healthcaresystem/src/pages/Home/Home.jsx  | 228 ++++++++++++++++++---
+ .../healthcaresystem/src/pages/TestSti/TestSti.jsx |  24 +++
+ frontend/healthcaresystem/src/routers/routers.jsx  |   8 +
+ frontend/healthcaresystem/src/services/api.js      |   2 +-
+ 11 files changed, 432 insertions(+), 50 deletions(-)
+
+commit 6d3bd1e5a3b11a88803d75e66e2bbb058d068e96
+Merge: abb9a9a bbec109
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 18:46:23 2025 +0700
+
+    Merge pull request #18 from nhm809/revert-17-be/feature/testServiceRecord-page
+    
+    Revert "Be/feature/test service record page"
+
+commit bbec1091cd00861092a1e16a283e04ecab91617b
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 18:45:41 2025 +0700
+
+    Revert "Be/feature/test service record page"
+
+ .../Controllers/TestServiceRecordController.cs     |   43 -
+ .../HealthcareSystem.API/HealthcareSystem.API.sln  |   25 -
+ backend/HealthcareSystem.API/Program.cs            |    1 -
+ .../HealthcareSystem.Application/DTOs/StaffDTO.cs  |   12 -
+ .../DTOs/TestServiceRecordDTO.cs                   |   18 -
+ .../DTOs/TestServiceRecordDetailDTO.cs             |   21 -
+ .../HealthcareSystem.Application.csproj            |    3 +-
+ .../Interfaces/IService.cs                         |    2 +-
+ .../Interfaces/ITestServiceRecord.cs               |   12 -
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |    6 +-
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    7 +-
+ .../Entities/UserSpecialty.cs                      |   19 -
+ .../HealthcareSystem.Domain.csproj                 |    2 +-
+ .../HealthcareSystem.Infrastructure.csproj         |   63 +-
+ ...50604085539_Fix_UserSpecialty_Table.Designer.cs | 1107 --------------------
+ .../20250604085539_Fix_UserSpecialty_Table.cs      |  144 ---
+ ...04090608_Remove_SpecialtyUser_Table.Designer.cs | 1107 --------------------
+ .../20250604090608_Remove_SpecialtyUser_Table.cs   |   22 -
+ .../Migrations/AppDbContextModelSnapshot.cs        |   66 +-
+ .../Services/TestServiceRecordService.cs           |   80 --
+ .../data/AppDbContext.cs                           |   56 +-
+ database/CreateDatabaseAndInsert.sql               |    7 +-
+ 22 files changed, 71 insertions(+), 2752 deletions(-)
+
+commit abb9a9a54b350dc46e0c7b957fc321ed904fc840
+Merge: 8b20d23 68fbd95
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Wed Jun 4 18:43:15 2025 +0700
+
+    Merge pull request #17 from nhm809/be/feature/testServiceRecord-page
+    
+    Be/feature/test service record page
+
+commit 68fbd952083953dec03ed9c451194a24dd2bf9ca
+Merge: 8bc9aaa 8b20d23
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Wed Jun 4 18:43:03 2025 +0700
+
+    Merge branch 'main' into be/feature/testServiceRecord-page
+
+commit 8bc9aaa0e1808e0c3d4efe177a47c4d61d1b85f1
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Wed Jun 4 18:21:21 2025 +0700
+
+    TestServiceRecord And Detail
+
+ .../Controllers/TestServiceRecordController.cs     |   43 +
+ .../HealthcareSystem.API/HealthcareSystem.API.sln  |   25 +
+ backend/HealthcareSystem.API/Program.cs            |    1 +
+ .../HealthcareSystem.Application/DTOs/StaffDTO.cs  |   12 +
+ .../DTOs/TestServiceRecordDTO.cs                   |   18 +
+ .../DTOs/TestServiceRecordDetailDTO.cs             |   21 +
+ .../HealthcareSystem.Application.csproj            |    3 +-
+ .../Interfaces/IService.cs                         |    2 +-
+ .../Interfaces/ITestServiceRecord.cs               |   12 +
+ .../HealthcareSystem.Domain/Entities/Specialty.cs  |    6 +-
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    7 +-
+ .../Entities/UserSpecialty.cs                      |   19 +
+ .../HealthcareSystem.Domain.csproj                 |    2 +-
+ .../HealthcareSystem.Infrastructure.csproj         |   63 +-
+ ...50604085539_Fix_UserSpecialty_Table.Designer.cs | 1107 ++++++++++++++++++++
+ .../20250604085539_Fix_UserSpecialty_Table.cs      |  144 +++
+ ...04090608_Remove_SpecialtyUser_Table.Designer.cs | 1107 ++++++++++++++++++++
+ .../20250604090608_Remove_SpecialtyUser_Table.cs   |   22 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |   66 +-
+ .../Services/TestServiceRecordService.cs           |   80 ++
+ .../data/AppDbContext.cs                           |   56 +-
+ database/CreateDatabaseAndInsert.sql               |    4 +-
+ 22 files changed, 2751 insertions(+), 69 deletions(-)
+
+commit 8b20d2385f7d8c5d89c2ca8a4894fcce7eeb3826
+Merge: 82d74cf babff40
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 13:40:22 2025 +0700
+
+    Merge pull request #16 from nhm809/GetAllNoti
+    
+    Config ClientID and ClientSecret
+
+commit babff40fc4b74d0adab478eeb219927a831efdcc
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 13:38:22 2025 +0700
+
+    Config ClientID and ClientSecret
+
+ backend/HealthcareSystem.API/appsettings.json | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit 82d74cf7338097ccaae5ddd7f341a450f3a4e6af
+Merge: 68aef45 fbec4ba
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 13:29:22 2025 +0700
+
+    Merge pull request #15 from nhm809/Fix
+    
+    Fix GoogleLogin and Port
+
+commit fbec4baf74a7e3fcb3562286baa07932ba6ac177
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 13:23:05 2025 +0700
+
+    Update Google Login and Port
+
+ .../Properties/launchSettings.json                 |    4 +-
+ backend/HealthcareSystem.API/appsettings.json      |    4 +-
+ .../DTOs/GetAllNotiDTO.cs                          |   12 +
+ .../Interfaces/INotiService.cs                     |   12 +
+ backend/HealthcareSystem.Domain/Entities/User.cs   |    2 +-
+ .../20250604061543_AllowPWNull.Designer.cs         | 1068 ++++++++++++++++++++
+ .../Migrations/20250604061543_AllowPWNull.cs       |   44 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |    1 -
+ .../Services/NotiService.cs                        |   24 +
+ database/CreateDatabaseAndInsert.sql               |    2 +-
+ 10 files changed, 1166 insertions(+), 7 deletions(-)
+
+commit 011dd5dc6d2fc6752445923db07a677293955a11
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 09:21:15 2025 +0700
+
+    Update db 'Notification'
+
+ .../Entities/Notification.cs                       |    4 +-
+ ...21943_ChangeAttributeOfNotification.Designer.cs | 1069 ++++++++++++++++++++
+ ...20250604021943_ChangeAttributeOfNotification.cs |   49 +
+ .../Migrations/AppDbContextModelSnapshot.cs        |   10 +-
+ .../data/AppDbContext.cs                           |    4 +-
+ 5 files changed, 1127 insertions(+), 9 deletions(-)
+
+commit e162e813216b85f4a6a78b0069c994ee50f8b22e
+Merge: ba3e5f9 761fa98
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 08:47:35 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into develop
+
+commit ba3e5f9dda0e6cd8b73a1deb73b8c37f1a65e4dc
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 08:47:15 2025 +0700
+
+    Fix ggLogin
+
+ .../Services/GoogleLoginService.cs                          | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+commit 761fa98ec67392f18e1cba50f988054c612afd9f
+Merge: 3f3c492 a4c8544
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Wed Jun 4 08:41:02 2025 +0700
+
+    Merge pull request #14 from nhm809/feature/home-page
+    
+    User profile page, fix header component, login with google
+
+commit 9a9e445020297e2d2c60370c25e2a0b61627f4e8
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Wed Jun 4 00:30:59 2025 +0700
+
+    Add PasswordHash in User table
+
+ database/CreateDatabaseAndInsert.sql | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3f3c4923bc8a045ab92eec3bf9a54807d621c58a
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jun 3 23:24:17 2025 +0700
+
+    Update entities
+
+ backend/HealthcareSystem.API/appsettings.json      |    4 +-
+ .../HealthcareSystem.Domain/Entities/Invoice.cs    |   14 +-
+ .../HealthcareSystem.Domain/Entities/Payment.cs    |   24 -
+ ...8_RemovePaymentAndAddInvoiceColumns.Designer.cs | 1069 ++++++++++++++++++++
+ ...0603162018_RemovePaymentAndAddInvoiceColumns.cs |  667 ++++++++++++
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1066 +++++++++++++++++++
+ .../data/AppDbContext.cs                           |   27 -
+ 7 files changed, 2814 insertions(+), 57 deletions(-)
+
+commit b50ebd662b26e6757650b8c3933615af451fd610
+Merge: a4c8544 cd36078
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 3 22:00:16 2025 +0700
+
+    Merge branch 'develop' of https://github.com/nhm809/HealthcareSystem into feature/home-page
+
+commit a4c8544ed362dbea016fb545e195e6a33fdc4263
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Tue Jun 3 21:36:37 2025 +0700
+
+    User profile page, fix header component, login with google
+
+ frontend/healthcaresystem/package-lock.json        |  16 ++
+ frontend/healthcaresystem/package.json             |   1 +
+ .../src/components/Header/AuthModal/AuthModal.jsx  | 116 +++++++----
+ .../src/components/Header/Header.css               |  42 +++-
+ .../src/components/Header/Header.jsx               |  80 +++++---
+ .../healthcaresystem/src/pages/Profile/Profile.jsx | 222 +++++++++++++++++++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |   4 +
+ frontend/healthcaresystem/src/services/api.js      |  10 +-
+ 8 files changed, 420 insertions(+), 71 deletions(-)
+
+commit cd360783ebc633c5bdad727887c6812ab64ec617
+Merge: 68aef45 b53a8fa
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Tue Jun 3 19:28:04 2025 +0700
+
+    Merge pull request #13 from nhm809/be/feature/GoogleLogin
+    
+    Google login feature
+
+commit b53a8fa1efbfdded0422abf4fafc71a99396f12c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Tue Jun 3 19:24:04 2025 +0700
+
+    Google login feature
+
+ .../Controllers/GoogleLoginController.cs           | 32 +++++++++
+ .../HealthcareSystem.API.csproj                    |  1 +
+ backend/HealthcareSystem.API/Program.cs            |  4 +-
+ .../DTOs/GoogleTokenRequestDTO.cs                  |  9 +++
+ .../DTOs/GoolgeLoginDTO.cs                         | 12 ++--
+ .../Interfaces/IGoogleLoginService.cs              | 10 +++
+ .../Services/GoogleLoginService.cs                 | 76 ++++++++++++++++++++--
+ 7 files changed, 130 insertions(+), 14 deletions(-)
+
+commit b0e51426e84375473c61d2bb871f7a9312f95ab8
+Author: danghai-07 <haipndse181854@fpt.edu.vn>
+Date:   Mon Jun 2 21:52:03 2025 +0700
+
+    pull new code
+
+ HealthcareSystem.sln                               |  50 +++++
+ frontend/healthcaresystem/src/App.jsx              |  22 +--
+ .../healthcaresystem/src/pages/Blog/BlogDetail.css |  43 +++++
+ .../healthcaresystem/src/pages/Blog/BlogDetail.jsx |  44 +++++
+ .../healthcaresystem/src/pages/Blog/BlogPage.css   | 211 +++++++++++++++++++++
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   | 137 +++++++++++--
+ 6 files changed, 483 insertions(+), 24 deletions(-)
+
+commit 68aef4533747afbb8062273bc2445368da3af963
+Merge: 96dac23 3345e68
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 16:37:07 2025 +0700
+
+    Merge pull request #11 from nhm809/feature/home-page
+    
+    Add User icon to header, fix logic get user information
+
+commit 3345e6882c6dacc9536245a960c3ac9dfd34f69b
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Mon Jun 2 16:13:42 2025 +0700
+
+    Add User icon to header, fix logic get user information
+
+ .../src/components/Header/AuthModal/AuthModal.jsx  |  9 ++++---
+ .../src/components/Header/Header.css               |  8 ++++++-
+ .../src/components/Header/Header.jsx               | 28 ++++++++++++----------
+ .../src/contexts/StoreProvider.jsx                 | 10 ++++----
+ .../healthcaresystem/src/pages/Blog/BlogPage.jsx   |  7 +++++-
+ .../healthcaresystem/src/services/AuthService.jsx  |  7 ------
+ frontend/healthcaresystem/src/services/api.js      |  6 ++++-
+ frontend/healthcaresystem/vite.config.js           |  3 ++-
+ 8 files changed, 45 insertions(+), 33 deletions(-)
+
+commit 96dac23e8fcc4aaabbedcfd8cbe28085bd8f7342
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 14:21:51 2025 +0700
+
+    Latest version
+
+ backend/HealthcareSystem.API/Controllers/BlogController.cs         | 6 ++++--
+ backend/HealthcareSystem.API/Controllers/ServiceController.cs      | 4 ++--
+ backend/HealthcareSystem.API/Program.cs                            | 6 ++----
+ backend/HealthcareSystem.Application/Interfaces/IService.cs        | 4 ++--
+ backend/HealthcareSystem.Infrastructure/Services/BlogService.cs    | 2 +-
+ backend/HealthcareSystem.Infrastructure/Services/ServiceService.cs | 4 ++--
+ 6 files changed, 13 insertions(+), 13 deletions(-)
+
+commit 5f686e95ddb85dd8ca1c04fc349ecb47b98919ba
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 14:03:11 2025 +0700
+
+    nhm809: fix conflict
+
+ backend/HealthcareSystem.API/Program.cs |  2 +-
+ backend/HealthcareSystem.sln            | 79 ---------------------------------
+ backend/cls                             |  0
+ backend/dotnet                          |  0
+ 4 files changed, 1 insertion(+), 80 deletions(-)
+
+commit bbc18d01e3b512a081d2615d54e69146a407305a
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 14:01:30 2025 +0700
+
+    Revert "GoogleLogin"
+    
+    This reverts commit 7a4b223e1228f317cf2ee36b912967b6520c82b1.
+
+ backend/HealthcareSystem.API/Program.cs            | 19 ++++++
+ backend/HealthcareSystem.API/appsettings.json      |  4 +-
+ .../Interfaces/IGoogleService.cs                   | 13 ----
+ .../Services/GoogleLoginService.cs                 | 43 ++----------
+ backend/HealthcareSystem.sln                       | 79 ++++++++++++++++++++++
+ backend/cls                                        |  0
+ backend/dotnet                                     |  0
+ 7 files changed, 107 insertions(+), 51 deletions(-)
+
+commit 1fa766293e507e4f8f98fdb4b5cc46eeb7d517ff
+Merge: 7a4b223 1de8a20
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 14:00:17 2025 +0700
+
+    Save local changes before revert
+
+commit 7a4b223e1228f317cf2ee36b912967b6520c82b1
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 13:52:56 2025 +0700
+
+    GoogleLogin
+
+ backend/HealthcareSystem.API/Program.cs            | 12 ++--
+ backend/HealthcareSystem.API/appsettings.json      |  4 +-
+ .../Interfaces/IGoogleService.cs                   | 13 ++++
+ .../Services/GoogleLoginService.cs                 | 43 ++++++++++--
+ backend/HealthcareSystem.sln                       | 79 ----------------------
+ backend/cls                                        |  0
+ backend/dotnet                                     |  0
+ 7 files changed, 56 insertions(+), 95 deletions(-)
+
+commit 1de8a2072fa757ed43e83dc4d1c23712c1498351
+Merge: cb0911e 255f385
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 13:51:39 2025 +0700
+
+    Merge pull request #10 from nhm809/be/feature/blogs
+    
+    Update blog's feature
+
+commit 255f3857865b246def7002cee48b0d6fef3095d3
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Mon Jun 2 13:50:45 2025 +0700
+
+    fix conlict
+
+ backend/HealthcareSystem.API/Program.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6f02aa19d61a682a0de7e95c755ea158acb85a50
+Merge: 6a390c8 cb0911e
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Mon Jun 2 13:22:27 2025 +0700
+
+    fix conlict
+
+commit 6a390c8475f23dbccce884c780667db21c5f520a
+Author: Hieu Em <hieubmk2210@gmail.com>
+Date:   Mon Jun 2 12:56:22 2025 +0700
+
+    Update blog's feature
+
+ .../Controllers/BlogController.cs                  |   96 ++
+ backend/HealthcareSystem.API/Program.cs            |   22 +-
+ .../DTOs/BlogContentDTO.cs                         |   15 +
+ .../DTOs/BlogDetailDTO.cs                          |   22 -
+ .../DTOs/BlogImageDTO.cs                           |   11 +
+ .../DTOs/BlogViewDTO.cs                            |   10 +
+ .../DTOs/{BlogDTO.cs => GetBlogDTO.cs}             |    0
+ .../DTOs/GetBlogSummaryDTO.cs                      |   12 +
+ .../Interfaces/IBlogService.cs                     |   24 +
+ ...1025049_AddProvideAndGoogleIdInUser.Designer.cs | 1114 -------------------
+ .../20250601025049_AddProvideAndGoogleIdInUser.cs  |  701 ------------
+ ...033113_AlterUserAllowNullOfProvider.Designer.cs | 1113 -------------------
+ .../20250601033113_AlterUserAllowNullOfProvider.cs |   36 -
+ .../20250601035845_AddRefreshToken.Designer.cs     | 1119 --------------------
+ .../Migrations/20250601035845_AddRefreshToken.cs   |   39 -
+ .../Migrations/AppDbContextModelSnapshot.cs        | 1116 -------------------
+ .../Services/BlogService.cs                        |  160 +++
+ 17 files changed, 338 insertions(+), 5272 deletions(-)
+
+commit e20782959649849c18ff9bb43878a949091b684f
+Merge: fd5a1c5 cb0911e
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 07:36:37 2025 +0700
+
+    Merge branch 'main' of https://github.com/nhm809/HealthcareSystem
+
+commit fd5a1c56b340bef66fca80bfe41a80859111de3b
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 07:36:29 2025 +0700
+
+    Update Google Login feature
+
+ backend/HealthcareSystem.API/Program.cs                 | 17 +++++++++++++++++
+ backend/HealthcareSystem.API/appsettings.json           |  8 ++++++++
+ .../Services/AuthService.cs                             |  1 +
+ 3 files changed, 26 insertions(+)
+
+commit cb0911ed05f759f5e552ebf49bbc44b0a9878b21
+Merge: fa9f0a4 bc7674a
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Mon Jun 2 07:35:03 2025 +0700
+
+    Merge pull request #8 from nhm809/feature/service-page
+    
+    Feature/service page
+
+commit fa9f0a470e4c1c63cefa5b74cea74c27b1b44a5d
+Merge: ddcdf82 c7fda91
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 1 22:08:30 2025 +0700
+
+    Merge pull request #9 from nhm809/feature/home-page
+    
+    Feature/home page
+
+commit c7fda91995f58d54885a3926eb1a4c1fceb55e83
+Merge: 433f000 ddcdf82
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 1 22:07:07 2025 +0700
+
+    Merge branch 'main' into feature/home-page
+
+commit 433f000b999cb9becf75150c740dceb436e67c63
+Author: tongngocanhtaik18 <taitnase181917@fpt.edu.vn>
+Date:   Sun Jun 1 21:17:51 2025 +0700
+
+    fix login and register, valication for input
+
+ frontend/healthcaresystem/package-lock.json        |  16 +++
+ frontend/healthcaresystem/package.json             |   1 +
+ frontend/healthcaresystem/src/App.jsx              |  60 ++++-----
+ .../src/components/Header/AuthModal/AuthModal.jsx  | 139 ++++++++++++++-------
+ .../components/Header/AuthModal/OTPVerfication.jsx | 125 ------------------
+ .../src/components/Header/Header.css               |  44 +++++++
+ .../src/components/Header/Header.jsx               |  37 +++++-
+ .../src/components/Loading/Loading.css             |  15 +++
+ .../src/components/Loading/Loading.jsx             |  19 +++
+ .../src/contexts/StoreProvider.jsx                 |  36 ++++++
+ frontend/healthcaresystem/src/routers/routers.jsx  |  15 +++
+ .../healthcaresystem/src/services/AuthService.jsx  |   7 ++
+ frontend/healthcaresystem/src/services/api.js      |  68 ++++++++--
+ frontend/healthcaresystem/src/utils/validate.jsx   |  35 ++++++
+ frontend/healthcaresystem/vite.config.js           |   1 +
+ 15 files changed, 402 insertions(+), 216 deletions(-)
+
+commit bc7674ab5a325fb9ca1825078178a265dedb22ef
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 1 19:51:33 2025 +0700
+
+    Add ServiceDTO,ServiceDetailDTO and ServiceController
+
+ backend/HealthcareSystem.API/Controllers/ServiceController.cs      | 2 +-
+ backend/HealthcareSystem.Application/DTOs/ServiceDTO.cs            | 2 +-
+ backend/HealthcareSystem.Application/DTOs/ServiceDetailDTO.cs      | 2 +-
+ backend/HealthcareSystem.Application/Interfaces/IService.cs        | 2 +-
+ backend/HealthcareSystem.Infrastructure/Services/ServiceService.cs | 3 +--
+ 5 files changed, 5 insertions(+), 6 deletions(-)
+
+commit 498025aedd6509af7808eca8354542cf4aad9b4f
+Merge: 8153594 ddcdf82
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 1 19:44:48 2025 +0700
+
+    Resolve merge conflict in solution file
+
+commit ddcdf8212d4ec7bb57a7f9ce9c88b5e3d8ec0580
+Merge: 5bce42b 6a3747a
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 1 18:22:00 2025 +0700
+
+    Merge pull request #6 from nhm809/be/feature/GetUserInfo
+    
+    GetUserInfo Update
+
+commit 6a3747a39f31df9d3d03905d39f958ac3311236c
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 1 18:20:56 2025 +0700
+
+    GetUserInfo Update
+
+ .../DTOs/UserInfoDTO.cs                            | 16 ++++++
+ .../Interfaces/IUserService.cs                     |  9 ++++
+ .../Services/UserService.cs                        | 41 ++++++++++++++
+ backend/HealthcareSystem.sln                       | 62 ----------------------
+ backend/cls                                        |  0
+ backend/dotnet                                     |  0
+ 6 files changed, 66 insertions(+), 62 deletions(-)
+
+commit 5bce42bb9f81aa384e45250619a1e5d1f3ee91eb
+Merge: f702689 333ebe3
+Author: Nguyễn Hữu Mỹ <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 1 18:15:48 2025 +0700
+
+    Merge pull request #5 from nhm809/be/feature/GetUserInfo
+    
+    Get User Info
+
+commit 333ebe34e56f2b0877523b8d2a8d34508a83bf00
+Author: nhm809 <mynhse181827@fpt.edu.vn>
+Date:   Sun Jun 1 18:15:05 2025 +0700
+
+    Get User Info
+
+ .../Controllers/GetUserInfoController.cs           | 34 ++++++++++++++++++++++
+ .../Controllers/LoginController.cs                 |  5 +---
+ backend/HealthcareSystem.API/Program.cs            |  1 +
+ 3 files changed, 36 insertions(+), 4 deletions(-)
+
+commit 8153594811acceaa92fd575e158add330c853ed0
+Author: NguyenTrongTot <164918193+TrongtotDHFPT@users.noreply.github.com>
+Date:   Sun Jun 1 17:35:38 2025 +0700
+
+    Add ServiceSummaryDTO and update service APIs
+
+ .../Controllers/ServiceController.cs               | 37 ++++++++++++++++
+ backend/HealthcareSystem.API/Program.cs            | 14 ++++--
+ .../DTOs/ServiceDTO.cs                             | 13 ++++++
+ .../DTOs/ServiceDetailDTO.cs                       | 16 +++++++
+ .../Interfaces/IService.cs                         | 13 ++++++
+ .../Services/ServiceService.cs                     | 51 ++++++++++++++++++++++
+ backend/HealthcareSystem.sln                       | 17 ++++++++
+ 7 files changed, 157 insertions(+), 4 deletions(-)
