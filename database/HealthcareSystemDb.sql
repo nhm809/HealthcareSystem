@@ -53,7 +53,7 @@ INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
 INSERT INTO Service ( Name, Description, Price)
 VALUES
 (N'Xét nghiệm tổng quát STIs', N'Kiểm tra tổng quát các bệnh lây truyền qua đường tình dục ,Xét nghiệm theo quá trình', 1000000),
-(N'Tư vấn sức khỏe sinh sản', N'Tư vấn 1:1 với chuyên gia về sức khỏe sinh sản.', 150000)
+(N'Tư vấn sức khỏe', N'Tư vấn 1:1 với chuyên gia về sức khỏe.', 150000)
 
 
 --[UserSpecialty]--=====================================================================================================================================================

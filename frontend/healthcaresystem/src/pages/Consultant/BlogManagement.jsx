@@ -19,6 +19,7 @@ const topicOptions = [
      'Hướng dẫn',
      'Nhi khoa',
      'Cơ xương khớp',
+     'Giới tính',
 ];
 
 const BlogManagement = () => {

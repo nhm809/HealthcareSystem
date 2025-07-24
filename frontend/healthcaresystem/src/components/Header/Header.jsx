@@ -302,9 +302,10 @@ function Header() {
             </div>
           </div>
 
-          <button onClick={() => navigate('/question')}>Hỏi đáp bác sĩ</button>
-          <button className="cycle-button" onClick={(() => navigate('/reproductive-cycle'))}>Theo dõi chu kỳ sinh sản</button>
-          <button onClick={() => navigate('/blog')}>Blog</button>
+                              <button onClick={() => navigate('/question')}>Hỏi đáp bác sĩ</button>
+                    <button onClick={() => navigate('/chatbot')}>Trợ lý AI</button>
+                    <button className="cycle-button" onClick={(() => navigate('/reproductive-cycle'))}>Theo dõi chu kỳ sinh sản</button>
+                    <button onClick={() => navigate('/blog')}>Blog</button>
         </div>
       </div>
     </>
