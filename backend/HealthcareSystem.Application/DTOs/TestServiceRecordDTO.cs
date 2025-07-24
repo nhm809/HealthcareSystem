@@ -41,7 +41,7 @@ namespace HealthcareSystem.Application.DTOs
 
         public DateTime? RecordDate { get; set; }
 
-        public DateOnly? TestDate { get; set; } //
+        public DateOnly? TestDate { get; set; } 
 
         public string? Notes { get; set; }
 
