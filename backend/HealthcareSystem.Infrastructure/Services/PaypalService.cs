@@ -41,10 +41,10 @@ namespace HealthcareSystem.Infrastructure.Services
             _testServiceRecordService = testServiceRecordService;
         }
 
-        private bool IsPaymentPendingStatus(string status)
-        {
-            return status.Equals(PAYMENT_PENDING_STATUS, StringComparison.OrdinalIgnoreCase);
-        }
+        //private bool IsPaymentPendingStatus(string status)
+        //{
+        //    return status.Equals(PAYMENT_PENDING_STATUS, StringComparison.OrdinalIgnoreCase);
+        //}
 
         private async Task<string> GetAccessTokenAsync()
         {
@@ -103,7 +103,7 @@ namespace HealthcareSystem.Infrastructure.Services
                         throw new ArgumentException("Bản ghi hoặc dịch vụ không tồn tại");
 
                     if (!testServiceRecord.Status.Trim().Equals(PAYMENT_PENDING_STATUS.Trim(), StringComparison.OrdinalIgnoreCase))
-                    {
+                    {   
                         _logger.LogError($"TestServiceRecord Status không hợp lệ. Expected: '{PAYMENT_PENDING_STATUS.Trim()}', Actual: '{testServiceRecord.Status.Trim()}'");
                         throw new ArgumentException("Bản ghi không ở trạng thái chờ thanh toán.");
                     }
@@ -129,7 +129,7 @@ namespace HealthcareSystem.Infrastructure.Services
                     }
 
                     amount = appointment.Service.Price ?? 0;
-                    description = $"Thanh toán đặt lịch khám - {appointment.Member?.FullName} - AppointmentID: {appointmentId}";
+                    description = $"Thanh toán đặt lịch tư vấn - {appointment.Member?.FullName} - AppointmentID: {appointmentId}";
                     status = appointment.Status;
                 }
                 else
@@ -137,8 +137,6 @@ namespace HealthcareSystem.Infrastructure.Services
                     throw new ArgumentException("Phải cung cấp TestServiceRecordId hoặc AppointmentId");
                 }
 
-                if (amount <= 0)
-                    throw new ArgumentException("Giá tiền không hợp lệ.");
 
                 var accessToken = await GetAccessTokenAsync();
 
@@ -294,7 +292,6 @@ namespace HealthcareSystem.Infrastructure.Services
             
             decimal totalAmount = amount * (1 + taxRate);
 
-            // Tạo mới Invoice
             var invoice = new Invoice
             {
                 TestServiceRecordId = testServiceRecordId,

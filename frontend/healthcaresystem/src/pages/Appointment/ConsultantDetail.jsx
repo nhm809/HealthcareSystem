@@ -28,9 +28,8 @@ function DoctorDetail() {
     const serviceId = state?.serviceId;
     const [consultationCount, setConsultationCount] = useState(0);
 
-
     const today = dayjs();
-    const [selectedDate, setSelectedDate] = useState(today.format('YYYY-MM-DD'));
+    const [selectedDate, setSelectedDate] = useState(state?.selectedDate || today.format('YYYY-MM-DD'));
 
     const dateOptions = Array.from({ length: 7 }, (_, i) => {
         const date = today.add(i, 'day');
@@ -55,7 +54,7 @@ function DoctorDetail() {
                 if (selectedDate === todayStr) {
                     slots = slots.filter((timeStr) => {
                         const slotTime = dayjs(`${selectedDate}T${timeStr}`);
-                        return slotTime.isAfter(now.add(1, 'hour'));
+                        return slotTime.isAfter(now.add(2, 'hour'));
                     });
                 }
                 setAvailableSlots(slots);
