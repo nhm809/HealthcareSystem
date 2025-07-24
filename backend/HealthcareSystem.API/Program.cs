@@ -8,8 +8,16 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Infrastructure.BackgroundTasks;
+using Application.DTOs;
 using HealthcareSystem.Application.Interfaces;
 using HealthcareSystem.Infrastructure.Services;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
