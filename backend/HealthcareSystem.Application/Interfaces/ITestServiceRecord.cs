@@ -23,7 +23,7 @@ namespace HealthcareSystem.Application.Interfaces
         Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStatusAsync(string status);
         Task<IEnumerable<TestServiceRecordStaffDTO>> GetTestServiceRecordByStaffIdAsync(int staffId);
         Task<List<int>> GetAvailableStaffForShiftAsync(DateOnly date, int shift);
-   
+
         Task<bool> CanBookTestService(BookTestServiceRecordDTO request);
         Task AssignStaffToTestRecordAsync(int testServiceRecordId);
     }
