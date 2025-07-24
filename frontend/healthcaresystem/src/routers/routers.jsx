@@ -92,6 +92,10 @@ const routers = [
           path: '/my-questions',
           component: lazy(() => import('../pages/Question/MyQuestions'))
      },
+     {
+          path: '/chatbot',
+          component: lazy(() => import('../pages/Chatbot/Chatbot'))
+     },
 ]
 
 export default routers;

@@ -132,17 +132,13 @@ namespace Infrastructure.Services
             var testDate = request.TestDate;
             var shift = request.Shift;
 
-            if (shift != 1 && shift != 2)
-            {
-                throw new ArgumentException("Ca làm việc không hợp lệ. Chỉ chấp nhận ca 1 hoặc ca 2.");
-            }
             var shiftStartTime = GetDefaultTimeSlotForShift(shift);
             var shiftEndTime = (shift == 1) ? new TimeSpan(12, 0, 0) : new TimeSpan(17, 0, 0);
 
             var existingUserBookingInShift = await _context.TestServiceRecords
                 .AnyAsync(r => r.TestDate == testDate && 
                            r.MemberId == request.UserId &&
-                           r.Status != "Da huy" && /////////////////////////////////////
+                           r.Status != "Da huy" && 
                            r.Status != "Khach hang khong den" &&
                            r.TimeSlot >= shiftStartTime && r.TimeSlot < shiftEndTime);
 
@@ -318,7 +314,7 @@ namespace Infrastructure.Services
             availableStaffIds.UnionWith(extraWorkStaffIds);
             availableStaffIds.ExceptWith(staffOnLeaveIds);
 
-            Console.WriteLine("Available staff for {0} ca {1}: {2}", date, shift, string.Join(",", availableStaffIds));
+            //Console.WriteLine("Available staff for {0} ca {1}: {2}", date, shift, string.Join(",", availableStaffIds));
 
             return availableStaffIds.OrderBy(id => id).ToList();
         }
@@ -344,7 +340,6 @@ namespace Infrastructure.Services
             bool resultChanged = !string.IsNullOrEmpty(request.Result) && request.Result != oldResult;
 
             testServiceRecord.Status = request.Status;
-            // Chỉ cập nhật Notes và Result nếu chúng được cung cấp và không rỗng
             if (!string.IsNullOrEmpty(request.Notes))
             {
                 testServiceRecord.Notes = request.Notes;
@@ -485,6 +480,7 @@ namespace Infrastructure.Services
                     PhoneNumber = r.PhoneNumber,
                     FullNameOfMember = r.FullNameOfMember,
                     Result = r.Result,
+                    Dob =r.Dob,
                     StaffId = r.StaffId,
                     TestDate = r.TestDate,
                     MemberId = r.MemberId,

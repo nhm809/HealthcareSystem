@@ -44,9 +44,7 @@ function ReproductiveCycle() {
   const [defaultTab, setDefaultTab] = useState(0);
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const latestCycle = cycles.length > 0
-    ? [...cycles].sort((a, b) => moment(b.startDate).diff(moment(a.startDate)))[0]
-    : null;
+  const latestCycle = cycles[0] || null;
 
   const latestCycleDateRange = latestCycle
     ? {
@@ -97,11 +95,15 @@ function ReproductiveCycle() {
       const res = await api.get(`/cycle/${memberId}`);
       const data = res.data || [];
 
-      if (data.length === 0) {
+    const sortedCycles = [...data].sort((a, b) =>
+      moment(b.startDate).diff(moment(a.startDate))
+    );
+
+      if (sortedCycles.length === 0) {
         toast.info("Bạn chưa khai báo chu kỳ nào.", { toastId: "no-cycle-info" });
       }
 
-      setCycles(data);
+      setCycles(sortedCycles);
     } catch (err) {
       if (err.response?.status === 404) {
         toast.info("Bạn chưa khai báo chu kỳ nào.", { toastId: "no-cycle-404" });
@@ -115,11 +117,7 @@ function ReproductiveCycle() {
   const getPredictedCycle = (cycles) => {
     if (!cycles || cycles.length === 0) return null;
 
-    const sortedCycles = [...cycles].sort((a, b) =>
-      moment(a.startDate).diff(moment(b.startDate))
-    );
-
-    const last = sortedCycles[sortedCycles.length - 1];
+    const last = cycles[0];
 
     const nextStart = moment(last.startDate).clone().add(last.cycleLength + 1, "day");
     const nextEnd = nextStart.clone().add(last.periodLength - 1, "day");
@@ -293,7 +291,7 @@ function ReproductiveCycle() {
     return "Bình thường";
   };
 
-  const warning = getCurrentCycleWarning(cycles[cycles.length - 1]);
+  const warning = getCurrentCycleWarning(cycles[0]);
   const color = warning === "Bình thường" ? "green" : "red";
 
   return (
