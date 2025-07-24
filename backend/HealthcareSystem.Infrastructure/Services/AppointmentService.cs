@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +10,19 @@ using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.data;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Services
 {
     public class AppointmentService : IAppointmentService
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _config;
 
-        public AppointmentService(AppDbContext context)
+        public AppointmentService(IConfiguration config, AppDbContext context)
         {
             _context = context;
+            _config = config;
         }
 
         public async Task<int> CreateAppointmentAsync(AppointmentCreateDto dto)
@@ -59,6 +65,58 @@ namespace Infrastructure.Services
                 SendTime = DateTime.UtcNow.AddHours(7),
                 IsRead = false
             };
+
+            var email = new MimeMessage();
+            email.From.Add(new MailboxAddress("Gender Healthcare System", _config["EmailSettings:From"]));
+            email.To.Add(MailboxAddress.Parse(member.Email));
+            email.Subject = "Xác nhận lịch hẹn thành công";
+
+            email.Body = new TextPart("html")
+            {
+                Text = $@"
+        <div style='font-family: Arial, sans-serif; background-color: #f2f6f9; padding: 30px 0;'>
+            <div style='max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;'>
+
+                <!-- Logo -->
+                <div style='text-align: center; margin-bottom: 24px;'>
+                    <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
+                         alt='Healthcare System Logo'
+                         style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
+                </div>
+
+                <!-- Nội dung chính -->
+                <h2 style='color: #1a73e8; text-align: center; margin-bottom: 20px;'>Đặt lịch thành công</h2>
+
+                <p style='font-size: 15px; color: #333; line-height: 1.6; text-align: center;'>
+                    Xin chào <strong>{member.FullName}</strong>,
+                    <br />
+                    Bạn đã <strong>đặt lịch hẹn thành công</strong> với chuyên gia <strong>{consultantName}</strong> vào lúc <strong>{formattedTime}</strong>.
+                </p>
+
+                <div style='text-align: center; margin: 30px 0;'>
+                    <p style='font-size: 14px; color: #555;'>Vui lòng kiểm tra ứng dụng hoặc trang cá nhân để xem chi tiết lịch hẹn.</p>
+                </div>
+
+                <p style='font-size: 14px; color: #555; text-align: center;'>
+                    Nếu bạn cần thay đổi hoặc hủy lịch hẹn, vui lòng thực hiện trước giờ hẹn tối thiểu 2 tiếng.
+                </p>
+
+                <hr style='margin: 40px 0; border: none; border-top: 1px solid #e0e0e0;' />
+
+                <p style='font-size: 12px; color: #999; text-align: center;'>
+                    Email được gửi tự động từ hệ thống <strong>Healthcare System</strong>. Vui lòng không phản hồi lại email này.
+                </p>
+            </div>
+        </div>
+    "
+            };
+
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_config["EmailSettings:SmtpServer"], 587, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_config["EmailSettings:Username"], _config["EmailSettings:Password"]);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
+
             await _context.Notifications.AddRangeAsync(notiForConsultant, notiForMember);
 
             await _context.SaveChangesAsync();

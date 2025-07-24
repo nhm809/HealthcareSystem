@@ -11,7 +11,7 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 
 INSERT INTO dbo.[User] (Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
 VALUES
-('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'mexnguyen894@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'admin@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
 ('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
 ('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000002', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
 ('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
@@ -318,30 +318,66 @@ VALUES
 ---Blog-=====================================================================================================================================================
 INSERT INTO dbo.Blog (Title, Content, Description, ConsultantID, PublishDate, Topic, Status )
 VALUES
-(N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
- N'Nắm rõ chu kỳ kinh nguyệt giúp bạn dự đoán thời gian rụng trứng và khả năng mang thai. Trong bài viết này, chúng tôi hướng dẫn bạn cách theo dõi và sử dụng công cụ tính chu kỳ hiệu quả.',
- N'Hướng dẫn theo dõi chu kỳ kinh nguyệt để nhận biết thời điểm rụng trứng và tránh thai tự nhiên.',
- 14, '2025-05-20', N'Sức khỏe', 1),
+(N'Quan hệ xong 1 ngày sau có kinh có thai không?', 
+N'Hiểu biết về khả năng mang thai trong các giai đoạn của chu kỳ kinh nguyệt giúp bạn chủ động hơn trong việc phòng tránh thai hoặc lên kế hoạch sinh con. Đặc biệt, với trường hợp quan hệ xong 1 ngày sau có kinh, nhiều người băn khoăn liệu đây có phải thời điểm an toàn hay vẫn có nguy cơ mang thai ngoài ý muốn. Bài viết dưới đây sẽ cung cấp đến bạn các thông tin để giải đáp cho câu hỏi quan hệ xong 1 ngày sau có kinh có thai không.
 
-(N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
- N'STIs là các bệnh nguy hiểm có thể ảnh hưởng đến sức khỏe sinh sản và cuộc sống tình dục. Bài viết giúp bạn hiểu rõ về dấu hiệu, cách phòng ngừa và thời điểm cần xét nghiệm.',
- N'Hiểu đúng về STIs – dấu hiệu, cách lây và phòng ngừa hiệu quả.',
- 14, '2025-05-18', N'STIs', 1),
+Quan hệ xong 1 ngày sau có kinh có thai không?
+Quan hệ tình dục 1 ngày trước khi có kinh vẫn có khả năng mang thai, nhưng rất thấp. Vì lúc này thường không phải thời điểm rụng trứng. Tuy nhiên, nếu chu kỳ kinh nguyệt không đều, tinh trùng sống lâu trong âm đạo thì vẫn có khả năng thụ thai.
 
-(N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
- N'Không chỉ uống đúng giờ, người dùng thuốc tránh thai còn cần lưu ý nhiều điều khác để đảm bảo hiệu quả tránh thai. Bài viết giải đáp chi tiết những thắc mắc thường gặp.',
- N'Giải đáp mọi thắc mắc về việc sử dụng thuốc tránh thai an toàn và hiệu quả.',
- 13, '2025-05-15', N'Sức khỏe', 1),
+Mang thai xảy ra khi tinh trùng gặp trứng và thụ tinh thành công. Thông thường, sự rụng trứng diễn ra vào khoảng giữa chu kỳ kinh nguyệt ở phụ nữ có chu kỳ đều đặn 28 ngày (khoảng ngày 12 - 16 của chu kỳ). Sau khi rụng, trứng chỉ có khả năng sống sót trong khoảng 12 - 24 giờ. Trong khi đó, tinh trùng khỏe mạnh có thể tồn tại trong hệ sinh dục nữ (tử cung và ống dẫn trứng) từ 3 - 5 ngày. Do đó, quan hệ tình dục vào thời điểm gần ngày rụng trứng sẽ làm tăng khả năng thụ thai.',
+N'“Quan hệ xong 1 ngày sau có kinh có thai không?” là câu hỏi khiến nhiều người lo lắng, đặc biệt với những ai chưa hiểu rõ về khả năng thụ thai trong từng giai đoạn của chu kỳ kinh nguyệt. Để giải đáp vấn đề này, hãy cùng tìm hiểu qua bài viết sau đây.',
+11, '2025-07-24', N'Sức khỏe', 1),
 
-(N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
- N'Nhiều người lo lắng hoặc ngại ngùng khi đi xét nghiệm STIs. Bài viết chia sẻ quy trình, những điều cần chuẩn bị và cách lấy kết quả an toàn, bảo mật.',
- N'Chuẩn bị tâm lý và hiểu quy trình khi đi xét nghiệm STIs lần đầu.',
- 15, '2025-05-12', N'Hướng dẫn', 1),
+(N'Âm đạo là gì? Vị trí, cấu tạo và chức năng âm đạo',
+N'Nhiều người vẫn nhầm lẫn giữa âm đạo và âm hộ, hoặc chưa nắm rõ vị trí, cấu trúc, cũng như chức năng cụ thể của âm đạo. Bài viết này sẽ cung cấp thông tin chi tiết, chuẩn xác từ các nguồn y tế uy tín trong và ngoài nước, giúp bạn tự tin hơn trong việc chăm sóc vùng kín và bảo vệ sức khỏe sinh sản.
 
-(N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
- N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
- N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 13, '2025-05-10', N'Tâm lý', 1),
+Âm đạo là gì?
+Âm đạo là một ống cơ - màng nhầy nối tử cung với cửa ngoài của cơ quan sinh dục nữ. Đây là một phần quan trọng trong hệ sinh sản, nằm hoàn toàn bên trong cơ thể, khác với âm hộ - phần bên ngoài bao gồm môi lớn, môi nhỏ và âm vật. Âm đạo có đặc tính đàn hồi, co giãn mạnh, và có khả năng tự bôi trơn khi được kích thích, hỗ trợ cho các chức năng sinh lý như quan hệ tình dục và sinh sản.
+
+Hàm lượng dịch tiết âm đạo thay đổi tùy theo chu kỳ kinh nguyệt, trạng thái kích thích, hoặc tình trạng sức khỏe. Âm đạo không chỉ là một cơ quan sinh sản mà còn đóng vai trò trong việc duy trì sức khỏe tổng thể của phụ nữ khi được chăm sóc đúng cách.',
+N'Âm đạo là ống cơ đàn hồi nằm bên trong cơ thể phụ nữ, có vai trò quan trọng trong quan hệ tình dục, kinh nguyệt, thụ thai và sinh sản. Hiểu đúng về âm đạo là gì giúp phòng tránh viêm nhiễm và bảo vệ sức khỏe sinh sản. Cùng tìm hiểu sâu hơn về chủ đề này trong bài viết dưới đây của Nhà thuốc Long Châu!',
+15, '2025-07-24', N'Hướng dẫn', 1),
+
+(N'Thai IVF 10 tuần phát triển thế nào? Có nguy cơ gì cần theo dõi?',
+N'Tuần thứ 10 của thai kỳ IVF đánh dấu một cột mốc quan trọng khi phôi thai đang hoàn thiện các cơ quan và bước vào giai đoạn phát triển ổn định hơn. Tuy nhiên, do đặc thù thai IVF vốn nhạy cảm, mẹ bầu vẫn cần theo dõi sát sao để đảm bảo thai nhi phát triển khỏe mạnh. Vậy thai IVF 10 tuần phát triển thế nào và có những nguy cơ nào cần lưu ý?
+
+Sự phát triển của thai IVF 10 tuần
+Ở tuần thai thứ 10, thai IVF đang trải qua một giai đoạn phát triển rất quan trọng với nhiều thay đổi rõ rệt. Lúc này, thai nhi có chiều dài khoảng 3 - 4 cm và cân nặng khoảng 4 - 5g, tương đương kích thước của một quả dâu tây.
+
+Dù còn bé, nhưng hầu hết các cơ quan chính như não bộ, tim, gan, thận và ruột đã bắt đầu hình thành gần như hoàn chỉnh và tiếp tục phát triển mạnh mẽ.
+
+Các đặc điểm bên ngoài như mắt, tai, miệng, tay chân cũng ngày càng rõ ràng hơn. Đặc biệt, thai IVF 10 tuần bắt đầu xuất hiện phản xạ nhẹ, có thể di chuyển khi bị chạm vào thành tử cung, mặc dù mẹ vẫn chưa cảm nhận được những chuyển động này.
+
+Tim thai đã hoạt động rõ ràng với nhịp đập từ 120 - 180 lần/phút và có thể nghe thấy bằng thiết bị siêu âm Doppler, khiến các mẹ IVF cảm thấy an tâm hơn rất nhiều.
+
+Ngoài ra, nhau thai cũng bắt đầu đảm nhận chức năng vận chuyển chất dinh dưỡng và hormone cho thai nhi. Đây là giai đoạn đánh dấu sự phát triển khỏe mạnh ban đầu của em bé và là một cột mốc tinh thần quan trọng cho mẹ sau quá trình IVF đầy lo lắng.',
+N'Tuần thứ 10 của thai kỳ IVF là giai đoạn quan trọng với nhiều cột mốc phát triển vượt bậc của thai nhi và những thay đổi đáng chú ý ở mẹ. Bài viết này sẽ cùng bạn khám phá sự phát triển của thai IVF 10 tuần và những điều mẹ cần lưu ý để có một thai kỳ khỏe mạnh.',
+13, '2025-07-24', N'Sức khỏe', 1),
+
+(N'Rối loạn phóng noãn nên ăn gì và không nên ăn gì?',
+N'Bạn đang mong con nhưng chu kỳ kinh nguyệt rối loạn, trứng không rụng đều khiến việc thụ thai trở nên khó khăn? Một trong những nguyên nhân khá phổ biến là rối loạn phóng noãn, khiến trứng không rụng đều đặn mỗi tháng. Chế độ ăn uống khoa học có thể cải thiện đáng kể tình trạng này.
+
+Trong bài viết này, mình sẽ cùng bạn tìm hiểu rối loạn phóng noãn nên ăn gì để hỗ trợ sinh sản một cách tốt nhất.
+
+Rối loạn phóng noãn nên ăn gì?
+Chế độ dinh dưỡng đóng vai trò quan trọng trong việc hỗ trợ cải thiện chức năng buồng trứng và khả năng rụng trứng tự nhiên. Với tình trạng rối loạn phóng noãn, dưới đây là những thực phẩm bạn nên ăn để cân bằng nội tiết và tăng khả năng thụ thai:
+
+Thực phẩm giàu đạm thực vật
+Các thực phẩm có chứa nhiều đạm thực vật như đậu nành, đậu lăng, đậu xanh, hạt chia, hạt bí hay hạt hướng dương không chỉ giàu protein mà còn chứa nhiều phytoestrogen – hợp chất có khả năng cân bằng nội tiết tố nữ. Một nghiên cứu nổi bật từ Đại học Harvard cho thấy việc thay thế một phần đạm động vật bằng đạm thực vật có thể góp phần giảm nguy cơ vô sinh liên quan đến rối loạn phóng noãn.
+
+Omega 3 và chất béo không bão hòa
+Các loại chất béo tốt như Omega-3 và chất béo không bão hòa đơn có vai trò quan trọng trong việc điều hòa hormone sinh sản và cải thiện chất lượng nang noãn.
+
+Cá hồi, cá thu, quả bơ, dầu ô-liu, hạt lanh,… là những nguồn thực phẩm lý tưởng mà phụ nữ rối loạn phóng noãn nên ăn thường xuyên.
+
+Đồng thời, họ cũng nên hạn chế tối đa chất béo bão hòa từ đồ chiên rán, thức ăn nhanh vì chúng có thể khiến tình trạng mất cân bằng nội tiết thêm trầm trọng.',
+N'Rối loạn phóng noãn là nguyên nhân phổ biến gây khó thụ thai ở nữ giới. Bên cạnh việc điều trị y tế, chế độ ăn uống đóng vai trò quan trọng trong việc cải thiện chức năng rụng trứng. Vậy rối loạn phóng noãn nên ăn gì để hỗ trợ khả năng sinh sản một cách tự nhiên?',
+15, '2025-07-24', N'Hướng dẫn', 1),
+
+(N'Giải đáp thắc mắc: Tắc 1 bên vòi trứng có thai được không?',
+N'Khi bị chẩn đoán tắc một bên vòi trứng, nhiều phụ nữ lo lắng về khả năng làm mẹ của mình. Liệu tắc 1 bên vòi trứng có thai được không? Bài viết này sẽ giúp bạn trả lời câu hỏi này và kịp thời áp dụng các biện pháp phù hợp giúp có thai.',
+N'Khi bị chẩn đoán tắc một bên vòi trứng, nhiều phụ nữ lo lắng về khả năng làm mẹ của mình. Liệu tắc 1 bên vòi trứng có thai được không? Bài viết này sẽ giúp bạn trả lời câu hỏi này và kịp thời áp dụng các biện pháp phù hợp giúp có thai.',
+11, '2025-07-24', N'Sức khỏe', 1),
  
  (N'Sức khỏe hệ sinh sản của nam và nữ là gì?',
 N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Sức khỏe sinh sản của nam và nữ là những khía cạnh quan trọng của hệ thống sinh sản về mặt tổng thể vì cả hai đều tham gia vào quá trình tạo ra một sinh linh mới. Vậy thì sức khỏe hệ sinh sản là gì, hãy tìm hiểu cùng MedSex nhé.
@@ -353,7 +389,7 @@ Theo WHO, sức khỏe hệ sinh sản là trạng thái hoàn toàn khỏe mạ
 - Sức khỏe tinh thần: cá nhân cảm thấy thoải mái với chính mình về sức khỏe sinh sản và tình dục, biết thừa nhận những nhược điểm, không tự ti, sống đoàn kết với mọi người.
 - Sức khỏe xã hội: đảm bảo sự an toàn cho xã hội, có mối quan hệ tốt với cộng đồng.',
 N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Hãy tìm hiểu sức khỏe hệ sinh sản cùng Genetica nhé.',
-11, '2025-07-24', N'Sức khỏe', 1),
+12, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Ra huyết trắng nhiều là sắp có kinh hay có thai? Dấu hiệu và lời khuyên hữu ích',
 N'Nhiều chị em thắc mắc ra huyết trắng nhiều là sắp có kinh hay có thai, đặc biệt khi nhận thấy vùng kín ẩm ướt và khí hư thay đổi bất thường. Thực tế, đây có thể là dấu hiệu sinh lý bình thường hoặc cảnh báo thai kỳ, nhưng cũng không loại trừ khả năng tiềm ẩn bệnh lý phụ khoa. Hiểu rõ những đặc điểm của khí hư trong từng trường hợp sẽ giúp bạn chủ động theo dõi và chăm sóc sức khỏe tốt hơn.
@@ -363,7 +399,7 @@ Hiện tượng ra huyết trắng nhiều có thể là dấu hiệu bình thư
 
 Theo Mayo Clinic, trước kỳ kinh nguyệt, hormone estrogen tăng cao, làm tăng tiết dịch âm đạo. Khí hư thường ra nhiều và đặc hơn bình thường. Trong khi đó, ở những tuần đầu mang thai, nồng độ estrogen cùng lưu lượng máu tăng khiến khí hư có màu trắng sữa, loãng và ra nhiều hơn.',
 N'Ra huyết trắng nhiều là sắp có kinh hay có thai là băn khoăn phổ biến ở nhiều chị em, nhất là những người đang mong có em bé hoặc quan tâm tới sức khỏe sinh sản. Bài viết dưới đây sẽ giúp bạn nhận diện đúng dấu hiệu của cơ thể, phân biệt khí hư sinh lý khi sắp có kinh hoặc khi mang thai, đồng thời lưu ý cách chăm sóc phù hợp.',
-11, '2025-07-24', N'Sức khỏe', 1),
+14, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Tinh trùng dị dạng có thụ thai được không? Cách tăng khả năng thụ thai',
 N'Tinh trùng dị dạng là một trong những nguyên nhân phổ biến ảnh hưởng đến khả năng sinh sản nam giới, làm dấy lên lo ngại về khả năng thụ thai tự nhiên. Liệu có phải tất cả các trường hợp tinh trùng có hình dạng bất thường đều dẫn đến vô sinh? Bài viết sau sẽ giúp bạn hiểu rõ tinh trùng dị dạng có thụ thai được không và làm thế nào để tăng khả năng thụ thai.
@@ -378,7 +414,7 @@ Theo Tổ chức Y tế Thế giới (WHO, 2021), tỷ lệ tinh trùng có hìn
 
 Trong trường hợp tỷ lệ tinh trùng bình thường dưới 4%, bác sĩ sẽ đánh giá thêm các chỉ số quan trọng khác như: Tổng số lượng tinh trùng trong mỗi lần xuất tinh, mật độ tinh trùng (số lượng/ml), khả năng di động của tinh trùng, tỷ lệ sống của tinh trùng. Nếu tổng số lượng tinh trùng vẫn cao, di động tốt và vẫn còn một phần nhỏ tinh trùng có hình dạng bình thường thì khả năng thụ thai tự nhiên vẫn hoàn toàn có thể xảy ra.',
 N'Tinh trùng dị dạng là chẩn đoán khiến nhiều nam giới lo lắng về khả năng sinh sản. Liệu tinh trùng dị dạng có thụ thai được không hay cần can thiệp y học? Bài viết dưới đây sẽ giúp bạn có câu trả lời cụ thể và giải pháp giúp tăng khả năng thụ thai.',
-11, '2025-07-24', N'Sức khỏe', 1),
+13, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Thai 17 tuần là mấy tháng? Kích thước phát triển và những điều cần lưu ý',
 N'Mang thai là một hành trình kỳ diệu và mỗi tuần trôi qua đều đánh dấu những cột mốc phát triển quan trọng của thai nhi và những thay đổi đáng kể trên cơ thể người mẹ. Tuần thai thứ 17 là một giai đoạn đặc biệt, khi thai nhi bắt đầu phát triển mạnh mẽ hơn và mẹ bầu cảm nhận rõ rệt những biến đổi trong cơ thể. Vậy thai 17 tuần là mấy tháng? Thai nhi phát triển như thế nào và mẹ bầu cần lưu ý những gì? Bài viết này sẽ cung cấp thông tin để giúp bạn hiểu rõ hơn về giai đoạn này nhé!
@@ -388,18 +424,18 @@ Thông thường, việc tính tuổi thai thường dựa trên số tuần. �
 
 Cách tính này dựa trên quy ước rằng một tháng thai kỳ trung bình kéo dài khoảng 4 tuần. Tuy nhiên, do mỗi tháng có số ngày khác nhau nên việc xác định chính xác "mấy tháng" thường có tỷ lệ chênh lệch. Đây là thời điểm thai nhi đang phát triển nhanh chóng cả về kích thước lẫn chức năng cơ thể.',
 N'Mang thai 17 tuần là mấy tháng? Thai nhi phát triển ra sao và mẹ bầu cần lưu ý những gì? Để giúp mẹ hiểu rõ hơn về những thay đổi trong giai đoạn này, mời bạn đọc cùng tham khảo chi tiết trên bài viết dưới đây nhé!',
-11, '2025-07-24', N'Sức khỏe', 1);
+12, '2025-07-24', N'Sức khỏe', 1);
 
 
 
  --Blogimage-=====================================================================================================================================================
 INSERT INTO dbo.BlogImage (BlogID, ImagePath, ImageCaption, UploadDate, OrderIndex )
 VALUES
-(1, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951433/ivgihugmou0zjp1emclv.jpg', N'Minh họa chu kỳ kinh nguyệt', '2025-07-08 05:11:20.150', 1),
-(2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951443/dyggaxusc4fme4oet3tev.jpg', N'Thông tin về các bệnh STIs', '2025-07-08 05:09:01.747', 1),
-(3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951112/b3g6xkwcbvrlw4kicotw.jpg', N'Thuốc tránh thai hằng ngày', '2025-07-08 05:08:34.373', 1),
-(4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951325/bmjfiuhejrhcj5j5quq.jpg', N'Tư thế lấy mẫu xét nghiệm STIs', '2025-07-08 05:07:42.563', 1),
-(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951126/imf8crhktlis12j03o8g.jpg', N'Tư vấn giới tính trực tuyến', '2025-07-08 05:03:45.803', 1),
+(1, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344576/o4kcuxxv1mf629iinhed.webp', 'Thumbnail', '2025-07-24 08:09:40.870', 1),
+(2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344630/htnjucs7cjbnumgy4dgo.webp', 'Thumbnail', '2025-07-24 08:10:32.053', 1),
+(3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344715/d6jbyy2cobzxss18lqcn.webp', 'Thumbnail', '2025-07-24 08:11:56.803', 1),
+(4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344771/ff0wyvh6d0lsin7k1kev.jpg', 'Thumbnail', '2025-07-24 08:12:53.853', 1),
+(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344804/j4p7imkblv58djsjub5z.webp', 'Thumbnail', '2025-07-24 08:13:26.433', 1),
 (6, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337275/fpwfwngwgvxpivb9fw5c.webp', N'Thumbnail', '2025-07-24 06:08:35.987', 1),
 (7, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337660/chyrelwrjc3oftqtjf3m.webp', N'Thumbnail', '2025-07-24 06:14:22.297', 1),
 (8, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337727/rynj3t2cf4gruufjwjjo.webp', N'Thumbnail', '2025-07-24 06:15:34.137', 1),
