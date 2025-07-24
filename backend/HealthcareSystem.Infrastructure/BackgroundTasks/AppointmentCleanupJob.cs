@@ -76,7 +76,7 @@ public class AppointmentCleanupJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #d32f2f; text-align: center;'>Cuộc hẹn đã bị hủy</h2>
@@ -175,7 +175,7 @@ public class AppointmentCleanupJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #f57c00; text-align: center;'>Nhắc thanh toán trước cuộc hẹn</h2>
