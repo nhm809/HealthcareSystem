@@ -108,7 +108,6 @@ VALUES
 (17, 'https://meet.google.com/lmn-opqr-stu', 2, 6, '2025-07-26 09:00:00.000', '2025-07-26 09:30:00.000', N'Dang cho kham', N'Gặp vấn đề về sức khỏe sau kỳ rụng dâu'),
 
 (18, 'https://meet.google.com/rst-uvwx-yza', 2, 5, '2025-07-27 10:00:00.000', '2025-07-27 10:30:00.000', N'Dang cho kham', N'Vấn đề liên quan đến rụng trứng'),
-
 (19, 'https://meet.google.com/vwx-yzab-cde', 2, 5, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
 (19, 'https://meet.google.com/fgh-ijkl-mno', 2, 15, '2025-07-26 14:30:00.000', '2025-07-26 15:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
 
@@ -545,7 +544,6 @@ VALUES
 
 
 
-
 INSERT INTO dbo.Invoice (
     AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod,
     TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
@@ -607,4 +605,6 @@ VALUES
 (5, '2025-06-30 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã từ chối'),
 (10, '2025-07-04 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 3, N'Đã xác nhận'),
 (3, '2025-07-05 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đã xác nhận'),
-(5, '2025-07-08 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt');
+(5, '2025-07-08 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt'),
+(3, '2025-07-16 00:00:00.0000000', N'Làm thêm', N'', 2, N'Đang chờ duyệt'),
+(10, '2025-07-17 00:00:00.0000000', N'Nghỉ', N'Lý do cá nhân', 2, N'Đang chờ duyệt');
