@@ -15,7 +15,8 @@ import {
      faBaby,
      faBone,
      faMagnifyingGlass,
-     faLayerGroup
+     faLayerGroup,
+     faVenus
 } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 
@@ -26,6 +27,7 @@ const iconMap = {
   'Hướng dẫn': faFire,
   'Nhi khoa': faBaby,
   'Cơ xương khớp': faBone,
+  'Giới tính': faVenus,
 };
 
 function BlogPage() {
