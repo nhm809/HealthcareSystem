@@ -9,33 +9,32 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
 
-INSERT INTO dbo.[User] (Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
+INSERT INTO dbo.[User] (
+    Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, 
+    DoB, Gender, Address, CreateDate, Avatar, RoleID, 
+    RefreshToken, RefreshTokenExpiryTime, IsAvailable
+)
 VALUES
-('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'admin@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
-('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
-('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000002', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0900000004', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0900000006', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0900000007', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0900000008', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0900000009', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0900000011', '1990-01-01', 'FEMALE', N'Tân Bình, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0900000012', '1990-01-01', 'MALE', N'Gò Vấp, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0900000013', '1990-01-01', 'FEMALE', N'Phú Nhuận, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0900000014', '1990-01-01', 'MALE', N'Thủ Đức, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0900000015', '1990-01-01', 'FEMALE', N'Bình Thạnh, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0900000021', '1990-01-01', 'MALE', N'Hải Châu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0900000022', '1990-01-01', 'FEMALE', N'Thanh Khê, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0900000023', '1990-01-01', 'MALE', N'Sơn Trà, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0900000024', '1990-01-01', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0900000025', '1990-01-01', 'MALE', N'Liên Chiểu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1);
-
-
+('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'admin@gmail.com', '0970604318', '2000-08-07', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', '2025-02-18', NULL, 'AD', NULL, NULL, 1),
+('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0844058430', '1993-12-14', 'MALE', N'Quận 1, TP.HCM', '2024-11-16', NULL, 'MG', NULL, NULL, 1),
+('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0924364761', '1994-03-20', 'MALE', N'Quận 3, TP.HCM', '2024-10-07', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0970055076', '1990-09-18', 'MALE', N'Quận 5, TP.HCM', '2024-11-24', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0830235422', '1993-01-16', 'MALE', N'Quận 7, TP.HCM', '2024-07-19', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0850535918', '1997-05-13', 'MALE', N'Ba Đình, Hà Nội', '2025-02-15', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0887788836', '1991-04-16', 'FEMALE', N'Cầu Giấy, Hà Nội', '2024-10-10', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0929554192', '1988-08-27', 'MALE', N'Đống Đa, Hà Nội', '2025-03-01', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0966782683', '2000-05-13', 'FEMALE', N'Tây Hồ, Hà Nội', '2024-10-31', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0923819850', '1999-06-15', 'MALE', N'Thanh Xuân, Hà Nội', '2024-11-01', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0949674595', '1991-11-21', 'FEMALE', N'Tân Bình, TP.HCM', '2024-09-10', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0919801562', '1985-01-31', 'MALE', N'Gò Vấp, TP.HCM', '2024-08-16', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0850570828', '1994-12-20', 'FEMALE', N'Phú Nhuận, TP.HCM', '2025-01-26', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0917015014', '1991-11-12', 'MALE', N'Thủ Đức, TP.HCM', '2024-12-15', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0961375236', '1993-01-19', 'FEMALE', N'Bình Thạnh, TP.HCM', '2024-10-02', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0848667151', '1986-11-14', 'MALE', N'Hải Châu, Đà Nẵng', '2024-11-29', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0976149467', '1994-12-15', 'FEMALE', N'Thanh Khê, Đà Nẵng', '2024-09-09', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0961377191', '1985-11-14', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', '2024-09-12', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0931677872', '1999-02-13', 'MALE', N'Liên Chiểu, Đà Nẵng', '2024-09-20', NULL, 'MB', NULL, NULL, 1);
 
 --Specialty--=====================================================================================================================================================
 INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
@@ -97,23 +96,34 @@ VALUES
 
 (15, 3) -- Da liễu - STIs
 
+
+
+
 INSERT INTO dbo.Appointment (
     MemberID, MeetLink, ServiceID, ConsultantID, 
     StartTime, EndTime, Status, Symptoms
 )
 VALUES
-(16, 'https://meet.google.com/abc-defg-hij', 2, 5, '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Da hoan thanh', N'Tư vấn tâm lý'),
-(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 5, '2025-07-24 13:00:00.000', '2025-07-24 13:30:00.000', N'Dang cho kham', N'Cảm thấy khó chịu ở vùng ngực'),
+-- Da danh gia (2)
+(4, 'https://meet.google.com/abc-defg-hij', 2, 14, '2025-07-20 15:00:00.000', '2025-07-20 15:30:00.000', N'Da danh gia', N'Tư vấn tâm lý'),
+(20, 'https://meet.google.com/bcd-yzab-ijk', 2, 13, '2025-07-21 10:00:00.000', '2025-07-21 10:30:00.000', N'Da danh gia', N'Rối loạn lo âu'),
 
-(17, 'https://meet.google.com/lmn-opqr-stu', 2, 6, '2025-07-26 09:00:00.000', '2025-07-26 09:30:00.000', N'Dang cho kham', N'Gặp vấn đề về sức khỏe sau kỳ rụng dâu'),
+-- Da hoan thanh (2)
+(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 11, '2025-07-22 09:00:00.000', '2025-07-22 09:30:00.000', N'Da hoan thanh', N'Tư vấn mối quan hệ'),
+(17, 'https://meet.google.com/bcd-efgh-yzab', 2, 5,  '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Da hoan thanh', N'Tư vấn tâm lý'),
 
-(18, 'https://meet.google.com/rst-uvwx-yza', 2, 5, '2025-07-27 10:00:00.000', '2025-07-27 10:30:00.000', N'Dang cho kham', N'Vấn đề liên quan đến rụng trứng'),
-(19, 'https://meet.google.com/vwx-yzab-cde', 2, 5, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
-(19, 'https://meet.google.com/fgh-ijkl-mno', 2, 15, '2025-07-26 14:30:00.000', '2025-07-26 15:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
+-- Dang cho kham (3)
+(18, 'https://meet.google.com/bcd-jklm-ijk', 2, 12, '2025-07-24 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Đau đầu'),
+(19, 'https://meet.google.com/bcd-efgh-jklm', 2, 13, '2025-07-23 09:00:00.000', '2025-07-23 09:30:00.000', N'Dang cho kham', N'Stress học tập'),
+(20, 'https://meet.google.com/bcd-efgh-ijk', 2, 14, '2025-07-22 13:00:00.000', '2025-07-22 13:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
 
-(20, 'https://meet.google.com/ghi-jklm-nop', 1, 14, '2025-07-17 15:00:00.000', '2025-07-17 15:30:00.000', N'Da danh gia', N'Tư vấn tâm lý'),
-(20, 'https://meet.google.com/zab-cdef-ghi', 2, 14, '2025-07-25 15:00:00.000', '2025-07-25 15:30:00.000', N'Dang cho kham', N'Giáo dục giới tính'),
-(20, 'https://meet.google.com/pqr-stuv-wxy', 2, 14, '2025-07-26 16:00:00.000', '2025-07-26 16:30:00.000', N'Dang cho kham', N'Tôi cần tư vấn tâm lý sau khi sinh');
+-- Dang thanh toan (2)
+(4, '', 2, 15, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
+(16, '', 2, 11, '2025-07-22 11:00:00.000', '2025-07-22 11:30:00.000', N'Dang thanh toan', N'Áp lực công việc'),
+
+-- Da huy (2)
+(17, '', 2, 12, '2025-07-24 13:30:00.000', '2025-07-24 14:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
+(18, '', 2, 5,  '2025-07-21 16:00:00.000', '2025-07-21 16:30:00.000', N'Da huy', N'Không còn nhu cầu tư vấn');
 
 
 
@@ -125,53 +135,64 @@ INSERT INTO TestServiceRecord (
     TimeSlot, Notes, Status
 )
 VALUES
--- ID 6
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
- 16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3, '2025-07-03 13:49:14.260',
- '2025-07-06', '08:00:00.0000000', N'đã hoàn thành xét nghiệm', N'Da danh gia'),
-
--- ID 11
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
- 16, NULL, NULL, '2025-07-03 16:23:58.023',
- '2025-07-03', '08:00:00.0000000', NULL, N'Dang thanh toan'),
-
--- ID 13
+-- ✅ Da danh gia: 4 (Nguyễn Văn Hiếu), 20 (Đỗ Văn L)
 (1, '2004-04-06', N'MALE', '0975672459', N'Nguyễn Văn Hiếu',
- 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3, '2025-07-14 10:01:17.480',
- '2025-07-15', '08:00:00.0000000', NULL, N'Da hoan thanh'),
+ 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3,
+ '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Đã có kết quả xét nghiệm', N'Da danh gia'),
 
--- ID 19
-(1, '2002-04-08', N'MALE', '0975672457', N'Nguyễn Văn Hiếu',
- 4, NULL, NULL, '2025-07-24 02:09:00.227',
- '2025-08-01', '08:00:00.0000000', NULL, N'Da huy'),
-
--- ID 20
 (1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
- 20, NULL, NULL, '2025-07-24 02:11:41.433',
- '2025-07-31', '13:00:00.0000000', NULL, N'Da huy'),
+ 20, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 6,
+ '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Kết luận đầy đủ và chính xác', N'Da danh gia'),
 
--- ID 21
-(1, '2002-05-01', N'FEMALE', '0376782657', N'Nguyễn Thị Mai',
- 16, NULL, 7, '2025-07-24 02:14:12.787',
- '2025-07-31', '13:00:00.0000000', NULL, N'Dang cho kham'),
-
--- ID 22
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
- 18, NULL, 3, '2025-07-24 02:21:54.470',
- '2025-07-24', '08:00:00.0000000', N'Mẫu xét nghiệm đang trong quá trình phân tích', N'Dang thuc hien'),
-
- (1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
- 19, NULL, 3, '2025-07-24 02:36:00.923',
- '2025-07-30', '08:00:00.0000000', NULL, N'Dang cho kham'),
+-- 🟩 Da hoan thanh: 16 (Phạm Văn L), 17 (Lê Văn Tài)
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3,
+ '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Xét nghiệm hoàn tất', N'Da hoan thanh'),
 
 (1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
- 17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7, '2025-07-24 10:00:00.000',
- '2025-08-01', '08:00:00.0000000', N'Xét nghiệm thành công', N'Da danh gia'),
+ 17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7,
+ '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Hoàn tất xét nghiệm', N'Da hoan thanh'),
 
--- ID 24: Đang thực hiện
-(1, '2000-12-12', N'FEMALE', '0369876543', N'Trần Thị Bình',
- 20, NULL, 6, '2025-07-24 11:00:00.000',
- '2025-08-02', '13:00:00.0000000', N'Đang lấy mẫu xét nghiệm', N'Dang thuc hien');
+-- 🟡 Dang cho kham: 18, 19, 20
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+ 18, NULL, 3,
+ '2025-07-22', '2025-07-24', '08:00:00.0000000', N'Chờ khám lần đầu', N'Dang cho kham'),
+
+(1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
+ 19, NULL, 3,
+ '2025-07-22', '2025-07-25', '08:00:00.0000000', N'Đã lấy mẫu máu', N'Dang cho kham'),
+
+(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
+ 20, NULL, 6,
+ '2025-07-22', '2025-07-26', '08:00:00.0000000', N'Chưa đủ điều kiện xét nghiệm', N'Dang cho kham'),
+
+-- 🟧 Dang thanh toan: 4, 16
+(1, '2004-04-06', N'MALE', '0975672459', N'Nguyễn Văn Hiếu',
+ 4, NULL, NULL,
+ '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
+
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, NULL, NULL,
+ '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
+
+-- ❌ Da huy: 17, 18
+(1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
+ 17, NULL, NULL,
+ '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Hủy do lý do cá nhân', N'Da huy'),
+
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+ 18, NULL, NULL,
+ '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Khách tự hủy lịch', N'Da huy') ,
+-- 🟦 Dang thuc hien: 5, 6
+(1, '2000-12-12', N'MALE', '0371234568', N'Trần Văn B',
+ 16, NULL, 6,
+ '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành xét nghiệm máu', N'Dang thuc hien'),
+
+(1, '2000-01-01', N'FEMALE', '0934567890', N'Nguyễn Thị L',
+ 17, NULL, 7,
+ '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành phân tích mẫu', N'Dang thuc hien');
+
+
 
 INSERT INTO Question (
    MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, Heart, AnsCount
@@ -522,11 +543,12 @@ VALUES
 
 --=====================================================================================================================================================
 --feedback
-INSERT INTO Feedback (AppointmentID, [RecordID], Rating, Comment, FeedbackDate)
+INSERT INTO Feedback (AppointmentID, RecordID, Rating, Comment, FeedbackDate)
 VALUES
-(NULL, 1, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
-(NULL, 9, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
-(1, NULL, 5, N'Feedback dịch vụ rất tốt', GETDATE());
+(1, NULL, 5,  N'dịch vụ rất tốt', GETDATE()),
+(2, NULL, 5,  N'dịch vụ rất tốt', GETDATE()),
+(NULL, 1, 5,  N'Bác sĩ rất tận tâm ạ', GETDATE()),
+(NULL, 2, 5,  N'Dịch vụ rất tốt', GETDATE());
 
 
 --Table [dbo].[Notification]
@@ -570,28 +592,30 @@ INSERT INTO dbo.Invoice (
     TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
 )
 VALUES
-(NULL, 1, 1050000.00, 'PayPal', '9B766355RJ45471925', '2025-07-14 10:01:36.937', 1, 0.05, 'VND', NULL),
-(NULL, 3, 1050000.00, 'PayPal', '6IW823322B527477M', '2025-07-14 13:34:59.577', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
-(NULL, 6, 1050000.00, 'PayPal', '1BD76296U803490K', '2025-07-16 16:42:49.443', 1, 0.05, 'VND', '2025-07-16 16:42:49.443'),
-(NULL, 7, 1050000.00, 'PayPal', '8YX5658U74173812T', '2025-07-19 15:56:32.380', 1, 0.05, 'VND', '2025-07-19 15:56:32.380'),
-(NULL, 8, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
-(NULL, 9, 1050000.00, 'PayPal', '6F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
-(NULL, 10, 1050000.00, 'PayPal', '31627614SJ2608229', '2025-07-24 02:14:26.793', 1, 0.05, 'VND', '2025-07-24 02:14:26.793');
-
-
+(1, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(2, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(3, NULL, 157500.00, 'PayPal', '8EF34567NO765432N', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(4, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(5, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(6, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000'),
+(7, NULL, 157500.00, 'PayPal', '3MN78901VW321098V', '2025-07-21 16:00:00.000', 1, 0.05, 'VND', '2025-07-21 16:00:00.000');
 
 INSERT INTO dbo.Invoice (
     AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod,
     TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
 )
 VALUES
-(1, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-24 13:00:01.000', 1, 0.05, 'VND', '2025-07-24 13:00:01.000'),
-(2, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-24 13:01:01.000', 1, 0.05, 'VND', '2025-07-24 13:01:01.000'),
-(3, NULL, 157500.00, 'PayPal', '8EF34567NO765432N', '2025-07-24 13:02:01.000', 1, 0.05, 'VND', '2025-07-24 13:02:01.000'),
-(4, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
-(5, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
-(8, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
-(9, NULL, 157500.00, 'PayPal', '3MN78901VW321098V', '2025-07-24 13:06:01.000', 1, 0.05, 'VND', '2025-07-24 13:06:01.000');
+(NULL, 3, 1050000.00, 'PayPal', '9B766355RJ45471925', '2025-07-14 10:01:36.937', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
+(NULL, 4, 1050000.00, 'PayPal', '6IW823322B527477M', '2025-07-14 13:34:59.577', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
+(NULL, 5, 1050000.00, 'PayPal', '1BD76296U803490K', '2025-07-16 16:42:49.443', 1, 0.05, 'VND', '2025-07-16 16:42:49.443'),
+(NULL, 6, 1050000.00, 'PayPal', '8YX5658U74173812T', '2025-07-19 15:56:32.380', 1, 0.05, 'VND', '2025-07-19 15:56:32.380'),
+(NULL, 7, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
+(NULL, 1, 1050000.00, 'PayPal', '6F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
+(NULL, 2, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
+(NULL, 12, 1050000.00, 'PayPal', '4F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
+(NULL, 13, 1050000.00, 'PayPal', '46627614SJ2608229', '2025-07-24 02:14:26.793', 1, 0.05, 'VND', '2025-07-24 02:14:26.793');
+
+
 --WeeklySchedule--=====================================================================================================================================================
 -- Staff (UserID = 3, 6) works morning shift from Mon to Fri
 INSERT INTO [WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType, Note)
