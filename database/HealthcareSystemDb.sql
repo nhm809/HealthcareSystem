@@ -97,40 +97,82 @@ VALUES
 
 (15, 3) -- Da liễu - STIs
 
-
-INSERT INTO Appointment (MemberID, MeetLink, ServiceID, ConsultantID, StartTime, EndTime, Status)
+INSERT INTO dbo.Appointment (
+    MemberID, MeetLink, ServiceID, ConsultantID, 
+    StartTime, EndTime, Status, Symptoms
+)
 VALUES
-(16, 'https://meet.link/1', 1, 5, '2025-07-15 08:00:00', '2025-07-15 08:30:00', N'Đã đặt'),
-(17, 'https://meet.link/2', 2, 11, '2025-07-15 08:45:00', '2025-07-15 09:15:00', N'Đã đặt'),
-(18, 'https://meet.link/3', 1, 12, '2025-07-16 10:15:00', '2025-07-16 10:45:00', N'Đã đặt'),
-(19, 'https://meet.link/4', 2, 13, '2025-07-16 14:30:00', '2025-07-16 15:00:00', N'Đã đặt'),
-(20, 'https://meet.link/5', 1, 14, '2025-07-17 15:15:00', '2025-07-17 15:45:00', N'Đã đặt');
-  
+(16, 'https://meet.google.com/abc-defg-hij', 2, 5, '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Da hoan thanh', N'Tư vấn tâm lý'),
+(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 5, '2025-07-24 13:00:00.000', '2025-07-24 13:30:00.000', N'Dang cho kham', N'Cảm thấy khó chịu ở vùng ngực'),
+
+(17, 'https://meet.google.com/lmn-opqr-stu', 2, 6, '2025-07-26 09:00:00.000', '2025-07-26 09:30:00.000', N'Dang cho kham', N'Gặp vấn đề về sức khỏe sau kỳ rụng dâu'),
+
+(18, 'https://meet.google.com/rst-uvwx-yza', 2, 5, '2025-07-27 10:00:00.000', '2025-07-27 10:30:00.000', N'Dang cho kham', N'Vấn đề liên quan đến rụng trứng'),
+
+(19, 'https://meet.google.com/vwx-yzab-cde', 2, 5, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
+(19, 'https://meet.google.com/fgh-ijkl-mno', 2, 15, '2025-07-26 14:30:00.000', '2025-07-26 15:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
+
+(20, 'https://meet.google.com/ghi-jklm-nop', 1, 14, '2025-07-17 15:00:00.000', '2025-07-17 15:30:00.000', N'Da danh gia', N'Tư vấn tâm lý'),
+(20, 'https://meet.google.com/zab-cdef-ghi', 2, 14, '2025-07-25 15:00:00.000', '2025-07-25 15:30:00.000', N'Dang cho kham', N'Giáo dục giới tính'),
+(20, 'https://meet.google.com/pqr-stuv-wxy', 2, 14, '2025-07-26 16:00:00.000', '2025-07-26 16:30:00.000', N'Dang cho kham', N'Tôi cần tư vấn tâm lý sau khi sinh');
+
 
 
 
 --TestServiceRecord --=====================================================================================================================================================
-INSERT INTO dbo.TestServiceRecord (
-    ServiceID, Dob, Gender, PhoneNumber, FullNameOfMember, MemberID, Result,
-    StaffID, RecordDate, TestDate, TimeSlot, Notes, Status
+INSERT INTO TestServiceRecord (
+    ServiceID, Dob, Gender, PhoneNumber, FullNameOfMember,
+    MemberID, Result, StaffID, RecordDate, TestDate,
+    TimeSlot, Notes, Status
 )
 VALUES
-(1, '1990-01-01', 'MALE', '0900000021', N'Phạm Văn L', 16, NULL, 3, '2025-06-27 13:18:16.997', '2025-06-30', '08:00 - 09:00', NULL, N'Đã đánh giá'),
-(1, '1990-01-01', 'FEMALE', '0900000022', N'Nguyễn Thị M', 17, NULL, 6, '2025-06-27 13:19:03.783', '2025-06-30', '08:00 - 09:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'MALE', '0900000023', N'Trần Văn N', 18, NULL, 7, '2025-06-27 13:19:32.320', '2025-06-30', '08:00 - 09:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'FEMALE', '0900000024', N'Lê Thị O', 19, NULL, 8, '2025-06-30 22:51:34.037', '2025-07-05', '08:00 - 09:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'MALE', '0900000025', N'Đỗ Văn P', 20, NULL, 9, '2025-06-30 23:31:39.420', '2025-07-05', '08:00 - 09:00', NULL, N'Đang chờ khám'),
+-- ID 6
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3, '2025-07-03 13:49:14.260',
+ '2025-07-06', '08:00:00.0000000', N'đã hoàn thành xét nghiệm', N'Da danh gia'),
 
-(1, '1990-01-01', 'MALE', '0900000021', N'Phạm Văn L', 16, NULL, 3, '2025-07-03 13:49:14.260', '2025-07-06', '08:00 - 09:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'FEMALE', '0900000022', N'Nguyễn Thị M', 17, NULL, 6, '2025-07-03 13:50:32.387', '2025-07-06', '08:00 - 09:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'MALE', '0900000023', N'Trần Văn N', 18, NULL, 7, '2025-07-03 13:51:36.653', '2025-07-06', '13:00 - 14:00', NULL, N'Đang chờ khám'),
-(1, '1990-01-01', 'FEMALE', '0900000024', N'Lê Thị O', 19, NULL, 8, '2025-07-03 13:52:02.603', '2025-07-06', '13:00 - 14:00', NULL, N'Đang thực hiện'),
+-- ID 11
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, NULL, NULL, '2025-07-03 16:23:58.023',
+ '2025-07-03', '08:00:00.0000000', NULL, N'Dang thanh toan'),
 
-(1, '1990-01-01', 'MALE', '0900000025', N'Đỗ Văn P', 20, NULL, NULL, '2025-07-03 16:23:11.957', '2025-07-03', '08:00 - 09:00', NULL, N'Đã hủy'),
-(1, '1990-01-01', 'MALE', '0900000021', N'Phạm Văn L', 16, NULL, NULL, '2025-07-03 16:23:58.023', '2025-07-03', '08:00 - 09:00', NULL, N'Đang thanh toán'),
+-- ID 13
+(1, '2004-04-06', N'MALE', '0975672459', N'Nguyễn Văn Hiếu',
+ 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3, '2025-07-14 10:01:17.480',
+ '2025-07-15', '08:00:00.0000000', NULL, N'Da hoan thanh'),
 
-(1, '1990-01-01', 'MALE', '0900000023', N'Trần Văn N', 18, NULL, 9, '2025-07-04 22:21:53.317', '2025-07-16', '08:00 - 09:00', NULL, N'Đang chờ khám');
+-- ID 19
+(1, '2002-04-08', N'MALE', '0975672457', N'Nguyễn Văn Hiếu',
+ 4, NULL, NULL, '2025-07-24 02:09:00.227',
+ '2025-08-01', '08:00:00.0000000', NULL, N'Da huy'),
 
+-- ID 20
+(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
+ 20, NULL, NULL, '2025-07-24 02:11:41.433',
+ '2025-07-31', '13:00:00.0000000', NULL, N'Da huy'),
+
+-- ID 21
+(1, '2002-05-01', N'FEMALE', '0376782657', N'Nguyễn Thị Mai',
+ 16, NULL, 7, '2025-07-24 02:14:12.787',
+ '2025-07-31', '13:00:00.0000000', NULL, N'Dang cho kham'),
+
+-- ID 22
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+ 18, NULL, 3, '2025-07-24 02:21:54.470',
+ '2025-07-24', '08:00:00.0000000', N'Mẫu xét nghiệm đang trong quá trình phân tích', N'Dang thuc hien'),
+
+ (1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
+ 19, NULL, 3, '2025-07-24 02:36:00.923',
+ '2025-07-30', '08:00:00.0000000', NULL, N'Dang cho kham'),
+
+(1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
+ 17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7, '2025-07-24 10:00:00.000',
+ '2025-08-01', '08:00:00.0000000', N'Xét nghiệm thành công', N'Da danh gia'),
+
+-- ID 24: Đang thực hiện
+(1, '2000-12-12', N'FEMALE', '0369876543', N'Trần Thị Bình',
+ 20, NULL, 6, '2025-07-24 11:00:00.000',
+ '2025-08-02', '13:00:00.0000000', N'Đang lấy mẫu xét nghiệm', N'Dang thuc hien');
 
 INSERT INTO Question (
    MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, Heart, AnsCount
@@ -163,7 +205,36 @@ VALUES
  -- Câu hỏi về giáo dục giới tính
 (20, 7, N'Nên dạy con về giới tính từ mấy tuổi?',
  N'Tôi có con gái 2 tuổi, muốn dạy về sự khác biệt giới tính và tôn trọng người khác. Nên bắt đầu thế nào cho phù hợp?',
- NULL, '2025-07-05 08:00:00', 9, N'Bị từ chối', 35, N'Nữ', 18, 4);
+ NULL, '2025-07-05 08:00:00', 9, N'Bị từ chối', 35, N'Nữ', 18, 4),
+
+ -- Câu hỏi 6 – Ra máu sau quan hệ (MemberID = 16)
+(16, 1, N'Ra máu sau khi quan hệ có nguy hiểm không?', 
+ N'Tôi bị ra máu nhẹ sau khi quan hệ với chồng, dù trước đó không có dấu hiệu bất thường. Đây có phải là dấu hiệu viêm nhiễm hay bệnh lý gì không?', 
+ 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753338542/pc2blenllsiapdugz9qq.jpg', 
+ '2025-07-06 10:00:00', 5, N'Chưa trả lời', 30, N'Nữ', 10, 0),
+
+-- Câu hỏi 7 – Dị ứng bao cao su (MemberID = 17)
+(17, 3, N'Dị ứng bao cao su có biểu hiện thế nào?', 
+ N'Mỗi lần dùng bao cao su tôi thường bị ngứa và rát vùng kín sau đó vài tiếng. Có phải tôi bị dị ứng với mủ cao su không?', 
+ NULL, '2025-07-06 14:30:00', 7, N'Đã trả lời', 28, N'Nữ', 14, 2),
+
+-- Câu hỏi 8 – Tính ngày an toàn (MemberID = 18)
+(18, 1, N'Làm sao để tính ngày an toàn để tránh thai tự nhiên?', 
+ N'Tôi có chu kỳ kinh đều 28 ngày, xin hỏi cách tính ngày rụng trứng và ngày nào quan hệ là an toàn?', 
+ NULL, 
+ '2025-07-07 08:45:00', 6, N'Chưa trả lời', 24, N'Nữ', 11, 0),
+
+-- Câu hỏi 9 – HPV và chưa quan hệ (MemberID = 19)
+(19, 3, N'30 tuổi, chưa quan hệ, có nên xét nghiệm HPV không?', 
+ N'Tôi năm nay 30 tuổi, chưa từng quan hệ tình dục. Có cần tiêm vaccine và làm xét nghiệm HPV không?', 
+ NULL, '2025-07-07 11:20:00', 7, N'Đang xử lý', 30, N'Nữ', 13, 1),
+
+-- Câu hỏi 10 – Sùi mào gà (MemberID = 20)
+(20, 3, N'Sùi mào gà giai đoạn đầu nhìn như thế nào?', 
+ N'Tôi thấy vùng kín có mụn nhỏ li ti, không đau. Lo lắng có thể là sùi mào gà. Mong được tư vấn cụ thể hơn để đi khám sớm.', 
+ 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753338715/s1sdlxi9xtjppcucux4c.jpg', 
+ '2025-07-07 15:10:00', 7, N'Chưa trả lời', 26, N'Nam', 22, 0);
+
 
  INSERT INTO [QuestionThreadItem] (
     QuestionID, SentAt, AnsweredAt, QuestionText, AnswerText, AttachmentPath, IsAnswered
@@ -207,7 +278,42 @@ VALUES
 (5, '2025-07-05 09:15:00', '2025-07-05 10:00:00',
  N'Nên giải thích giới tính thứ ba cho trẻ như thế nào để bé không bị hoang mang?',
  N'Hãy nói về sự đa dạng giới tính một cách đơn giản, dùng ví dụ thực tế và nhấn mạnh sự tôn trọng lẫn nhau.',
- NULL, 1);
+ NULL, 1),
+ -- Thread cho QuestionID = 6
+(6, '2025-07-06 10:30:00', NULL,
+ N'Ra máu sau khi quan hệ có cần đi khám phụ khoa gấp không?',
+ NULL,
+ NULL, 0),
+
+-- Thread cho QuestionID = 7
+(7, '2025-07-06 15:00:00', '2025-07-06 16:10:00',
+ N'Tôi nên chuyển sang loại bao nào nếu bị dị ứng với latex?',
+ N'Bạn có thể thử bao cao su làm từ polyurethane hoặc polyisoprene – ít gây dị ứng hơn.',
+ NULL, 1),
+
+(7, '2025-07-06 16:15:00', NULL,
+ N'Ngứa nhẹ có phải là bình thường sau khi dùng bao cao su không?',
+ NULL,
+ NULL, 0),
+
+-- Thread cho QuestionID = 8
+(8, '2025-07-07 09:10:00', NULL,
+ N'Chu kỳ em đều 28 ngày, ngày nào là ngày rụng trứng?',
+ NULL,
+ NULL, 0),
+
+-- Thread cho QuestionID = 9
+(9, '2025-07-07 11:45:00', '2025-07-07 12:30:00',
+ N'Người chưa từng quan hệ có cần tiêm vaccine HPV không?',
+ N'Có. WHO khuyến nghị nên tiêm trước khi có quan hệ tình dục lần đầu để đạt hiệu quả bảo vệ cao nhất.',
+ NULL, 1),
+
+-- Thread cho QuestionID = 10
+(10, '2025-07-07 15:30:00', NULL,
+ N'Làm sao phân biệt sùi mào gà với mụn cóc sinh dục thông thường?',
+ NULL,
+ NULL, 0);
+
 
 
 ---Blog-=====================================================================================================================================================
@@ -236,7 +342,54 @@ VALUES
 (N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
  N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
  N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 13, '2025-05-10', N'Tâm lý', 1);
+ 13, '2025-05-10', N'Tâm lý', 1),
+ 
+ (N'Sức khỏe hệ sinh sản của nam và nữ là gì?',
+N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Sức khỏe sinh sản của nam và nữ là những khía cạnh quan trọng của hệ thống sinh sản về mặt tổng thể vì cả hai đều tham gia vào quá trình tạo ra một sinh linh mới. Vậy thì sức khỏe hệ sinh sản là gì, hãy tìm hiểu cùng MedSex nhé.
+
+1. Sức khỏe hệ sinh sản là gì?
+Theo WHO, sức khỏe hệ sinh sản là trạng thái hoàn toàn khỏe mạnh, hài hòa về thể chất, tinh thần và xã hội ở mọi khía cạnh liên quan đến hệ thống, chức năng và quá trình sinh sản trong suốt các giai đoạn của cuộc đời, chứ không đơn thuần chỉ là không có bệnh tật hoặc ốm đau. Sức khỏe sinh sản bao gồm:
+
+- Sức khỏe thể chất: cơ thể khỏe mạnh, các cơ quan sinh dục nam, nữ không bị tổn thương và đảm bảo cho việc thực hiện chức năng tình dục và sinh sản.
+- Sức khỏe tinh thần: cá nhân cảm thấy thoải mái với chính mình về sức khỏe sinh sản và tình dục, biết thừa nhận những nhược điểm, không tự ti, sống đoàn kết với mọi người.
+- Sức khỏe xã hội: đảm bảo sự an toàn cho xã hội, có mối quan hệ tốt với cộng đồng.',
+N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Hãy tìm hiểu sức khỏe hệ sinh sản cùng Genetica nhé.',
+11, '2025-07-24', N'Sức khỏe', 1),
+
+(N'Ra huyết trắng nhiều là sắp có kinh hay có thai? Dấu hiệu và lời khuyên hữu ích',
+N'Nhiều chị em thắc mắc ra huyết trắng nhiều là sắp có kinh hay có thai, đặc biệt khi nhận thấy vùng kín ẩm ướt và khí hư thay đổi bất thường. Thực tế, đây có thể là dấu hiệu sinh lý bình thường hoặc cảnh báo thai kỳ, nhưng cũng không loại trừ khả năng tiềm ẩn bệnh lý phụ khoa. Hiểu rõ những đặc điểm của khí hư trong từng trường hợp sẽ giúp bạn chủ động theo dõi và chăm sóc sức khỏe tốt hơn.
+
+Ra huyết trắng nhiều là sắp có kinh hay có thai?
+Hiện tượng ra huyết trắng nhiều có thể là dấu hiệu bình thường trong chu kỳ sinh lý, xuất hiện ở giai đoạn trứng rụng, trước kỳ kinh hoặc khi mang thai. Tuy nhiên, để trả lời chính xác ra huyết trắng nhiều là sắp có kinh hay có thai, cần xem xét thời điểm, tính chất khí hư cũng như các triệu chứng đi kèm.
+
+Theo Mayo Clinic, trước kỳ kinh nguyệt, hormone estrogen tăng cao, làm tăng tiết dịch âm đạo. Khí hư thường ra nhiều và đặc hơn bình thường. Trong khi đó, ở những tuần đầu mang thai, nồng độ estrogen cùng lưu lượng máu tăng khiến khí hư có màu trắng sữa, loãng và ra nhiều hơn.',
+N'Ra huyết trắng nhiều là sắp có kinh hay có thai là băn khoăn phổ biến ở nhiều chị em, nhất là những người đang mong có em bé hoặc quan tâm tới sức khỏe sinh sản. Bài viết dưới đây sẽ giúp bạn nhận diện đúng dấu hiệu của cơ thể, phân biệt khí hư sinh lý khi sắp có kinh hoặc khi mang thai, đồng thời lưu ý cách chăm sóc phù hợp.',
+11, '2025-07-24', N'Sức khỏe', 1),
+
+(N'Tinh trùng dị dạng có thụ thai được không? Cách tăng khả năng thụ thai',
+N'Tinh trùng dị dạng là một trong những nguyên nhân phổ biến ảnh hưởng đến khả năng sinh sản nam giới, làm dấy lên lo ngại về khả năng thụ thai tự nhiên. Liệu có phải tất cả các trường hợp tinh trùng có hình dạng bất thường đều dẫn đến vô sinh? Bài viết sau sẽ giúp bạn hiểu rõ tinh trùng dị dạng có thụ thai được không và làm thế nào để tăng khả năng thụ thai.
+
+Tinh trùng dị dạng có con được không?
+Tinh trùng dị dạng vẫn có thể có con nếu tỷ lệ ≥ 4% tinh trùng bình thường và các chỉ số khác như số lượng, di động, tỷ lệ sống đạt chuẩn. Trường hợp dị dạng nặng, hỗ trợ sinh sản như IUI, IVF, ICSI có thể tăng khả năng thụ thai. Không đồng nghĩa vô sinh tuyệt đối.
+
+Với thắc mắc này, câu trả lời là trong nhiều trường hợp, nam giới có tinh trùng dị dạng vẫn có thể thụ thai tự nhiên nếu các yếu tố khác của tinh dịch đồ đạt mức bình thường.
+
+Trường hợp vẫn có thể thụ thai tự nhiên
+Theo Tổ chức Y tế Thế giới (WHO, 2021), tỷ lệ tinh trùng có hình dạng bình thường từ 4% trở lên vẫn được coi là có khả năng sinh sản bình thường. Điều đó có nghĩa là dù có đến 96% tinh trùng dị dạng, nam giới vẫn có thể có con tự nhiên, miễn là số tinh trùng còn lại đủ khỏe mạnh để thực hiện chức năng thụ tinh.
+
+Trong trường hợp tỷ lệ tinh trùng bình thường dưới 4%, bác sĩ sẽ đánh giá thêm các chỉ số quan trọng khác như: Tổng số lượng tinh trùng trong mỗi lần xuất tinh, mật độ tinh trùng (số lượng/ml), khả năng di động của tinh trùng, tỷ lệ sống của tinh trùng. Nếu tổng số lượng tinh trùng vẫn cao, di động tốt và vẫn còn một phần nhỏ tinh trùng có hình dạng bình thường thì khả năng thụ thai tự nhiên vẫn hoàn toàn có thể xảy ra.',
+N'Tinh trùng dị dạng là chẩn đoán khiến nhiều nam giới lo lắng về khả năng sinh sản. Liệu tinh trùng dị dạng có thụ thai được không hay cần can thiệp y học? Bài viết dưới đây sẽ giúp bạn có câu trả lời cụ thể và giải pháp giúp tăng khả năng thụ thai.',
+11, '2025-07-24', N'Sức khỏe', 1),
+
+(N'Thai 17 tuần là mấy tháng? Kích thước phát triển và những điều cần lưu ý',
+N'Mang thai là một hành trình kỳ diệu và mỗi tuần trôi qua đều đánh dấu những cột mốc phát triển quan trọng của thai nhi và những thay đổi đáng kể trên cơ thể người mẹ. Tuần thai thứ 17 là một giai đoạn đặc biệt, khi thai nhi bắt đầu phát triển mạnh mẽ hơn và mẹ bầu cảm nhận rõ rệt những biến đổi trong cơ thể. Vậy thai 17 tuần là mấy tháng? Thai nhi phát triển như thế nào và mẹ bầu cần lưu ý những gì? Bài viết này sẽ cung cấp thông tin để giúp bạn hiểu rõ hơn về giai đoạn này nhé!
+
+Mang thai 17 tuần là mấy tháng?
+Thông thường, việc tính tuổi thai thường dựa trên số tuần. Ở giai đoạn thai 17 tuần tuổi, mẹ bầu đang ở tháng thứ 5 của thai kỳ và cụ thể là 4 tháng 1 tuần.
+
+Cách tính này dựa trên quy ước rằng một tháng thai kỳ trung bình kéo dài khoảng 4 tuần. Tuy nhiên, do mỗi tháng có số ngày khác nhau nên việc xác định chính xác "mấy tháng" thường có tỷ lệ chênh lệch. Đây là thời điểm thai nhi đang phát triển nhanh chóng cả về kích thước lẫn chức năng cơ thể.',
+N'Mang thai 17 tuần là mấy tháng? Thai nhi phát triển ra sao và mẹ bầu cần lưu ý những gì? Để giúp mẹ hiểu rõ hơn về những thay đổi trong giai đoạn này, mời bạn đọc cùng tham khảo chi tiết trên bài viết dưới đây nhé!',
+11, '2025-07-24', N'Sức khỏe', 1);
 
 
 
@@ -247,7 +400,11 @@ VALUES
 (2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951443/dyggaxusc4fme4oet3tev.jpg', N'Thông tin về các bệnh STIs', '2025-07-08 05:09:01.747', 1),
 (3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951112/b3g6xkwcbvrlw4kicotw.jpg', N'Thuốc tránh thai hằng ngày', '2025-07-08 05:08:34.373', 1),
 (4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951325/bmjfiuhejrhcj5j5quq.jpg', N'Tư thế lấy mẫu xét nghiệm STIs', '2025-07-08 05:07:42.563', 1),
-(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951126/imf8crhktlis12j03o8g.jpg', N'Tư vấn giới tính trực tuyến', '2025-07-08 05:03:45.803', 1);
+(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951126/imf8crhktlis12j03o8g.jpg', N'Tư vấn giới tính trực tuyến', '2025-07-08 05:03:45.803', 1),
+(6, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337275/fpwfwngwgvxpivb9fw5c.webp', N'Thumbnail', '2025-07-24 06:08:35.987', 1),
+(7, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337660/chyrelwrjc3oftqtjf3m.webp', N'Thumbnail', '2025-07-24 06:14:22.297', 1),
+(8, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337727/rynj3t2cf4gruufjwjjo.webp', N'Thumbnail', '2025-07-24 06:15:34.137', 1),
+(9, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337798/ttwqad9lzrlmbngkfmgs.webp', N'Thumbnail', '2025-07-24 06:16:40.273', 1);
 
 --Blogview -=====================================================================================================================================================
 INSERT INTO dbo.BlogView (MemberID, BlogID, ViewDate)
@@ -330,23 +487,11 @@ VALUES
 
 --=====================================================================================================================================================
 --feedback
-INSERT INTO Feedback (AppointmentID, RecordID, Rating, Comment, FeedbackDate)
+INSERT INTO Feedback (AppointmentID, [RecordID], Rating, Comment, FeedbackDate)
 VALUES
--- Feedback cho TestServiceRecord
-(NULL, 1, 5, N'Dịch vụ xét nghiệm nhanh chóng và nhân viên rất thân thiện.', '2025-07-01 10:00:00'),
-(NULL, 2, 4, N'Kết quả được giải thích rõ ràng, nhưng đợi hơi lâu.', '2025-07-01 11:00:00'),
-(NULL, 3, 5, N'Bác sĩ tư vấn kỹ lưỡng, tạo cảm giác an tâm.', '2025-07-02 09:30:00'),
-(NULL, 4, 5, N'Nhân viên nhẹ nhàng, quy trình lấy mẫu nhanh gọn.', '2025-07-02 15:00:00'),
-(NULL, 5, 4, N'Xét nghiệm ok, nhưng phòng chờ hơi chật.', '2025-07-03 08:30:00'),
-(NULL, 6, 5, N'Tư vấn về STIs rõ ràng và chi tiết.', '2025-07-04 09:00:00'),
-(NULL, 7, 5, N'Địa chỉ phòng khám dễ tìm, nhân viên nhiệt tình.', '2025-07-04 14:00:00'),
-
--- Feedback cho Appointment
-(1, NULL, 5, N'Tư vấn qua video call rất tiện lợi, cảm ơn bác sĩ.', '2025-07-15 09:00:00'),
-(2, NULL, 4, N'Dịch vụ ổn, nhưng đôi khi kết nối video hơi lag.', '2025-07-15 09:30:00'),
-(3, NULL, 5, N'Tôi cảm thấy được lắng nghe và thấu hiểu.', '2025-07-16 11:00:00'),
-(4, NULL, 5, N'Tư vấn tâm lý nhẹ nhàng, giúp tôi giải tỏa căng thẳng.', '2025-07-16 15:10:00'),
-(5, NULL, 5, N'Lịch hẹn đúng giờ, trao đổi dễ hiểu.', '2025-07-17 16:00:00');
+(NULL, 1, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
+(NULL, 9, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
+(1, NULL, 5, N'Feedback dịch vụ rất tốt', GETDATE());
 
 
 --Table [dbo].[Notification]
@@ -386,33 +531,33 @@ VALUES
 
 
 INSERT INTO dbo.Invoice (
-    AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod, TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
+    AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod,
+    TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
 )
 VALUES
--- Invoice cho các Appointment
-(1, NULL, 150000, N'PayPal', 'PAYPAL_APPT_0001', '2025-07-15 08:35:00', 1, 0.1, 150000, '2025-07-15 08:35:00'),
-(2, NULL, 150000, N'PayPal', 'PAYPAL_APPT_0002', '2025-07-15 09:20:00', 1, 0.1, 150000, '2025-07-15 09:20:00'),
-(3, NULL, 150000, N'PayPal', 'PAYPAL_APPT_0003', '2025-07-16 10:50:00', 1, 0.1, 150000, '2025-07-16 10:50:00'),
-(4, NULL, 150000, N'PayPal', 'PAYPAL_APPT_0004', '2025-07-16 15:05:00', 1, 0.1, 150000, '2025-07-16 15:05:00'),
-(5, NULL, 150000, N'PayPal', 'PAYPAL_APPT_0005', '2025-07-17 15:50:00', 1, 0.1, 150000, '2025-07-17 15:50:00'),
-
--- Invoice cho các TestServiceRecord
-(NULL, 1, 1000000, N'PayPal', 'PAYPAL_TEST_0001', '2025-06-27 13:20:00', 1, 0.1, 1000000, '2025-06-27 13:20:00'),
-(NULL, 2, 1000000, N'PayPal', 'PAYPAL_TEST_0002', '2025-06-27 13:25:00', 1, 0.1, 1000000, '2025-06-27 13:25:00'),
-(NULL, 3, 1000000, N'PayPal', 'PAYPAL_TEST_0003', '2025-06-27 13:30:00', 1, 0.1, 1000000, '2025-06-27 13:30:00'),
-(NULL, 4, 1000000, N'PayPal', 'PAYPAL_TEST_0004', '2025-06-30 22:55:00', 1, 0.1, 1000000, '2025-06-30 22:55:00'),
-(NULL, 5, 1000000, N'PayPal', 'PAYPAL_TEST_0005', '2025-07-01 09:00:00', 1, 0.1, 1000000, '2025-07-01 09:00:00'),
-
-(NULL, 6, 1000000, N'PayPal', 'PAYPAL_TEST_0006', '2025-07-03 14:00:00', 1, 0.1, 1000000, '2025-07-03 14:00:00'),
-(NULL, 7, 1000000, N'PayPal', 'PAYPAL_TEST_0007', '2025-07-03 14:10:00', 1, 0.1, 1000000, '2025-07-03 14:10:00'),
-(NULL, 8, 1000000, N'PayPal', 'PAYPAL_TEST_0008', '2025-07-03 14:20:00', 1, 0.1, 1000000, '2025-07-03 14:20:00'),
-(NULL, 9, 1000000, N'PayPal', 'PAYPAL_TEST_0009', '2025-07-03 14:30:00', 1, 0.1, 1000000, '2025-07-03 14:30:00'),
-
--- Một invoice chưa thanh toán
-(NULL, 12, 1000000, N'PayPal', 'PAYPAL_TEST_0012', '2025-07-04 22:25:00', 0, 0.1, 1000000, NULL);
+(NULL, 1, 1050000.00, 'PayPal', '9B766355RJ45471925', '2025-07-14 10:01:36.937', 1, 0.05, 'VND', NULL),
+(NULL, 3, 1050000.00, 'PayPal', '6IW823322B527477M', '2025-07-14 13:34:59.577', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
+(NULL, 6, 1050000.00, 'PayPal', '1BD76296U803490K', '2025-07-16 16:42:49.443', 1, 0.05, 'VND', '2025-07-16 16:42:49.443'),
+(NULL, 7, 1050000.00, 'PayPal', '8YX5658U74173812T', '2025-07-19 15:56:32.380', 1, 0.05, 'VND', '2025-07-19 15:56:32.380'),
+(NULL, 8, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
+(NULL, 9, 1050000.00, 'PayPal', '6F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
+(NULL, 10, 1050000.00, 'PayPal', '31627614SJ2608229', '2025-07-24 02:14:26.793', 1, 0.05, 'VND', '2025-07-24 02:14:26.793');
 
 
 
+
+INSERT INTO dbo.Invoice (
+    AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod,
+    TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
+)
+VALUES
+(1, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-24 13:00:01.000', 1, 0.05, 'VND', '2025-07-24 13:00:01.000'),
+(2, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-24 13:01:01.000', 1, 0.05, 'VND', '2025-07-24 13:01:01.000'),
+(3, NULL, 157500.00, 'PayPal', '8EF34567NO765432N', '2025-07-24 13:02:01.000', 1, 0.05, 'VND', '2025-07-24 13:02:01.000'),
+(4, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(5, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(8, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(9, NULL, 157500.00, 'PayPal', '3MN78901VW321098V', '2025-07-24 13:06:01.000', 1, 0.05, 'VND', '2025-07-24 13:06:01.000');
 --WeeklySchedule--=====================================================================================================================================================
 -- Staff (UserID = 3, 6) works morning shift from Mon to Fri
 INSERT INTO [WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType, Note)
