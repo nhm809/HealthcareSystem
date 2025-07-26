@@ -87,7 +87,7 @@ public class ReproductiveReminderJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #1a73e8; text-align: center;'>Bắt đầu chu kỳ mới</h2>
@@ -154,7 +154,7 @@ public class ReproductiveReminderJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #c62828; text-align: center;'>Hôm nay là ngày rụng trứng</h2>
@@ -221,7 +221,7 @@ public class ReproductiveReminderJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #43a047; text-align: center;'>Bắt đầu thời kỳ dễ thụ thai</h2>
@@ -289,7 +289,7 @@ public class ReproductiveReminderJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <!-- Nội dung -->
@@ -356,7 +356,7 @@ public class ReproductiveReminderJob : BackgroundService
                             <div style='text-align: center; margin-bottom: 24px;'>
                                 <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                                      alt='Healthcare System Logo'
-                                     style='max-width: 100px; height: auto; border-radius: 6px;' />
+                                     style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                             </div>
 
                             <h2 style='color: #1a73e8; text-align: center;'>Đã đến giờ uống thuốc tránh thai</h2>
@@ -433,7 +433,7 @@ public class ReproductiveReminderJob : BackgroundService
                     <div style='text-align: center; margin-bottom: 24px;'>
                         <img src='https://drive.google.com/uc?export=view&id=1fAWDOkaMgta-jhbFkghgoFN19Sgr4QBA'
                              alt='Healthcare System Logo'
-                             style='max-width: 100px; height: auto; border-radius: 6px;' />
+                             style='max-width: 100%; height: auto; width: 100%; object-fit: contain; border-radius: 6px;' />
                     </div>
 
                     <h2 style='color: #1a73e8; text-align: center;'>Chu kỳ mới dự đoán bắt đầu</h2>

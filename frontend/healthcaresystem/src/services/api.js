@@ -280,4 +280,81 @@ api.interceptors.response.use(
 
 export const deleteService = (serviceId) => api.delete(`/Service/${serviceId}`);
 
+// Chatbot API Service
+export const chatbotApi = {
+     sendMessage: async (message, conversationId = null) => {
+          const formData = new FormData();
+          formData.append("query", message);
+          formData.append("bot_id", "ccb891955c7ea686cc5c639b");
+          if (conversationId) {
+               formData.append("conversation_id", conversationId);
+          }
+          formData.append("model_name", "gemini-2.5-flash-preview-05-20");
+          formData.append("api_key", "AIzaSyC-xdM4iV4MmRKX7m18bB-CXZ6bOIHoxvc");
+          // Do NOT append 'attachs' if there are no files
+
+          try {
+               const response = await fetch('https://ai.ftes.vn/api/ai/rag_agent_template/stream', {
+                    method: 'POST',
+                    headers: {
+                         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NzYxMjEyZmNkYzNhMTkxNzM4MDliNCJ9.y3FIXE0_aGPlT_mpRRsHgYHyQGTC0rOFKW1kRc9s4sk'
+                    },
+                    body: formData
+               });
+
+               if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+               }
+
+               return response;
+          } catch (error) {
+               console.error('Chatbot API error:', error);
+               throw error;
+          }
+     },
+
+     // Parse streaming response
+     parseStreamingResponse: async function* (response) {
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+
+          try {
+               while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    
+                    // Keep the last incomplete line in buffer
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                         if (line.trim()) {
+                              try {
+                                   const data = JSON.parse(line.trim());
+                                   yield data;
+                              } catch (e) {
+                                   console.warn('Failed to parse line:', line, e);
+                              }
+                         }
+                    }
+               }
+
+               // Process any remaining data in buffer
+               if (buffer.trim()) {
+                    try {
+                         const data = JSON.parse(buffer.trim());
+                         yield data;
+                    } catch (e) {
+                         console.warn('Failed to parse final buffer:', buffer, e);
+                    }
+               }
+          } finally {
+               reader?.releaseLock();
+          }
+     }
+};
+
 export default api;

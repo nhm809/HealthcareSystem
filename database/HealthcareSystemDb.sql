@@ -9,33 +9,32 @@ INSERT INTO [Role] ([RoleID], [RoleName], [RoleDescription]) VALUES
 ('MB', 'Member', N'Thành viên/khách hàng sử dụng dịch vụ');
 
 
-INSERT INTO dbo.[User] (Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, DoB, Gender, Address, CreateDate, Avatar, RoleID, RefreshToken, RefreshTokenExpiryTime, IsAvailable)
+INSERT INTO dbo.[User] (
+    Provider, GoogleId, FullName, PasswordHash, Email, PhoneNumber, 
+    DoB, Gender, Address, CreateDate, Avatar, RoleID, 
+    RefreshToken, RefreshTokenExpiryTime, IsAvailable
+)
 VALUES
-('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'mexnguyen894@gmail.com', '0979298904', '1990-09-08', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', GETDATE(), NULL, 'AD', NULL, NULL, 1),
-('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0900000001', '1990-01-01', 'MALE', N'Quận 1, TP.HCM', GETDATE(), NULL, 'MG', NULL, NULL, 1),
-('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0900000002', '1990-01-01', 'MALE', N'Quận 3, TP.HCM', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0900000003', '1990-01-01', 'MALE', N'Quận 5, TP.HCM', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0900000004', '1990-01-01', 'MALE', N'Quận 7, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0900000005', '1990-01-01', 'MALE', N'Ba Đình, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0900000006', '1990-01-01', 'FEMALE', N'Cầu Giấy, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0900000007', '1990-01-01', 'MALE', N'Đống Đa, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0900000008', '1990-01-01', 'FEMALE', N'Tây Hồ, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0900000009', '1990-01-01', 'MALE', N'Thanh Xuân, Hà Nội', GETDATE(), NULL, 'ST', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0900000011', '1990-01-01', 'FEMALE', N'Tân Bình, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0900000012', '1990-01-01', 'MALE', N'Gò Vấp, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0900000013', '1990-01-01', 'FEMALE', N'Phú Nhuận, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0900000014', '1990-01-01', 'MALE', N'Thủ Đức, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0900000015', '1990-01-01', 'FEMALE', N'Bình Thạnh, TP.HCM', GETDATE(), NULL, 'CS', NULL, NULL, 1),
-
-('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0900000021', '1990-01-01', 'MALE', N'Hải Châu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0900000022', '1990-01-01', 'FEMALE', N'Thanh Khê, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0900000023', '1990-01-01', 'MALE', N'Sơn Trà, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0900000024', '1990-01-01', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0900000025', '1990-01-01', 'MALE', N'Liên Chiểu, Đà Nẵng', GETDATE(), NULL, 'MB', NULL, NULL, 1);
-
-
+('Local', NULL, N'Nguyễn Hữu Mỹ', '$2b$12$Pxl1ujUjOPYdRWjahaiX5.T5dGh32eIsLim6cS9qxbZCdRM2Moa5K', 'admin@gmail.com', '0970604318', '2000-08-07', 'MALE', N'Quận 9, TP. Thủ Đức, TP.HCM', '2025-02-18', NULL, 'AD', NULL, NULL, 1),
+('Local', NULL, N'Tống Ngọc Anh Tài', '$2b$12$3HxIeXlkXQ3IeQ/DElsoEuHIDIsMAAGe6EdWthucDyXVUltWEE3hu', 'taitongngocanh@gmail.com', '0844058430', '1993-12-14', 'MALE', N'Quận 1, TP.HCM', '2024-11-16', NULL, 'MG', NULL, NULL, 1),
+('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0924364761', '1994-03-20', 'MALE', N'Quận 3, TP.HCM', '2024-10-07', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0970055076', '1990-09-18', 'MALE', N'Quận 5, TP.HCM', '2024-11-24', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0830235422', '1993-01-16', 'MALE', N'Quận 7, TP.HCM', '2024-07-19', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0850535918', '1997-05-13', 'MALE', N'Ba Đình, Hà Nội', '2025-02-15', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0887788836', '1991-04-16', 'FEMALE', N'Cầu Giấy, Hà Nội', '2024-10-10', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0929554192', '1988-08-27', 'MALE', N'Đống Đa, Hà Nội', '2025-03-01', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0966782683', '2000-05-13', 'FEMALE', N'Tây Hồ, Hà Nội', '2024-10-31', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0923819850', '1999-06-15', 'MALE', N'Thanh Xuân, Hà Nội', '2024-11-01', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0949674595', '1991-11-21', 'FEMALE', N'Tân Bình, TP.HCM', '2024-09-10', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0919801562', '1985-01-31', 'MALE', N'Gò Vấp, TP.HCM', '2024-08-16', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0850570828', '1994-12-20', 'FEMALE', N'Phú Nhuận, TP.HCM', '2025-01-26', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0917015014', '1991-11-12', 'MALE', N'Thủ Đức, TP.HCM', '2024-12-15', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0961375236', '1993-01-19', 'FEMALE', N'Bình Thạnh, TP.HCM', '2024-10-02', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0848667151', '1986-11-14', 'MALE', N'Hải Châu, Đà Nẵng', '2024-11-29', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0976149467', '1994-12-15', 'FEMALE', N'Thanh Khê, Đà Nẵng', '2024-09-09', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0961377191', '1985-11-14', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', '2024-09-12', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0931677872', '1999-02-13', 'MALE', N'Liên Chiểu, Đà Nẵng', '2024-09-20', NULL, 'MB', NULL, NULL, 1);
 
 --Specialty--=====================================================================================================================================================
 INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
@@ -53,7 +52,7 @@ INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
 INSERT INTO Service ( Name, Description, Price)
 VALUES
 (N'Xét nghiệm tổng quát STIs', N'Kiểm tra tổng quát các bệnh lây truyền qua đường tình dục ,Xét nghiệm theo quá trình', 1000000),
-(N'Tư vấn sức khỏe sinh sản', N'Tư vấn 1:1 với chuyên gia về sức khỏe sinh sản.', 150000)
+(N'Tư vấn sức khỏe', N'Tư vấn 1:1 với chuyên gia về sức khỏe.', 150000)
 
 
 --[UserSpecialty]--=====================================================================================================================================================
@@ -61,7 +60,6 @@ INSERT INTO dbo.UserSpecialty (UserID, SpecialtyID)
 VALUES
 -- Phạm Nguyễn Đăng Hải (ST)
 (3, 1),  -- Sản Phụ Khoa
-(3, 2),  -- Nam Khoa
 
 -- Nguyễn Trọng Tốt (CS)
 (5, 3),  -- Da liễu - STIs
@@ -74,7 +72,6 @@ VALUES
 (7, 1),  -- Sản Phụ Khoa
 (7, 5),  -- Y học tổng quát
 
-(8, 2),  -- Nam Khoa
 (8, 5),  -- Y học tổng quát
 
 (9, 5),  -- Y học tổng quát
@@ -84,8 +81,7 @@ VALUES
 (10, 7), -- Giáo dục giới tính
 
 -- Các CS khác
-(11, 3), -- Da liễu - STIs
-(11, 6), -- Dược học
+(11, 2), -- Nam khoa cho Tai`
 
 (12, 3), -- Da liễu - STIs
 (12, 7), -- Giáo dục giới tính
@@ -97,23 +93,55 @@ VALUES
 
 (15, 3) -- Da liễu - STIs
 
+
+
+
 INSERT INTO dbo.Appointment (
     MemberID, MeetLink, ServiceID, ConsultantID, 
     StartTime, EndTime, Status, Symptoms
 )
 VALUES
-(16, 'https://meet.google.com/abc-defg-hij', 2, 5, '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Da hoan thanh', N'Tư vấn tâm lý'),
-(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 5, '2025-07-24 13:00:00.000', '2025-07-24 13:30:00.000', N'Dang cho kham', N'Cảm thấy khó chịu ở vùng ngực'),
+-- Da danh gia (2)
+(4, 'https://meet.google.com/abc-defg-hij', 2, 14, '2025-07-20 15:00:00.000', '2025-07-20 15:30:00.000', N'Da danh gia', N'Tư vấn tâm lý'),
+(20, 'https://meet.google.com/bcd-yzab-ijk', 2, 13, '2025-07-21 10:00:00.000', '2025-07-21 10:30:00.000', N'Da danh gia', N'Rối loạn lo âu'),
 
-(17, 'https://meet.google.com/lmn-opqr-stu', 2, 6, '2025-07-26 09:00:00.000', '2025-07-26 09:30:00.000', N'Dang cho kham', N'Gặp vấn đề về sức khỏe sau kỳ rụng dâu'),
+-- Da hoan thanh (2)
+(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 11, '2025-07-22 09:00:00.000', '2025-07-22 09:30:00.000', N'Da hoan thanh', N'Tư vấn mối quan hệ'),
+(17, 'https://meet.google.com/bcd-efgh-yzab', 2, 5,  '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Da hoan thanh', N'Tư vấn tâm lý'),
 
-(18, 'https://meet.google.com/rst-uvwx-yza', 2, 5, '2025-07-27 10:00:00.000', '2025-07-27 10:30:00.000', N'Dang cho kham', N'Vấn đề liên quan đến rụng trứng'),
-(19, 'https://meet.google.com/vwx-yzab-cde', 2, 5, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
-(19, 'https://meet.google.com/fgh-ijkl-mno', 2, 15, '2025-07-26 14:30:00.000', '2025-07-26 15:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
+-- Dang cho kham (3)
+(4, 'https://meet.google.com/bcd-jklm-ijk', 2, 11, '2025-07-24 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Đau đầu'),
+(16, 'https://meet.google.com/bcd-efgh-jklm', 2, 11, '2025-07-23 16:00:00.000', '2025-07-23 16:30:00.000', N'Dang cho kham', N'Stress học tập'),
+(17, 'https://meet.google.com/bcd-efgh-ijk', 2, 11, '2025-07-22 14:00:00.000', '2025-07-22 14:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
 
-(20, 'https://meet.google.com/ghi-jklm-nop', 1, 14, '2025-07-17 15:00:00.000', '2025-07-17 15:30:00.000', N'Da danh gia', N'Tư vấn tâm lý'),
-(20, 'https://meet.google.com/zab-cdef-ghi', 2, 14, '2025-07-25 15:00:00.000', '2025-07-25 15:30:00.000', N'Dang cho kham', N'Giáo dục giới tính'),
-(20, 'https://meet.google.com/pqr-stuv-wxy', 2, 14, '2025-07-26 16:00:00.000', '2025-07-26 16:30:00.000', N'Dang cho kham', N'Tôi cần tư vấn tâm lý sau khi sinh');
+(16, 'https://meet.google.com/bcd-jklm-ijk', 2, 5, '2025-07-24 13:00:00.000', '2025-07-24 13:30:00.000', N'Dang cho kham', N'Đau đầu'),
+(17, 'https://meet.google.com/bcd-efgh-jklm', 2, 5, '2025-07-23 14:00:00.000', '2025-07-23 14:30:00.000', N'Dang cho kham', N'Tư vấn tâm lý'),
+(18, 'https://meet.google.com/bcd-efgh-ijk', 2, 5, '2025-07-22 15:00:00.000', '2025-07-22 15:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
+
+(18, 'https://meet.google.com/bcd-jklm-ijk', 2, 12, '2025-07-24 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Tư vấn tâm lý'),
+(19, 'https://meet.google.com/bcd-efgh-jklm', 2, 12, '2025-07-23 13:00:00.000', '2025-07-23 13:30:00.000', N'Dang cho kham', N'Stress học tập'),
+(20, 'https://meet.google.com/bcd-efgh-ijk', 2, 12, '2025-07-22 15:00:00.000', '2025-07-22 15:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
+
+(19, 'https://meet.google.com/bcd-jklm-ijk', 2, 13, '2025-07-24 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Đau đầu'),
+(20, 'https://meet.google.com/bcd-efgh-jklm', 2, 13, '2025-07-23 13:00:00.000', '2025-07-23 13:30:00.000', N'Dang cho kham', N'Stress học tập'),
+(4, 'https://meet.google.com/bcd-efgh-ijk', 2, 13, '2025-07-22 15:00:00.000', '2025-07-22 15:30:00.000', N'Dang cho kham', N'Tư vấn tâm lý'),
+
+(20, 'https://meet.google.com/bcd-jklm-ijk', 2, 14, '2025-07-24 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Đau đầu'),
+(4, 'https://meet.google.com/bcd-efgh-jklm', 2, 14, '2025-07-23 13:00:00.000', '2025-07-23 13:30:00.000', N'Dang cho kham', N'Rối loạn lo âu'),
+(16, 'https://meet.google.com/bcd-efgh-ijk', 2, 14, '2025-07-22 15:00:00.000', '2025-07-22 15:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
+
+
+(4, 'https://meet.google.com/bcd-jklm-ijk', 2, 15, '2025-07-23 14:00:00.000', '2025-07-24 14:30:00.000', N'Dang cho kham', N'Rối loạn lo âu'),
+(20, 'https://meet.google.com/bcd-efgh-jklm', 2, 15, '2025-07-23 13:00:00.000', '2025-07-23 13:30:00.000', N'Dang cho kham', N'Stress học tập'),
+(18, 'https://meet.google.com/bcd-efgh-ijk', 2, 15, '2025-07-22 15:00:00.000', '2025-07-22 15:30:00.000', N'Dang cho kham', N'Khó khăn tài chính'),
+
+-- Dang thanh toan (2)
+(4, '', 2, 15, '2025-07-24 15:30:00.000', '2025-07-24 16:00:00.000', N'Dang thanh toan', N'Khó ngủ'),
+(16, '', 2, 11, '2025-07-22 11:00:00.000', '2025-07-22 11:30:00.000', N'Dang thanh toan', N'Áp lực công việc'),
+
+-- Da huy (2)
+(17, '', 2, 12, '2025-07-24 13:30:00.000', '2025-07-24 14:00:00.000', N'Da huy', N'Tôi cần tư vấn tâm lý sau khi sinh'),
+(18, '', 2, 5,  '2025-07-21 16:00:00.000', '2025-07-21 16:30:00.000', N'Da huy', N'Không còn nhu cầu tư vấn');
 
 
 
@@ -125,53 +153,64 @@ INSERT INTO TestServiceRecord (
     TimeSlot, Notes, Status
 )
 VALUES
--- ID 6
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
- 16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3, '2025-07-03 13:49:14.260',
- '2025-07-06', '08:00:00.0000000', N'đã hoàn thành xét nghiệm', N'Da danh gia'),
-
--- ID 11
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
- 16, NULL, NULL, '2025-07-03 16:23:58.023',
- '2025-07-03', '08:00:00.0000000', NULL, N'Dang thanh toan'),
-
--- ID 13
+-- ✅ Da danh gia: 4 (Nguyễn Văn Hiếu), 20 (Đỗ Văn L)
 (1, '2004-04-06', N'MALE', '0975672459', N'Nguyễn Văn Hiếu',
- 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3, '2025-07-14 10:01:17.480',
- '2025-07-15', '08:00:00.0000000', NULL, N'Da hoan thanh'),
+ 4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3,
+ '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Đã có kết quả xét nghiệm', N'Da danh gia'),
 
--- ID 19
-(1, '2002-04-08', N'MALE', '0975672457', N'Nguyễn Văn Hiếu',
- 4, NULL, NULL, '2025-07-24 02:09:00.227',
- '2025-08-01', '08:00:00.0000000', NULL, N'Da huy'),
-
--- ID 20
 (1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
- 20, NULL, NULL, '2025-07-24 02:11:41.433',
- '2025-07-31', '13:00:00.0000000', NULL, N'Da huy'),
+ 20, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 6,
+ '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Kết luận đầy đủ và chính xác', N'Da danh gia'),
 
--- ID 21
-(1, '2002-05-01', N'FEMALE', '0376782657', N'Nguyễn Thị Mai',
- 16, NULL, 7, '2025-07-24 02:14:12.787',
- '2025-07-31', '13:00:00.0000000', NULL, N'Dang cho kham'),
-
--- ID 22
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
- 18, NULL, 3, '2025-07-24 02:21:54.470',
- '2025-07-24', '08:00:00.0000000', N'Mẫu xét nghiệm đang trong quá trình phân tích', N'Dang thuc hien'),
-
- (1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
- 19, NULL, 3, '2025-07-24 02:36:00.923',
- '2025-07-30', '08:00:00.0000000', NULL, N'Dang cho kham'),
+-- 🟩 Da hoan thanh: 16 (Phạm Văn L), 17 (Lê Văn Tài)
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3,
+ '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Xét nghiệm hoàn tất', N'Da hoan thanh'),
 
 (1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
- 17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7, '2025-07-24 10:00:00.000',
- '2025-08-01', '08:00:00.0000000', N'Xét nghiệm thành công', N'Da danh gia'),
+ 17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7,
+ '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Hoàn tất xét nghiệm', N'Da hoan thanh'),
 
--- ID 24: Đang thực hiện
-(1, '2000-12-12', N'FEMALE', '0369876543', N'Trần Thị Bình',
- 20, NULL, 6, '2025-07-24 11:00:00.000',
- '2025-08-02', '13:00:00.0000000', N'Đang lấy mẫu xét nghiệm', N'Dang thuc hien');
+-- 🟡 Dang cho kham: 18, 19, 20
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+ 18, NULL, 3,
+ '2025-07-22', '2025-07-24', '08:00:00.0000000', N'Chờ khám lần đầu', N'Dang cho kham'),
+
+(1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
+ 19, NULL, 3,
+ '2025-07-22', '2025-07-25', '08:00:00.0000000', N'Đã lấy mẫu máu', N'Dang cho kham'),
+
+(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
+ 20, NULL, 6,
+ '2025-07-22', '2025-07-26', '08:00:00.0000000', N'Chưa đủ điều kiện xét nghiệm', N'Dang cho kham'),
+
+-- 🟧 Dang thanh toan: 4, 16
+(1, '2004-04-06', N'MALE', '0975672459', N'Nguyễn Văn Hiếu',
+ 4, NULL, NULL,
+ '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
+
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+ 16, NULL, NULL,
+ '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
+
+-- ❌ Da huy: 17, 18
+(1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
+ 17, NULL, NULL,
+ '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Hủy do lý do cá nhân', N'Da huy'),
+
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+ 18, NULL, NULL,
+ '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Khách tự hủy lịch', N'Da huy') ,
+-- 🟦 Dang thuc hien: 5, 6
+(1, '2000-12-12', N'MALE', '0371234568', N'Trần Văn B',
+ 16, NULL, 6,
+ '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành xét nghiệm máu', N'Dang thuc hien'),
+
+(1, '2000-01-01', N'FEMALE', '0934567890', N'Nguyễn Thị L',
+ 17, NULL, 7,
+ '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành phân tích mẫu', N'Dang thuc hien');
+
+
 
 INSERT INTO Question (
    MemberID, SpecialtyId, TitleQuestion, Content, AttachmentPath, SubmitDate, ConsultantID, [Status], Age, Gender, Heart, AnsCount
@@ -318,30 +357,66 @@ VALUES
 ---Blog-=====================================================================================================================================================
 INSERT INTO dbo.Blog (Title, Content, Description, ConsultantID, PublishDate, Topic, Status )
 VALUES
-(N'Cách theo dõi chu kỳ kinh nguyệt và nhận biết thời gian rụng trứng',
- N'Nắm rõ chu kỳ kinh nguyệt giúp bạn dự đoán thời gian rụng trứng và khả năng mang thai. Trong bài viết này, chúng tôi hướng dẫn bạn cách theo dõi và sử dụng công cụ tính chu kỳ hiệu quả.',
- N'Hướng dẫn theo dõi chu kỳ kinh nguyệt để nhận biết thời điểm rụng trứng và tránh thai tự nhiên.',
- 14, '2025-05-20', N'Sức khỏe', 1),
+(N'Quan hệ xong 1 ngày sau có kinh có thai không?', 
+N'Hiểu biết về khả năng mang thai trong các giai đoạn của chu kỳ kinh nguyệt giúp bạn chủ động hơn trong việc phòng tránh thai hoặc lên kế hoạch sinh con. Đặc biệt, với trường hợp quan hệ xong 1 ngày sau có kinh, nhiều người băn khoăn liệu đây có phải thời điểm an toàn hay vẫn có nguy cơ mang thai ngoài ý muốn. Bài viết dưới đây sẽ cung cấp đến bạn các thông tin để giải đáp cho câu hỏi quan hệ xong 1 ngày sau có kinh có thai không.
 
-(N'Những điều cần biết về các bệnh lây truyền qua đường tình dục (STIs)',
- N'STIs là các bệnh nguy hiểm có thể ảnh hưởng đến sức khỏe sinh sản và cuộc sống tình dục. Bài viết giúp bạn hiểu rõ về dấu hiệu, cách phòng ngừa và thời điểm cần xét nghiệm.',
- N'Hiểu đúng về STIs – dấu hiệu, cách lây và phòng ngừa hiệu quả.',
- 14, '2025-05-18', N'STIs', 1),
+Quan hệ xong 1 ngày sau có kinh có thai không?
+Quan hệ tình dục 1 ngày trước khi có kinh vẫn có khả năng mang thai, nhưng rất thấp. Vì lúc này thường không phải thời điểm rụng trứng. Tuy nhiên, nếu chu kỳ kinh nguyệt không đều, tinh trùng sống lâu trong âm đạo thì vẫn có khả năng thụ thai.
 
-(N'Thuốc tránh thai: Cách dùng đúng và những lưu ý quan trọng',
- N'Không chỉ uống đúng giờ, người dùng thuốc tránh thai còn cần lưu ý nhiều điều khác để đảm bảo hiệu quả tránh thai. Bài viết giải đáp chi tiết những thắc mắc thường gặp.',
- N'Giải đáp mọi thắc mắc về việc sử dụng thuốc tránh thai an toàn và hiệu quả.',
- 13, '2025-05-15', N'Sức khỏe', 1),
+Mang thai xảy ra khi tinh trùng gặp trứng và thụ tinh thành công. Thông thường, sự rụng trứng diễn ra vào khoảng giữa chu kỳ kinh nguyệt ở phụ nữ có chu kỳ đều đặn 28 ngày (khoảng ngày 12 - 16 của chu kỳ). Sau khi rụng, trứng chỉ có khả năng sống sót trong khoảng 12 - 24 giờ. Trong khi đó, tinh trùng khỏe mạnh có thể tồn tại trong hệ sinh dục nữ (tử cung và ống dẫn trứng) từ 3 - 5 ngày. Do đó, quan hệ tình dục vào thời điểm gần ngày rụng trứng sẽ làm tăng khả năng thụ thai.',
+N'“Quan hệ xong 1 ngày sau có kinh có thai không?” là câu hỏi khiến nhiều người lo lắng, đặc biệt với những ai chưa hiểu rõ về khả năng thụ thai trong từng giai đoạn của chu kỳ kinh nguyệt. Để giải đáp vấn đề này, hãy cùng tìm hiểu qua bài viết sau đây.',
+11, '2025-07-24', N'Sức khỏe', 1),
 
-(N'Lần đầu đi xét nghiệm STIs – Cần chuẩn bị gì?',
- N'Nhiều người lo lắng hoặc ngại ngùng khi đi xét nghiệm STIs. Bài viết chia sẻ quy trình, những điều cần chuẩn bị và cách lấy kết quả an toàn, bảo mật.',
- N'Chuẩn bị tâm lý và hiểu quy trình khi đi xét nghiệm STIs lần đầu.',
- 15, '2025-05-12', N'Hướng dẫn', 1),
+(N'Âm đạo là gì? Vị trí, cấu tạo và chức năng âm đạo',
+N'Nhiều người vẫn nhầm lẫn giữa âm đạo và âm hộ, hoặc chưa nắm rõ vị trí, cấu trúc, cũng như chức năng cụ thể của âm đạo. Bài viết này sẽ cung cấp thông tin chi tiết, chuẩn xác từ các nguồn y tế uy tín trong và ngoài nước, giúp bạn tự tin hơn trong việc chăm sóc vùng kín và bảo vệ sức khỏe sinh sản.
 
-(N'Tư vấn giới tính online – Giải pháp an toàn và tiện lợi cho giới trẻ',
- N'Tư vấn giới tính trực tuyến giúp bạn giải đáp những thắc mắc nhạy cảm một cách kín đáo và nhanh chóng. Hãy tìm hiểu cách đặt lịch và trao đổi hiệu quả với chuyên gia.',
- N'Tìm hiểu cách tư vấn giới tính online và những lợi ích mang lại.',
- 13, '2025-05-10', N'Tâm lý', 1),
+Âm đạo là gì?
+Âm đạo là một ống cơ - màng nhầy nối tử cung với cửa ngoài của cơ quan sinh dục nữ. Đây là một phần quan trọng trong hệ sinh sản, nằm hoàn toàn bên trong cơ thể, khác với âm hộ - phần bên ngoài bao gồm môi lớn, môi nhỏ và âm vật. Âm đạo có đặc tính đàn hồi, co giãn mạnh, và có khả năng tự bôi trơn khi được kích thích, hỗ trợ cho các chức năng sinh lý như quan hệ tình dục và sinh sản.
+
+Hàm lượng dịch tiết âm đạo thay đổi tùy theo chu kỳ kinh nguyệt, trạng thái kích thích, hoặc tình trạng sức khỏe. Âm đạo không chỉ là một cơ quan sinh sản mà còn đóng vai trò trong việc duy trì sức khỏe tổng thể của phụ nữ khi được chăm sóc đúng cách.',
+N'Âm đạo là ống cơ đàn hồi nằm bên trong cơ thể phụ nữ, có vai trò quan trọng trong quan hệ tình dục, kinh nguyệt, thụ thai và sinh sản. Hiểu đúng về âm đạo là gì giúp phòng tránh viêm nhiễm và bảo vệ sức khỏe sinh sản. Cùng tìm hiểu sâu hơn về chủ đề này trong bài viết dưới đây của Nhà thuốc Long Châu!',
+15, '2025-07-24', N'Hướng dẫn', 1),
+
+(N'Thai IVF 10 tuần phát triển thế nào? Có nguy cơ gì cần theo dõi?',
+N'Tuần thứ 10 của thai kỳ IVF đánh dấu một cột mốc quan trọng khi phôi thai đang hoàn thiện các cơ quan và bước vào giai đoạn phát triển ổn định hơn. Tuy nhiên, do đặc thù thai IVF vốn nhạy cảm, mẹ bầu vẫn cần theo dõi sát sao để đảm bảo thai nhi phát triển khỏe mạnh. Vậy thai IVF 10 tuần phát triển thế nào và có những nguy cơ nào cần lưu ý?
+
+Sự phát triển của thai IVF 10 tuần
+Ở tuần thai thứ 10, thai IVF đang trải qua một giai đoạn phát triển rất quan trọng với nhiều thay đổi rõ rệt. Lúc này, thai nhi có chiều dài khoảng 3 - 4 cm và cân nặng khoảng 4 - 5g, tương đương kích thước của một quả dâu tây.
+
+Dù còn bé, nhưng hầu hết các cơ quan chính như não bộ, tim, gan, thận và ruột đã bắt đầu hình thành gần như hoàn chỉnh và tiếp tục phát triển mạnh mẽ.
+
+Các đặc điểm bên ngoài như mắt, tai, miệng, tay chân cũng ngày càng rõ ràng hơn. Đặc biệt, thai IVF 10 tuần bắt đầu xuất hiện phản xạ nhẹ, có thể di chuyển khi bị chạm vào thành tử cung, mặc dù mẹ vẫn chưa cảm nhận được những chuyển động này.
+
+Tim thai đã hoạt động rõ ràng với nhịp đập từ 120 - 180 lần/phút và có thể nghe thấy bằng thiết bị siêu âm Doppler, khiến các mẹ IVF cảm thấy an tâm hơn rất nhiều.
+
+Ngoài ra, nhau thai cũng bắt đầu đảm nhận chức năng vận chuyển chất dinh dưỡng và hormone cho thai nhi. Đây là giai đoạn đánh dấu sự phát triển khỏe mạnh ban đầu của em bé và là một cột mốc tinh thần quan trọng cho mẹ sau quá trình IVF đầy lo lắng.',
+N'Tuần thứ 10 của thai kỳ IVF là giai đoạn quan trọng với nhiều cột mốc phát triển vượt bậc của thai nhi và những thay đổi đáng chú ý ở mẹ. Bài viết này sẽ cùng bạn khám phá sự phát triển của thai IVF 10 tuần và những điều mẹ cần lưu ý để có một thai kỳ khỏe mạnh.',
+13, '2025-07-24', N'Sức khỏe', 1),
+
+(N'Rối loạn phóng noãn nên ăn gì và không nên ăn gì?',
+N'Bạn đang mong con nhưng chu kỳ kinh nguyệt rối loạn, trứng không rụng đều khiến việc thụ thai trở nên khó khăn? Một trong những nguyên nhân khá phổ biến là rối loạn phóng noãn, khiến trứng không rụng đều đặn mỗi tháng. Chế độ ăn uống khoa học có thể cải thiện đáng kể tình trạng này.
+
+Trong bài viết này, mình sẽ cùng bạn tìm hiểu rối loạn phóng noãn nên ăn gì để hỗ trợ sinh sản một cách tốt nhất.
+
+Rối loạn phóng noãn nên ăn gì?
+Chế độ dinh dưỡng đóng vai trò quan trọng trong việc hỗ trợ cải thiện chức năng buồng trứng và khả năng rụng trứng tự nhiên. Với tình trạng rối loạn phóng noãn, dưới đây là những thực phẩm bạn nên ăn để cân bằng nội tiết và tăng khả năng thụ thai:
+
+Thực phẩm giàu đạm thực vật
+Các thực phẩm có chứa nhiều đạm thực vật như đậu nành, đậu lăng, đậu xanh, hạt chia, hạt bí hay hạt hướng dương không chỉ giàu protein mà còn chứa nhiều phytoestrogen – hợp chất có khả năng cân bằng nội tiết tố nữ. Một nghiên cứu nổi bật từ Đại học Harvard cho thấy việc thay thế một phần đạm động vật bằng đạm thực vật có thể góp phần giảm nguy cơ vô sinh liên quan đến rối loạn phóng noãn.
+
+Omega 3 và chất béo không bão hòa
+Các loại chất béo tốt như Omega-3 và chất béo không bão hòa đơn có vai trò quan trọng trong việc điều hòa hormone sinh sản và cải thiện chất lượng nang noãn.
+
+Cá hồi, cá thu, quả bơ, dầu ô-liu, hạt lanh,… là những nguồn thực phẩm lý tưởng mà phụ nữ rối loạn phóng noãn nên ăn thường xuyên.
+
+Đồng thời, họ cũng nên hạn chế tối đa chất béo bão hòa từ đồ chiên rán, thức ăn nhanh vì chúng có thể khiến tình trạng mất cân bằng nội tiết thêm trầm trọng.',
+N'Rối loạn phóng noãn là nguyên nhân phổ biến gây khó thụ thai ở nữ giới. Bên cạnh việc điều trị y tế, chế độ ăn uống đóng vai trò quan trọng trong việc cải thiện chức năng rụng trứng. Vậy rối loạn phóng noãn nên ăn gì để hỗ trợ khả năng sinh sản một cách tự nhiên?',
+15, '2025-07-24', N'Hướng dẫn', 1),
+
+(N'Giải đáp thắc mắc: Tắc 1 bên vòi trứng có thai được không?',
+N'Khi bị chẩn đoán tắc một bên vòi trứng, nhiều phụ nữ lo lắng về khả năng làm mẹ của mình. Liệu tắc 1 bên vòi trứng có thai được không? Bài viết này sẽ giúp bạn trả lời câu hỏi này và kịp thời áp dụng các biện pháp phù hợp giúp có thai.',
+N'Khi bị chẩn đoán tắc một bên vòi trứng, nhiều phụ nữ lo lắng về khả năng làm mẹ của mình. Liệu tắc 1 bên vòi trứng có thai được không? Bài viết này sẽ giúp bạn trả lời câu hỏi này và kịp thời áp dụng các biện pháp phù hợp giúp có thai.',
+11, '2025-07-24', N'Sức khỏe', 1),
  
  (N'Sức khỏe hệ sinh sản của nam và nữ là gì?',
 N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Sức khỏe sinh sản của nam và nữ là những khía cạnh quan trọng của hệ thống sinh sản về mặt tổng thể vì cả hai đều tham gia vào quá trình tạo ra một sinh linh mới. Vậy thì sức khỏe hệ sinh sản là gì, hãy tìm hiểu cùng MedSex nhé.
@@ -353,7 +428,7 @@ Theo WHO, sức khỏe hệ sinh sản là trạng thái hoàn toàn khỏe mạ
 - Sức khỏe tinh thần: cá nhân cảm thấy thoải mái với chính mình về sức khỏe sinh sản và tình dục, biết thừa nhận những nhược điểm, không tự ti, sống đoàn kết với mọi người.
 - Sức khỏe xã hội: đảm bảo sự an toàn cho xã hội, có mối quan hệ tốt với cộng đồng.',
 N'Sức khỏe hệ sinh sản đảm bảo mọi người có một đời sống tình dục hạnh phúc và an toàn, mang khả năng sinh sản và được quyền chủ động quyết định thời gian và số lần mang thai. Hãy tìm hiểu sức khỏe hệ sinh sản cùng Genetica nhé.',
-11, '2025-07-24', N'Sức khỏe', 1),
+12, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Ra huyết trắng nhiều là sắp có kinh hay có thai? Dấu hiệu và lời khuyên hữu ích',
 N'Nhiều chị em thắc mắc ra huyết trắng nhiều là sắp có kinh hay có thai, đặc biệt khi nhận thấy vùng kín ẩm ướt và khí hư thay đổi bất thường. Thực tế, đây có thể là dấu hiệu sinh lý bình thường hoặc cảnh báo thai kỳ, nhưng cũng không loại trừ khả năng tiềm ẩn bệnh lý phụ khoa. Hiểu rõ những đặc điểm của khí hư trong từng trường hợp sẽ giúp bạn chủ động theo dõi và chăm sóc sức khỏe tốt hơn.
@@ -363,7 +438,7 @@ Hiện tượng ra huyết trắng nhiều có thể là dấu hiệu bình thư
 
 Theo Mayo Clinic, trước kỳ kinh nguyệt, hormone estrogen tăng cao, làm tăng tiết dịch âm đạo. Khí hư thường ra nhiều và đặc hơn bình thường. Trong khi đó, ở những tuần đầu mang thai, nồng độ estrogen cùng lưu lượng máu tăng khiến khí hư có màu trắng sữa, loãng và ra nhiều hơn.',
 N'Ra huyết trắng nhiều là sắp có kinh hay có thai là băn khoăn phổ biến ở nhiều chị em, nhất là những người đang mong có em bé hoặc quan tâm tới sức khỏe sinh sản. Bài viết dưới đây sẽ giúp bạn nhận diện đúng dấu hiệu của cơ thể, phân biệt khí hư sinh lý khi sắp có kinh hoặc khi mang thai, đồng thời lưu ý cách chăm sóc phù hợp.',
-11, '2025-07-24', N'Sức khỏe', 1),
+14, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Tinh trùng dị dạng có thụ thai được không? Cách tăng khả năng thụ thai',
 N'Tinh trùng dị dạng là một trong những nguyên nhân phổ biến ảnh hưởng đến khả năng sinh sản nam giới, làm dấy lên lo ngại về khả năng thụ thai tự nhiên. Liệu có phải tất cả các trường hợp tinh trùng có hình dạng bất thường đều dẫn đến vô sinh? Bài viết sau sẽ giúp bạn hiểu rõ tinh trùng dị dạng có thụ thai được không và làm thế nào để tăng khả năng thụ thai.
@@ -378,7 +453,7 @@ Theo Tổ chức Y tế Thế giới (WHO, 2021), tỷ lệ tinh trùng có hìn
 
 Trong trường hợp tỷ lệ tinh trùng bình thường dưới 4%, bác sĩ sẽ đánh giá thêm các chỉ số quan trọng khác như: Tổng số lượng tinh trùng trong mỗi lần xuất tinh, mật độ tinh trùng (số lượng/ml), khả năng di động của tinh trùng, tỷ lệ sống của tinh trùng. Nếu tổng số lượng tinh trùng vẫn cao, di động tốt và vẫn còn một phần nhỏ tinh trùng có hình dạng bình thường thì khả năng thụ thai tự nhiên vẫn hoàn toàn có thể xảy ra.',
 N'Tinh trùng dị dạng là chẩn đoán khiến nhiều nam giới lo lắng về khả năng sinh sản. Liệu tinh trùng dị dạng có thụ thai được không hay cần can thiệp y học? Bài viết dưới đây sẽ giúp bạn có câu trả lời cụ thể và giải pháp giúp tăng khả năng thụ thai.',
-11, '2025-07-24', N'Sức khỏe', 1),
+13, '2025-07-24', N'Sức khỏe', 1),
 
 (N'Thai 17 tuần là mấy tháng? Kích thước phát triển và những điều cần lưu ý',
 N'Mang thai là một hành trình kỳ diệu và mỗi tuần trôi qua đều đánh dấu những cột mốc phát triển quan trọng của thai nhi và những thay đổi đáng kể trên cơ thể người mẹ. Tuần thai thứ 17 là một giai đoạn đặc biệt, khi thai nhi bắt đầu phát triển mạnh mẽ hơn và mẹ bầu cảm nhận rõ rệt những biến đổi trong cơ thể. Vậy thai 17 tuần là mấy tháng? Thai nhi phát triển như thế nào và mẹ bầu cần lưu ý những gì? Bài viết này sẽ cung cấp thông tin để giúp bạn hiểu rõ hơn về giai đoạn này nhé!
@@ -388,18 +463,18 @@ Thông thường, việc tính tuổi thai thường dựa trên số tuần. �
 
 Cách tính này dựa trên quy ước rằng một tháng thai kỳ trung bình kéo dài khoảng 4 tuần. Tuy nhiên, do mỗi tháng có số ngày khác nhau nên việc xác định chính xác "mấy tháng" thường có tỷ lệ chênh lệch. Đây là thời điểm thai nhi đang phát triển nhanh chóng cả về kích thước lẫn chức năng cơ thể.',
 N'Mang thai 17 tuần là mấy tháng? Thai nhi phát triển ra sao và mẹ bầu cần lưu ý những gì? Để giúp mẹ hiểu rõ hơn về những thay đổi trong giai đoạn này, mời bạn đọc cùng tham khảo chi tiết trên bài viết dưới đây nhé!',
-11, '2025-07-24', N'Sức khỏe', 1);
+12, '2025-07-24', N'Sức khỏe', 1);
 
 
 
  --Blogimage-=====================================================================================================================================================
 INSERT INTO dbo.BlogImage (BlogID, ImagePath, ImageCaption, UploadDate, OrderIndex )
 VALUES
-(1, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951433/ivgihugmou0zjp1emclv.jpg', N'Minh họa chu kỳ kinh nguyệt', '2025-07-08 05:11:20.150', 1),
-(2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951443/dyggaxusc4fme4oet3tev.jpg', N'Thông tin về các bệnh STIs', '2025-07-08 05:09:01.747', 1),
-(3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951112/b3g6xkwcbvrlw4kicotw.jpg', N'Thuốc tránh thai hằng ngày', '2025-07-08 05:08:34.373', 1),
-(4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951325/bmjfiuhejrhcj5j5quq.jpg', N'Tư thế lấy mẫu xét nghiệm STIs', '2025-07-08 05:07:42.563', 1),
-(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1751951126/imf8crhktlis12j03o8g.jpg', N'Tư vấn giới tính trực tuyến', '2025-07-08 05:03:45.803', 1),
+(1, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344576/o4kcuxxv1mf629iinhed.webp', 'Thumbnail', '2025-07-24 08:09:40.870', 1),
+(2, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344630/htnjucs7cjbnumgy4dgo.webp', 'Thumbnail', '2025-07-24 08:10:32.053', 1),
+(3, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344715/d6jbyy2cobzxss18lqcn.webp', 'Thumbnail', '2025-07-24 08:11:56.803', 1),
+(4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344771/ff0wyvh6d0lsin7k1kev.jpg', 'Thumbnail', '2025-07-24 08:12:53.853', 1),
+(5, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753344804/j4p7imkblv58djsjub5z.webp', 'Thumbnail', '2025-07-24 08:13:26.433', 1),
 (6, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337275/fpwfwngwgvxpivb9fw5c.webp', N'Thumbnail', '2025-07-24 06:08:35.987', 1),
 (7, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337660/chyrelwrjc3oftqtjf3m.webp', N'Thumbnail', '2025-07-24 06:14:22.297', 1),
 (8, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1753337727/rynj3t2cf4gruufjwjjo.webp', N'Thumbnail', '2025-07-24 06:15:34.137', 1),
@@ -486,11 +561,12 @@ VALUES
 
 --=====================================================================================================================================================
 --feedback
-INSERT INTO Feedback (AppointmentID, [RecordID], Rating, Comment, FeedbackDate)
+INSERT INTO Feedback (AppointmentID, RecordID, Rating, Comment, FeedbackDate)
 VALUES
-(NULL, 1, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
-(NULL, 9, 5, N'Feedback dịch vụ rất tốt', GETDATE()),
-(1, NULL, 5, N'Feedback dịch vụ rất tốt', GETDATE());
+(1, NULL, 5,  N'dịch vụ rất tốt', GETDATE()),
+(2, NULL, 5,  N'dịch vụ rất tốt', GETDATE()),
+(NULL, 1, 5,  N'Bác sĩ rất tận tâm ạ', GETDATE()),
+(NULL, 2, 5,  N'Dịch vụ rất tốt', GETDATE());
 
 
 --Table [dbo].[Notification]
@@ -534,28 +610,45 @@ INSERT INTO dbo.Invoice (
     TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
 )
 VALUES
-(NULL, 1, 1050000.00, 'PayPal', '9B766355RJ45471925', '2025-07-14 10:01:36.937', 1, 0.05, 'VND', NULL),
-(NULL, 3, 1050000.00, 'PayPal', '6IW823322B527477M', '2025-07-14 13:34:59.577', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
-(NULL, 6, 1050000.00, 'PayPal', '1BD76296U803490K', '2025-07-16 16:42:49.443', 1, 0.05, 'VND', '2025-07-16 16:42:49.443'),
-(NULL, 7, 1050000.00, 'PayPal', '8YX5658U74173812T', '2025-07-19 15:56:32.380', 1, 0.05, 'VND', '2025-07-19 15:56:32.380'),
-(NULL, 8, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
-(NULL, 9, 1050000.00, 'PayPal', '6F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
-(NULL, 10, 1050000.00, 'PayPal', '31627614SJ2608229', '2025-07-24 02:14:26.793', 1, 0.05, 'VND', '2025-07-24 02:14:26.793');
-
-
+(1, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-24 13:00:01.000', 1, 0.05, 'VND', '2025-07-24 13:00:01.000'),
+(2, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-24 13:01:01.000', 1, 0.05, 'VND', '2025-07-24 13:01:01.000'),
+(3, NULL, 157500.00, 'PayPal', '8EF34567NO765432N', '2025-07-24 13:02:01.000', 1, 0.05, 'VND', '2025-07-24 13:02:01.000'),
+(4, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(5, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(6, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(7, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-24 13:00:01.000', 1, 0.05, 'VND', '2025-07-24 13:00:01.000'),
+(8, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-24 13:01:01.000', 1, 0.05, 'VND', '2025-07-24 13:01:01.000'),
+(9, NULL, 157500.00, 'PayPal', 'K9876567NO765432N', '2025-07-24 13:02:01.000', 1, 0.05, 'VND', '2025-07-24 13:02:01.000'),
+(10, NULL, 157500.00, 'PayPal', 'NO765678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(11, NULL, 157500.00, 'PayPal', 'IJ566789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(12, NULL, 157500.00, 'PayPal', '2IJ57890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(13, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(14, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(15, NULL, 157500.00, 'PayPal', 'Q6547890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(16, NULL, 157500.00, 'PayPal', '45J45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(17, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(18, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(19, NULL, 157500.00, 'PayPal', 'TU445678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
+(20, NULL, 157500.00, 'PayPal', '09T56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
+(21, NULL, 157500.00, 'PayPal', '21P67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
+(22, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000');
 
 INSERT INTO dbo.Invoice (
     AppointmentID, TestServiceRecordID, TotalAmount, PaymentMethod,
     TransactionId, CreatedAt, Status, TaxRate, UnitPrice, PaidAt
 )
 VALUES
-(1, NULL, 157500.00, 'PayPal', '7AB12345JK987654L', '2025-07-24 13:00:01.000', 1, 0.05, 'VND', '2025-07-24 13:00:01.000'),
-(2, NULL, 157500.00, 'PayPal', '6CD23456LM876543M', '2025-07-24 13:01:01.000', 1, 0.05, 'VND', '2025-07-24 13:01:01.000'),
-(3, NULL, 157500.00, 'PayPal', '8EF34567NO765432N', '2025-07-24 13:02:01.000', 1, 0.05, 'VND', '2025-07-24 13:02:01.000'),
-(4, NULL, 157500.00, 'PayPal', '9GH45678PQ654321P', '2025-07-24 13:03:01.000', 1, 0.05, 'VND', '2025-07-24 13:03:01.000'),
-(5, NULL, 157500.00, 'PayPal', '1IJ56789RS543210R', '2025-07-24 13:04:01.000', 1, 0.05, 'VND', '2025-07-24 13:04:01.000'),
-(8, NULL, 157500.00, 'PayPal', '2KL67890TU432109T', '2025-07-24 13:05:01.000', 1, 0.05, 'VND', '2025-07-24 13:05:01.000'),
-(9, NULL, 157500.00, 'PayPal', '3MN78901VW321098V', '2025-07-24 13:06:01.000', 1, 0.05, 'VND', '2025-07-24 13:06:01.000');
+(NULL, 3, 1050000.00, 'PayPal', '9B766355RJ45471925', '2025-07-14 10:01:36.937', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
+(NULL, 4, 1050000.00, 'PayPal', '6IW823322B527477M', '2025-07-14 13:34:59.577', 1, 0.05, 'VND', '2025-07-14 13:34:59.577'),
+(NULL, 5, 1050000.00, 'PayPal', '1BD76296U803490K', '2025-07-16 16:42:49.443', 1, 0.05, 'VND', '2025-07-16 16:42:49.443'),
+(NULL, 6, 1050000.00, 'PayPal', '8YX5658U74173812T', '2025-07-19 15:56:32.380', 1, 0.05, 'VND', '2025-07-19 15:56:32.380'),
+(NULL, 7, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
+(NULL, 1, 1050000.00, 'PayPal', '6F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
+(NULL, 2, 1050000.00, 'PayPal', '3VB8217R1S160237B', '2025-07-22 16:40:07.407', 1, 0.05, 'VND', '2025-07-22 16:40:07.407'),
+(NULL, 12, 1050000.00, 'PayPal', '4F077593P0139692R', '2025-07-22 17:02:30.653', 1, 0.05, 'VND', '2025-07-22 17:02:30.653'),
+(NULL, 13, 1050000.00, 'PayPal', '46627614SJ2608229', '2025-07-24 02:14:26.793', 1, 0.05, 'VND', '2025-07-24 02:14:26.793');
+
+
 --WeeklySchedule--=====================================================================================================================================================
 -- Staff (UserID = 3, 6) works morning shift from Mon to Fri
 INSERT INTO [WeeklySchedules] (UserId, DayOfWeek, StartTime, EndTime, ShiftType, Note)
@@ -590,7 +683,31 @@ VALUES
 (4, 1, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),--Staff
 (4, 2, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 (4, 3, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
-(4, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL);
+(4, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 11, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),   --lichj cho CS Pham thi F
+( 11, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 11, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 11, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 5, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),--CS
+( 5, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 5, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 5, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 12, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 12, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 12, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 12, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 13, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 13, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 13, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 13, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 14, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 14, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 14, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 14, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 15, 1, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 15, 2, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 15, 3, '13:00:00.0000000', '17:00:00.0000000', 2, NULL),
+( 15, 4, '13:00:00.0000000', '17:00:00.0000000', 2, NULL);
 
 
 
