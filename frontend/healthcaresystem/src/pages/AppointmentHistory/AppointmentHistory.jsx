@@ -178,7 +178,7 @@ function AppointmentHistory() {
                     if (status === 'da hoan thanh') {
                          const endTime = dayjs(record.startTime).add(record.duration || 30, 'minute'); // Giả sử mặc định 30 phút nếu không có
                          const daysSince = dayjs().diff(endTime, 'day');
-                         if (daysSince <= 7) {
+                         if (daysSince <= 30) {
                               return (
                                    <Button
                                         type="primary"
