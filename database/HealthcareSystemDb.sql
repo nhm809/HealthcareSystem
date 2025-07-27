@@ -37,7 +37,7 @@ VALUES
 -- MB
 ('Local', NULL, N'Phạm Văn Lâm', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0848667151', '1986-11-14', 'MALE', N'Hải Châu, Đà Nẵng', '2024-11-29', NULL, 'MB', NULL, NULL, 1),
 ('Local', NULL, N'Nguyễn Thị Bích Trâm', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0976149467', '1994-12-15', 'FEMALE', N'Thanh Khê, Đà Nẵng', '2024-09-09', NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Trần Văn Nhựt', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Trần Văn Nguyên', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
 ('Local', NULL, N'Lê Thị Oanh', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0961377191', '1985-11-14', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', '2024-09-12', NULL, 'MB', NULL, NULL, 1),
 ('Local', NULL, N'Đỗ Văn Phúc', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0931677872', '1999-02-13', 'MALE', N'Liên Chiểu, Đà Nẵng', '2024-09-20', NULL, 'MB', NULL, NULL, 1);
 
@@ -164,29 +164,29 @@ VALUES
  4, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752915543/mvszssp7fpthqweeh51i.jpg', 3,
  '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Đã có kết quả xét nghiệm', N'Da danh gia'),
 
-(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
+(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn Phúc',
  20, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 6,
  '2025-07-20', '2025-07-21', '08:00:00.0000000', N'Kết luận đầy đủ và chính xác', N'Da danh gia'),
 
 -- 🟩 Da hoan thanh: 16 (Phạm Văn L), 17 (Lê Văn Tài)
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn Lâm',
  16, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752463186/aq4lk1js0gofqlvsbqlp.jpg', 3,
  '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Xét nghiệm hoàn tất', N'Da hoan thanh'),
 
-(1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
+(1, '2001-03-05', N'MALE', '0371234567', N'Nguyễn Thị Bích Trâm',
  17, 'https://res.cloudinary.com/dktu0nbjx/image/upload/v1752918765/sample_result1.jpg', 7,
  '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Hoàn tất xét nghiệm', N'Da hoan thanh'),
 
 -- 🟡 Dang cho kham: 18, 19, 20
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nhựt',
  18, NULL, 3,
  '2025-07-22', '2025-07-24', '08:00:00.0000000', N'Chờ khám lần đầu', N'Dang cho kham'),
 
-(1, '2002-04-09', N'MALE', '0931231233', N'Nguyễn Nhật Minh',
+(1, '2002-04-09', N'MALE', '0931231233', N'Lê Thị Oanh',
  19, NULL, 3,
  '2025-07-22', '2025-07-25', '08:00:00.0000000', N'Đã lấy mẫu máu', N'Dang cho kham'),
 
-(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn L',
+(1, '2002-01-02', N'MALE', '0377681234', N'Đỗ Văn Phúc',
  20, NULL, 6,
  '2025-07-22', '2025-07-26', '08:00:00.0000000', N'Chưa đủ điều kiện xét nghiệm', N'Dang cho kham'),
 
@@ -195,24 +195,24 @@ VALUES
  4, NULL, NULL,
  '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
 
-(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn L',
+(1, '1990-01-01', N'MALE', '0900000021', N'Phạm Văn Lâm',
  16, NULL, NULL,
  '2025-07-23', '2025-07-24', '08:00:00.0000000', NULL, N'Dang thanh toan'),
 
 -- ❌ Da huy: 17, 18
-(1, '2001-03-05', N'MALE', '0371234567', N'Lê Văn Tài',
+(1, '2001-03-05', N'MALE', '0371234567', N'Nguyễn Thị Bích Trâm',
  17, NULL, NULL,
  '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Hủy do lý do cá nhân', N'Da huy'),
 
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nhựt',
  18, NULL, NULL,
  '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Khách tự hủy lịch', N'Da huy') ,
 -- 🟦 Dang thuc hien: 5, 6
-(1, '2000-12-12', N'MALE', '0371234568', N'Trần Văn B',
+(1, '2000-12-12', N'MALE', '0371234568', N'Phạm Văn Lâm',
  16, NULL, 6,
  '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành xét nghiệm máu', N'Dang thuc hien'),
 
-(1, '2000-01-01', N'FEMALE', '0934567890', N'Nguyễn Thị L',
+(1, '2000-01-01', N'FEMALE', '0934567890', N'Nguyễn Thị Bích Trâm',
  17, NULL, 7,
  '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành phân tích mẫu', N'Dang thuc hien');
 
@@ -664,6 +664,8 @@ VALUES
 (3, 3, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 (3, 4, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 ( 3, 5, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+(3, 6, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
+( 3, 0, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 ( 6, 0, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 ( 6, 1, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
 ( 6, 2, '08:00:00.0000000', '12:00:00.0000000', 1, NULL),
