@@ -178,7 +178,7 @@ VALUES
  '2025-07-21', '2025-07-22', '08:00:00.0000000', N'Hoàn tất xét nghiệm', N'Da hoan thanh'),
 
 -- 🟡 Dang cho kham: 18, 19, 20
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nhựt',
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
  18, NULL, 3,
  '2025-07-22', '2025-07-24', '08:00:00.0000000', N'Chờ khám lần đầu', N'Dang cho kham'),
 
@@ -204,7 +204,7 @@ VALUES
  17, NULL, NULL,
  '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Hủy do lý do cá nhân', N'Da huy'),
 
-(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nhựt',
+(1, '1990-08-08', N'MALE', '0975672123', N'Trần Văn Nguyên',
  18, NULL, NULL,
  '2025-07-24', '2025-07-26', '08:00:00.0000000', N'Khách tự hủy lịch', N'Da huy') ,
 -- 🟦 Dang thuc hien: 5, 6
@@ -215,7 +215,6 @@ VALUES
 (1, '2000-01-01', N'FEMALE', '0934567890', N'Nguyễn Thị Bích Trâm',
  17, NULL, 7,
  '2025-07-23', '2025-07-25', '08:00:00.0000000', N'Đang tiến hành phân tích mẫu', N'Dang thuc hien');
-
 
 
 INSERT INTO Question (
