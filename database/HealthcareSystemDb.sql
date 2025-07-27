@@ -20,21 +20,27 @@ VALUES
 ('Local', NULL, N'Phạm Nguyễn Đăng Hải', '$2b$12$hjtLyni3G0HRc2ZW80Pqy.iehAis/gEXgwFM90QxoZ5.SeXFQlAPy', 'pndhai@gmail.com', '0924364761', '1994-03-20', 'MALE', N'Quận 3, TP.HCM', '2024-10-07', NULL, 'ST', NULL, NULL, 1),
 ('Local', NULL, N'Nguyễn Văn Hiếu', '$2b$12$c/AAkCxOXWR3NV9eoTuYZux5omogNoyNn/kwIfw8cCJzm51F.08Km', 'hieubmk2210@gmail.com', '0970055076', '1990-09-18', 'MALE', N'Quận 5, TP.HCM', '2024-11-24', NULL, 'MB', NULL, NULL, 1),
 ('Local', NULL, N'Nguyễn Trọng Tốt', '$2b$12$S3vJka0JR7z/6nQzCWggZ.xepI5V35EwsA9qhKpM5lRRxINuD8KMe', 'totn786@gmail.com', '0830235422', '1993-01-16', 'MALE', N'Quận 7, TP.HCM', '2024-07-19', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Phạm Văn A', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0850535918', '1997-05-13', 'MALE', N'Ba Đình, Hà Nội', '2025-02-15', NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị B', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0887788836', '1991-04-16', 'FEMALE', N'Cầu Giấy, Hà Nội', '2024-10-10', NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn C', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0929554192', '1988-08-27', 'MALE', N'Đống Đa, Hà Nội', '2025-03-01', NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị D', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0966782683', '2000-05-13', 'FEMALE', N'Tây Hồ, Hà Nội', '2024-10-31', NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn E', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0923819850', '1999-06-15', 'MALE', N'Thanh Xuân, Hà Nội', '2024-11-01', NULL, 'ST', NULL, NULL, 1),
-('Local', NULL, N'Phạm Thị F', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0949674595', '1991-11-21', 'FEMALE', N'Tân Bình, TP.HCM', '2024-09-10', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Văn G', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0919801562', '1985-01-31', 'MALE', N'Gò Vấp, TP.HCM', '2024-08-16', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Trần Thị H', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0850570828', '1994-12-20', 'FEMALE', N'Phú Nhuận, TP.HCM', '2025-01-26', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Lê Văn I', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0917015014', '1991-11-12', 'MALE', N'Thủ Đức, TP.HCM', '2024-12-15', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Thị K', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0961375236', '1993-01-19', 'FEMALE', N'Bình Thạnh, TP.HCM', '2024-10-02', NULL, 'CS', NULL, NULL, 1),
-('Local', NULL, N'Phạm Văn L', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0848667151', '1986-11-14', 'MALE', N'Hải Châu, Đà Nẵng', '2024-11-29', NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Nguyễn Thị M', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0976149467', '1994-12-15', 'FEMALE', N'Thanh Khê, Đà Nẵng', '2024-09-09', NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Trần Văn N', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Lê Thị O', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0961377191', '1985-11-14', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', '2024-09-12', NULL, 'MB', NULL, NULL, 1),
-('Local', NULL, N'Đỗ Văn P', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0931677872', '1999-02-13', 'MALE', N'Liên Chiểu, Đà Nẵng', '2024-09-20', NULL, 'MB', NULL, NULL, 1);
+-- ST
+('Local', NULL, N'Trần Minh Nhật', '$2b$12$3cp8.Ow3.K9IcQ755h/AQemjyo3HvJihF1t1DnkE/SrkvvgXJ98V6', 'st1@gmail.com', '0850535918', '1997-05-13', 'MALE', N'Ba Đình, Hà Nội', '2025-02-15', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Lê Thị Mai', '$2b$12$Z3t4PM.cwdj15n7WE4iukOKCpX64O2xiJrYw/yNnZwPtu/id7Ulqy', 'st2@gmail.com', '0887788836', '1991-04-16', 'FEMALE', N'Cầu Giấy, Hà Nội', '2024-10-10', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Võ Quốc Duy', '$2b$12$89QkxPonD5JMDU.1huUGGu1BozLmOwUNKmoAJPJF1llv7hInR5CO2', 'st3@gmail.com', '0929554192', '1988-08-27', 'MALE', N'Đống Đa, Hà Nội', '2025-03-01', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Bùi Thị Ngọc Lan', '$2b$12$mYXj/4b3m0aO1UrTcU16DudS/NlzY2HKnnlzcj3JBq5k6eTgSMw4.', 'st4@gmail.com', '0966782683', '2000-05-13', 'FEMALE', N'Tây Hồ, Hà Nội', '2024-10-31', NULL, 'ST', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Khánh', '$2b$12$HMoag.2c2xwHEvF/mHNRl.gMTILC0UiTXg9ktP2Zr7w9argdcVAVa', 'st5@gmail.com', '0923819850', '1999-06-15', 'MALE', N'Thanh Xuân, Hà Nội', '2024-11-01', NULL, 'ST', NULL, NULL, 1),
+
+-- CS
+('Local', NULL, N'Nguyễn Nguyệt Thiên Kim', '$2b$12$wSZBfgrmVSrLZ2bdQF06u.nDqlpw0XSsQGMP4IDKqmm0HCV8tlp76', 'cs1@gmail.com', '0949674595', '1991-11-21', 'FEMALE', N'Tân Bình, TP.HCM', '2024-09-10', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Văn Giao', '$2b$12$MbuVCH/y24/h32Ur0CHspui1EFCoGhPb0xmP3FMVAlRuyp.VYARDi', 'cs2@gmail.com', '0919801562', '1985-01-31', 'MALE', N'Gò Vấp, TP.HCM', '2024-08-16', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Trần Thị Kim Ngân', '$2b$12$EcD9DhEhG/UWS1ZSdvojFOVU6abjJkiCDkKiYBKUtRuxFpW20CoYa', 'cs3@gmail.com', '0850570828', '1994-12-20', 'FEMALE', N'Phú Nhuận, TP.HCM', '2025-01-26', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Lê Quốc Hưng', '$2b$12$5PsH27XHdXMQHOCKIDTdeeRUAMXpdBUQlIOsjTKFSGnEqLXSUSLTG', 'cs4@gmail.com', '0917015014', '1991-11-12', 'MALE', N'Thủ Đức, TP.HCM', '2024-12-15', NULL, 'CS', NULL, NULL, 1),
+('Local', NULL, N'Phạm Thị Mỹ Linh', '$2b$12$GGkIhoYhz8Q3i.Ngj.qVb.uvSMgjAiY1.L.YJp84mcp..P80.c4ti', 'cs5@gmail.com', '0961375236', '1993-01-19', 'FEMALE', N'Bình Thạnh, TP.HCM', '2024-10-02', NULL, 'CS', NULL, NULL, 1),
+
+-- MB
+('Local', NULL, N'Phạm Văn Lâm', '$2b$12$3ImHvmrpcTZ4pmSuFGJ3Tu2z2eQwDdRd3Drl2mDrUZOu0CyaOEqPW', 'mb1@gmail.com', '0848667151', '1986-11-14', 'MALE', N'Hải Châu, Đà Nẵng', '2024-11-29', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Nguyễn Thị Bích Trâm', '$2b$12$.TjUlnCV5kveIaB3HqndC.LGh9Oe1b.DLkGL7GPAv9NIm2Fc2DNQu', 'mb2@gmail.com', '0976149467', '1994-12-15', 'FEMALE', N'Thanh Khê, Đà Nẵng', '2024-09-09', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Trần Văn Nhựt', '$2b$12$P0BM/UixRPRcpzQPmBE1Au4LrHlfXInJAZzT82GoN2SQQTO6WNP0K', 'mb3@gmail.com', '0931287802', '1998-09-23', 'MALE', N'Sơn Trà, Đà Nẵng', '2024-09-25', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Lê Thị Oanh', '$2b$12$TO7pN0Mv2WwYf3OO/cFsjOZUDHqL2IesQvgYIBzkdDjbLaSgF6avi', 'mb4@gmail.com', '0961377191', '1985-11-14', 'FEMALE', N'Ngũ Hành Sơn, Đà Nẵng', '2024-09-12', NULL, 'MB', NULL, NULL, 1),
+('Local', NULL, N'Đỗ Văn Phúc', '$2b$12$BFKrN3o41xu0qzFHrUQURO/k8HWnLJbvgGDZyw.HStDg4dB0yysC.', 'mb5@gmail.com', '0931677872', '1999-02-13', 'MALE', N'Liên Chiểu, Đà Nẵng', '2024-09-20', NULL, 'MB', NULL, NULL, 1);
+
 
 --Specialty--=====================================================================================================================================================
 INSERT INTO Specialty ([Name], [Description], [IsDeleted]) VALUES
