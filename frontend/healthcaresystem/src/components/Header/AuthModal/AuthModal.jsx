@@ -373,8 +373,6 @@ function AuthModal({ open, onClose }) {
                                         <Typography className="error-message">{error}</Typography>
                                     )}
 
-                                    <a className="forget-account" onClick={() => setShowForgotPassword(true)}>Quên mật khẩu</a>
-
                                     <div className="auth-divider">
                                         <span></span>
                                         <span className="auth-divider-text">Hoặc đăng nhập với</span>
