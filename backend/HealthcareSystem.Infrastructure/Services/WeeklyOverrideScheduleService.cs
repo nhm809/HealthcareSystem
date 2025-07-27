@@ -134,7 +134,6 @@ namespace Infrastructure.Services
             string title = "Đơn đăng ký nghỉ và làm thêm";
             string content = $"Đơn đăng ký {entity.OverrideType?.ToLower()} của bạn đã được gửi đến Manager.";
 
-            // Gửi thông báo cho User
             var notification = new Notification
             {
                 UserId = entity.UserId,
