@@ -120,33 +120,31 @@ function ServiceManagement() {
      };
 
      const handleDelete = () => {
-         if (!selectedService) return;
-         Modal.confirm({
-             title: 'Xác nhận xóa dịch vụ',
-             content: 'Bạn có chắc chắn muốn xóa dịch vụ này không? Hành động này không thể hoàn tác.',
-             okText: 'Xóa',
-             okType: 'danger',
-             cancelText: 'Hủy',
-             onOk: async () => {
-                 try {
-                     await deleteService(selectedService.serviceId);
-                     message.success('Xóa dịch vụ thành công!');
-                     setModalOpen(false);
-                     setSelectedService(null);
-                     fetchServices();
-                 } catch (err) {
-                     message.error('Xóa dịch vụ thất bại!');
-                 }
-             }
-         });
+          if (!selectedService) return;
+          Modal.confirm({
+               title: 'Xác nhận xóa dịch vụ',
+               content: 'Bạn có chắc chắn muốn xóa dịch vụ này không? Hành động này không thể hoàn tác.',
+               okText: 'Xóa',
+               okType: 'danger',
+               cancelText: 'Hủy',
+               onOk: async () => {
+                    try {
+                         await deleteService(selectedService.serviceId);
+                         message.success('Xóa dịch vụ thành công!');
+                         setModalOpen(false);
+                         setSelectedService(null);
+                         fetchServices();
+                    } catch (err) {
+                         message.error('Xóa dịch vụ thất bại!');
+                    }
+               }
+          });
      };
 
      return (
           <div style={{ padding: 24 }}>
                <Title level={2} style={{ marginBottom: 24 }}>Quản lý dịch vụ</Title>
-               <Button type="primary" style={{ marginBottom: 24 }} onClick={handleAddServiceClick}>
-                    Thêm dịch vụ
-               </Button>
+
                {loading ? (
                     <Spin size="large" style={{ display: 'block', margin: '40px auto' }} />
                ) : (
@@ -198,11 +196,11 @@ function ServiceManagement() {
                               <Button type="primary" htmlType="submit" loading={saving} block>
                                    {isAddMode ? 'Thêm mới' : 'Cập nhật'}
                               </Button>
-                             {!isAddMode && (
-                                 <Button danger style={{ marginTop: 8 }} onClick={handleDelete} block>
-                                     Xóa dịch vụ
-                                 </Button>
-                             )}
+                              {!isAddMode && (
+                                   <Button danger style={{ marginTop: 8 }} onClick={handleDelete} block>
+                                        Xóa dịch vụ
+                                   </Button>
+                              )}
                          </Form.Item>
                     </Form>
                </Modal>
