@@ -1,2 +1,1 @@
-Client ID: 358772835376-0nj72cjoeb2rlckbrurlv3ptd44kp9uc.apps.googleusercontent.com
-Client Secret: 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
+
