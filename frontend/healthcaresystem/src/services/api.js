@@ -290,7 +290,7 @@ export const chatbotApi = {
                formData.append("conversation_id", conversationId);
           }
           formData.append("model_name", "gemini-2.5-flash-preview-05-20");
-          formData.append("api_key", "AIzaSyC-xdM4iV4MmRKX7m18bB-CXZ6bOIHoxvc");
+          formData.append("api_key", "AIzaSyBYV6lbfpPQCNEtoea79n0JPqIXchg66rg");
           // Do NOT append 'attachs' if there are no files
 
           try {
